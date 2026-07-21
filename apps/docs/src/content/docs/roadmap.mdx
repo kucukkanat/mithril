@@ -1,0 +1,66 @@
+---
+title: Roadmap
+description: What's shipped today, and what's coming next — documented honestly.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Mithril's docs describe only what's **verified against the source today**. This page tracks the
+scoped work that isn't shipped yet, so you never hit a surprise `NOT_IMPLEMENTED`.
+
+<Aside type="tip">
+Everything under "Shipped" below is implemented and covered by the test suite. Everything under
+"Next" and "Later" is designed but not yet built.
+</Aside>
+
+## Shipped today
+
+- **Core** — the `MithrilEvent` protocol, total `reduce`/`replay`, `narrow()`, the streaming
+  agent loop, and the `agentLoop` eject hatch.
+- **Tools & agents** — typed tools via Standard Schema, three run methods (`run`/`stream`/`resume`).
+- **Providers** — OpenAI, Anthropic, and Google adapters (real SSE), self-wiring handles,
+  byok/proxy/ephemeral transports, plus **browser-local inference** via Transformers.js
+  (`@mithril/providers/transformers` — on-device WebGPU/WASM, no keys).
+- **Human-in-the-loop** — all three suspension tiers: Tier-1 approval (`needsApproval`), Tier-1b (a tool
+  _returns_ `suspend(...)`), and Tier-2 (`await ctx.suspend()` mid-execute, resumed by replaying journaled
+  effects). Resume with `resume()` (to a final `RunResult`) or `rehydrate()` (streaming), plus in-process
+  `RunHandle.resolve()`. `seal`/`open` sealing (HMAC + AES-GCM) for persisted tokens.
+- **Run control** — real `RunHandle.cancel()` (aborts at the next step boundary), `iterate()` step-level
+  snapshots, and `asTool()` to call one agent as another's tool — with **first-class nested HITL**: a
+  suspended sub-agent is resumed through the parent's own token.
+- **Structured output** — validate → retry, streamed `object.delta`.
+- **Composability** — **step-, model-, and tool-altitude** middleware, plugins, event consumers.
+- **Memory** — `Checkpointer` (in-memory + Bun SQLite) with a conformance kit.
+- **Providers** — a Standard-Schema → JSON-Schema converter (`toJsonSchema`/`withJsonSchema`) feeds real
+  tool-parameter schemas to OpenAI/Anthropic/Google when the input schema self-describes or a converter is
+  supplied.
+- **Evals** — trajectory scoring plus a **record-once / replay-from-file** split (`runEvalCached` +
+  `TrajectoryStore`) for deterministic, network-free CI.
+- **MCP** — a client, an official Streamable-**HTTP transport** (`@mithril/mcp/http`), and **server
+  exposure** (`@mithril/mcp/server`) to serve your own tools over MCP.
+- **Devtools** — a headless inspector **and a framework-agnostic UI** (event stream, span tree, cost +
+  context meters, time-travel scrubber, all-tier suspension card) shipped as a **Web Component**
+  (`@mithril/devtools/element`), **mount functions** (`@mithril/devtools/dom`), and **React** components
+  (`@mithril/devtools/ui`) over one rendering implementation — with **zero-touch attach**
+  (`import "mithril/devtools/attach"` / `MITHRIL_DEVTOOLS=1`) and a `BroadcastChannel` live-tail panel.
+- **Batteries** — OTel spans, `fs`/`kv` (in-memory + IndexedDB) adapters, the `vectors` store (in-memory +
+  durable Bun SQLite), the `sandbox` code runner (`node:vm` + remote proxy), workflows, React bindings,
+  `create-mithril`.
+
+## Next
+
+| Area | What's coming | Why it's not here yet |
+| --- | --- | --- |
+| Adapters | ANN-indexed `vectors` backends (sqlite-vec / pgvector / Vectorize); a WASM `sandbox` backend | today's `vectors` do an exact brute-force scan; `sandbox` runs via `node:vm` or a remote proxy |
+| Studio | A standalone `bunx mithril dev` studio app | the embeddable devtools UI ships today; a full studio app is v2 |
+
+## Later
+
+- **Studio / playground app** and **realtime / voice** (v2).
+- **Local-inference upgrades** — a WASM/CPU-guaranteed backend (wllama) and native constrained/grammar
+  decoding for hard structured-output guarantees on local models.
+
+<Aside type="note">
+This ordering reflects the current build plan and can change. The design for most of these already
+lives in the in-repo spec — see [How Mithril was designed](/design/how-mithril-was-designed/).
+</Aside>

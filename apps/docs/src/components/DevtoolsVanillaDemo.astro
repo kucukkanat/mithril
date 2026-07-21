@@ -1,0 +1,49 @@
+---
+// A NON-React demo: the devtools UI as a Web Component, driven by a plain browser <script> (no React
+// island, no framework). Proves `@mithril/devtools/element` works standalone.
+---
+
+<div class="vanilla-demo-mount"></div>
+
+<script>
+  import { agent, asTool, tool } from "@mithril/core/agent";
+  import type { ProviderChunk, StandardSchemaV1, UsageDelta } from "@mithril/core/protocol";
+  import { scriptedProvider, testModel } from "@mithril/core/testkit";
+  import { defineDevtoolsElements } from "@mithril/devtools/element";
+  import "@mithril/devtools/ui.css";
+
+  const NO: UsageDelta = { input: 40, output: 12, cacheRead: 0, cacheWrite: 0, reasoning: 0, costMicroUsd: 220 };
+  function schema<T>(): StandardSchemaV1<unknown, T> {
+    return { "~standard": { version: 1, vendor: "demo", validate: (v) => ({ value: v as T }) } };
+  }
+
+  const child = agent({
+    model: testModel(scriptedProvider([[{ type: "text.delta", delta: "Mild; ~22°C in spring." }, { type: "message.end", finishReason: "stop", usage: NO }]])),
+    instructions: "Research the question.",
+  });
+  const research = asTool(child, { name: "research", description: "Deep-dive a question." });
+  const weather = tool({
+    name: "get_weather",
+    description: "Current weather for a city.",
+    inputSchema: schema<{ city: string }>(),
+    execute: async ({ city }) => ({ city, tempC: 22, sky: "clear" }),
+  });
+  const assistant = agent({
+    model: testModel(
+      scriptedProvider([
+        [{ type: "tool.call", callId: "c1", name: "get_weather", input: { city: "Paris" } }, { type: "message.end", finishReason: "tool_calls", usage: NO }],
+        [{ type: "tool.call", callId: "c2", name: "research", input: { task: "Paris spring climate" } }, { type: "message.end", finishReason: "tool_calls", usage: NO }],
+        [{ type: "text.delta", delta: "Paris is clear and ~22°C — typical for spring." }, { type: "message.end", finishReason: "stop", usage: NO }],
+      ] as ProviderChunk[][]),
+    ),
+    instructions: "Answer using the tools.",
+    tools: [weather, research],
+  });
+
+  // No React anywhere — register the custom element and hand it a live run.
+  defineDevtoolsElements();
+  const el = document.createElement("mithril-run-inspector") as HTMLElement & { source?: unknown };
+  el.setAttribute("context-window", "200000");
+  el.source = assistant.stream("What's the weather in Paris?");
+  document.querySelector(".vanilla-demo-mount")?.append(el);
+</script>

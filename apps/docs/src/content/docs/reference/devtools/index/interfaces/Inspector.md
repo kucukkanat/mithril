@@ -1,0 +1,103 @@
+---
+editUrl: false
+next: false
+prev: false
+title: "Inspector"
+---
+
+Defined in: packages/devtools/src/index.ts:43
+
+A headless run inspector.
+
+## Remarks
+
+Add [Inspector.consumer](/reference/devtools/index/interfaces/inspector/#consumer) to an agent (via `use:` or `agentLoop`'s `consumers`) and it
+records every run. Everything else is derived on read.
+
+## Properties
+
+### consumer
+
+```ts
+readonly consumer: EventConsumer;
+```
+
+Defined in: packages/devtools/src/index.ts:45
+
+The EventConsumer to attach to an agent; records every event it sees.
+
+## Methods
+
+### clear()
+
+```ts
+clear(): void;
+```
+
+Defined in: packages/devtools/src/index.ts:53
+
+Drop all retained runs.
+
+#### Returns
+
+`void`
+
+***
+
+### get()
+
+```ts
+get(runId): 
+  | InspectedRun
+  | undefined;
+```
+
+Defined in: packages/devtools/src/index.ts:49
+
+The captured run for `runId`, or `undefined` if unknown/evicted.
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `runId` | `string` |
+
+#### Returns
+
+  \| [`InspectedRun`](/reference/devtools/index/interfaces/inspectedrun/)
+  \| `undefined`
+
+***
+
+### latest()
+
+```ts
+latest(): 
+  | InspectedRun
+  | undefined;
+```
+
+Defined in: packages/devtools/src/index.ts:51
+
+The most recently started run, or `undefined` if none.
+
+#### Returns
+
+  \| [`InspectedRun`](/reference/devtools/index/interfaces/inspectedrun/)
+  \| `undefined`
+
+***
+
+### runIds()
+
+```ts
+runIds(): readonly string[];
+```
+
+Defined in: packages/devtools/src/index.ts:47
+
+The ids of currently-retained runs, oldest first.
+
+#### Returns
+
+readonly `string`[]

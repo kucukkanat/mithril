@@ -1,0 +1,194 @@
+---
+title: Evaluations
+description: Score an agent's recorded trajectory with pure functions — the event log is the fixture.
+sidebar:
+  order: 8
+  label: Evals
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Evals in Mithril are **trajectory-native**: a run's recorded event log *is* the fixture, and a
+scorer is a pure function over it. Nothing to mock — you assert against the same real `MithrilEvent`
+stream the loop produced (and your app consumes).
+
+## A complete example
+
+Here is the whole thing end to end — a tool, an agent, one case, three scorers, and a run. It is
+copy-paste runnable with no key and no network: the model is the **scripted test double**, so the
+trajectory is deterministic. Save it as `weather-agent.ts`:
+
+```ts
+import { agent, tool } from "@mithril/core/agent";
+import { scriptedProvider, testModel } from "@mithril/core/testkit";
+import { runEval, calledTool, calledToolWith, completed } from "@mithril/evals";
+import { z } from "zod";
+
+// A zero-usage delta for the scripted turns (a real provider reports real token counts here).
+const usage = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, costMicroUsd: 0 };
+
+// The agent under test: one tool + a model. The scripted model replays these two turns, so the run
+// is offline and deterministic — swap `model` for `openai("gpt-4o-mini")` or a local
+// `transformers("onnx-community/Qwen3-0.6B-ONNX")` and the cases + scorers below don't change.
+const getWeather = tool({
+  name: "getWeather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21, sky: "clear" }),
+});
+
+const model = testModel(
+  scriptedProvider([
+    // turn 1 — the model calls the tool
+    [
+      { type: "tool.call", callId: "c1", name: "getWeather", input: { city: "Istanbul" } },
+      { type: "message.end", finishReason: "tool_calls", usage },
+    ],
+    // turn 2 — it answers from the tool result
+    [
+      { type: "text.delta", delta: "It's 21°C and clear in Istanbul." },
+      { type: "message.end", finishReason: "stop", usage },
+    ],
+  ]),
+);
+
+export const weatherAgent = agent({
+  model,
+  instructions: "Use the weather tool to answer weather questions.",
+  tools: [getWeather],
+});
+
+// A case is a named input paired with the scorers to apply to its recorded trajectory.
+export const cases = [
+  {
+    name: "reports Istanbul weather",
+    input: "What's the weather in Istanbul?",
+    scorers: [
+      completed(),
+      calledTool("getWeather"),
+      calledToolWith("getWeather", (i) => (i as { city?: string }).city === "Istanbul"),
+    ],
+  },
+];
+
+// Run directly to see the scores; importing this file elsewhere just reuses the two exports.
+if (import.meta.main) {
+  for await (const r of runEval(weatherAgent, cases, { deps: undefined })) {
+    console.log(r.passed ? "✓" : "✗", r.case);
+    for (const s of r.scores) console.log(`   ${s.name} = ${s.value}`);
+  }
+}
+```
+
+`bun run weather-agent.ts` prints:
+
+```
+✓ reports Istanbul weather
+   completed = 1
+   called:getWeather = 1
+   calledWith:getWeather = 1
+```
+
+An eval is three parts: the **agent under test** (any agent — the scripted model just keeps this one
+offline), the **cases** (a named `input` + its `scorers`), and the **scorers** (pure functions over the
+run). `runEval` streams one `EvalRun` — `{ case, scores, trajectory, passed }` — per case as it finishes;
+a case `passed` when every score meets the `threshold` (`RunEvalOptions.threshold`, default `1`). Every
+section below reuses the exported `weatherAgent` and `cases` from this file.
+
+## Scorers
+
+A `Scorer` is `(trajectory, ctx?) => Score`, where `Score` is `{ name, value, rationale? }` (value
+conventionally `0..1`). The built-ins cover the common asserts:
+
+- `completed()` — 1 if the run's final `RunState` status is `"completed"`.
+- `calledTool(name)` — 1 if the log contains a `tool.call` for `name`.
+- `calledToolWith(name, match)` — 1 if a `tool.call` for `name` had input satisfying `match`: the right
+  tool **and** the right arguments. Essential for multi-tool agents where selection *and* args matter.
+
+A custom scorer reads the same `Trajectory` — `t.log` is the `MithrilEvent[]`, `t.final` is the folded
+`RunState`:
+
+```ts
+import type { Scorer } from "@mithril/evals";
+
+// 1 only if the agent used exactly one tool call — no thrashing, no redundant calls.
+const oneToolCall: Scorer = (t) => {
+  const calls = t.log.filter((e) => e.type === "tool.call").length;
+  return { name: "one-tool-call", value: calls === 1 ? 1 : 0, rationale: `${calls} call(s)` };
+};
+```
+
+Because scoring is just a fold over events, an **LLM-judge** scorer is nothing special: read the
+transcript from `t.log`, ask a model to grade it, return the `value` — same signature, no special path.
+Use `makeContext` in `RunEvalOptions` to hand each scorer some derived per-run context.
+
+## Run them as tests
+
+`describeEval` bridges to your test runner (`bun:test`, Vitest): it registers one named test per case,
+so a failing eval fails the suite like any other test. Save as `weather.eval.test.ts`:
+
+```ts
+import { test } from "bun:test";
+import { describeEval } from "@mithril/evals";
+import { weatherAgent, cases } from "./weather-agent.ts";
+
+describeEval(test, weatherAgent, cases, { deps: undefined });
+```
+
+`bun test weather.eval.test.ts` runs `eval: reports Istanbul weather`; a sub-threshold score throws with
+the failing `name=value` scores. Keep eval and unit runs on **separate commands** (a slow live suite must
+never block the fast one) — a live eval hits the model, so it belongs in its own task.
+
+## Record once, replay from file
+
+`runEval` streams the agent live every time. For **deterministic, network-free** scoring in CI, record
+each case's trajectory once and replay it — replay re-emits the stored log wholesale, so tools never
+re-run and no provider is called:
+
+```ts
+import { runEvalCached, fsTrajectoryStore } from "@mithril/evals";
+import { nodeFileSystem } from "@mithril/fs/node";
+import { weatherAgent, cases } from "./weather-agent.ts";
+
+const store = fsTrajectoryStore(nodeFileSystem("./fixtures"));
+
+// Record once — the only time the model actually runs (do this against the real provider):
+for await (const _ of runEvalCached(weatherAgent, cases, { deps: undefined, mode: "record", store })) {}
+
+// Replay in CI — reads the stored logs, re-scores, never touches the network:
+for await (const run of runEvalCached(weatherAgent, cases, { deps: undefined, mode: "replay", store })) {
+  console.log(run.case, run.passed);
+}
+```
+
+Each case becomes one JSON file under `./fixtures`. `memoryTrajectoryStore()` keeps fixtures in memory
+instead; `serializeTrajectory` / `loadTrajectory` are the codec if you roll your own store. Replay throws
+if a case was never recorded — record it first.
+
+## A visual HTML report
+
+`htmlReport` turns a batch of results into a single **self-contained HTML file** — summary stats plus a
+list of cases you can **filter by pass/fail, filter by group, and search** across names, output, tool
+calls, and scorers. No deps, no network: it returns a string.
+
+```ts
+import { runEval, htmlReport, type EvalReportEntry } from "@mithril/evals";
+import { weatherAgent, cases } from "./weather-agent.ts";
+
+const entries: EvalReportEntry[] = [];
+for await (const run of runEval(weatherAgent, cases, { deps: undefined })) {
+  entries.push({ run, group: "scripted", durationMs: 0 }); // group + durationMs are optional
+}
+await Bun.write("report.html", htmlReport(entries, { title: "Weather agent evals" }));
+```
+
+Set `group` to the model id and push entries from several models to compare them **side by side** in one
+report — expand a row for its scores (with rationale), the assistant output, and its tool calls. Untrusted
+model output is HTML-escaped, so a report is always safe to open and share.
+
+<Aside type="tip" title="A real, worked example">
+The repo's `apps/evals` workspace runs exactly this shape against real [local models](/guides/local-inference/)
+— the chat + multi-tool scenarios, headless in Bun, ending in an `htmlReport`. See
+[how those models were chosen](/guides/local-inference/#how-we-chose-these-models). Run it with
+`bun run evals`; the `EVAL_MAX_TOKENS` and `EVAL_DTYPE` env vars tune the run.
+</Aside>

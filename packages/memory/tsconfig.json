@@ -1,0 +1,8 @@
+{
+  "//": "bun-types provides the bun:sqlite module declaration (not under @types/, so not auto-included).",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["bun-types"]
+  },
+  "include": ["src/**/*.ts"]
+}

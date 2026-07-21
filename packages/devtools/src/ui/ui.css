@@ -1,0 +1,322 @@
+/* @mithril/devtools/ui.css — self-contained, themeable styles for the visual devtools UI.
+ * Dark-first "mithril silver"; light mode via prefers-color-scheme and [data-theme="light"]. All colours are
+ * CSS variables scoped to .mth-dev, so a host app can override them (e.g. map them to its own design tokens).
+ * Zero external dependencies. */
+
+/* Tokens on every top-level component root (zero-specificity :where, so hosts override trivially) — each
+ * exported component is self-styling and usable standalone, not only inside <RunInspector>. */
+:where(.mth-dev, .mth-dev-panel, .mth-dev-events, .mth-dev-state, .mth-dev-meters, .mth-dev-suspend, .mth-dev-scrub-row, .mth-dev-cols, .mth-dev-empty) {
+  --d-bg: #0b0d11;
+  --d-surface: #14171d;
+  --d-surface-2: #1b1f27;
+  --d-border: #2a2f3a;
+  --d-text: #c9d1de;
+  --d-text-muted: #8a93a6;
+  --d-accent: #6cb8ff;
+  --d-radius: 8px;
+  --d-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+
+  /* event families */
+  --k-lifecycle: #8a93a6;
+  --k-text: #6cb8ff;
+  --k-tool: #c9a36c;
+  --k-toolResult: #6cd0a3;
+  --k-object: #b58cff;
+  --k-control: #ff9d6c;
+  --k-meta: #6a7488;
+  --k-error: #ff6c8a;
+  --k-custom: #6cd0d0;
+}
+.mth-dev,
+.mth-dev-panel {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: var(--d-bg);
+  color: var(--d-text);
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius);
+  font: 13px/1.5 system-ui, -apple-system, sans-serif;
+}
+.mth-dev *,
+.mth-dev-panel * {
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: light) {
+  :where(.mth-dev, .mth-dev-panel, .mth-dev-events, .mth-dev-state, .mth-dev-meters, .mth-dev-suspend, .mth-dev-scrub-row, .mth-dev-cols, .mth-dev-empty) {
+    --d-bg: #f5f6f8;
+    --d-surface: #ffffff;
+    --d-surface-2: #eef0f4;
+    --d-border: #d7dbe2;
+    --d-text: #22262e;
+    --d-text-muted: #5a6373;
+    --d-accent: #1f6fd6;
+  }
+}
+:root[data-theme="light"] :where(.mth-dev, .mth-dev-panel, .mth-dev-events, .mth-dev-state, .mth-dev-meters, .mth-dev-suspend, .mth-dev-scrub-row, .mth-dev-cols, .mth-dev-empty) {
+  --d-bg: #f5f6f8;
+  --d-surface: #ffffff;
+  --d-surface-2: #eef0f4;
+  --d-border: #d7dbe2;
+  --d-text: #22262e;
+  --d-text-muted: #5a6373;
+  --d-accent: #1f6fd6;
+}
+:root[data-theme="dark"] :where(.mth-dev, .mth-dev-panel, .mth-dev-events, .mth-dev-state, .mth-dev-meters, .mth-dev-suspend, .mth-dev-scrub-row, .mth-dev-cols, .mth-dev-empty) {
+  --d-bg: #0b0d11;
+  --d-surface: #14171d;
+  --d-surface-2: #1b1f27;
+  --d-border: #2a2f3a;
+  --d-text: #c9d1de;
+  --d-text-muted: #8a93a6;
+  --d-accent: #6cb8ff;
+}
+
+/* ── meters ── */
+.mth-dev-meters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  background: var(--d-surface);
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius);
+}
+.mth-dev-stat {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.mth-dev-stat span {
+  color: var(--d-text-muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.mth-dev-stat b {
+  font-family: var(--d-mono);
+  font-weight: 600;
+}
+.mth-dev-status {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #0b0d11;
+  background: var(--d-text-muted);
+}
+.s-running { background: var(--d-accent); }
+.s-streaming { background: var(--d-accent); }
+.s-suspended { background: #ff9d6c; }
+.s-completed { background: #6cd0a3; }
+.s-cancelled { background: #8a93a6; }
+.s-error, .s-unresumable { background: #ff6c8a; }
+.mth-dev-ctx {
+  position: relative;
+  flex: 1 1 120px;
+  min-width: 120px;
+  height: 16px;
+  background: var(--d-surface-2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.mth-dev-ctx-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: linear-gradient(90deg, var(--d-accent), #b58cff);
+  opacity: 0.7;
+}
+.mth-dev-ctx-label {
+  position: relative;
+  display: block;
+  text-align: center;
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--d-text);
+}
+
+/* ── suspension card ── */
+.mth-dev-suspend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: color-mix(in srgb, #ff9d6c 12%, var(--d-surface));
+  border: 1px solid #ff9d6c;
+  border-radius: var(--d-radius);
+}
+.mth-dev-suspend-badge {
+  font-weight: 600;
+  font-size: 11px;
+  color: #ff9d6c;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.mth-dev-suspend-payload {
+  font-family: var(--d-mono);
+  font-size: 12px;
+  color: var(--d-text-muted);
+}
+.mth-dev-suspend-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+.mth-dev-suspend button,
+.mth-dev-live {
+  padding: 3px 10px;
+  border: 1px solid var(--d-border);
+  border-radius: 6px;
+  background: var(--d-surface-2);
+  color: var(--d-text);
+  font: inherit;
+  cursor: pointer;
+}
+.mth-dev-suspend button:hover,
+.mth-dev-live:hover {
+  border-color: var(--d-accent);
+}
+.mth-dev-resolve-input,
+.mth-dev-runs button {
+  padding: 3px 8px;
+  border: 1px solid var(--d-border);
+  border-radius: 6px;
+  background: var(--d-surface-2);
+  color: var(--d-text);
+  font: inherit;
+}
+
+/* ── scrubber row ── */
+.mth-dev-scrub-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mth-dev-scrubber {
+  flex: 1;
+  accent-color: var(--d-accent);
+}
+.mth-dev-live[data-pinned="true"] {
+  border-color: var(--d-accent);
+  color: var(--d-accent);
+}
+.mth-dev-cursor {
+  font-family: var(--d-mono);
+  font-size: 11px;
+  color: var(--d-text-muted);
+  min-width: 54px;
+  text-align: right;
+}
+
+/* ── two-column body ── */
+.mth-dev-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  min-height: 0;
+}
+@media (max-width: 720px) {
+  .mth-dev-cols { grid-template-columns: 1fr; }
+}
+
+/* ── event list ── */
+.mth-dev-events {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  max-height: 320px;
+  overflow: auto;
+  background: var(--d-surface);
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius);
+  font-family: var(--d-mono);
+  font-size: 12px;
+}
+.mth-dev-ev {
+  display: grid;
+  grid-template-columns: 34px 10px auto 1fr;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.mth-dev-ev:hover { background: var(--d-surface-2); }
+.mth-dev-ev.future { opacity: 0.38; }
+.mth-dev-ev.current { background: color-mix(in srgb, var(--d-accent) 18%, transparent); }
+.mth-dev-seq { color: var(--d-text-muted); text-align: right; }
+.mth-dev-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--k-lifecycle); }
+.k-lifecycle .mth-dev-dot { background: var(--k-lifecycle); }
+.k-text .mth-dev-dot { background: var(--k-text); }
+.k-tool .mth-dev-dot { background: var(--k-tool); }
+.k-toolResult .mth-dev-dot { background: var(--k-toolResult); }
+.k-object .mth-dev-dot { background: var(--k-object); }
+.k-control .mth-dev-dot { background: var(--k-control); }
+.k-meta .mth-dev-dot { background: var(--k-meta); }
+.k-error .mth-dev-dot { background: var(--k-error); }
+.k-custom .mth-dev-dot { background: var(--k-custom); }
+.mth-dev-type { color: var(--d-text); }
+.mth-dev-preview { color: var(--d-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── state / transcript / span tree ── */
+.mth-dev-state {
+  padding: 6px;
+  max-height: 320px;
+  overflow: auto;
+  background: var(--d-surface);
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius);
+}
+.mth-dev-msg { padding: 4px 0; border-bottom: 1px solid var(--d-border); }
+.mth-dev-role {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--d-text-muted);
+}
+.mth-dev-text { margin: 2px 0; white-space: pre-wrap; }
+.mth-dev-toolcall {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: var(--d-mono);
+  font-size: 11px;
+  padding: 2px 6px;
+  margin: 2px 0;
+  background: var(--d-surface-2);
+  border-radius: 4px;
+}
+.mth-dev-tc-name { color: var(--k-tool); font-weight: 600; }
+.mth-dev-tc-in { color: var(--d-text-muted); }
+.mth-dev-tc-out { color: var(--k-toolResult); }
+.mth-dev-spans, .mth-dev-raw { margin-top: 6px; font-size: 12px; }
+.mth-dev-spans summary, .mth-dev-raw summary { cursor: pointer; color: var(--d-text-muted); }
+.mth-dev-span { padding: 1px 0; }
+.mth-dev-span-head { display: flex; gap: 6px; align-items: center; }
+.mth-dev-span-kind {
+  font-family: var(--d-mono);
+  font-size: 11px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: var(--d-surface-2);
+}
+.sk-invoke_agent { color: var(--k-lifecycle); }
+.sk-chat { color: var(--k-text); }
+.sk-execute_tool { color: var(--k-tool); }
+.sk-handoff { color: var(--k-control); }
+.sk-workflow { color: var(--k-object); }
+.mth-dev-span-count { font-size: 10px; color: var(--d-text-muted); }
+.mth-dev-raw pre { margin: 4px 0 0; font-size: 11px; overflow: auto; }
+
+/* ── panel ── */
+.mth-dev-runs { display: flex; gap: 6px; flex-wrap: wrap; }
+.mth-dev-runs button { font-family: var(--d-mono); cursor: pointer; }
+.mth-dev-runs button[data-active="true"] { border-color: var(--d-accent); color: var(--d-accent); }
+.mth-dev-empty { color: var(--d-text-muted); padding: 12px; text-align: center; }

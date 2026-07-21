@@ -1,0 +1,18 @@
+{
+  "name": "@mithril/devtools",
+  "version": "0.0.0",
+  "description": "Run inspector for Mithril — a headless core, a framework-agnostic DOM/Web-Component UI, a React UI, and zero-touch attach.",
+  "type": "module",
+  "sideEffects": ["./src/attach.ts", "./src/ui/ui.css"],
+  "exports": {
+    ".": { "types": "./src/index.ts", "import": "./src/index.ts" },
+    "./dom": { "types": "./src/dom.ts", "import": "./src/dom.ts" },
+    "./element": { "types": "./src/element.ts", "import": "./src/element.ts" },
+    "./ui": { "types": "./src/ui/index.tsx", "import": "./src/ui/index.tsx" },
+    "./ui.css": "./src/ui/ui.css",
+    "./attach": { "types": "./src/attach.ts", "import": "./src/attach.ts" }
+  },
+  "peerDependencies": { "react": ">=18" },
+  "peerDependenciesMeta": { "react": { "optional": true } },
+  "scripts": { "test": "bun test" }
+}

@@ -1,0 +1,8 @@
+{
+  "//": "jsx: react-jsx for the ./ui component layer; @types/react supplies the global JSX namespace.",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

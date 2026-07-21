@@ -1,0 +1,13 @@
+{
+  "name": "@mithril/fs",
+  "version": "0.0.0",
+  "description": "Runtime-agnostic FileSystem for Mithril tools.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": { "types": "./src/index.ts", "import": "./src/index.ts" },
+    "./node": { "types": "./src/node.ts", "import": "./src/node.ts" },
+    "./opfs": { "types": "./src/opfs.ts", "import": "./src/opfs.ts" }
+  },
+  "scripts": { "test": "bun test" }
+}

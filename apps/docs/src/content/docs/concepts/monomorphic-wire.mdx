@@ -1,0 +1,46 @@
+---
+title: Monomorphic wire, local typing
+description: The global event union never indexes over your tool record — so the type-checker stays fast.
+sidebar:
+  order: 3
+  label: Monomorphic wire
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Frameworks that thread per-tool generics through a global union pay for it at scale: `tsc`
+instantiation cost explodes, editor hovers become unreadable, and a project with 200 tools grinds
+to a halt. Mithril refuses that trade.
+
+On the wire, tool `input` and `output` are plain `JsonValue`. The global `MithrilEvent` union is
+**monomorphic** — it never indexes over your tool record. You recover precise per-tool types
+_locally, on demand_:
+
+```ts
+import { narrow } from "@mithril/core/protocol";
+
+for (const e of events) {
+  if (narrow(e, tools)) {
+    // e.input is now typed to the matching tool's input
+    e.name; // union of your tool names
+  }
+}
+```
+
+`narrow(e, tools)` is a real TypeScript type predicate. `tsc` only pays the instantiation cost at
+the call site that asks for it — not across the entire union, and not on every event everywhere.
+
+<Aside type="tip">
+This is the deliberate defense against the "type-checker melts at 200 tools" failure mode. It's
+guarded in CI by a 100-tool instantiation benchmark plus diagnostic-shape snapshots — so a
+regression that reintroduces the blow-up fails the build.
+</Aside>
+
+## The trade you're making
+
+You give up "every event is statically typed to its tool everywhere" and get, in exchange, a
+type-checker that stays fast no matter how many tools you register. When you _do_ want the precise
+type — rendering a specific tool's result, say — `narrow()` gives it to you exactly where you ask.
+
+The same principle applies to plugin tools: they're runtime-callable, and their static types are
+recovered locally via `InferPluginTools` rather than being unioned into the agent's global type.

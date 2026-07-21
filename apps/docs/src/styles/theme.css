@@ -1,0 +1,274 @@
+/*
+ * Bridges the Mithril tokens (tokens.css) onto Starlight's --sl-* variables and
+ * adds global element polish. Keep component-specific styling in the component;
+ * this file is only the theme bridge + primitives.
+ */
+
+:root {
+  --sl-font: var(--mth-font-sans);
+  --sl-font-mono: var(--mth-font-mono);
+  --sl-nav-height: 4rem;
+  --sl-text-code: var(--mth-fs-sm);
+  --sl-content-width: 48rem;
+}
+
+/* ── Dark (Starlight default) ── */
+:root,
+:root[data-theme="dark"] {
+  --sl-color-accent-low: color-mix(in srgb, var(--mth-accent) 20%, var(--mth-ink-900));
+  --sl-color-accent: var(--mth-accent);
+  --sl-color-accent-high: var(--mth-accent-bright);
+  --sl-color-white: var(--text-strong);
+  --sl-color-gray-1: var(--text);
+  --sl-color-gray-2: var(--mth-ink-100);
+  --sl-color-gray-3: var(--mth-ink-200);
+  --sl-color-gray-4: var(--mth-ink-400);
+  --sl-color-gray-5: var(--mth-ink-600);
+  --sl-color-gray-6: var(--surface-2);
+  --sl-color-gray-7: var(--surface);
+  --sl-color-black: var(--bg);
+  --sl-color-bg: var(--bg);
+  --sl-color-bg-nav: var(--bg-nav);
+  --sl-color-bg-sidebar: color-mix(in srgb, var(--bg-deep) 60%, var(--bg));
+  --sl-color-bg-inline-code: var(--surface-3);
+  --sl-color-hairline: var(--border);
+  --sl-color-hairline-light: var(--border);
+  --sl-color-hairline-shade: var(--border);
+  --sl-color-text: var(--text);
+  --sl-color-text-accent: var(--accent);
+  --sl-color-text-invert: var(--accent-contrast);
+}
+
+/* ── Light ── */
+:root[data-theme="light"] {
+  --sl-color-accent-low: color-mix(in srgb, var(--accent) 14%, white);
+  --sl-color-accent: var(--accent);
+  --sl-color-accent-high: var(--accent-hover);
+  --sl-color-white: var(--text-strong);
+  --sl-color-gray-1: var(--text);
+  --sl-color-gray-2: var(--text-muted);
+  --sl-color-gray-3: var(--text-faint);
+  --sl-color-gray-4: #97a1af;
+  --sl-color-gray-5: #c3cbd6;
+  --sl-color-gray-6: var(--surface-3);
+  --sl-color-gray-7: var(--surface-2);
+  --sl-color-black: var(--bg);
+  --sl-color-bg: var(--bg);
+  --sl-color-bg-nav: var(--bg-nav);
+  --sl-color-bg-sidebar: color-mix(in srgb, var(--bg-deep) 55%, var(--bg));
+  --sl-color-bg-inline-code: var(--surface-3);
+  --sl-color-hairline: var(--border);
+  --sl-color-hairline-light: var(--border);
+  --sl-color-hairline-shade: var(--border);
+  --sl-color-text: var(--text);
+  --sl-color-text-accent: var(--accent);
+  --sl-color-text-invert: var(--accent-contrast);
+}
+
+/* ─────────────────────────  CodeMirror (playground editor) tokens  ───────────────────────── */
+:root,
+:root[data-theme="dark"] {
+  --cm-keyword: var(--mth-violet);
+  --cm-string: var(--mth-mint);
+  --cm-number: var(--mth-amber);
+  --cm-comment: var(--text-faint);
+  --cm-func: var(--mth-accent-bright);
+  --cm-type: var(--mth-silver-300);
+  --cm-prop: var(--mth-accent);
+  --cm-variable: var(--text);
+  --cm-punct: var(--text-muted);
+  --cm-cursor: var(--mth-accent-bright);
+  --cm-selection: color-mix(in srgb, var(--mth-accent) 26%, transparent);
+  --cm-active-line: color-mix(in srgb, var(--mth-ink-100) 5%, transparent);
+  --cm-gutter: var(--text-faint);
+}
+:root[data-theme="light"] {
+  --cm-keyword: #8250df;
+  --cm-string: #0a7d55;
+  --cm-number: #b45309;
+  --cm-comment: var(--text-faint);
+  --cm-func: #0969da;
+  --cm-type: #5a677a;
+  --cm-prop: #1f6fd6;
+  --cm-variable: var(--text);
+  --cm-punct: var(--text-muted);
+  --cm-cursor: var(--accent);
+  --cm-selection: color-mix(in srgb, var(--accent) 18%, transparent);
+  --cm-active-line: color-mix(in srgb, #0b0d11 4%, transparent);
+  --cm-gutter: var(--text-faint);
+}
+
+/* ─────────────────────────  Global element polish  ───────────────────────── */
+
+html {
+  scrollbar-color: var(--border-strong) transparent;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--bg);
+  font-feature-settings: "cv05" 1, "ss01" 1, "calt" 1;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--mth-accent) 32%, transparent);
+  color: var(--text-strong);
+}
+
+:where(a):focus-visible,
+:where(button):focus-visible,
+:where(input):focus-visible,
+:where(textarea):focus-visible,
+:where([tabindex]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: var(--mth-radius-sm);
+}
+
+/* Thin metallic scrollbars (WebKit) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--mth-radius-full);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mth-ink-300);
+  background-clip: content-box;
+}
+
+/* Headings feel "forged": tight tracking, strong weight */
+.sl-markdown-content :is(h1, h2, h3) {
+  letter-spacing: var(--mth-tracking-tight);
+}
+
+/* Brand wordmark sheen — used by the site title + hero */
+.mth-sheen {
+  background: var(--brand-sheen);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Site title in the header: precise, slightly condensed */
+.site-title,
+a.site-title {
+  font-weight: var(--mth-weight-semibold);
+  letter-spacing: var(--mth-tracking-tight);
+}
+
+/* ─────────────────────────  Inline symbol links + hover tooltips  ───────────────────────── */
+.sl-markdown-content a.sym {
+  position: relative;
+  text-decoration: none;
+  border-bottom: 1px dotted color-mix(in srgb, var(--accent) 55%, transparent);
+}
+.sl-markdown-content a.sym > code {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  transition: background var(--mth-dur-fast) var(--mth-ease);
+}
+.sl-markdown-content a.sym:hover > code,
+.sl-markdown-content a.sym:focus-visible > code {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.sym-tip {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  z-index: 50;
+  width: max-content;
+  min-width: 14rem;
+  max-width: min(28rem, 80vw);
+  padding: 0.55rem 0.7rem;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--mth-radius-md);
+  box-shadow: var(--shadow-lg), var(--edge-hi);
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition:
+    opacity var(--mth-dur-fast) var(--mth-ease),
+    transform var(--mth-dur-fast) var(--mth-ease);
+}
+.sl-markdown-content a.sym:hover .sym-tip,
+.sl-markdown-content a.sym:focus-within .sym-tip {
+  opacity: 1;
+  transform: translateY(0);
+}
+.sym-tip-kind {
+  display: inline-block;
+  font-family: var(--mth-font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: var(--mth-tracking-wide);
+  color: var(--accent-contrast);
+  background: var(--accent);
+  padding: 1px 7px;
+  border-radius: var(--mth-radius-full);
+  margin-bottom: 0.4rem;
+}
+.sym-tip-sig {
+  display: block;
+  font-family: var(--mth-font-mono);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Clickable symbol references inside code examples (Expressive Code) */
+.expressive-code a.sym-code {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: color-mix(in srgb, var(--text-faint) 55%, transparent);
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+  border-radius: 3px;
+  transition:
+    background var(--mth-dur-fast) var(--mth-ease),
+    text-decoration-color var(--mth-dur-fast) var(--mth-ease);
+}
+.expressive-code a.sym-code:hover,
+.expressive-code a.sym-code:focus-visible {
+  text-decoration-style: solid;
+  text-decoration-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  outline: none;
+}
+
+/* Utility primitives reused across custom pages */
+.mth-container {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: var(--mth-space-5);
+}
+
+.mth-eyebrow {
+  font-family: var(--mth-font-mono);
+  font-size: var(--mth-fs-xs);
+  letter-spacing: var(--mth-tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.mth-card {
+  background: var(--surface);
+  border: var(--mth-border-thin) solid var(--border);
+  border-radius: var(--mth-radius-lg);
+  box-shadow: var(--edge-hi);
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@mithril/core",
+  "version": "0.0.0",
+  "description": "Mithril core — the typed event protocol and the agent loop.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "./protocol": {
+      "types": "./src/protocol/index.ts",
+      "import": "./src/protocol/index.ts"
+    },
+    "./agent": {
+      "types": "./src/agent/index.ts",
+      "import": "./src/agent/index.ts"
+    },
+    "./testkit": {
+      "types": "./src/testkit/index.ts",
+      "import": "./src/testkit/index.ts"
+    }
+  },
+  "scripts": {
+    "test": "bun test"
+  }
+}

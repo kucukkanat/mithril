@@ -1,0 +1,74 @@
+---
+/**
+ * Standalone shell for the bespoke, full-bleed pages (landing, playground) that
+ * live outside Starlight's docs layout. It loads the same tokens and mirrors
+ * Starlight's theme key so the toggle stays in sync across the whole site.
+ */
+import "../styles/tokens.css";
+import "../styles/theme.css";
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Constrain body scroll — used by the full-screen playground. */
+  fixed?: boolean;
+}
+const { title, description, fixed = false } = Astro.props;
+const site = Astro.site?.toString().replace(/\/$/, "") ?? "";
+const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://mithril.dev").toString();
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {site && <link rel="sitemap" href={`${site}/sitemap-index.xml`} />}
+    <script is:inline>
+      // Keep the standalone pages in sync with Starlight's theme choice.
+      try {
+        const stored = localStorage.getItem("starlight-theme");
+        const sys = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        document.documentElement.dataset.theme =
+          stored === "light" || stored === "dark" ? stored : sys;
+      } catch {}
+    </script>
+  </head>
+  <body class:list={["mth-landing", { "mth-fixed": fixed }]}>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  body.mth-landing {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mth-font-sans);
+    line-height: var(--mth-lh-normal);
+    min-height: 100vh;
+  }
+  body.mth-fixed {
+    height: 100vh;
+    overflow: hidden;
+  }
+  a {
+    color: var(--link);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+</style>

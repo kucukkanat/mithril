@@ -1,0 +1,80 @@
+---
+title: Suspension is a value
+description: Human-in-the-loop is a typed, serializable branch of RunResult — not an exception.
+sidebar:
+  order: 5
+  label: Suspension
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+When an agent needs a human — an approval, a clarification — many frameworks throw an
+`interrupt()`. That's a footgun: a `try/catch` can swallow it, and side effects that ran _before_
+the interrupt run again on resume.
+
+Mithril makes suspension a **value you can't ignore at the type level** — a discriminated branch
+of `RunResult`:
+
+```ts
+const r = await assistant.run("deploy to prod");
+
+if (r.status === "suspended") {
+  // r.request.payload = { name, input } — nothing side-effecting has run yet
+  const done = await assistant.resume(r.token, { kind: "approve" });
+  //                                            or { kind: "reject", message }
+  //                                            or { kind: "edit", input }
+}
+```
+
+A suspended run serializes as the **event log + a pending descriptor** — never your `deps`, tool
+functions, DB handles, or the instructions closure. Today that token is unsigned `durable-local`
+JSON; when you persist it across a trust boundary, the `seal` / `open` primitives (HMAC integrity
+or AES-GCM confidentiality) sign and verify the exact bytes _before_ they're trusted — see [Verify
+before parse](/concepts/errors/).
+
+## The approval gate
+
+Mark a tool `needsApproval` and the run pauses _before_ `execute` runs:
+
+```ts
+const deploy = tool({
+  name: "deploy",
+  description: "Deploy to an environment.",
+  inputSchema: z.object({ env: z.string() }),
+  needsApproval: true,
+  execute: async ({ env }) => ({ deployed: true, env }),
+});
+```
+
+Try it live — the [Human-in-the-loop preset](/playground/) suspends, shows Approve / Reject, and
+resumes from the sealed token. Full walkthrough: [Human-in-the-loop](/guides/human-in-the-loop/).
+
+## Three tiers of suspension
+
+The approval gate is the common case, but a run can pause in three ways — all the same value-shaped
+`suspended` branch, all resumed with the same token:
+
+- **Tier-1 — approval.** Mark a tool `needsApproval` and the run pauses _before_ `execute` runs.
+  Resume with an `ApprovalDecision` (`approve` / `reject` / `edit`).
+- **Tier-1b — a tool returns `suspend(...)`.** The tool decides to pause and hands back a request;
+  the resolution you supply _becomes_ the tool's result (the tool does not re-run).
+- **Tier-2 — `await ctx.suspend()` mid-execute.** The tool pauses partway through. On resume its
+  `execute` re-runs, and `ctx.journal(key, fn)` replays recorded effects so they run **exactly
+  once** across the boundary.
+
+For Tier-1b and Tier-2, resume with a resolution value: `resume(token, { kind: "resolve", value })`.
+
+```ts
+// Tier-2: an exactly-once effect, then a pause for confirmation
+execute: async (input, ctx) => {
+  const draft = await ctx.journal("draft", () => createDraft(input)); // runs once, even across resume
+  const approved = await ctx.suspend({ kind: "confirm", payload: { draft }, resolutionSchema, resolutionSchemaId: "c" });
+  return approved ? publish(draft) : { cancelled: true };
+};
+```
+
+Resume either to a final `RunResult` (`resume`) or as a live stream (`rehydrate`), and continue an
+in-process suspension without a token round-trip via `RunHandle.resolve()`.
+
+Because the suspended state is just the log plus a verified token, you can persist it in any
+[Checkpointer](/guides/memory-and-checkpointing/) and resume it in a different process.

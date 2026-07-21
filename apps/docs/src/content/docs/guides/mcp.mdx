@@ -1,0 +1,80 @@
+---
+title: MCP tools
+description: Connect to an MCP server over a transport you own, and expose its tools as Mithril tools.
+sidebar:
+  order: 9
+  label: MCP
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+An [MCP](https://modelcontextprotocol.io) server exposes tools over a transport. Mithril's client
+lists them and wraps each as a normal Mithril `tool`, so they drop straight into an agent's
+`tools:` array.
+
+## The HTTP transport
+
+The official Streamable-HTTP transport ships at `@mithril/mcp/http` — it POSTs JSON-RPC and handles
+either a plain-JSON or a `text/event-stream` reply, with an injectable `fetch`:
+
+```ts
+import { httpTransport } from "@mithril/mcp/http";
+
+const transport = httpTransport({
+  url: "https://mcp.example.com/rpc",
+  headers: { authorization: `Bearer ${token}` },
+});
+```
+
+A transport is a two-method interface, so you can still implement your own for **stdio** or an
+**in-memory** server — `request(method, params)` is all the client calls (it issues `"tools/list"`
+and `"tools/call"` and unwraps MCP's `{ content: [...] }` results); add an optional `close()` to
+release resources.
+
+## Wire it up
+
+```ts
+import { mcpClient, mcpTools } from "@mithril/mcp";
+import { httpTransport } from "@mithril/mcp/http";
+import { agent } from "mithril";
+
+const client = mcpClient(httpTransport({ url: "https://mcp.example.com/rpc" }));
+const tools = await mcpTools(client); // one Mithril tool per MCP tool
+
+const assistant = agent({
+  model,
+  instructions: "Use the connected tools when helpful.",
+  tools,
+});
+
+const result = await assistant.run("Summarize today's incidents.");
+await client.close();
+```
+
+From here the MCP tools are indistinguishable from hand-written ones: they call, stream, and record
+into the same event log.
+
+<Aside type="caution" title="Schemas are passthrough">
+`mcpTools` wraps each server tool with a **non-validating** (passthrough) input schema — the MCP
+server's JSON Schema is carried through opaquely, not enforced locally. A JSON-Schema →
+Standard-Schema bridge that would validate MCP inputs the way a Zod tool does is on the
+[Roadmap](/roadmap/). Until then, treat MCP tool inputs as untrusted at the server boundary.
+</Aside>
+
+## Serve your own tools over MCP
+
+The other direction: expose your Mithril tools *as* an MCP server so any MCP client can call them.
+`mcpServer` from `@mithril/mcp/server` implements `initialize`, `tools/list` (advertising each tool's
+real JSON-Schema parameters via `toJsonSchema`), and `tools/call`:
+
+```ts
+import { mcpServer } from "@mithril/mcp/server";
+
+const server = mcpServer([weatherTool, searchTool], { name: "my-tools", version: "1.0.0" });
+
+// `serve` is a fetch handler — mount it on any HTTP framework:
+Bun.serve({ port: 8787, fetch: (req) => server.serve(req) });
+```
+
+Any Mithril tool works, including one that wraps a sub-agent via `asTool` — so a whole agent can be
+served as a single MCP tool.

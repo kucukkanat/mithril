@@ -1,0 +1,53 @@
+---
+title: Capability adapters
+description: Runtime differences handled honestly — promise the intersection, inject via Deps, never auto-detect.
+sidebar:
+  order: 8
+  label: Capability adapters
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+A file system, a key-value store, a vector index — these exist on every runtime, but not
+identically. If your tool reaches for `node:fs`, it breaks in the browser. Mithril's answer is a
+family of small, honest adapters injected through `Deps`.
+
+## The portability taxonomy
+
+Every capability falls into one of three buckets:
+
+1. **Universal** (a web standard everywhere) → lives on `RuntimeAdapter`. No per-capability
+   adapter: `fetch`, `now`, `randomUUID`, `getRandomValues`.
+2. **Differs by runtime, honest intersection** → a Deps-injected adapter with explicit per-runtime
+   subpaths: [`@mithril/fs`](/reference/fs/readme/), [`@mithril/kv`](/reference/kv/readme/), and the vector store.
+3. **Impossible in the browser** → an honest-degradation adapter (proxy / WASM) or a documented
+   recipe — never a fake local implementation.
+
+## The three adapter laws
+
+<Aside type="tip">
+1. **Promise the cross-runtime _intersection_, not any one runtime's superset.**
+2. **Inject via `Deps`, not `RuntimeAdapter`** (a file system isn't universal).
+3. **Explicit per-runtime subpaths — never runtime auto-detection.**
+</Aside>
+
+So `@mithril/fs` is async-only, path-based, and **rooted** (it cannot escape its base directory).
+You pick the backend explicitly:
+
+```ts
+import { nodeFileSystem } from "@mithril/fs/node";   // server
+// import { opfsFileSystem } from "@mithril/fs/opfs"; // browser
+// import { memoryFileSystem } from "@mithril/fs";     // tests
+
+const fs = nodeFileSystem("./workspace");
+await fs.writeFile("notes/todo.md", "- ship it");
+await fs.readText("../../../etc/passwd"); // throws — escapes the root
+```
+
+Each adapter ships a **conformance kit**, so every backend meets identical observable semantics —
+your tool behaves the same whether it's talking to memory, Node's fs, or OPFS.
+
+<Aside type="note">
+SQL databases and object storage are deliberately left as _recipes_, not adapters: a browser can't
+hold those credentials, so they're "just a `fetch` tool." Over-abstracting them would be dishonest.
+</Aside>

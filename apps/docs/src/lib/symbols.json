@@ -1,0 +1,1257 @@
+{
+  "addUsage": {
+    "href": "/reference/core/protocol/functions/addusage/",
+    "kind": "fn",
+    "sig": "function addUsage(totals, delta): UsageTotals;"
+  },
+  "aesGcmCodec": {
+    "href": "/reference/core/agent/functions/aesgcmcodec/",
+    "kind": "fn",
+    "sig": "function aesGcmCodec(key): SealCodec;"
+  },
+  "agent": {
+    "href": "/reference/core/agent/functions/agent/",
+    "kind": "fn",
+    "sig": "function agent<Deps>(): AgentFactory<Deps>;"
+  },
+  "Agent": {
+    "href": "/reference/core/agent/interfaces/agent/",
+    "kind": "type",
+    "sig": "A configured, runnable agent produced by agent."
+  },
+  "AgentConfig": {
+    "href": "/reference/core/agent/interfaces/agentconfig/",
+    "kind": "type",
+    "sig": "The declarative configuration of an agent, passed to agent (or a harness-bound factory)."
+  },
+  "AgentFactory": {
+    "href": "/reference/core/agent/interfaces/agentfactory/",
+    "kind": "type",
+    "sig": "A Deps-bound agent constructor: call it with an AgentConfig to get an Agent."
+  },
+  "agentLoop": {
+    "href": "/reference/core/agent/functions/agentloop/",
+    "kind": "fn",
+    "sig": "function agentLoop<Deps>(opts): AsyncGenerator<MithrilEvent, RunResult<JsonValue>>;"
+  },
+  "angleToolCall": {
+    "href": "/reference/providers/transformers/variables/angletoolcall/",
+    "kind": "const",
+    "sig": "const angleToolCall: ToolFormat;"
+  },
+  "anthropic": {
+    "href": "/reference/providers/anthropic/functions/anthropic/",
+    "kind": "fn",
+    "sig": "function anthropic(model): ModelHandle;"
+  },
+  "anthropicProvider": {
+    "href": "/reference/providers/anthropic/functions/anthropicprovider/",
+    "kind": "fn",
+    "sig": "function anthropicProvider(config?): Provider;"
+  },
+  "AnyTool": {
+    "href": "/reference/core/protocol/type-aliases/anytool/",
+    "kind": "type",
+    "sig": "type AnyTool<Deps> = { description: string; inputSchema: StandardSchemaV1<unknown, unknown>; name: string; needsApproval?: boolean | ((inpu…"
+  },
+  "ApprovalDecision": {
+    "href": "/reference/core/protocol/type-aliases/approvaldecision/",
+    "kind": "type",
+    "sig": "type ApprovalDecision<I> = | { kind: \"approve\"; } | { kind: \"reject\"; message: string; } | { input: I; kind: \"edit\"; };"
+  },
+  "ApprovalRequest": {
+    "href": "/reference/core/protocol/type-aliases/approvalrequest/",
+    "kind": "type",
+    "sig": "type ApprovalRequest = SuspensionRequest<\"tool.approval\", { input: JsonValue; name: string; }, ApprovalDecision<JsonValue>>;"
+  },
+  "assertContiguous": {
+    "href": "/reference/core/protocol/functions/assertcontiguous/",
+    "kind": "fn",
+    "sig": "function assertContiguous(prev, e): ContiguityResult;"
+  },
+  "asTool": {
+    "href": "/reference/core/agent/functions/astool/",
+    "kind": "fn",
+    "sig": "function asTool<In, ChildDeps, COut>(child, opts): Tool<string, In, COut, unknown>;"
+  },
+  "AsToolOptions": {
+    "href": "/reference/core/agent/interfaces/astooloptions/",
+    "kind": "type",
+    "sig": "Options for asTool: how a sub-agent is exposed as a callable tool."
+  },
+  "attachDevtools": {
+    "href": "/reference/devtools/attach/functions/attachdevtools/",
+    "kind": "fn",
+    "sig": "function attachDevtools(): () => void;"
+  },
+  "browserEngine": {
+    "href": "/reference/providers/transformers/functions/browserengine/",
+    "kind": "fn",
+    "sig": "function browserEngine(opts?): TransformersEngine;"
+  },
+  "buildSpanTree": {
+    "href": "/reference/devtools/index/functions/buildspantree/",
+    "kind": "fn",
+    "sig": "function buildSpanTree(events): readonly SpanNode[];"
+  },
+  "calledTool": {
+    "href": "/reference/evals/functions/calledtool/",
+    "kind": "fn",
+    "sig": "function calledTool(name): Scorer;"
+  },
+  "calledToolWith": {
+    "href": "/reference/evals/functions/calledtoolwith/",
+    "kind": "fn",
+    "sig": "function calledToolWith(name, match): Scorer;"
+  },
+  "ChatRequest": {
+    "href": "/reference/core/protocol/interfaces/chatrequest/",
+    "kind": "type",
+    "sig": "The provider-agnostic semantic input for one model call."
+  },
+  "Checkpointer": {
+    "href": "/reference/core/protocol/interfaces/checkpointer/",
+    "kind": "type",
+    "sig": "The persistence contract for durable runs."
+  },
+  "checkpointerConformance": {
+    "href": "/reference/memory/index/functions/checkpointerconformance/",
+    "kind": "fn",
+    "sig": "function checkpointerConformance(make, t): void;"
+  },
+  "CheckpointRecord": {
+    "href": "/reference/core/protocol/interfaces/checkpointrecord/",
+    "kind": "type",
+    "sig": "One persisted checkpoint in a run's history — an opaque run token plus routing metadata."
+  },
+  "classifyEvent": {
+    "href": "/reference/devtools/index/functions/classifyevent/",
+    "kind": "fn",
+    "sig": "function classifyEvent(type): EventKind;"
+  },
+  "compactionSavings": {
+    "href": "/reference/devtools/index/functions/compactionsavings/",
+    "kind": "fn",
+    "sig": "function compactionSavings(events): number;"
+  },
+  "contextMeter": {
+    "href": "/reference/devtools/index/functions/contextmeter/",
+    "kind": "fn",
+    "sig": "function contextMeter(state, opts?): ContextMeter;"
+  },
+  "ContextMeter": {
+    "href": "/reference/devtools/index/interfaces/contextmeter/",
+    "kind": "type",
+    "sig": "A projection of a run's accounting for the inspector's cost/context meters."
+  },
+  "ContiguityResult": {
+    "href": "/reference/core/protocol/type-aliases/contiguityresult/",
+    "kind": "type",
+    "sig": "type ContiguityResult = | { ok: true; } | { missingFrom: number; ok: false; };"
+  },
+  "createApp": {
+    "href": "/reference/create-mithril/functions/createapp/",
+    "kind": "fn",
+    "sig": "function createApp( template, appName, dir): Promise<readonly string[]>;"
+  },
+  "createHarness": {
+    "href": "/reference/core/agent/functions/createharness/",
+    "kind": "fn",
+    "sig": "function createHarness<Deps>(): { agent: AgentFactory<Deps>; tool: ToolFactory<Deps>; };"
+  },
+  "createInspector": {
+    "href": "/reference/devtools/index/functions/createinspector/",
+    "kind": "fn",
+    "sig": "function createInspector(opts?): Inspector;"
+  },
+  "createRunStore": {
+    "href": "/reference/react/index/functions/createrunstore/",
+    "kind": "fn",
+    "sig": "function createRunStore(source): RunStore;"
+  },
+  "CustomEventOf": {
+    "href": "/reference/core/protocol/type-aliases/customeventof/",
+    "kind": "type",
+    "sig": "type CustomEventOf<Id, P> = EventMeta & { payload: P; type: `custom.${Id}`; };"
+  },
+  "DEFAULT_MODEL": {
+    "href": "/reference/providers/transformers/variables/default_model/",
+    "kind": "const",
+    "sig": "const DEFAULT_MODEL: \"onnx-community/Qwen3-0.6B-ONNX\" = \"onnx-community/Qwen3-0.6B-ONNX\";"
+  },
+  "defaultRuntime": {
+    "href": "/reference/core/agent/functions/defaultruntime/",
+    "kind": "fn",
+    "sig": "function defaultRuntime(): RuntimeAdapter;"
+  },
+  "defineDevtoolsElements": {
+    "href": "/reference/devtools/element/functions/definedevtoolselements/",
+    "kind": "fn",
+    "sig": "function defineDevtoolsElements(options?): void;"
+  },
+  "defineWorkflow": {
+    "href": "/reference/workflows/functions/defineworkflow/",
+    "kind": "fn",
+    "sig": "function defineWorkflow<S>(steps, opts): Workflow<S>;"
+  },
+  "describeEval": {
+    "href": "/reference/evals/functions/describeeval/",
+    "kind": "fn",
+    "sig": "function describeEval<Deps, Ctx>( register, agent, cases, opts): void;"
+  },
+  "DEVTOOLS_CHANNEL": {
+    "href": "/reference/devtools/attach/variables/devtools_channel/",
+    "kind": "const",
+    "sig": "const DEVTOOLS_CHANNEL: \"mithril.devtools\" = \"mithril.devtools\";"
+  },
+  "devtoolsEnabled": {
+    "href": "/reference/devtools/attach/functions/devtoolsenabled/",
+    "kind": "fn",
+    "sig": "function devtoolsEnabled(): boolean;"
+  },
+  "DevtoolsHandle": {
+    "href": "/reference/devtools/dom/interfaces/devtoolshandle/",
+    "kind": "type",
+    "sig": "The handle returned by every mount function: push new options in, or tear the view down."
+  },
+  "DevtoolsPanelOptions": {
+    "href": "/reference/devtools/dom/interfaces/devtoolspaneloptions/",
+    "kind": "type",
+    "sig": "Options for mountDevtoolsPanel."
+  },
+  "devtoolsPlugin": {
+    "href": "/reference/devtools/index/functions/devtoolsplugin/",
+    "kind": "fn",
+    "sig": "function devtoolsPlugin(inspector?): Plugin<unknown, readonly AnyTool<unknown>[]> & { inspector: Inspector; };"
+  },
+  "DraftEvent": {
+    "href": "/reference/core/protocol/type-aliases/draftevent/",
+    "kind": "type",
+    "sig": "type DraftEvent = { payload: JsonValue; type: `custom.${string}`; };"
+  },
+  "EdgeOptions": {
+    "href": "/reference/providers/transformers/interfaces/edgeoptions/",
+    "kind": "type",
+    "sig": "Options for browserEngine / transformers / preload."
+  },
+  "EngineChunk": {
+    "href": "/reference/providers/transformers/type-aliases/enginechunk/",
+    "kind": "type",
+    "sig": "type EngineChunk = | { kind: \"token\"; text: string; } | { callId?: string; input: JsonValue; kind: \"toolCall\"; name: string; };"
+  },
+  "EngineRequest": {
+    "href": "/reference/providers/transformers/interfaces/enginerequest/",
+    "kind": "type",
+    "sig": "The semantic request handed to a TransformersEngine (a flattened ChatRequest)."
+  },
+  "EvalCase": {
+    "href": "/reference/evals/interfaces/evalcase/",
+    "kind": "type",
+    "sig": "One evaluation case: a named input paired with the Scorers to apply to its resulting trajectory."
+  },
+  "EvalReportEntry": {
+    "href": "/reference/evals/interfaces/evalreportentry/",
+    "kind": "type",
+    "sig": "One row of an HTML report: an EvalRun plus optional presentation metadata."
+  },
+  "EvalRun": {
+    "href": "/reference/evals/interfaces/evalrun/",
+    "kind": "type",
+    "sig": "The outcome of evaluating one EvalCase: its scores, the captured Trajectory, and whether"
+  },
+  "EventConsumer": {
+    "href": "/reference/core/protocol/interfaces/eventconsumer/",
+    "kind": "type",
+    "sig": "A passive observer that receives every MithrilEvent in order."
+  },
+  "EventKind": {
+    "href": "/reference/devtools/index/type-aliases/eventkind/",
+    "kind": "type",
+    "sig": "type EventKind = | \"lifecycle\" | \"text\" | \"tool\" | \"toolResult\" | \"object\" | \"control\" | \"meta\" | \"error\" | \"custom\";"
+  },
+  "EventListOptions": {
+    "href": "/reference/devtools/dom/interfaces/eventlistoptions/",
+    "kind": "type",
+    "sig": "Options for mountEventList."
+  },
+  "EventMeta": {
+    "href": "/reference/core/protocol/interfaces/eventmeta/",
+    "kind": "type",
+    "sig": "The envelope fields present on every MithrilEvent."
+  },
+  "EventOf": {
+    "href": "/reference/core/protocol/type-aliases/eventof/",
+    "kind": "type",
+    "sig": "type EventOf<T> = Extract<MithrilEvent, { type: T; }>;"
+  },
+  "EventTransport": {
+    "href": "/reference/core/protocol/interfaces/eventtransport/",
+    "kind": "type",
+    "sig": "A gap-detecting, cross-runtime event bus built on web standards only."
+  },
+  "EventType": {
+    "href": "/reference/core/protocol/type-aliases/eventtype/",
+    "kind": "type",
+    "sig": "type EventType = MithrilEvent[\"type\"];"
+  },
+  "FailureResult": {
+    "href": "/reference/core/protocol/namespaces/standardschemav1/interfaces/failureresult/",
+    "kind": "type",
+    "sig": "readonly issues: readonly Issue[];"
+  },
+  "FileKind": {
+    "href": "/reference/fs/index/type-aliases/filekind/",
+    "kind": "type",
+    "sig": "type FileKind = \"file\" | \"directory\";"
+  },
+  "FileSystem": {
+    "href": "/reference/fs/index/interfaces/filesystem/",
+    "kind": "type",
+    "sig": "The rooted, async filesystem contract shared by every @mithril/fs adapter."
+  },
+  "fileSystemConformance": {
+    "href": "/reference/fs/index/functions/filesystemconformance/",
+    "kind": "fn",
+    "sig": "function fileSystemConformance(make, t): void;"
+  },
+  "FinishReason": {
+    "href": "/reference/core/protocol/type-aliases/finishreason/",
+    "kind": "type",
+    "sig": "type FinishReason = \"stop\" | \"length\" | \"tool_calls\" | \"content_filter\" | \"error\";"
+  },
+  "formatForModel": {
+    "href": "/reference/providers/transformers/functions/formatformodel/",
+    "kind": "fn",
+    "sig": "function formatForModel(modelId): ToolFormat;"
+  },
+  "FsError": {
+    "href": "/reference/fs/index/classes/fserror/",
+    "kind": "class",
+    "sig": "new FsError(message?): FsError;"
+  },
+  "FsTestAdapter": {
+    "href": "/reference/fs/index/interfaces/fstestadapter/",
+    "kind": "type",
+    "sig": "Test-runner adapter that lets fileSystemConformance run under any framework."
+  },
+  "fsTrajectoryStore": {
+    "href": "/reference/evals/functions/fstrajectorystore/",
+    "kind": "fn",
+    "sig": "function fsTrajectoryStore(fs, opts?): TrajectoryStore;"
+  },
+  "gemmaToolCall": {
+    "href": "/reference/providers/transformers/variables/gemmatoolcall/",
+    "kind": "const",
+    "sig": "const gemmaToolCall: ToolFormat;"
+  },
+  "GenAiSpan": {
+    "href": "/reference/otel/interfaces/genaispan/",
+    "kind": "type",
+    "sig": "A reconstructed OpenTelemetry GenAI span, following the gen_ai.* semantic conventions."
+  },
+  "generateEncryptionKey": {
+    "href": "/reference/core/agent/functions/generateencryptionkey/",
+    "kind": "fn",
+    "sig": "function generateEncryptionKey(rt?): Promise<CryptoKey>;"
+  },
+  "generateStateKey": {
+    "href": "/reference/core/agent/functions/generatestatekey/",
+    "kind": "fn",
+    "sig": "function generateStateKey(rt?): Promise<CryptoKey>;"
+  },
+  "getGlobalInspector": {
+    "href": "/reference/devtools/index/functions/getglobalinspector/",
+    "kind": "fn",
+    "sig": "function getGlobalInspector(): Inspector;"
+  },
+  "globalConsumers": {
+    "href": "/reference/core/agent/functions/globalconsumers/",
+    "kind": "fn",
+    "sig": "function globalConsumers(): readonly EventConsumer[];"
+  },
+  "google": {
+    "href": "/reference/providers/google/functions/google/",
+    "kind": "fn",
+    "sig": "function google(model): ModelHandle;"
+  },
+  "googleProvider": {
+    "href": "/reference/providers/google/functions/googleprovider/",
+    "kind": "fn",
+    "sig": "function googleProvider(config?): Provider;"
+  },
+  "goto": {
+    "href": "/reference/workflows/functions/goto/",
+    "kind": "fn",
+    "sig": "function goto<S>(next, state): StepResult<S>;"
+  },
+  "HandoffSuspension": {
+    "href": "/reference/core/protocol/type-aliases/handoffsuspension/",
+    "kind": "type",
+    "sig": "type HandoffSuspension = SuspensionRequest<\"handoff.suspended\", { child: SuspensionDescriptor; to: string; }, JsonValue>;"
+  },
+  "hmacCodec": {
+    "href": "/reference/core/agent/functions/hmaccodec/",
+    "kind": "fn",
+    "sig": "function hmacCodec(): SealCodec;"
+  },
+  "htmlReport": {
+    "href": "/reference/evals/functions/htmlreport/",
+    "kind": "fn",
+    "sig": "function htmlReport(entries, opts?): string;"
+  },
+  "HtmlReportOptions": {
+    "href": "/reference/evals/interfaces/htmlreportoptions/",
+    "kind": "type",
+    "sig": "Options for htmlReport."
+  },
+  "InferInput": {
+    "href": "/reference/core/protocol/namespaces/standardschemav1/type-aliases/inferinput/",
+    "kind": "type",
+    "sig": "type InferInput<T> = NonNullable<T[\"~standard\"][\"types\"]>[\"input\"];"
+  },
+  "InferOutput": {
+    "href": "/reference/core/protocol/namespaces/standardschemav1/type-aliases/inferoutput/",
+    "kind": "type",
+    "sig": "type InferOutput<T> = NonNullable<T[\"~standard\"][\"types\"]>[\"output\"];"
+  },
+  "InferPluginTools": {
+    "href": "/reference/core/protocol/type-aliases/inferplugintools/",
+    "kind": "type",
+    "sig": "type InferPluginTools<P> = P extends (...args) => infer R ? InferPluginTools<R> : P extends Plugin<infer _D, infer T> ? { [E in T[number] a…"
+  },
+  "INITIAL": {
+    "href": "/reference/core/protocol/variables/initial/",
+    "kind": "const",
+    "sig": "const INITIAL: RunState;"
+  },
+  "inMemoryTransport": {
+    "href": "/reference/core/protocol/functions/inmemorytransport/",
+    "kind": "fn",
+    "sig": "function inMemoryTransport(): EventTransport;"
+  },
+  "Input": {
+    "href": "/reference/core/agent/type-aliases/input/",
+    "kind": "type",
+    "sig": "type Input = | string | readonly InputMessage[];"
+  },
+  "InputMessage": {
+    "href": "/reference/core/agent/type-aliases/inputmessage/",
+    "kind": "type",
+    "sig": "type InputMessage = | { content: string; role: \"user\"; } | { content: string; role: \"assistant\"; };"
+  },
+  "inputToJson": {
+    "href": "/reference/core/agent/functions/inputtojson/",
+    "kind": "fn",
+    "sig": "function inputToJson(input): JsonValue;"
+  },
+  "InspectedRun": {
+    "href": "/reference/devtools/index/interfaces/inspectedrun/",
+    "kind": "type",
+    "sig": "A captured run: its id, ordered event log, replayed RunState, and TimelineEntry projection."
+  },
+  "Inspector": {
+    "href": "/reference/devtools/index/interfaces/inspector/",
+    "kind": "type",
+    "sig": "A headless run inspector."
+  },
+  "isKnownEvent": {
+    "href": "/reference/core/protocol/functions/isknownevent/",
+    "kind": "fn",
+    "sig": "function isKnownEvent(e): boolean;"
+  },
+  "Issue": {
+    "href": "/reference/core/protocol/namespaces/standardschemav1/interfaces/issue/",
+    "kind": "type",
+    "sig": "readonly message: string;"
+  },
+  "isSuspend": {
+    "href": "/reference/core/protocol/functions/issuspend/",
+    "kind": "fn",
+    "sig": "function isSuspend(value): value is Suspend<unknown>;"
+  },
+  "JsonSafe": {
+    "href": "/reference/core/protocol/type-aliases/jsonsafe/",
+    "kind": "type",
+    "sig": "type JsonSafe<T> = T extends JsonValue ? T : never;"
+  },
+  "JsonSchema": {
+    "href": "/reference/core/protocol/type-aliases/jsonschema/",
+    "kind": "type",
+    "sig": "type JsonSchema = JsonValue;"
+  },
+  "JsonSchemaConverter": {
+    "href": "/reference/core/protocol/type-aliases/jsonschemaconverter/",
+    "kind": "type",
+    "sig": "type JsonSchemaConverter = (schema) => | JsonSchema | undefined;"
+  },
+  "JsonValue": {
+    "href": "/reference/core/protocol/type-aliases/jsonvalue/",
+    "kind": "type",
+    "sig": "type JsonValue = | null | boolean | number | string | readonly JsonValue[] | { [k: string]: JsonValue; };"
+  },
+  "Keyring": {
+    "href": "/reference/core/agent/interfaces/keyring/",
+    "kind": "type",
+    "sig": "A source of signing/verification keys for sealed tokens, indexed by key id (kid)."
+  },
+  "KeyValue": {
+    "href": "/reference/kv/interfaces/keyvalue/",
+    "kind": "type",
+    "sig": "A runtime-agnostic async key-value store (§10.2) for tools — caches, dedup sets, counters, scratch state."
+  },
+  "kvConformance": {
+    "href": "/reference/kv/functions/kvconformance/",
+    "kind": "fn",
+    "sig": "function kvConformance(make, t): void;"
+  },
+  "KvTestAdapter": {
+    "href": "/reference/kv/interfaces/kvtestadapter/",
+    "kind": "type",
+    "sig": "Minimal test-runner shim that lets kvConformance register cases against bun:test / vitest without"
+  },
+  "loadTrajectory": {
+    "href": "/reference/evals/functions/loadtrajectory/",
+    "kind": "fn",
+    "sig": "function loadTrajectory(json): Trajectory;"
+  },
+  "LoopOptions": {
+    "href": "/reference/core/agent/interfaces/loopoptions/",
+    "kind": "type",
+    "sig": "The full set of inputs to agentLoop — the flattened, already-resolved form of an"
+  },
+  "makeRunHandle": {
+    "href": "/reference/core/agent/functions/makerunhandle/",
+    "kind": "fn",
+    "sig": "function makeRunHandle<Out>( gen, runId, controls): RunHandle<Out>;"
+  },
+  "mcpClient": {
+    "href": "/reference/mcp/functions/mcpclient/",
+    "kind": "fn",
+    "sig": "function mcpClient(transport): McpClient;"
+  },
+  "McpClient": {
+    "href": "/reference/mcp/interfaces/mcpclient/",
+    "kind": "type",
+    "sig": "A connected MCP client over an McpTransport. Create one with mcpClient."
+  },
+  "McpToolDef": {
+    "href": "/reference/mcp/interfaces/mcptooldef/",
+    "kind": "type",
+    "sig": "An MCP server's description of one tool, as returned by tools/list."
+  },
+  "mcpTools": {
+    "href": "/reference/mcp/functions/mcptools/",
+    "kind": "fn",
+    "sig": "function mcpTools(client): Promise<readonly Tool<string, JsonValue, JsonValue, unknown>[]>;"
+  },
+  "McpTransport": {
+    "href": "/reference/mcp/interfaces/mcptransport/",
+    "kind": "type",
+    "sig": "The transport you implement to carry MCP JSON-RPC calls to a server."
+  },
+  "memoryCheckpointer": {
+    "href": "/reference/memory/index/functions/memorycheckpointer/",
+    "kind": "fn",
+    "sig": "function memoryCheckpointer(): Checkpointer;"
+  },
+  "memoryFileSystem": {
+    "href": "/reference/fs/index/functions/memoryfilesystem/",
+    "kind": "fn",
+    "sig": "function memoryFileSystem(now?): FileSystem;"
+  },
+  "memoryKv": {
+    "href": "/reference/kv/functions/memorykv/",
+    "kind": "fn",
+    "sig": "function memoryKv(now?): KeyValue;"
+  },
+  "memoryTrajectoryStore": {
+    "href": "/reference/evals/functions/memorytrajectorystore/",
+    "kind": "fn",
+    "sig": "function memoryTrajectoryStore(): TrajectoryStore;"
+  },
+  "Message": {
+    "href": "/reference/core/protocol/interfaces/message/",
+    "kind": "type",
+    "sig": "One conversation message with any tool calls it issued."
+  },
+  "Middleware": {
+    "href": "/reference/core/protocol/interfaces/middleware/",
+    "kind": "type",
+    "sig": "Producer-side composability: observe or transform a run purely by wrapping"
+  },
+  "MiddlewareContext": {
+    "href": "/reference/core/protocol/interfaces/middlewarecontext/",
+    "kind": "type",
+    "sig": "The context handed to a Middleware — a subset of RunContext"
+  },
+  "migrate": {
+    "href": "/reference/core/protocol/functions/migrate/",
+    "kind": "fn",
+    "sig": "function migrate(event): MithrilEvent;"
+  },
+  "MithrilDevtoolsPanelElement": {
+    "href": "/reference/devtools/element/classes/mithrildevtoolspanelelement/",
+    "kind": "class",
+    "sig": "new MithrilDevtoolsPanelElement(): MithrilDevtoolsPanelElement;"
+  },
+  "MithrilError": {
+    "href": "/reference/core/agent/classes/mithrilerror/",
+    "kind": "class",
+    "sig": "new MithrilError(code, message): MithrilError;"
+  },
+  "MithrilEvent": {
+    "href": "/reference/core/protocol/type-aliases/mithrilevent/",
+    "kind": "type",
+    "sig": "type MithrilEvent = | EventMeta & { depsDigest: string; input: JsonValue; model: string; type: \"run.start\"; } | EventMeta & { reason: Finis…"
+  },
+  "MithrilRunInspectorElement": {
+    "href": "/reference/devtools/element/classes/mithrilruninspectorelement/",
+    "kind": "class",
+    "sig": "new MithrilRunInspectorElement(): MithrilRunInspectorElement;"
+  },
+  "ModelCall": {
+    "href": "/reference/core/protocol/interfaces/modelcall/",
+    "kind": "type",
+    "sig": "The model-call input a Middleware.model wrapper observes or transforms."
+  },
+  "ModelCapabilities": {
+    "href": "/reference/core/protocol/interfaces/modelcapabilities/",
+    "kind": "type",
+    "sig": "The feature flags a model supports, used for capability-gated routing."
+  },
+  "ModelHandle": {
+    "href": "/reference/core/protocol/interfaces/modelhandle/",
+    "kind": "type",
+    "sig": "A provider-bound model reference."
+  },
+  "ModelId": {
+    "href": "/reference/core/protocol/type-aliases/modelid/",
+    "kind": "type",
+    "sig": "type ModelId = `${string}/${string}`;"
+  },
+  "ModelInput": {
+    "href": "/reference/core/protocol/type-aliases/modelinput/",
+    "kind": "type",
+    "sig": "type ModelInput = | ModelId | ModelHandle;"
+  },
+  "ModelResult": {
+    "href": "/reference/core/protocol/interfaces/modelresult/",
+    "kind": "type",
+    "sig": "The result of one model invocation seen by a Middleware.model wrapper."
+  },
+  "ModelSpec": {
+    "href": "/reference/core/protocol/interfaces/modelspec/",
+    "kind": "type",
+    "sig": "The published spec for one model: its capabilities, pricing, and context size."
+  },
+  "mountDevtoolsPanel": {
+    "href": "/reference/devtools/dom/functions/mountdevtoolspanel/",
+    "kind": "fn",
+    "sig": "function mountDevtoolsPanel(target, options): DevtoolsHandle<DevtoolsPanelOptions>;"
+  },
+  "mountEventList": {
+    "href": "/reference/devtools/dom/functions/mounteventlist/",
+    "kind": "fn",
+    "sig": "function mountEventList(target, options): DevtoolsHandle<EventListOptions>;"
+  },
+  "mountRunInspector": {
+    "href": "/reference/devtools/dom/functions/mountruninspector/",
+    "kind": "fn",
+    "sig": "function mountRunInspector(target, options): DevtoolsHandle<RunInspectorOptions>;"
+  },
+  "mountStateTree": {
+    "href": "/reference/devtools/dom/functions/mountstatetree/",
+    "kind": "fn",
+    "sig": "function mountStateTree(target, options): DevtoolsHandle<StateTreeOptions>;"
+  },
+  "narrow": {
+    "href": "/reference/core/protocol/functions/narrow/",
+    "kind": "fn",
+    "sig": "function narrow<Tools>(e, tools): e is EventMeta & { callId: string; input: JsonValue; name: string; type: \"tool.call\"; version?: string } …"
+  },
+  "nodeFileSystem": {
+    "href": "/reference/fs/node/functions/nodefilesystem/",
+    "kind": "fn",
+    "sig": "function nodeFileSystem(root): FileSystem;"
+  },
+  "open": {
+    "href": "/reference/core/agent/functions/open/",
+    "kind": "fn",
+    "sig": "function open( token, keyring, rt?, opts?): Promise<string>;"
+  },
+  "openai": {
+    "href": "/reference/providers/openai/functions/openai/",
+    "kind": "fn",
+    "sig": "function openai(model): ModelHandle;"
+  },
+  "openaiProvider": {
+    "href": "/reference/providers/openai/functions/openaiprovider/",
+    "kind": "fn",
+    "sig": "function openaiProvider(config?): Provider;"
+  },
+  "opfsFileSystem": {
+    "href": "/reference/fs/opfs/functions/opfsfilesystem/",
+    "kind": "fn",
+    "sig": "function opfsFileSystem(): FileSystem;"
+  },
+  "PathSegment": {
+    "href": "/reference/core/protocol/namespaces/standardschemav1/interfaces/pathsegment/",
+    "kind": "type",
+    "sig": "readonly key: PropertyKey;"
+  },
+  "PendingKind": {
+    "href": "/reference/core/agent/type-aliases/pendingkind/",
+    "kind": "type",
+    "sig": "type PendingKind = \"approval\" | \"return\" | \"midtool\";"
+  },
+  "PendingSuspension": {
+    "href": "/reference/core/agent/interfaces/pendingsuspension/",
+    "kind": "type",
+    "sig": "The serialized description of what a suspended run is waiting on — enough to resume it in another"
+  },
+  "PERMISSIVE_OBJECT": {
+    "href": "/reference/core/protocol/variables/permissive_object/",
+    "kind": "const",
+    "sig": "const PERMISSIVE_OBJECT: JsonSchema;"
+  },
+  "plugin": {
+    "href": "/reference/core/agent/functions/plugin/",
+    "kind": "fn",
+    "sig": "function plugin<Deps>(): <Tools>(p) => Plugin<Deps, Tools>;"
+  },
+  "Plugin": {
+    "href": "/reference/core/protocol/interfaces/plugin/",
+    "kind": "type",
+    "sig": "A bundle of tools, middleware, and event consumers registered as a unit."
+  },
+  "PluginHost": {
+    "href": "/reference/core/protocol/interfaces/pluginhost/",
+    "kind": "type",
+    "sig": "The registration surface passed to a Plugin.setup, for contributing plugin fragments."
+  },
+  "preload": {
+    "href": "/reference/providers/transformers/functions/preload/",
+    "kind": "fn",
+    "sig": "function preload(modelId, opts?): Promise<void>;"
+  },
+  "previewEvent": {
+    "href": "/reference/devtools/index/functions/previewevent/",
+    "kind": "fn",
+    "sig": "function previewEvent(e): string;"
+  },
+  "Pricing": {
+    "href": "/reference/core/protocol/interfaces/pricing/",
+    "kind": "type",
+    "sig": "Per-token pricing for a model, in integer micro-USD, matching UsageDelta's cost fields."
+  },
+  "ProgressReport": {
+    "href": "/reference/providers/transformers/interfaces/progressreport/",
+    "kind": "type",
+    "sig": "A model-download progress report (see EdgeOptions.onProgress)."
+  },
+  "Props": {
+    "href": "/reference/core/protocol/namespaces/standardschemav1/interfaces/props/",
+    "kind": "type",
+    "sig": "readonly optional types?: Types<Input, Output>;"
+  },
+  "ProtocolVersionError": {
+    "href": "/reference/core/protocol/classes/protocolversionerror/",
+    "kind": "class",
+    "sig": "new ProtocolVersionError(found): ProtocolVersionError;"
+  },
+  "Provider": {
+    "href": "/reference/core/protocol/interfaces/provider/",
+    "kind": "type",
+    "sig": "A model provider: its ProviderSpec plus a streaming chat entry point."
+  },
+  "ProviderChunk": {
+    "href": "/reference/core/protocol/type-aliases/providerchunk/",
+    "kind": "type",
+    "sig": "type ProviderChunk = | { delta: string; type: \"text.delta\"; } | { delta: string; type: \"reasoning.delta\"; } | { callId: string; name: strin…"
+  },
+  "providerRegistry": {
+    "href": "/reference/core/agent/functions/providerregistry/",
+    "kind": "fn",
+    "sig": "function providerRegistry(...providers): ProviderRegistry;"
+  },
+  "ProviderRegistry": {
+    "href": "/reference/core/protocol/interfaces/providerregistry/",
+    "kind": "type",
+    "sig": "Resolves a ModelId to its Provider over the set of registered ProviderSpecs."
+  },
+  "ProviderSpec": {
+    "href": "/reference/core/protocol/interfaces/providerspec/",
+    "kind": "type",
+    "sig": "A provider's published spec: its id and the models it offers keyed by name."
+  },
+  "reduce": {
+    "href": "/reference/core/protocol/functions/reduce/",
+    "kind": "fn",
+    "sig": "function reduce(state, e): RunState;"
+  },
+  "registerGlobalConsumer": {
+    "href": "/reference/core/agent/functions/registerglobalconsumer/",
+    "kind": "fn",
+    "sig": "function registerGlobalConsumer(consumer): () => void;"
+  },
+  "replay": {
+    "href": "/reference/core/protocol/functions/replay/",
+    "kind": "fn",
+    "sig": "function replay(log, toSeq?): RunState;"
+  },
+  "ResolutionOf": {
+    "href": "/reference/core/protocol/type-aliases/resolutionof/",
+    "kind": "type",
+    "sig": "type ResolutionOf<R> = R extends SuspensionRequest<string, JsonValue, infer T> ? T : never;"
+  },
+  "resolveModel": {
+    "href": "/reference/core/agent/functions/resolvemodel/",
+    "kind": "fn",
+    "sig": "function resolveModel(model, registry?): { id: `${string}/${string}`; provider: Provider; };"
+  },
+  "resolveTransport": {
+    "href": "/reference/core/agent/functions/resolvetransport/",
+    "kind": "fn",
+    "sig": "function resolveTransport(explicit, modelId): Transport;"
+  },
+  "Result": {
+    "href": "/reference/core/protocol/namespaces/standardschemav1/type-aliases/result/",
+    "kind": "type",
+    "sig": "type Result<Output> = | SuccessResult<Output> | FailureResult;"
+  },
+  "ResumeState": {
+    "href": "/reference/core/agent/interfaces/resumestate/",
+    "kind": "type",
+    "sig": "The reconstructed loop state driving a resume, assembled by agent from a run token."
+  },
+  "ResumeValue": {
+    "href": "/reference/core/agent/type-aliases/resumevalue/",
+    "kind": "type",
+    "sig": "type ResumeValue = | ApprovalDecision<JsonValue> | { kind: \"resolve\"; value: JsonValue; };"
+  },
+  "RunArgs": {
+    "href": "/reference/core/agent/type-aliases/runargs/",
+    "kind": "type",
+    "sig": "type RunArgs<Deps> = [Deps] extends [void] ? [RunOptions<void>] : [RunOptions<Deps>];"
+  },
+  "RunContext": {
+    "href": "/reference/core/protocol/interfaces/runcontext/",
+    "kind": "type",
+    "sig": "The typed dependency-injection context threaded into tools and dynamic"
+  },
+  "runEval": {
+    "href": "/reference/evals/functions/runeval/",
+    "kind": "fn",
+    "sig": "function runEval<Deps, Ctx>( agent, cases, opts): AsyncGenerator<EvalRun>;"
+  },
+  "runEvalCached": {
+    "href": "/reference/evals/functions/runevalcached/",
+    "kind": "fn",
+    "sig": "function runEvalCached<Deps, Ctx>( agent, cases, opts): AsyncGenerator<EvalRun>;"
+  },
+  "RunEvalCachedOptions": {
+    "href": "/reference/evals/type-aliases/runevalcachedoptions/",
+    "kind": "type",
+    "sig": "type RunEvalCachedOptions<Deps, Ctx> = RunEvalOptions<Deps, Ctx> & | { mode: \"live\"; } | { mode: \"record\"; store: TrajectoryStore; } | { mo…"
+  },
+  "RunEvalOptions": {
+    "href": "/reference/evals/interfaces/runevaloptions/",
+    "kind": "type",
+    "sig": "Options controlling how runEval / describeEval execute and score cases."
+  },
+  "RunHandle": {
+    "href": "/reference/core/agent/interfaces/runhandle/",
+    "kind": "type",
+    "sig": "A live handle over a streaming run, returned by Agent.stream."
+  },
+  "RunInspectorOptions": {
+    "href": "/reference/devtools/dom/interfaces/runinspectoroptions/",
+    "kind": "type",
+    "sig": "Options for mountRunInspector. Provide exactly one of events / source / transport."
+  },
+  "RunOptions": {
+    "href": "/reference/core/agent/interfaces/runoptions/",
+    "kind": "type",
+    "sig": "Per-run options passed to Agent.run, Agent.stream, and Agent.resume."
+  },
+  "RunResult": {
+    "href": "/reference/core/agent/type-aliases/runresult/",
+    "kind": "type",
+    "sig": "type RunResult<Out> = | { output: Out; status: \"completed\"; usage: UsageTotals; } | { request: SuspensionDescriptor; status: \"suspended\"; t…"
+  },
+  "RunSnapshot": {
+    "href": "/reference/react/index/interfaces/runsnapshot/",
+    "kind": "type",
+    "sig": "An immutable view of a run, recomputed on every event."
+  },
+  "RunSource": {
+    "href": "/reference/devtools/dom/interfaces/runsource/",
+    "kind": "type",
+    "sig": "Anything carrying a live event stream — a RunHandle satisfies this."
+  },
+  "RunState": {
+    "href": "/reference/core/protocol/interfaces/runstate/",
+    "kind": "type",
+    "sig": "The materialized state of a run — always the pure fold of its event log."
+  },
+  "RunStatus": {
+    "href": "/reference/core/protocol/type-aliases/runstatus/",
+    "kind": "type",
+    "sig": "type RunStatus = | \"running\" | \"suspended\" | \"unresumable\" | \"completed\" | \"cancelled\" | \"error\";"
+  },
+  "RunStore": {
+    "href": "/reference/react/index/interfaces/runstore/",
+    "kind": "type",
+    "sig": "A useSyncExternalStore-compatible store over a run's events. Created by createRunStore."
+  },
+  "RuntimeAdapter": {
+    "href": "/reference/core/protocol/interfaces/runtimeadapter/",
+    "kind": "type",
+    "sig": "The single ambient-capability seam: every non-deterministic or platform"
+  },
+  "RunTokenV2": {
+    "href": "/reference/core/agent/interfaces/runtokenv2/",
+    "kind": "type",
+    "sig": "The versioned, serializable run token carried by a suspended RunResult."
+  },
+  "scaffold": {
+    "href": "/reference/create-mithril/functions/scaffold/",
+    "kind": "fn",
+    "sig": "function scaffold(template, appName): Readonly<Record<string, string>>;"
+  },
+  "schemaRegistry": {
+    "href": "/reference/core/protocol/functions/schemaregistry/",
+    "kind": "fn",
+    "sig": "function schemaRegistry(entries): SchemaRegistry;"
+  },
+  "SchemaRegistry": {
+    "href": "/reference/core/protocol/interfaces/schemaregistry/",
+    "kind": "type",
+    "sig": "Resolves a resolutionSchemaId to its Standard Schema for validating a resume resolution."
+  },
+  "Score": {
+    "href": "/reference/evals/interfaces/score/",
+    "kind": "type",
+    "sig": "A single scoring result produced by a Scorer."
+  },
+  "Scorer": {
+    "href": "/reference/evals/type-aliases/scorer/",
+    "kind": "type",
+    "sig": "type Scorer<Ctx> = (t, ctx) => | Score | Promise<Score>;"
+  },
+  "scriptedProvider": {
+    "href": "/reference/core/testkit/functions/scriptedprovider/",
+    "kind": "fn",
+    "sig": "function scriptedProvider(turns): Provider;"
+  },
+  "seal": {
+    "href": "/reference/core/agent/functions/seal/",
+    "kind": "fn",
+    "sig": "function seal( body, keyring, rt?, codec?): Promise<string>;"
+  },
+  "SealCodec": {
+    "href": "/reference/core/agent/interfaces/sealcodec/",
+    "kind": "type",
+    "sig": "A payload transform applied before signing (encode) and after verifying (decode) in the seal envelope."
+  },
+  "SerializedError": {
+    "href": "/reference/core/protocol/interfaces/serializederror/",
+    "kind": "type",
+    "sig": "A JSON-safe serialized form of a thrown error, suitable for the wire."
+  },
+  "SerializedRunState": {
+    "href": "/reference/core/protocol/type-aliases/serializedrunstate/",
+    "kind": "type",
+    "sig": "type SerializedRunState = string & { __brand: \"mithril.runstate.v1\"; };"
+  },
+  "serializeTrajectory": {
+    "href": "/reference/evals/functions/serializetrajectory/",
+    "kind": "fn",
+    "sig": "function serializeTrajectory(t): string;"
+  },
+  "singleKeyring": {
+    "href": "/reference/core/agent/functions/singlekeyring/",
+    "kind": "fn",
+    "sig": "function singleKeyring(key, kid?): Keyring;"
+  },
+  "SpanNode": {
+    "href": "/reference/devtools/index/interfaces/spannode/",
+    "kind": "type",
+    "sig": "A node in the span tree: one span, the events stamped to it, and its child spans."
+  },
+  "SpanRef": {
+    "href": "/reference/core/protocol/interfaces/spanref/",
+    "kind": "type",
+    "sig": "Identifies the tracing span an event belongs to, forming the parent/child"
+  },
+  "SpanSink": {
+    "href": "/reference/otel/interfaces/spansink/",
+    "kind": "type",
+    "sig": "Receiver for reconstructed spans — implement this to bridge toGenAiSpans to a real OTel exporter."
+  },
+  "splitToolCalls": {
+    "href": "/reference/providers/transformers/functions/splittoolcalls/",
+    "kind": "fn",
+    "sig": "function splitToolCalls(tokens, fmt): AsyncGenerator<EngineChunk>;"
+  },
+  "sqliteBunCheckpointer": {
+    "href": "/reference/memory/sqlite-bun/functions/sqlitebuncheckpointer/",
+    "kind": "fn",
+    "sig": "function sqliteBunCheckpointer(path?): Checkpointer;"
+  },
+  "StandardSchemaV1": {
+    "href": "/reference/core/protocol/interfaces/standardschemav1/",
+    "kind": "type",
+    "sig": "The Standard Schema v1 contract — a validator-agnostic interface implemented"
+  },
+  "StateIntegrityError": {
+    "href": "/reference/core/agent/classes/stateintegrityerror/",
+    "kind": "class",
+    "sig": "new StateIntegrityError(message): StateIntegrityError;"
+  },
+  "StateTreeOptions": {
+    "href": "/reference/devtools/dom/interfaces/statetreeoptions/",
+    "kind": "type",
+    "sig": "Options for mountStateTree."
+  },
+  "StepInput": {
+    "href": "/reference/core/protocol/interfaces/stepinput/",
+    "kind": "type",
+    "sig": "The input to one step (model call + tool execution), observed by a Middleware.step wrapper."
+  },
+  "StepOutcome": {
+    "href": "/reference/core/protocol/interfaces/stepoutcome/",
+    "kind": "type",
+    "sig": "The summary of one completed step seen by a Middleware.step wrapper."
+  },
+  "StepResult": {
+    "href": "/reference/workflows/type-aliases/stepresult/",
+    "kind": "type",
+    "sig": "type StepResult<S> = | { goto: string; state: S; } | { done: true; state: S; };"
+  },
+  "StepSnapshot": {
+    "href": "/reference/core/agent/interfaces/stepsnapshot/",
+    "kind": "type",
+    "sig": "A per-step view yielded by Agent.iterate: the step index, the events emitted during it, and a"
+  },
+  "SuccessResult": {
+    "href": "/reference/core/protocol/namespaces/standardschemav1/interfaces/successresult/",
+    "kind": "type",
+    "sig": "readonly optional issues?: undefined;"
+  },
+  "suspend": {
+    "href": "/reference/core/protocol/functions/suspend/",
+    "kind": "fn",
+    "sig": "function suspend<Req>(req): Suspend<ResolutionOf<Req>>;"
+  },
+  "Suspend": {
+    "href": "/reference/core/protocol/interfaces/suspend/",
+    "kind": "type",
+    "sig": "The marker value a tool's execute returns to request a replay-free mid-tool pause."
+  },
+  "SUSPEND": {
+    "href": "/reference/core/protocol/variables/suspend/",
+    "kind": "const",
+    "sig": "const SUSPEND: unique symbol;"
+  },
+  "SuspensionDescriptor": {
+    "href": "/reference/core/protocol/type-aliases/suspensiondescriptor/",
+    "kind": "type",
+    "sig": "type SuspensionDescriptor = { callId?: string; kind: string; payload: JsonValue; resolutionSchemaId: string; toolVersion?: string; };"
+  },
+  "SuspensionRequest": {
+    "href": "/reference/core/protocol/interfaces/suspensionrequest/",
+    "kind": "type",
+    "sig": "A request to pause a run until a human (or external system) supplies a"
+  },
+  "Template": {
+    "href": "/reference/create-mithril/type-aliases/template/",
+    "kind": "type",
+    "sig": "type Template = \"node-cli\" | \"bun-server\" | \"react-chat\";"
+  },
+  "TestAdapter": {
+    "href": "/reference/core/protocol/interfaces/testadapter/",
+    "kind": "type",
+    "sig": "A tiny test-runner bridge so the conformance kit runs under bun:test or"
+  },
+  "testModel": {
+    "href": "/reference/core/testkit/functions/testmodel/",
+    "kind": "fn",
+    "sig": "function testModel(provider, id?): ModelHandle;"
+  },
+  "TimelineEntry": {
+    "href": "/reference/devtools/index/interfaces/timelineentry/",
+    "kind": "type",
+    "sig": "One row of a run's timeline: the event's sequence, timestamp, type, and owning span id."
+  },
+  "toGenAiSpans": {
+    "href": "/reference/otel/functions/togenaispans/",
+    "kind": "fn",
+    "sig": "function toGenAiSpans( events, sink?, opts?): readonly GenAiSpan[];"
+  },
+  "toJsonSchema": {
+    "href": "/reference/core/protocol/functions/tojsonschema/",
+    "kind": "fn",
+    "sig": "function toJsonSchema(schema, convert?): JsonValue;"
+  },
+  "tool": {
+    "href": "/reference/core/agent/functions/tool/",
+    "kind": "fn",
+    "sig": "function tool<Deps>(): ToolFactory<Deps>;"
+  },
+  "Tool": {
+    "href": "/reference/core/protocol/interfaces/tool/",
+    "kind": "type",
+    "sig": "A typed tool: Standard Schema in/out plus typed dependency injection."
+  },
+  "ToolCallFor": {
+    "href": "/reference/core/protocol/type-aliases/toolcallfor/",
+    "kind": "type",
+    "sig": "type ToolCallFor<Tools> = { [T in Tools[number] as ToolNameOf<T> & string]: T extends Tool<infer N, infer In, infer _O, infer _D> ? { callI…"
+  },
+  "ToolCallRecord": {
+    "href": "/reference/core/protocol/interfaces/toolcallrecord/",
+    "kind": "type",
+    "sig": "A single tool call and its (eventual) output within a Message."
+  },
+  "ToolDef": {
+    "href": "/reference/core/agent/interfaces/tooldef/",
+    "kind": "type",
+    "sig": "The definition object passed to tool to declare a single tool."
+  },
+  "ToolFactory": {
+    "href": "/reference/core/agent/interfaces/toolfactory/",
+    "kind": "type",
+    "sig": "A Deps-bound tool constructor: call it with a ToolDef to get a fully typed Tool."
+  },
+  "ToolFormat": {
+    "href": "/reference/providers/transformers/interfaces/toolformat/",
+    "kind": "type",
+    "sig": "How one model family delimits + encodes tool calls in generated text."
+  },
+  "ToolInputOf": {
+    "href": "/reference/core/protocol/type-aliases/toolinputof/",
+    "kind": "type",
+    "sig": "type ToolInputOf<T> = T extends Tool<infer _N, infer In, infer _O, infer _D> ? In : never;"
+  },
+  "ToolInvocation": {
+    "href": "/reference/core/protocol/type-aliases/toolinvocation/",
+    "kind": "type",
+    "sig": "type ToolInvocation = { callId: string; input: JsonValue; name: string; version?: string; };"
+  },
+  "ToolOutcome": {
+    "href": "/reference/core/protocol/type-aliases/tooloutcome/",
+    "kind": "type",
+    "sig": "type ToolOutcome = | { callId: string; output: JsonValue; status: \"ok\"; } | { callId: string; error: SerializedError; status: \"error\"; };"
+  },
+  "ToolOutputOf": {
+    "href": "/reference/core/protocol/type-aliases/tooloutputof/",
+    "kind": "type",
+    "sig": "type ToolOutputOf<T> = T extends Tool<infer _N, infer _In, infer Out, infer _D> ? Out : never;"
+  },
+  "ToolProgress": {
+    "href": "/reference/core/protocol/interfaces/toolprogress/",
+    "kind": "type",
+    "sig": "An intermediate value yielded by a streaming tool's execute generator, surfaced as tool.progress."
+  },
+  "toSerializedError": {
+    "href": "/reference/core/agent/functions/toserializederror/",
+    "kind": "fn",
+    "sig": "function toSerializedError(err): SerializedError;"
+  },
+  "Trajectory": {
+    "href": "/reference/evals/interfaces/trajectory/",
+    "kind": "type",
+    "sig": "The observable result of a single agent run: { runId, log, final }, where log is the ordered event"
+  },
+  "TrajectoryFs": {
+    "href": "/reference/evals/interfaces/trajectoryfs/",
+    "kind": "type",
+    "sig": "The minimal FileSystem surface fsTrajectoryStore needs — satisfied by any @mithril/fs backend."
+  },
+  "TrajectoryStore": {
+    "href": "/reference/evals/interfaces/trajectorystore/",
+    "kind": "type",
+    "sig": "A key→string store for persisted trajectories, backing the record/replay split."
+  },
+  "transformers": {
+    "href": "/reference/providers/transformers/functions/transformers/",
+    "kind": "fn",
+    "sig": "function transformers(model?, opts?): ModelHandle;"
+  },
+  "TRANSFORMERS_SPEC": {
+    "href": "/reference/providers/transformers/variables/transformers_spec/",
+    "kind": "const",
+    "sig": "const TRANSFORMERS_SPEC: ProviderSpec;"
+  },
+  "TransformersEngine": {
+    "href": "/reference/providers/transformers/interfaces/transformersengine/",
+    "kind": "type",
+    "sig": "The injected inference engine — the seam that keeps the provider testable without WebGPU/ONNX."
+  },
+  "TransformersHandleOptions": {
+    "href": "/reference/providers/transformers/interfaces/transformershandleoptions/",
+    "kind": "type",
+    "sig": "Options for transformers: EdgeOptions plus an optional injected engine (tests / custom runtimes)."
+  },
+  "transformersProvider": {
+    "href": "/reference/providers/transformers/functions/transformersprovider/",
+    "kind": "fn",
+    "sig": "function transformersProvider(engine): Provider;"
+  },
+  "Transport": {
+    "href": "/reference/core/protocol/type-aliases/transport/",
+    "kind": "type",
+    "sig": "type Transport = | { apiKey: string; baseUrl?: string; headers?: HeadersInit; kind: \"byok\"; } | { baseUrl: string; headers?: HeadersInit; k…"
+  },
+  "Types": {
+    "href": "/reference/core/protocol/namespaces/standardschemav1/interfaces/types/",
+    "kind": "type",
+    "sig": "readonly input: Input;"
+  },
+  "UsageDelta": {
+    "href": "/reference/core/protocol/interfaces/usagedelta/",
+    "kind": "type",
+    "sig": "Token counts and cost for a single accounting event."
+  },
+  "UsageTotals": {
+    "href": "/reference/core/protocol/interfaces/usagetotals/",
+    "kind": "type",
+    "sig": "A running usage accumulator: a UsageDelta plus a completed-step count."
+  },
+  "useObject": {
+    "href": "/reference/react/hooks/functions/useobject/",
+    "kind": "fn",
+    "sig": "function useObject(source): { partial: JsonValue | undefined; value: JsonValue | undefined; };"
+  },
+  "useRun": {
+    "href": "/reference/react/hooks/functions/userun/",
+    "kind": "fn",
+    "sig": "function useRun(source): RunSnapshot;"
+  },
+  "withJsonSchema": {
+    "href": "/reference/core/protocol/functions/withjsonschema/",
+    "kind": "fn",
+    "sig": "function withJsonSchema<In, Out>(schema, jsonSchema): StandardSchemaV1<In, Out>;"
+  },
+  "Workflow": {
+    "href": "/reference/workflows/interfaces/workflow/",
+    "kind": "type",
+    "sig": "A compiled workflow. Call Workflow.run with an initial state to execute it."
+  },
+  "WorkflowError": {
+    "href": "/reference/workflows/classes/workflowerror/",
+    "kind": "class",
+    "sig": "new WorkflowError(message?): WorkflowError;"
+  },
+  "WorkflowStep": {
+    "href": "/reference/workflows/type-aliases/workflowstep/",
+    "kind": "type",
+    "sig": "type WorkflowStep<S> = (state) => | StepResult<S> | Promise<StepResult<S>>;"
+  },
+  "ZERO_USAGE": {
+    "href": "/reference/core/protocol/variables/zero_usage/",
+    "kind": "const",
+    "sig": "const ZERO_USAGE: UsageTotals;"
+  }
+}

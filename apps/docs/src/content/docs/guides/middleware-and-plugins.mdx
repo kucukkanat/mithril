@@ -1,0 +1,130 @@
+---
+title: Middleware & plugins
+description: Wrap tool and model calls, or bundle a whole extension — with no private side channel.
+sidebar:
+  order: 6
+  label: Middleware
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
+
+Middleware and plugins make the *producer* side composable. They wrap invocations without forking
+the loop — Mithril stays a set of bricks, not a monolith. Compose them by array order via `use:`
+(outermost first).
+
+## Two altitudes
+
+A `Middleware` is `{ name, tool?, model? }`. Each hook is an onion layer: receive the call, do
+work, call `next` — or short-circuit by returning without it.
+
+```ts
+// tool altitude — guardrails, memoization, drift checks
+const guardrail: Middleware = {
+  name: "guardrail",
+  tool: async (ctx, call, next) =>
+    isBlocked(call) ? { callId: call.callId, status: "error", error: block } : next(call),
+};
+
+// model altitude — caching, fallback models, prompt-cache ordering
+const cache: Middleware = {
+  name: "cache",
+  model: async (ctx, call, next) => (await hit(call)) ?? next(call),
+};
+
+agent({ model, instructions, tools, use: [cache, guardrail] });
+```
+
+`call` is a `ToolInvocation` (`{ callId, name, input, version? }`) or a `ModelCall`; the return is a
+`ToolOutcome` (`{ status: "ok", output }` | `{ status: "error", error }`) or a `ModelResult`.
+
+## The one law: no private side channel
+
+<Aside type="caution" title="Design law">
+A middleware observes and transforms **only** by reading and emitting `MithrilEvent`s through
+`ctx.emit`, and journaling effects through `ctx.journal`. There is no second, hidden control plane.
+A middleware that "does something" but emits nothing is, by construction, invisible — and therefore
+illegal by review.
+</Aside>
+
+That is what keeps everything replayable and scoreable: effects flow through the event stream, so
+they show up in devtools and in [evals](/guides/evals/). It is the deliberate rejection of the
+hidden-prompt class of bug.
+
+## Plugins bundle bricks
+
+A `plugin({ name, tools?, middleware?, consumers?, setup? })` packs tools, middleware, event
+consumers, and setup behind one `use:` entry. Its tools are runtime-callable; static types are
+recovered locally via `InferPluginTools`, so bundling a plugin never inflates the type-checker.
+
+```ts
+import { plugin } from "mithril";
+
+const observability = plugin({
+  name: "observability",
+  middleware: [cache],
+  consumers: [{ name: "log", onEvent: (e) => sink.push(e) }],
+});
+
+agent({ model, instructions, use: [observability] });
+```
+
+## See it in the stream
+
+This middleware emits a `custom.audit` event around each tool call — watch it land in the inspector,
+inline with the real events:
+
+<Runnable title="audit.ts" code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const audit = {
+  name: "audit",
+  tool: async (ctx, call, next) => {
+    ctx.emit({ type: "custom.audit", payload: { tool: call.name, input: call.input } });
+    return next(call);
+  },
+};
+
+const model = testModel(scriptedProvider([
+  [
+    { type: "tool.call", callId: "c1", name: "search", input: { q: "mithril" } },
+    { type: "message.end", finishReason: "tool_calls", usage },
+  ],
+  [
+    { type: "text.delta", delta: "Found 3 results." },
+    { type: "message.end", finishReason: "stop", usage },
+  ],
+]));
+
+const search = tool({
+  name: "search",
+  description: "Search the docs.",
+  inputSchema: z.object({ q: z.string() }),
+  execute: async ({ q }) => ({ hits: 3, q }),
+});
+
+await run(agent({ model, instructions: "Use search.", tools: [search], use: [audit] }), "Search for mithril.");`} />
+
+## Three altitudes
+
+Middleware wraps at three altitudes, widest to narrowest:
+
+- **`step`** — a whole model↔tools round-trip. Use it for token/step budgets, compaction, or whole-step
+  retry. Short-circuit by returning a `StepOutcome` without calling `next`; end a run by aborting its
+  `signal`.
+- **`model`** — one model call. Caching, fallback models, prompt-cache ordering.
+- **`tool`** — one tool call. Guardrails, memoization, drift checks.
+
+```ts
+const budget: Middleware = {
+  name: "budget",
+  async step(ctx, input, next) {
+    if (input.step >= maxSteps) { controller.abort(); return { step: input.step, stop: "text", usage: zero }; }
+    return next(input);
+  },
+};
+```
+
+All three act only by reading and emitting events (no private side channel), so every extension stays
+replayable and inspectable.

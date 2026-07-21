@@ -1,0 +1,16 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.DS_Store
+
+# Astro / build caches
+.astro/
+
+# Generated eval report
+report.html
+
+# Secrets / local env (never commit)
+.env
+.env.*
+!.env.example
+*.log

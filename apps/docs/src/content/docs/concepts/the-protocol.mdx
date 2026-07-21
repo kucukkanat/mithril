@@ -1,0 +1,53 @@
+---
+title: The protocol is the product
+description: One typed, versioned event stream — the single public contract everything else consumes.
+sidebar:
+  order: 1
+  label: The protocol
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Most agent frameworks make the _framework_ the product: a class hierarchy you extend, a graph
+you wire, a runtime you defer to. Mithril makes something smaller and harder to break the
+product — a single typed, versioned event union called `MithrilEvent`.
+
+> The loop is its only producer. Devtools, React, OpenTelemetry, and evals are pure consumers —
+> and they may not import the loop. Enforced by the package `exports` map, not by convention.
+
+## The shape of the stream
+
+Every run is a monotonic sequence of dot-namespaced events, grouped by concern:
+
+- **Lifecycle** — `run.start`, `run.finish`, `run.error`, `run.cancel`, `step.start`, `step.finish`
+- **Assistant body** — `text.delta`, `reasoning.delta`, `tool.input.delta`, `tool.call`, `tool.progress`, `tool.result`, `tool.error`, `message.end`
+- **Structured output** — `object.delta`, `object.invalid`, `object.final`
+- **Accounting** — `usage`, `compaction`
+- **Control flow** — `handoff`, `tool.approval.requested`, `suspend`, `resume`
+- **Escape hatch** — `custom.${string}`
+
+Every event carries `EventMeta`: a protocol version `v`, the `runId`, a gap-free `seq`, a
+timestamp `ts`, and a `span`. Because span linkage rides on _every_ event, OpenTelemetry export
+is a pure fold — no separate instrumentation.
+
+## Why this matters
+
+When the wire format is the contract, everything composes:
+
+- **Devtools** render a run by reading events.
+- **React** (`useRun`) is a store over the same events.
+- **Evals** score the recorded event log — the log _is_ the fixture.
+- **OTel** groups events by span into `gen_ai.*` spans.
+
+Add a new consumer without touching the loop. Swap the loop (see [the eject
+hatch](/guides/ejecting-the-loop/)) without touching consumers — as long as it emits the same
+bytes.
+
+<Aside type="tip">
+The event union is **non-exhaustive by contract**: adding a new event type is a _minor_ version,
+so consumers must tolerate unknown events. That's what lets the protocol evolve without a
+coordinated major bump across every package.
+</Aside>
+
+Next: where does _state_ live, if the events are the product? → [State =
+replay(log, cursor)](/concepts/state-is-replay/).

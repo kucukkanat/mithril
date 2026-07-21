@@ -1,0 +1,73 @@
+---
+import Landing from "../layouts/Landing.astro";
+import Playground from "../components/Playground.tsx";
+---
+
+<Landing
+  title="Playground — Mithril"
+  description="Run a real Mithril agent loop in your browser — scripted by default, or bring your own key or a local in-browser model."
+  fixed={true}
+>
+  <div class="pg-page">
+    <header class="pg-nav">
+      <a href="/" class="brand"><span class="mth-sheen">Mithril</span></a>
+      <div class="pg-nav-meta">
+        <span class="pg-nav-tag">live · runs in your browser</span>
+        <a href="/getting-started/introduction/" class="pg-nav-link">Docs</a>
+      </div>
+    </header>
+    <div class="pg-mount">
+      <Playground client:only="react" />
+    </div>
+  </div>
+</Landing>
+
+<style>
+  .pg-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  .pg-nav {
+    flex: none;
+    height: 3.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--mth-space-4);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-nav);
+    backdrop-filter: blur(12px);
+  }
+  .brand {
+    font-weight: var(--mth-weight-semibold);
+    letter-spacing: var(--mth-tracking-tight);
+    font-size: var(--mth-fs-lg);
+  }
+  .pg-nav-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--mth-space-4);
+  }
+  .pg-nav-tag {
+    font-family: var(--mth-font-mono);
+    font-size: var(--mth-fs-2xs);
+    letter-spacing: var(--mth-tracking-wide);
+    color: var(--mth-mint);
+    text-transform: uppercase;
+  }
+  .pg-nav-link {
+    font-size: var(--mth-fs-sm);
+    color: var(--text-muted);
+  }
+  .pg-mount {
+    flex: 1;
+    min-height: 0;
+    padding: var(--mth-space-3);
+  }
+  @media (max-width: 40rem) {
+    .pg-nav-tag {
+      display: none;
+    }
+  }
+</style>

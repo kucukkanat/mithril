@@ -1,0 +1,115 @@
+---
+title: Memory & checkpointing
+description: Persist a run's log and resume it anywhere — with integrity-checked, optionally encrypted tokens.
+sidebar:
+  order: 7
+  label: Memory
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+[State is a fold over the log](/concepts/state-is-replay/), so durable persistence is just
+persisting the log plus a resumable token. A **Checkpointer** is the append-only store for that;
+it is the only thing you swap to go from in-memory to on-disk.
+
+## Pick a Checkpointer
+
+Both implement the same interface — start in memory, move to SQLite when you need durability:
+
+```ts
+import { memoryCheckpointer } from "@mithril/memory";
+import { sqliteBunCheckpointer } from "@mithril/memory/sqlite-bun";
+
+const cp = memoryCheckpointer();                  // ephemeral, every runtime
+const disk = sqliteBunCheckpointer("./runs.db");  // Bun; path defaults to ":memory:"
+```
+
+## The interface
+
+Five methods, all append-only. `put` takes an optional `ifParent` for optimistic concurrency —
+it returns `"conflict"` if the latest checkpoint isn't the parent you expected, and is idempotent
+on `checkpointId`:
+
+```ts
+await cp.put(record, { ifParent: null }); // "ok" | "conflict"
+await cp.latest(runId);                   // newest CheckpointRecord | undefined
+await cp.get(runId, checkpointId);
+for await (const rec of cp.history(runId)) { /* insertion order */ }
+await cp.purge(runId);
+```
+
+A `CheckpointRecord` is JSON-safe: `{ runId, checkpointId, parentId, token, status, createdAt }`,
+plus an optional unsealed `pending` descriptor so a UI can render "awaiting approval" without
+opening the token.
+
+## Cross-process resume
+
+Persist a suspended run in one process; resume it in another. The `token` is opaque — you store and
+forward it, never inspect it:
+
+```ts
+// Process A — suspend and save
+const handle = assistant.stream("Deploy to production.");
+const r = await handle.result();
+if (r.status === "suspended") {
+  await cp.put({
+    runId: handle.runId,
+    checkpointId: crypto.randomUUID(),
+    parentId: null,
+    token: r.token,
+    status: "suspended",
+    createdAt: new Date().toISOString(),
+  });
+}
+
+// Process B — load and resume
+const rec = await cp.latest(runId);
+if (rec?.token) await assistant.resume(rec.token, { kind: "approve" });
+```
+
+## Sealing: integrity and confidentiality
+
+Before persisting sensitive state, seal it. `seal`/`open` produce a three-part authenticated token
+(`header.payload.digest`) and — crucially — **verify before they parse**: the HMAC is checked over
+the exact transmitted bytes *before* the payload is decoded, closing the parse-attacker-bytes
+vulnerability class. A failed check throws `StateIntegrityError`.
+
+```ts
+import {
+  seal, open, hmacCodec, aesGcmCodec,
+  singleKeyring, generateStateKey, generateEncryptionKey,
+} from "@mithril/core/agent";
+
+const keyring = singleKeyring(await generateStateKey());       // HMAC signing key
+const token = await seal(JSON.stringify(state), keyring);      // integrity only
+const back = await open(token, keyring);                       // throws on tamper
+
+// Add at-rest confidentiality (PII) by swapping the codec:
+const codec = aesGcmCodec(await generateEncryptionKey());
+const sealed = await seal(JSON.stringify(state), keyring, undefined, codec);
+const clear = await open(sealed, keyring, undefined, { codec });
+```
+
+`hmacCodec` (the default) signs; `aesGcmCodec` additionally encrypts. Rotate by building a keyring
+whose `current()` is new while `resolve()` still returns retired keys.
+
+## Conformance
+
+Every Checkpointer — including your own backend — must pass one shared suite. Bridge it to
+`bun:test` with a tiny adapter:
+
+```ts
+import { checkpointerConformance } from "@mithril/memory";
+import { test, expect } from "bun:test";
+
+checkpointerConformance(async () => myCheckpointer(), {
+  test,
+  assertEqual: (a, b) => expect(a).toEqual(b),
+});
+```
+
+<Aside type="note" title="Sealed run-tokens">
+`seal`/`open` and both codecs are shipped and tested. Wiring them as the *default* envelope for the
+suspend/resume run-token (today it is durable-local JSON) is tracked on the
+[Roadmap](/roadmap/) — until then, seal any bytes you persist yourself.
+</Aside>

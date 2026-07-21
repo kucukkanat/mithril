@@ -1,0 +1,67 @@
+---
+import { Code } from "astro:components";
+import { encodeCode } from "../playground/share.ts";
+
+interface Props {
+  code: string;
+  lang?: "ts" | "tsx" | "js" | "jsx" | "json" | "bash" | "sh";
+  title?: string;
+  /** Set false for snippets that reference real providers / can't run scripted. */
+  runnable?: boolean;
+}
+const { code, lang = "ts", title = "example.ts", runnable = true } = Astro.props;
+const href = runnable ? `/playground/#code=${encodeCode(code.trim())}` : null;
+---
+
+<div class="runnable">
+  <div class="runnable-bar">
+    <span class="runnable-title">{title}</span>
+    {href && <a class="runnable-run" href={href}>Open in playground ↗</a>}
+  </div>
+  <Code code={code.trim()} lang={lang} theme="github-dark-default" />
+</div>
+
+<style>
+  .runnable {
+    border: 1px solid var(--sl-color-hairline, var(--border));
+    border-radius: var(--mth-radius-lg, 0.75rem);
+    overflow: hidden;
+    margin: 1rem 0 1.5rem;
+    box-shadow: var(--edge-hi);
+  }
+  .runnable-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.85rem;
+    background: var(--surface-2, #14181f);
+    border-bottom: 1px solid var(--border, rgba(167, 177, 190, 0.12));
+  }
+  .runnable-title {
+    font-family: var(--mth-font-mono);
+    font-size: var(--mth-fs-xs, 0.75rem);
+    color: var(--text-faint, #7c8898);
+  }
+  .runnable-run {
+    font-family: var(--mth-font-mono);
+    font-size: var(--mth-fs-xs, 0.75rem);
+    color: var(--accent, #6cb8ff);
+    text-decoration: none;
+    padding: 2px 10px;
+    border-radius: var(--mth-radius-full, 9999px);
+    border: 1px solid var(--border-accent, rgba(108, 184, 255, 0.45));
+    transition: background 0.12s ease;
+    white-space: nowrap;
+  }
+  .runnable-run:hover {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    text-decoration: none;
+  }
+  .runnable :global(pre) {
+    margin: 0;
+    padding: 1rem 1.15rem;
+    background: var(--code-bg, #0f1218) !important;
+    font-size: var(--mth-fs-sm, 0.875rem);
+    overflow: auto;
+  }
+</style>

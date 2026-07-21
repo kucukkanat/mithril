@@ -1,0 +1,50 @@
+---
+title: Errors that tell you the fix
+description: Every throw is a typed MithrilError with a stable code and a one-line fix.
+sidebar:
+  order: 9
+  label: Errors
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+"Errors that tell you the fix" is a deliverable, not a hope. Every throw in Mithril is a typed
+`MithrilError` carrying a **stable `code`**, the offending value, and a **one-line fix** — so you
+catch by code, never by string-matching:
+
+```ts
+try {
+  await assistant.run("hi");
+} catch (e) {
+  if (e instanceof MithrilError && e.code === "NO_PROVIDER") {
+    // e.message: No provider for "anthropic/claude-fable-5".
+    //            Use model: anthropic("claude-fable-5"), or pass providers:.
+  }
+}
+```
+
+A few representative codes:
+
+| Code | Means | The fix |
+| --- | --- | --- |
+| `NO_PROVIDER` | The model string didn't resolve. | Use a self-wiring handle or pass `providers:`. |
+| `NO_API_KEY` | No transport and no env key. | Set `ANTHROPIC_API_KEY` / `OPENAI_API_KEY`, or pass a `transport`. |
+| `TOOL_OUTPUT_NOT_JSON` | A tool returned a non-JSON value. | Return a `JsonValue` from `execute`. |
+| `MISSING_KEYRING` | A durable (signed) run needs a key. | Provide a `Keyring`, or use `durable-local`. |
+| `STATE_INTEGRITY` | A persisted token failed verification. | Don't trust it — it was tampered with or truncated. |
+
+## Verify before parse
+
+That last one is a principle, not just an error. When you `open` a sealed token, every byte is
+length-capped, HMAC-verified over the _exact transmitted bytes_, prototype-pollution-stripped,
+version-gated, migrated, and schema-revalidated — **in that order** — before it is trusted.
+
+<Aside type="caution">
+This ordering directly closes a real vulnerability class: persisted-state savers that parse
+attacker-controlled bytes before verifying them (the checkpointer SQL-injection → RCE chain).
+Mithril verifies first, then parses.
+</Aside>
+
+The first-run experience is part of this too: `create-mithril` scaffolds a running, streaming chat
+in a handful of lines — because the strongest DX statement a project makes is what happens the
+first time you run it.

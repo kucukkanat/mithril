@@ -1,0 +1,87 @@
+---
+title: Introduction
+description: Mithril is a batteries-included, provider-agnostic TypeScript AI-agent harness that genuinely runs in the browser.
+sidebar:
+  order: 1
+---
+
+import { CardGrid, LinkCard, Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
+
+Mithril is a batteries-included, provider-agnostic TypeScript AI-agent harness. It runs
+identically on **Node, Bun, and the browser** — over a tiny web-standards-only core.
+
+The whole design follows from one sentence:
+
+> **The typed, versioned event stream is the product.**
+
+The agent loop is its _only_ producer. Devtools, React, OpenTelemetry, and evals are pure
+consumers of that one event union — and they literally cannot import the loop. So every
+capability the harness offers is just a different way of reading, transforming, or replaying
+the same stream.
+
+## Why another harness?
+
+The winning meme of 2026 is _"an agent is a while loop with an LLM call."_ Developers don't
+want another framework that owns their control flow — they want **harness infrastructure**
+(durable state, human-in-the-loop, context management, tracing, evals) _under_ a loop they can
+read and, if they need to, copy out.
+
+That's the gap Mithril fills. Model abstraction is a commodity; the durable, portable,
+inspectable harness above it is the part teams keep rebuilding by hand.
+
+<Aside type="tip" title="The 90% path">
+One import from the `mithril` meta-package. No options object, no registry wiring, no
+per-call generics.
+</Aside>
+
+<Runnable runnable={false} title="weather-agent.ts" code={`import { agent, tool } from "mithril";
+import { anthropic } from "mithril/anthropic";
+import { z } from "zod"; // any Standard Schema validator
+
+const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
+});
+
+const assistant = agent({
+  model: anthropic("claude-fable-5"), // self-wires the provider
+  instructions: "You are a concise weather assistant.",
+  tools: [weather],
+});
+
+const { output } = await assistant.run("Weather in Istanbul?");
+// or stream:  for await (const e of assistant.stream("…").events) …`} />
+
+## What you get today
+
+Everything below is implemented and tested against the source — not aspirational:
+
+- **Typed tools** with inferred input/output via [Standard Schema](https://standardschema.dev)
+  (bring Zod, Valibot, ArkType…).
+- **Streaming** in three tiers — `run` (await), `stream` (handle), and the event iterator.
+- **Real provider adapters** for OpenAI, Anthropic, and Google (SSE, browser-safe transports).
+- **Human-in-the-loop** approval with resumable tokens, plus `seal`/`open` primitives (HMAC +
+  AES-GCM) for signing or encrypting persisted state.
+- **Structured output** with validate → retry and streamed `object.delta`.
+- **Middleware & plugins** — composable building blocks with no hidden side channel.
+- A portable **Checkpointer** (in-memory + SQLite) with a conformance kit.
+- **Trajectory-native evals**, **OTel** spans, runtime-agnostic **fs/kv** adapters, an **MCP**
+  client, deterministic **workflows**, and headless **React** bindings.
+
+<Aside type="note">
+Some parts of the v1 spec aren't shipped yet (streaming resume, a visual devtools UI, the
+Standard-Schema → JSON-Schema converter, and more). Mithril documents only what's real — the
+rest lives on the honest [Roadmap](/roadmap/).
+</Aside>
+
+## Next steps
+
+<CardGrid>
+  <LinkCard title="Installation" href="/getting-started/installation/" description="Scaffold a runnable app with create-mithril." />
+  <LinkCard title="Quickstart" href="/getting-started/quickstart/" description="Build and run your first agent in a few minutes." />
+  <LinkCard title="Concepts" href="/concepts/the-protocol/" description="The nine ideas the whole harness is built on." />
+  <LinkCard title="Playground" href="/playground/" description="Run a real agent loop in your browser — no keys." />
+</CardGrid>

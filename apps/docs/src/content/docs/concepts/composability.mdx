@@ -1,0 +1,87 @@
+---
+title: Composable building blocks
+description: Middleware and plugins extend the loop — with no private side channel.
+sidebar:
+  order: 7
+  label: Composability
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
+
+The protocol already makes _consumers_ composable. Middleware and plugins make the _producer_ side
+composable too — so Mithril is a set of lego bricks, not a monolith.
+
+## Middleware — the onion
+
+Middleware wraps invocations, outermost-first, at the **tool** and **model** altitudes. Compose by
+array order via `use:`:
+
+```ts
+const cache: Middleware = {
+  name: "cache",
+  model: async (ctx, call, next) => (await hit(call)) ?? next(call),
+};
+const guardrail: Middleware = {
+  name: "guardrail",
+  tool: async (ctx, call, next) =>
+    isBlocked(call) ? { callId: call.callId, status: "error", error: block } : next(call),
+};
+
+agent({ model, instructions, tools, use: [cache, guardrail] });
+```
+
+## The one law: no private side channel
+
+<Aside type="caution" title="Design law">
+Middleware observes and transforms **only** by reading and emitting `MithrilEvent`s through the
+single ordering authority. There is no second, hidden control plane. A middleware that "does
+something" but emits nothing is, by construction, invisible — and therefore illegal by review.
+</Aside>
+
+That's what keeps everything replayable: because effects flow through the event stream (and
+journaled effects through `ctx.journal`), whatever a middleware does stays inspectable in devtools
+and scoreable in evals. It's the deliberate rejection of the hidden-prompt, magic-framework class
+of bug.
+
+See it in the stream — this middleware emits a `custom.audit` event around each tool call, and it
+shows up right in the inspector:
+
+<Runnable title="middleware.ts" code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const audit = {
+  name: "audit",
+  tool: async (ctx, call, next) => {
+    ctx.emit({ type: "custom.audit", payload: { tool: call.name, input: call.input } });
+    return next(call);
+  },
+};
+
+const model = testModel(scriptedProvider([
+  [
+    { type: "tool.call", callId: "c1", name: "search", input: { q: "mithril" } },
+    { type: "message.end", finishReason: "tool_calls", usage },
+  ],
+  [
+    { type: "text.delta", delta: "Found 3 results." },
+    { type: "message.end", finishReason: "stop", usage },
+  ],
+]));
+
+const search = tool({
+  name: "search",
+  description: "Search the docs.",
+  inputSchema: z.object({ q: z.string() }),
+  execute: async ({ q }) => ({ hits: 3, q }),
+});
+
+await run(agent({ model, instructions: "Use search.", tools: [search], use: [audit] }), "Search for mithril.");`} />
+
+## Plugins — bundles of bricks
+
+A **plugin** bundles tools, middleware, event consumers, and setup behind one `use:` entry. Its
+tools are runtime-callable; static types are recovered locally via `InferPluginTools` so bundling
+a plugin never inflates the type-checker. More in [Middleware &
+plugins](/guides/middleware-and-plugins/).

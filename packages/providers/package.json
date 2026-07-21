@@ -1,0 +1,30 @@
+{
+  "name": "@mithril/providers",
+  "version": "0.0.0",
+  "description": "Mithril provider adapters (OpenAI, Anthropic, Google, + browser-local Transformers.js).",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "./openai": {
+      "types": "./src/openai/index.ts",
+      "import": "./src/openai/index.ts"
+    },
+    "./anthropic": {
+      "types": "./src/anthropic/index.ts",
+      "import": "./src/anthropic/index.ts"
+    },
+    "./google": {
+      "types": "./src/google/index.ts",
+      "import": "./src/google/index.ts"
+    },
+    "./transformers": {
+      "types": "./src/transformers/index.ts",
+      "import": "./src/transformers/index.ts"
+    }
+  },
+  "peerDependencies": { "@huggingface/transformers": ">=4.2" },
+  "peerDependenciesMeta": { "@huggingface/transformers": { "optional": true } },
+  "scripts": {
+    "test": "bun test"
+  }
+}

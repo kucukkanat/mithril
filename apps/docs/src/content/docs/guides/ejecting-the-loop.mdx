@@ -1,0 +1,69 @@
+---
+title: Ejecting the loop
+description: Drop below agent() to agentLoop — ~100 readable lines emitting the identical event stream.
+sidebar:
+  order: 13
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+`agent()` is the batteries-included loop. When you need full control over the drive — custom
+scheduling, embedding the loop in your own runtime, or just reading exactly what happens — eject to
+`agentLoop`. It is the same code `agent()` runs, roughly 100 readable lines, and it emits a
+**byte-identical** `MithrilEvent` stream.
+
+## Drive it yourself
+
+`agentLoop` is an async generator: it *yields* `MithrilEvent`s and *returns* the final `RunResult`.
+Because the result is the generator's return value, drive it to completion to read it:
+
+```ts
+import { agentLoop } from "mithril"; // or "@mithril/core/agent"
+import type { MithrilEvent, RunResult, JsonValue } from "@mithril/core/protocol";
+
+const gen = agentLoop({
+  model,
+  instructions: "You are a concise assistant.",
+  tools: [weather],
+  input: "Weather in Istanbul?",
+  deps: undefined, // required; pass your Deps, or undefined for a no-deps loop
+});
+
+let result: RunResult<JsonValue>;
+for (;;) {
+  const step = await gen.next();
+  if (step.done) { result = step.value; break; } // the RunResult
+  const event: MithrilEvent = step.value;
+  if (event.type === "text.delta") process.stdout.write(event.delta);
+}
+```
+
+Every event here is identical to what `agent({ … }).stream(…).events` would produce — same `seq`,
+same `span`, same order. That is the contract: [the protocol is the product](/concepts/the-protocol/),
+so swapping the producer changes nothing downstream.
+
+## Extensions carry over
+
+The same middleware you compose on `agent()` work here — you just pass them directly. At the
+`agent()` layer, `use:` is sugar that flattens plugins and middleware into two arrays; at the loop
+layer you pass those arrays yourself:
+
+```ts
+agentLoop({
+  model,
+  instructions,
+  tools,
+  input,
+  deps,
+  middlewares: [cache, guardrail], // same Middleware objects as use:
+  consumers: [{ name: "log", onEvent: (e) => sink.push(e) }],
+});
+```
+
+`LoopOptions` also accepts `transport`, `providers`, `runtime`, `signal`, `maxSteps`, `output`,
+`outputRetries`, and — for continuing a suspended run — `runId` and `resume`.
+
+<Aside type="tip" title="Eject last, not first">
+Reach for `agentLoop` only when `run`/`stream` genuinely aren't enough. The point of the eject
+hatch is that it exists and is small — not that you should live in it. Most apps never do.
+</Aside>

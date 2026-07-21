@@ -1,0 +1,37 @@
+---
+title: API reference
+description: The complete @mithril/* API — generated from the TypeScript source, so it never drifts.
+---
+
+import { CardGrid, LinkCard, Aside } from "@astrojs/starlight/components";
+
+Every page under this section is **generated from the framework source** with TypeDoc — the
+signatures, cross-links, and prose all come straight from the `@mithril/*` packages' types and
+TSDoc comments. It can't drift from the code, because it _is_ the code.
+
+<Aside type="tip">
+Prose that reads like a task ("how do I stream a run?") lives in the hand-written
+[Guides](/guides/defining-tools/) and [Concepts](/concepts/the-protocol/). This section is the
+exhaustive, always-accurate symbol reference.
+</Aside>
+
+## Packages
+
+<CardGrid>
+  <LinkCard title="@mithril/core" href="/reference/core/readme/" description="The event protocol, the agent loop, tools, sealing, and the testkit." />
+  <LinkCard title="@mithril/providers" href="/reference/providers/readme/" description="OpenAI, Anthropic, and Google adapters with self-wiring model handles." />
+  <LinkCard title="@mithril/memory" href="/reference/memory/readme/" description="The Checkpointer interface + in-memory and Bun-SQLite impls." />
+  <LinkCard title="@mithril/evals" href="/reference/evals/readme/" description="Trajectory-native evals — scorers over the recorded event log." />
+  <LinkCard title="@mithril/kv" href="/reference/kv/readme/" description="A runtime-agnostic key-value store for tools." />
+  <LinkCard title="@mithril/fs" href="/reference/fs/readme/" description="A rooted, runtime-agnostic FileSystem (memory / node / OPFS)." />
+  <LinkCard title="@mithril/otel" href="/reference/otel/readme/" description="Fold the event stream into gen_ai.* OpenTelemetry spans." />
+  <LinkCard title="@mithril/workflows" href="/reference/workflows/readme/" description="Deterministic, code-first routing over a shared typed state." />
+  <LinkCard title="@mithril/mcp" href="/reference/mcp/readme/" description="An MCP client that exposes server tools as Mithril tools." />
+  <LinkCard title="@mithril/react" href="/reference/react/readme/" description="Headless run-store + useRun / useObject hooks." />
+  <LinkCard title="create-mithril" href="/reference/create-mithril/readme/" description="Scaffold a runnable app from a template." />
+</CardGrid>
+
+<Aside type="note">
+The `mithril` meta-package simply re-exports `@mithril/core` (plus `mithril/openai` and
+`mithril/anthropic` provider handles) — see [@mithril/core](/reference/core/readme/).
+</Aside>

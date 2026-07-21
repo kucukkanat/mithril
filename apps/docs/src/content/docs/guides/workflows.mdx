@@ -1,0 +1,74 @@
+---
+title: Workflows
+description: Deterministic, code-first routing over a typed state — cheap branching around your agents.
+sidebar:
+  order: 10
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Not every decision needs a model. A **workflow** is plain, deterministic routing over a shared
+typed state — cheap branching *before* and *around* LLM calls. A step may run an agent, but the
+routing itself is code you can read, so there is no hidden LLM router unless you write one.
+
+## Define, route, finish
+
+`defineWorkflow` takes a map of named steps and a `start`. Each step returns `goto(next, state)` to
+continue or `done(state)` to stop. `run` folds from the start and returns the final `state` plus the
+`path` it took:
+
+```ts
+import { defineWorkflow, goto, done } from "@mithril/workflows";
+
+interface Refund {
+  readonly orderId: string;
+  readonly amountUsd: number;
+  readonly approved?: boolean;
+  readonly reason?: string;
+}
+
+const refunds = defineWorkflow<Refund>(
+  {
+    triage: (s) => (s.amountUsd <= 100 ? goto("autoApprove", s) : goto("review", s)),
+    autoApprove: (s) => done({ ...s, approved: true, reason: "under threshold" }),
+    review: (s) =>
+      s.amountUsd <= 1000
+        ? done({ ...s, approved: true, reason: "within policy" })
+        : goto("escalate", s),
+    escalate: (s) => done({ ...s, approved: false, reason: "needs manager sign-off" }),
+  },
+  { start: "triage", maxSteps: 16 },
+);
+
+const { state, path } = await refunds.run({ orderId: "A-1", amountUsd: 40 });
+// path:  ["triage", "autoApprove"]
+// state: { orderId: "A-1", amountUsd: 40, approved: true, reason: "under threshold" }
+```
+
+State is threaded immutably — each step receives the current state and returns the next. Nothing is
+mutated in place.
+
+## A step can call an agent
+
+The routing is deterministic, but a step is free to `await` anything — including an agent run —
+before it decides where to go:
+
+```ts
+classify: async (s) => {
+  const r = await classifier.run(s.reason ?? "");
+  return goto(r.status === "completed" && r.output === "fraud" ? "escalate" : "review", s);
+},
+```
+
+This is the point: the *model* classifies, the *code* routes. You can see every branch.
+
+## Termination is guaranteed
+
+`maxSteps` (default 100) bounds the walk. Referencing an unknown step, or exceeding the budget
+(a cycle), throws a `WorkflowError` rather than looping forever — failure is loud and typed.
+
+<Aside type="tip" title="Workflow vs. agent">
+Reach for a workflow when the control flow is known and deterministic (routing, validation,
+fan-out). Reach for an [agent](/guides/building-agents/) when the *model* should decide the next
+step. They compose — agents inside steps, workflows inside tools.
+</Aside>

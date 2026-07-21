@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "baseUrl": ".",
+    "paths": {
+      "@mithril/core/protocol": ["packages/core/src/protocol/index.ts"],
+      "@mithril/core/agent": ["packages/core/src/agent/index.ts"],
+      "@mithril/core/testkit": ["packages/core/src/testkit/index.ts"],
+      "@mithril/providers/openai": ["packages/providers/src/openai/index.ts"],
+      "@mithril/providers/anthropic": ["packages/providers/src/anthropic/index.ts"],
+      "@mithril/providers/transformers": ["packages/providers/src/transformers/index.ts"],
+      "@mithril/evals": ["packages/evals/src/index.ts"],
+      "@mithril/devtools/ui": ["packages/devtools/src/ui/index.tsx"],
+      "@mithril/devtools/dom": ["packages/devtools/src/dom.ts"],
+      "@mithril/devtools/element": ["packages/devtools/src/element.ts"],
+      "@mithril/devtools/attach": ["packages/devtools/src/attach.ts"],
+      "@mithril/devtools": ["packages/devtools/src/index.ts"]
+    },
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noEmit": true,
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  }
+}

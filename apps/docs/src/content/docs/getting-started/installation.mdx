@@ -1,0 +1,91 @@
+---
+title: Installation
+description: Scaffold a runnable Mithril app, or add it to an existing project.
+sidebar:
+  order: 2
+---
+
+import { Tabs, TabItem, Steps, Aside, Card } from "@astrojs/starlight/components";
+
+## Scaffold a new app
+
+The fastest path is `create-mithril`, which writes a running, streaming app in under ten lines
+of your own code.
+
+<Tabs syncKey="pkg">
+  <TabItem label="Bun">
+```sh
+bunx create-mithril my-agent
+```
+  </TabItem>
+  <TabItem label="npm">
+```sh
+npm create mithril@latest my-agent
+```
+  </TabItem>
+  <TabItem label="pnpm">
+```sh
+pnpm create mithril my-agent
+```
+  </TabItem>
+</Tabs>
+
+Pick a template when prompted:
+
+| Template | What it is |
+| --- | --- |
+| `node-cli` | A streaming CLI agent for Node. |
+| `bun-server` | An HTTP server that streams a run over the wire. |
+| `react-chat` | A headless React chat UI wired to `useRun`. |
+
+<Aside type="tip">
+Mithril ships as **source-as-published ESM** — no build step in the library itself, strict
+`exports` maps, and zero runtime dependencies in the core beyond a types-only Standard Schema
+mirror.
+</Aside>
+
+## Add to an existing project
+
+Install the blessed meta-package plus a validator of your choice:
+
+<Tabs syncKey="pkg">
+  <TabItem label="Bun">
+```sh
+bun add mithril zod
+```
+  </TabItem>
+  <TabItem label="npm">
+```sh
+npm install mithril zod
+```
+  </TabItem>
+  <TabItem label="pnpm">
+```sh
+pnpm add mithril zod
+```
+  </TabItem>
+</Tabs>
+
+Then reach for the individual `@mithril/*` packages only when you need them:
+
+<Steps>
+
+1. **Core is already there.** `mithril` re-exports `@mithril/core` — the protocol and the loop.
+
+2. **Add a provider path.** `mithril/openai`, `mithril/anthropic` expose self-wiring model
+   handles. Set `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` and you're done.
+
+3. **Add batteries as needed.** `@mithril/memory`, `@mithril/evals`, `@mithril/react`,
+   `@mithril/mcp`, `@mithril/workflows`, `@mithril/fs`, `@mithril/kv`, `@mithril/otel`.
+
+</Steps>
+
+## Requirements
+
+- **Any modern runtime** — Node 18+, Bun, or an evergreen browser. The core is web-standards
+  only (`fetch`, WebStreams, `AbortSignal`, WebCrypto).
+- **TypeScript 5.6+** recommended (Mithril is authored at maximum strictness).
+
+<Card title="Next: Quickstart" icon="rocket">
+Ready to build something? Head to the [Quickstart](/getting-started/quickstart/).
+</Card>

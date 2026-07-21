@@ -1,0 +1,5 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "//": "Tests are validated by running them (bun test); type-checking them needs bun-types (network install).",
+  "include": ["src/**/*.ts"]
+}

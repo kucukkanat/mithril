@@ -1,0 +1,195 @@
+---
+interface Pillar {
+  n: string;
+  title: string;
+  tag: string;
+  body: string;
+  href: string;
+}
+
+const pillars: Pillar[] = [
+  {
+    n: "01",
+    title: "The protocol is the product",
+    tag: "MithrilEvent",
+    body: "One typed, versioned event stream. The loop is its only producer; devtools, React, OTel, and evals are pure consumers that can't import the loop.",
+    href: "/concepts/the-protocol/",
+  },
+  {
+    n: "02",
+    title: "State = replay(log, cursor)",
+    tag: "replay()",
+    body: "A pure, total fold — never a stored checkpoint that can desync. Time-travel is free and correct by construction, as the playground shows.",
+    href: "/concepts/state-is-replay/",
+  },
+  {
+    n: "03",
+    title: "Monomorphic wire, local typing",
+    tag: "narrow()",
+    body: "The global union never indexes over your tool record — the deliberate defense against the type-checker melting at 200 tools. Recover per-tool types on demand.",
+    href: "/concepts/monomorphic-wire/",
+  },
+  {
+    n: "04",
+    title: "Three verbs, one argument each",
+    tag: "tool · agent · run",
+    body: "Progressive disclosure by argument, never by import. Escalate with output, onStep, deps — the 90% path is one import from the meta-package.",
+    href: "/concepts/three-verbs/",
+  },
+  {
+    n: "05",
+    title: "Suspension is a value",
+    tag: "RunResult",
+    body: "Human-in-the-loop is a typed, serializable branch you can't ignore — not an exception. No interrupt() footgun, no replay-from-start for the blessed paths.",
+    href: "/concepts/suspension/",
+  },
+  {
+    n: "06",
+    title: "Web-standards-only core",
+    tag: "fetch · WebStreams",
+    body: "Zero node: imports, zero runtime deps. Proven by executing golden trajectories in a workerd isolate and an insecure-context browser — not a static scan.",
+    href: "/concepts/web-standards/",
+  },
+  {
+    n: "07",
+    title: "Composable building blocks",
+    tag: "Middleware · Plugin",
+    body: "Lego bricks, not a monolith. Middleware has no private side channel — it observes and transforms only by emitting events, so everything stays replayable.",
+    href: "/concepts/composability/",
+  },
+  {
+    n: "08",
+    title: "Capability adapters",
+    tag: "fs · kv · vectors",
+    body: "Runtime differences handled honestly: promise the cross-runtime intersection, inject via Deps, never auto-detect. Each ships a conformance kit.",
+    href: "/concepts/capability-adapters/",
+  },
+  {
+    n: "09",
+    title: "Errors that tell you the fix",
+    tag: "MithrilError",
+    body: "Every throw carries a stable code, the offending value, and the one-line fix — catchable by code, never by string-matching. A first-class DX surface.",
+    href: "/concepts/errors/",
+  },
+];
+---
+
+<section class="pillars mth-container">
+  <div class="pillars-head">
+    <p class="mth-eyebrow">Nine load-bearing ideas</p>
+    <h2>A harness built on principles, not vibes</h2>
+    <p class="pillars-sub">
+      Each was chosen against an obvious alternative — and each is enforced by the package
+      boundaries, the type system, or CI. Not documentation you hope holds.
+    </p>
+  </div>
+  <div class="pillars-grid">
+    {
+      pillars.map((p) => (
+        <a class="pillar mth-card" href={p.href}>
+          <div class="pillar-top">
+            <span class="pillar-n">{p.n}</span>
+            <code class="pillar-tag">{p.tag}</code>
+          </div>
+          <h3>{p.title}</h3>
+          <p>{p.body}</p>
+          <span class="pillar-more">Learn more →</span>
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .pillars {
+    padding-block: var(--mth-space-12);
+  }
+  .pillars-head {
+    max-width: 42rem;
+    margin-bottom: var(--mth-space-8);
+  }
+  .pillars-head h2 {
+    font-size: var(--mth-fs-3xl);
+    letter-spacing: var(--mth-tracking-tight);
+    line-height: var(--mth-lh-snug);
+    margin: var(--mth-space-3) 0;
+  }
+  .pillars-sub {
+    color: var(--text-muted);
+    font-size: var(--mth-fs-lg);
+  }
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--mth-space-4);
+  }
+  .pillar {
+    display: flex;
+    flex-direction: column;
+    padding: var(--mth-space-5);
+    color: inherit;
+    transition:
+      transform var(--mth-dur-base) var(--mth-ease),
+      border-color var(--mth-dur-base) var(--mth-ease),
+      box-shadow var(--mth-dur-base) var(--mth-ease);
+  }
+  .pillar:hover {
+    text-decoration: none;
+    transform: translateY(-3px);
+    border-color: var(--border-accent);
+    box-shadow: var(--shadow-md), var(--edge-hi);
+  }
+  .pillar-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--mth-space-3);
+  }
+  .pillar-n {
+    font-family: var(--mth-font-mono);
+    font-size: var(--mth-fs-sm);
+    color: var(--text-faint);
+    letter-spacing: var(--mth-tracking-wide);
+  }
+  .pillar-tag {
+    font-family: var(--mth-font-mono);
+    font-size: var(--mth-fs-xs);
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    padding: 2px 8px;
+    border-radius: var(--mth-radius-full);
+  }
+  .pillar h3 {
+    font-size: var(--mth-fs-lg);
+    letter-spacing: var(--mth-tracking-tight);
+    margin: 0 0 var(--mth-space-2);
+  }
+  .pillar p {
+    color: var(--text-muted);
+    font-size: var(--mth-fs-sm);
+    line-height: var(--mth-lh-normal);
+    margin: 0 0 var(--mth-space-4);
+    flex: 1;
+  }
+  .pillar-more {
+    font-size: var(--mth-fs-sm);
+    color: var(--accent);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: all var(--mth-dur-base) var(--mth-ease);
+  }
+  .pillar:hover .pillar-more {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  @media (max-width: 64rem) {
+    .pillars-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 40rem) {
+    .pillars-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

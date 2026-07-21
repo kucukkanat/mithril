@@ -1,0 +1,95 @@
+---
+editUrl: false
+next: false
+prev: false
+title: "Plugin"
+---
+
+Defined in: packages/core/src/protocol/middleware.ts:141
+
+A bundle of tools, middleware, and event consumers registered as a unit.
+
+## Remarks
+
+`Tools` is carried (with a phantom `__tools` field, erased at build) so plugin
+tool types survive inference. `const` is applied at the `plugin()` factory's
+call signature, not here — it is invalid on an interface type parameter.
+
+## Type Parameters
+
+| Type Parameter | Default type | Description |
+| ------ | ------ | ------ |
+| `Deps` | `unknown` | The dependency bag the plugin's tools and middleware require. |
+| `Tools` *extends* readonly [`AnyTool`](/reference/core/protocol/type-aliases/anytool/)\<`Deps`\>[] | readonly [`AnyTool`](/reference/core/protocol/type-aliases/anytool/)\<`Deps`\>[] | The plugin's tool tuple, preserved so [InferPluginTools](/reference/core/protocol/type-aliases/inferplugintools/) can recover names/inputs. |
+
+## Properties
+
+### \_\_tools?
+
+```ts
+readonly optional __tools?: Tools;
+```
+
+Defined in: packages/core/src/protocol/middleware.ts:148
+
+Phantom carrier for `Tools` inference; erased at build.
+
+***
+
+### consumers?
+
+```ts
+readonly optional consumers?: readonly EventConsumer[];
+```
+
+Defined in: packages/core/src/protocol/middleware.ts:145
+
+***
+
+### middleware?
+
+```ts
+readonly optional middleware?: readonly Middleware<Deps>[];
+```
+
+Defined in: packages/core/src/protocol/middleware.ts:144
+
+***
+
+### name
+
+```ts
+readonly name: string;
+```
+
+Defined in: packages/core/src/protocol/middleware.ts:142
+
+***
+
+### setup?
+
+```ts
+readonly optional setup?: (host) => void | Promise<void>;
+```
+
+Defined in: packages/core/src/protocol/middleware.ts:146
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `host` | [`PluginHost`](/reference/core/protocol/interfaces/pluginhost/) |
+
+#### Returns
+
+`void` \| `Promise`\<`void`\>
+
+***
+
+### tools?
+
+```ts
+readonly optional tools?: Tools;
+```
+
+Defined in: packages/core/src/protocol/middleware.ts:143

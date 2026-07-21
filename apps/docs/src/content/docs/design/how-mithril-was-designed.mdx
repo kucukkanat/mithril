@@ -1,0 +1,71 @@
+---
+title: How Mithril was designed
+description: Protocol-first, chosen by a panel, and hardened by adversarial red-teams before a line shipped.
+sidebar:
+  order: 1
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+Mithril's architecture wasn't sketched once and shipped. It was competed, judged, attacked, and
+re-validated — on purpose, because a harness that owns durable state and security boundaries can't
+afford a load-bearing mistake found in production.
+
+## The 12 principles
+
+Every design decision traces back to twelve non-negotiable, _enforced_ principles:
+
+1. **The protocol is the product.** One typed event union; the loop is its only producer.
+2. **State = `replay(log, cursor)`.** A pure total fold, never a stored checkpoint.
+3. **Monomorphic wire, opt-in local typing.** The global union never indexes over your tools.
+4. **Three verbs, progressive disclosure by argument.** `tool`, `agent`, `run`.
+5. **No hidden prompts.** Every injected string is a named, exported, overridable constant.
+6. **Web-standards-only core, proven by execution.**
+7. **Suspension is a value, not an exception.**
+8. **Verify before parse.** Every persisted byte is checked before it's trusted.
+9. **Two-altitude runner.** `await` for the 90%; step-level control for the 10%.
+10. **Typed DI, no globals.** Deps are re-injected every run, never deserialized.
+11. **OTel `gen_ai.*` native.** Span linkage on every event.
+12. **Determinism is injectable.** `now`, `randomUUID`, `fetch`, `subtle` come from a runtime adapter.
+
+<Aside type="tip">
+These aren't aspirations in a README. Principle 1 is enforced by the package `exports` map;
+principle 3 by a `tsc` instantiation benchmark; principle 6 by executing golden trajectories in a
+workerd isolate and an insecure-context browser. If a change violates one, CI goes red.
+</Aside>
+
+## The design process
+
+<Steps>
+
+1. **Compete.** Four independent architectures were drafted. A panel of three judges scored them;
+   the protocol-first design (P4) won on 2 of 3 ballots and became the backbone, grafted with the
+   ergonomics, portability, and hardening ideas from the runners-up.
+
+2. **Attack.** Three red-team passes tried to break the synthesized spec. Nine blocker-class
+   findings were surfaced and fixed in the final text before anything was called "done."
+
+3. **Validate by building.** Four fresh agents each built a demanding end-to-end app — a browser
+   BYOK app with durable human-in-the-loop, a composability/plugins stress test, an
+   evals record-replay harness, and a multi-agent cross-process resume — against the _documented
+   API only_. Four independent builds converging on the same rough edges is a strong signal; the
+   producer side, the suspension/resume seam, and three core tool-type signatures had real defects.
+
+4. **Re-validate.** The spec was revised (~30 findings) and three more agents rebuilt the hardest
+   sections against the new text. A second wave of introduced defects was caught and closed.
+
+</Steps>
+
+## What building it found
+
+Writing the implementation under maximum-strict TypeScript surfaced bugs that careful review and
+even the validation agents missed — a non-distributive conditional type that collapsed a narrowed
+type to `never`, an interface that couldn't satisfy the `JsonValue` bound, and `const` type-param
+modifiers that are illegal on interfaces. Each was fixed in the code _and_ back-ported to the spec.
+
+<Aside type="note">
+The lesson baked into the project: a spec is a hypothesis until code and adversaries test it. The
+full record — the spec, the validation report, and a DX self-critique — lives in the repository
+under `docs/design`. For the market thesis, see [the landscape](/design/landscape/); for the
+deliberate rejections, see [considered & rejected](/design/considered-and-rejected/).
+</Aside>

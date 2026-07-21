@@ -1,0 +1,22 @@
+---
+editUrl: false
+next: false
+prev: false
+title: "create-mithril"
+---
+
+Scaffold a runnable Mithril app from a template.
+
+## Remarks
+
+[scaffold](/reference/create-mithril/functions/scaffold/) is the pure core — it returns a `{ path: contents }` map with no I/O — and
+[createApp](/reference/create-mithril/functions/createapp/) writes that map to disk. Server-only (`node:fs/promises`).
+
+## Type Aliases
+
+- [Template](/reference/create-mithril/type-aliases/template/)
+
+## Functions
+
+- [createApp](/reference/create-mithril/functions/createapp/)
+- [scaffold](/reference/create-mithril/functions/scaffold/)

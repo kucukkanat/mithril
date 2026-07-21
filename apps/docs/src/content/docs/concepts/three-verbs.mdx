@@ -1,0 +1,54 @@
+---
+title: Three verbs, one argument each
+description: tool, agent, run — you escalate capability by adding an argument, never a new import.
+sidebar:
+  order: 4
+  label: Three verbs
+---
+
+The entire surface is three verbs: **`tool`**, **`agent`**, **`run`**. Everything past the 90%
+path is _one more argument_ — never one more import.
+
+```ts
+// escalate by argument, not import:
+agent({ model, instructions });                      // plain
+agent({ model, instructions, tools });               // + tools
+agent({ model, instructions, output: schema });      // + structured output
+agent({ model, instructions, tools, use: [mw] });    // + middleware/plugins
+```
+
+## Bind dependencies once
+
+Apps with dependencies (a database, an API client) bind them a single time with `createHarness`,
+so no definition ever restates a generic:
+
+```ts
+import { createHarness } from "mithril";
+
+interface AppDeps { db: Database }
+const { agent, tool } = createHarness<AppDeps>();
+
+// ctx.deps is typed as AppDeps everywhere, with no per-call <Deps>()
+const lookup = tool({
+  name: "lookup",
+  description: "Find a user by id.",
+  inputSchema: z.object({ id: z.string() }),
+  execute: async ({ id }, ctx) => ctx.deps.db.users.get(id),
+});
+```
+
+## Three ways to run
+
+`run`, `stream`, and `iterate` are genuinely different shapes, not aliases:
+
+| Method | Returns | Use it when |
+| --- | --- | --- |
+| `agent.run(input)` | `Promise<RunResult>` | You want the final answer. |
+| `agent.stream(input)` | `RunHandle` (async-iterable events + text) | You want to render tokens as they arrive. |
+| `agent.resume(token, decision)` | `Promise<RunResult>` | You're resuming a suspended run. |
+
+The 90% path uses `run`. Reach down a level only when it isn't enough — and if you outgrow the
+whole loop, [eject it](/guides/ejecting-the-loop/): `agentLoop` is ~100 readable lines emitting a
+byte-identical event stream.
+
+The factory trio is `{ agent, tool, plugin }`; `agentLoop` is the eject hatch one layer down.

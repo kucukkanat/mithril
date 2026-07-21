@@ -1,0 +1,98 @@
+---
+title: Streaming a run
+description: Three tiers over one event stream — the final result, plain text, or every typed event.
+sidebar:
+  order: 3
+  label: Streaming
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
+
+There is exactly one source of truth — the `MithrilEvent` stream. The three ways to consume a run
+are progressively lower-level views of that same stream, so you reach for depth only when you need
+it.
+
+## Tier 1 — the final result
+
+Await it and branch on `.status`. No streaming machinery:
+
+```ts
+const result = await assistant.run("Summarize the incident.");
+if (result.status === "completed") console.log(result.output);
+```
+
+## Tier 2 — text as it arrives
+
+`stream()` returns a `RunHandle`. Iterate `.text` for token deltas; await `.result()` for the final
+`RunResult`:
+
+```ts
+const handle = assistant.stream("Summarize the incident.");
+for await (const delta of handle.text) process.stdout.write(delta);
+const result = await handle.result();
+```
+
+## Tier 3 — every typed event
+
+The handle is itself an async-iterable of events. `.state()` folds the buffered log into a
+`RunState` at any moment:
+
+```ts
+const handle = assistant.stream("Summarize the incident.");
+for await (const event of handle.events) {
+  if (event.type === "tool.call") console.log("calling", event.name);
+  if (event.type === "run.finish") console.log("done", event.usage);
+}
+```
+
+## The event families
+
+Every event is dot-namespaced and carries `EventMeta` (`v`, `runId`, `seq`, `ts`, `span`):
+
+- **Lifecycle** — `run.start`, `run.finish`, `run.error`, `run.cancel`, `step.start`, `step.finish`
+- **Assistant body** — `text.delta`, `reasoning.delta`, `tool.input.delta`, `tool.call`,
+  `tool.progress`, `tool.result`, `tool.error`, `message.end`
+- **Structured output** — `object.delta`, `object.invalid`, `object.final`
+- **Accounting** — `usage`, `compaction`
+- **Control flow** — `handoff`, `tool.approval.requested`, `suspend`, `resume`
+- **Escape hatch** — `custom.${string}`
+
+The union is [non-exhaustive by contract](/concepts/the-protocol/): a new event type is a minor
+version, so switch on the types you care about and ignore the rest.
+
+## Watch it stream
+
+Open this and scrub the inspector — the log below is the exact stream your `.events` loop would
+see:
+
+<Runnable title="stream.ts" code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const model = testModel(scriptedProvider([
+  [
+    { type: "tool.call", callId: "c1", name: "weather", input: { city: "Istanbul" } },
+    { type: "message.end", finishReason: "tool_calls", usage },
+  ],
+  [
+    { type: "text.delta", delta: "It's 21°C " },
+    { type: "text.delta", delta: "and clear in Istanbul." },
+    { type: "message.end", finishReason: "stop", usage },
+  ],
+]));
+
+const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
+});
+
+await run(agent({ model, instructions: "Use weather, then answer.", tools: [weather] }), "Weather in Istanbul?");`} />
+
+<Aside type="caution" title="Cancel via the signal, not the handle">
+`handle.cancel()` is currently a **no-op**. To cancel a run, pass an `AbortSignal` in the run
+options — the timeout idiom is `signal: AbortSignal.timeout(30_000)`. Aborting emits `run.cancel`
+and settles the result as `{ status: "cancelled" }`.
+</Aside>

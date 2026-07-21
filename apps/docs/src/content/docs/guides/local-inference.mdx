@@ -1,0 +1,191 @@
+---
+title: Local inference (in-browser)
+description: Run a model entirely in the browser tab with Transformers.js — on-device, no API key, no network.
+sidebar:
+  order: 11
+  label: Local inference
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+`@mithril/providers/transformers` runs an LLM **inside the browser tab** on WebGPU (falling back to WASM/CPU)
+via Hugging Face [Transformers.js](https://huggingface.co/docs/transformers.js) — no API key, no server, no
+network after the one-time weight download. It's a normal Mithril `Provider`, so
+`agent({ model: transformers("…") })` behaves like any other agent — same event stream, tools, structured
+output, and devtools.
+
+<Aside type="caution" title="Browser-only, and heavy first load">
+This provider is for **browser use**. Model weights are large (~0.4–2 GB) and downloaded on first use, then
+cached across reloads. It needs WebGPU for real speed (it feature-detects and falls back to WASM/CPU). The
+[playground](/playground/) can run this live — pick **Local · in-browser** in ⚙ Settings and click **Download
+weights** first, since the multi-GB download is gated behind a click.
+</Aside>
+
+## Install
+
+`@huggingface/transformers` is an **optional peer dependency** — install it only in the app that uses local
+inference (nothing else in Mithril pulls it in):
+
+```sh
+bun add @huggingface/transformers
+```
+
+## Quickstart
+
+```ts
+import { agent } from "@mithril/core/agent";
+import { transformers, preload } from "@mithril/providers/transformers";
+
+// Optional: warm the weight cache and drive a progress bar before the first run.
+await preload("onnx-community/Qwen3-0.6B-ONNX", { onProgress: (p) => setBar(p.progress) }); // p.progress is 0..1
+
+const assistant = agent({
+  model: transformers("onnx-community/Qwen3-0.6B-ONNX"), // or transformers() for the default
+  instructions: "You are a concise assistant.",
+});
+
+const result = await assistant.run("Give me one tip for naming variables.");
+if (result.status === "completed") console.log(result.output);
+```
+
+The handle self-wires (no provider registry, no keys). `transformers()` with no argument uses the default
+model. Download progress rides `onProgress` **outside** the event stream, so the public `MithrilEvent`
+contract is untouched — the run stream is exactly the same as a cloud provider's.
+
+## Curated models
+
+Seven models ship in the [playground](/playground/) picker: two long-standing defaults (Qwen3-0.6B, LFM2.5) plus
+five additions that were **researched and scored on the multi-tool eval suite** before shipping — the full
+methodology and results are in [How we chose these models](#how-we-chose-these-models). Each is a
+**text-generation** model, verified (2026-07-21) against the live Hugging Face file tree + raw chat template.
+The provider loads every model with `AutoModelForCausalLM` (a text-only path), so a multimodal
+(`image-text-to-text`) repo is **not** supported even when it ships an ONNX build — it loads through the wrong
+path and generates garbled output. Any other **text-generation** repo whose template emits a grammar the parser
+knows still runs via `transformers("<repo>")`: the `<tool_call>` grammar (Qwen/Granite), LFM2's
+`<|tool_call_start|>` Python-call lists, or Gemma's native token.
+
+| `transformers("<id>")` | ~download | Family | Notes |
+| --- | --- | --- | --- |
+| `onnx-community/Qwen3-0.6B-ONNX` | ~0.55 GB | Qwen3 | **default** — smallest reliable tool-caller; "thinks" first |
+| `onnx-community/Qwen2.5-0.5B-Instruct` | ~0.5 GB | Qwen2.5 | tiniest; direct (no thinking), fastest decode |
+| `LiquidAI/LFM2.5-1.2B-Instruct-ONNX` | ~0.8 GB | Liquid | agent-tuned; top eval score (4/4); LFM Open license |
+| `onnx-community/Qwen2.5-1.5B-Instruct` | ~1.2 GB | Qwen2.5 | stronger mid-tier, direct |
+| `onnx-community/Qwen3-1.7B-ONNX` | ~1.4 GB | Qwen3 | more capable; thinks |
+| `onnx-community/granite-4.0-1b-ONNX-web` | ~1.8 GB | IBM Granite | Mamba2 hybrid — auto-pinned to `q4` (q4f16 NaNs on WebGPU) |
+| `onnx-community/Qwen3-4B-ONNX` | ~2.1 GB | Qwen3 | most capable; ships q4f16 only → WebGPU-first |
+
+Device is feature-detected: `webgpu` when available, else **`cpu`** on Node/Bun (onnxruntime-node) or `wasm`
+in the browser — Node/Bun runs warn once on the CPU fallback. Override with `transformers(model, { device, dtype })`
+(`device` is `"webgpu" | "wasm" | "cpu"`). So the same handle runs headless in Node/Bun too: the
+[evals suite](/guides/evals/) scores these models on CPU with no browser.
+
+`dtype` defaults to **`q4f16`** on WebGPU (4-bit weights, fp16 activations) and **`q4`** on CPU/WASM. Two models
+need a pin (the playground catalog applies both automatically): (1) **fp16-fragile architectures** — Granite 4.0
+is a Mamba2 hybrid whose state-space layers overflow to NaN under `q4f16` on WebGPU (it then streams a run of `!`,
+token 0), so it's pinned to `q4` per its model card: `transformers("onnx-community/granite-4.0-1b-ONNX-web", { dtype: "q4" })`;
+(2) **single-dtype repos** — Qwen3-4B ships `q4f16` only, so the CPU/WASM `q4` default 404s and it's pinned to
+`q4f16` (which also keeps it WebGPU-first).
+
+## How we chose these models
+
+The catalog isn't a guess — every model went through the same gauntlet, and several plausible-looking
+candidates were **cut by the data**. The bar, in order:
+
+1. **Real, `text-generation`, ONNX.** Confirmed against the raw Hugging Face API: the repo exists, its
+   `pipeline_tag` is `text-generation` (a vision / `image-text-to-text` model loads through our text-only
+   `AutoModelForCausalLM` path and emits garbage — that is exactly how an earlier Qwen3.5 pick broke), and it
+   ships a transformers.js ONNX build.
+2. **A tool-call grammar the parser handles.** We read each model's raw chat template and kept only those that
+   emit `<tool_call>` (Hermes JSON / Qwen nested-XML), `<|tool_call_start|>` (LFM2), or Gemma's native token.
+   Models that emit bare JSON or `<|python_tag|>` (Llama 3.2), or ship no tools template at all (SmolLM2,
+   gemma-3-1b), would leak tool calls as visible text — rejected before we spent a GPU-second on them.
+3. **It actually calls tools.** Every survivor was scored on the [eval suite](/guides/evals/)'s five scenarios
+   (a chat baseline + four tool tasks: single call, right-tool-among-six, two-calls-in-one-turn, and
+   right-arguments), on CPU, with a 512-token budget so "thinking" models aren't cut off mid-reasoning.
+
+### Evaluation results
+
+Tool score is out of the four tool scenarios (all models pass the chat baseline). These are **single-run scores
+on ≤4 B models on CPU — directional, not a benchmark**; the signal is "does it reliably emit a parseable call,"
+not a precise ranking.
+
+| Model | Params | Tool score | Verdict |
+| --- | --- | --- | --- |
+| `LiquidAI/LFM2.5-1.2B-Instruct-ONNX` | 1.2 B | 4/4 | ✅ ship (anchor) |
+| `onnx-community/Qwen3-4B-ONNX` | 4 B | 4/4 | ✅ ship — most capable; q4f16-only, slowest |
+| `onnx-community/Qwen3-0.6B-ONNX` | 0.6 B | 3/4 | ✅ ship (anchor / default) |
+| `onnx-community/Qwen2.5-0.5B-Instruct` | 0.5 B | 3/4 | ✅ ship |
+| `onnx-community/Qwen2.5-1.5B-Instruct` | 1.5 B | 3/4 | ✅ ship |
+| `onnx-community/Qwen3-1.7B-ONNX` | 1.7 B | 3/4 | ✅ ship |
+| `onnx-community/granite-4.0-1b-ONNX-web` | 1.6 B | 3/4 | ✅ ship (pinned `q4`) |
+| `onnx-community/Qwen2.5-Coder-1.5B-Instruct` | 1.5 B | 0/4 | ❌ cut — code-tuned, not agentic |
+| `onnx-community/granite-4.0-350m-ONNX-web` | 0.35 B | 0/4 | ❌ cut — too small to emit a call |
+| `HuggingFaceTB/SmolLM3-3B-ONNX` | 3 B | 0/4 | ❌ cut — reasons in prose, no parseable call |
+| `onnx-community/Llama-3.2-1B-Instruct` | 1 B | gate 2 | ❌ cut — emits bare JSON, not `<tool_call>` |
+| `HuggingFaceTB/SmolLM2-1.7B-Instruct` | 1.7 B | gate 2 | ❌ cut — no tools template |
+| `onnx-community/gemma-3-1b-it-ONNX` | 1 B | gate 2 | ❌ cut — no tools template |
+| `onnx-community/DeepSeek-R1-Distill-Qwen-1.5B` | 1.5 B | gate 2 | ❌ cut — reasoning-only, no `<tool_call>` |
+
+The blunt finding: **at the ≤4 B scale, reliable tool-calling clusters in a few families** — Qwen (2.5 and 3),
+Liquid LFM2, and IBM Granite. Same-family look-alikes still fail for their own reasons (a 350 M Granite is too
+small; a code-tuned Qwen doesn't do agentic calls; an agentic-branded 3 B reasons in prose without emitting the
+call), which is exactly why we score every candidate instead of trusting the family name.
+
+### Why these are good offline / in-browser picks
+
+- **They fit in a tab.** 0.5–2.1 GB one-time download (q4/q4f16), cached across reloads, then **zero network** —
+  no key, no server, no per-token cost.
+- **Permissive licenses.** All Apache-2.0 except LFM2.5 (Liquid's own open license) — safe to ship in a product.
+- **A real capability ladder.** Pick by budget: Qwen2.5-0.5B (~0.5 GB) for the fastest/cheapest up to Qwen3-4B
+  (~2.1 GB) for the most capable. The Qwen3 models "think" (a `<think>` block before the answer — more capable,
+  more tokens); the Qwen2.5 models answer directly (faster).
+- **Vendor diversity where it's reliable.** Three vendors plus two Qwen generations across the set (Qwen2.5,
+  Qwen3, Liquid, IBM Granite) — different tokenizers and templates, no single-vendor lock-in, and the parser is
+  exercised across three distinct tool grammars.
+- **WebGPU-first, CPU-honest.** They run on WebGPU (fast) and fall back to WASM/CPU; the evals prove they work
+  headless on CPU too. Two carry an automatic dtype pin (Granite → `q4`, Qwen3-4B → `q4f16`) so they don't break
+  on a given backend.
+
+## Tools & structured output — honest limits
+
+Small local models are **best-effort** at function calling. Mithril passes your tools into the model's chat
+template and parses tool calls per model family (Qwen/Granite use `<tool_call>` grammars; LFM2 uses
+`<|tool_call_start|>[…]` Python-call lists; Gemma uses native tokens — best-effort). Malformed tool JSON
+degrades gracefully (no crash; the run continues as text).
+For **hard** structured-output guarantees, prefer a cloud model — Transformers.js has no native
+constrained/grammar decoding, so [structured output](/guides/structured-output/) here rests on the model plus
+the loop's validate→retry.
+
+## Running in a Web Worker
+
+For a smooth UI, run inference off the main thread. The provider is **engine-agnostic**: build a
+`TransformersEngine` inside a Worker and inject it:
+
+```ts
+const worker = new Worker(new URL("./inference.worker.ts", import.meta.url), { type: "module" });
+const engine = workerEngine(worker); // your thin postMessage bridge implementing TransformersEngine
+const model = transformers("onnx-community/Qwen3-0.6B-ONNX", { engine });
+```
+
+The default `transformers(model)` runs in-thread (simplest); the injected `engine` is the seam for a worker,
+or for swapping the runtime entirely.
+
+## Testing without a GPU
+
+The provider **core** is a pure function over an injected engine, so you unit-test it with a fake — no ONNX,
+no WebGPU, no network — exactly like `scriptedProvider`:
+
+```ts
+import { transformersProvider } from "@mithril/providers/transformers";
+
+const fake = { async *generate() { yield { kind: "token", text: "hi" }; } };
+const handle = { id: "transformers/x", provider: transformersProvider(fake) } as const;
+// agent({ model: handle }).run("…")  → deterministic, offline
+```
+
+<Aside type="note">
+Weights are the caller's bandwidth and consent — surface `onProgress`, and consider gating the download behind
+a click. See the model cards for licenses (most here are Apache-2.0). The provider loads models text-only
+(`AutoModelForCausalLM`); multimodal (`image-text-to-text`) repos aren't supported — even with an ONNX build
+they load through the wrong path, so pick a `text-generation` model.
+</Aside>

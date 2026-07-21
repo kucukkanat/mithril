@@ -1,0 +1,115 @@
+---
+title: Running in the browser
+description: The loop runs client-side — pick a transport that fits your trust model, persist to OPFS.
+sidebar:
+  order: 12
+  label: In the browser
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Mithril genuinely runs in the browser — the [playground](/playground/) on this site executes the
+real loop in a Web Worker. Against a cloud provider, the only thing that changes client-side is **how
+the request reaches the provider** — that is the `transport` (below). Or you can go all the way and run
+**the model itself in the browser**, so there's no request, no server, and no key at all — see
+[Local inference](#no-server-run-the-model-in-the-browser).
+
+## Three transports, three trust models
+
+```ts
+// BYOK — the key lives in the browser. Fine for local, personal, or trusted-user tools.
+const byok = { kind: "byok", apiKey: myOpenAiKey } as const;
+
+// Proxy — your server holds the key and forwards the call. The browser never sees it.
+const proxy = { kind: "proxy", baseUrl: "https://api.example.com/llm" } as const;
+
+// Ephemeral — your server mints a short-lived token per session.
+const ephemeral = {
+  kind: "ephemeral",
+  baseUrl: "https://api.example.com/llm",
+  token: () => fetchSessionToken(),
+} as const;
+
+await assistant.run("Summarize this page.", { transport: proxy });
+```
+
+Omit `transport` entirely and BYOK is read from `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` — handy on a
+server, but there is no such env in a browser, so pass one explicitly.
+
+<Aside type="caution" title="BYOK exposes the key">
+A BYOK key in client code is visible to the user — never ship it in a public app. Use **proxy**
+(your server holds the secret) or **ephemeral** (short-lived, server-minted tokens) for anything
+untrusted. BYOK is for local dev and personal tools.
+</Aside>
+
+<Aside type="tip" title="Try BYOK in the playground">
+The [playground](/playground/) can run these examples against a real model: open ⚙ Settings, choose
+**Live · your key**, and paste a key for OpenAI, Anthropic, Google, or Groq. It's pure BYOK — the key
+stays in your browser and is sent straight to the provider, exactly as described here.
+</Aside>
+
+## CORS, handled
+
+All four playground providers work directly from a browser with BYOK — you don't wire any of it:
+
+- **OpenAI** serves CORS unconditionally, so the request just works.
+- **Anthropic** auto-injects the `anthropic-dangerous-direct-browser-access: true` header, so the
+  request isn't blocked. (The name of that header is a feature: it makes the key-exposure trade-off
+  impossible to make by accident.)
+- **Google** sends the key as a `?key=` query parameter to `generativelanguage.googleapis.com`, which
+  serves permissive CORS for API-key calls.
+- **Groq** speaks the OpenAI wire format (point `openaiProvider` at its `baseUrl`) and is CORS-friendly.
+
+The provider does the right thing per host — Mistral/xAI are the ones that may still need a proxy.
+
+## No server: run the model in the browser
+
+Transports solve "how does the key reach a cloud model." The other option is to have **no cloud model**:
+`@mithril/providers/transformers` runs an open model **on-device** with [Transformers.js](https://huggingface.co/docs/transformers.js)
+(WebGPU, falling back to WASM/CPU). There's no transport, no key, and no network after the one-time weight
+download — everything else about the agent is identical.
+
+```ts
+import { agent } from "@mithril/core/agent";
+import { transformers, preload } from "@mithril/providers/transformers";
+
+// One-time weight download (cached across reloads); drive a progress bar with onProgress.
+await preload("onnx-community/Qwen3-0.6B-ONNX", { onProgress: (p) => setBar(p.progress) });
+
+const local = agent({
+  model: transformers("onnx-community/Qwen3-0.6B-ONNX"), // self-wires — no transport, no key
+  instructions: "You are a concise assistant.",
+});
+
+const result = await local.run("Summarize this page."); // runs entirely in the tab
+```
+
+`@huggingface/transformers` is an **optional peer dependency** — install it only in the app that uses local
+inference. Weights are ~0.4–2 GB (feature-detect WebGPU; it falls back to WASM), and tool-calling on small
+local models is **best-effort**. The full model catalog, worker recipe, and honest caveats are in the
+[Local inference guide](/guides/local-inference/).
+
+## Persist to OPFS
+
+For durable client-side state — resumable tokens, cached transcripts — use the Origin Private File
+System adapter. It is the same `FileSystem` interface as the Node and in-memory backends, so code
+written against it ports unchanged:
+
+```ts
+import { opfsFileSystem } from "@mithril/fs/opfs";
+
+const fs = opfsFileSystem(); // durable, per-origin, no permission prompt
+await fs.mkdir("runs");
+await fs.writeFile("runs/last.token", suspendedToken);
+const token = await fs.readText("runs/last.token");
+```
+
+Pair it with a [Checkpointer](/guides/memory-and-checkpointing/) to suspend a run in one tab and
+resume it in another.
+
+<Aside type="note" title="Rendering a live inspector">
+Because every consumer needs only the event stream, you can render a live inspector in the browser
+by iterating `handle.events`. The packaged UI ships at `@mithril/devtools/ui` — point
+`<RunInspector source={handle} />` at your run, or `import "mithril/devtools/attach"` for zero-touch
+capture. See [Devtools](/guides/devtools/).
+</Aside>

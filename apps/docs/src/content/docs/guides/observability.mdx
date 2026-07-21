@@ -1,0 +1,66 @@
+---
+title: Observability
+description: Fold a run's events into gen_ai.* spans — no separate instrumentation, content opt-in.
+sidebar:
+  order: 14
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Every `MithrilEvent` carries a `span` (`id`, `parentId`, `traceId`, `kind`). Because that linkage
+rides on *every* event, OpenTelemetry export is a **pure fold** over the stream — there is no
+separate instrumentation layer to wire, drift, or forget.
+
+## Fold events into spans
+
+`toGenAiSpans` groups events by `span.id` and reconstructs the semantic-convention hierarchy —
+`invoke_agent` > `chat` > `execute_tool` — with `gen_ai.*` attributes:
+
+```ts
+import { toGenAiSpans } from "@mithril/otel";
+
+const handle = assistant.stream(input);
+const events = [];
+for await (const e of handle.events) events.push(e);
+
+const spans = toGenAiSpans(events);
+// each: { spanId, parentSpanId, traceId, name, kind, startTime, endTime, attributes }
+```
+
+Attributes follow the GenAI conventions: `gen_ai.request.model`, `gen_ai.usage.output_tokens`,
+`gen_ai.tool.name`, `gen_ai.span.kind`. An `execute_tool` span is named for the tool it ran.
+
+## Stream into your exporter
+
+Pass a `SpanSink` and each reconstructed span is handed to `onSpan` — a thin adapter is all it takes
+to bridge to `@opentelemetry/api` (or any backend):
+
+```ts
+const sink = {
+  onSpan(span) {
+    tracer
+      .startSpan(span.name, { startTime: span.startTime, attributes: span.attributes })
+      .end(span.endTime);
+  },
+};
+
+toGenAiSpans(events, sink);
+```
+
+## Content is opt-in
+
+Metadata — model, token counts, tool names, timing — is captured **by default**. Prompts and tool
+outputs are **not**, because they may carry PII. Turn them on explicitly when you need them:
+
+```ts
+toGenAiSpans(events, sink, { captureContent: true }); // include prompts & outputs
+```
+
+This is the safe default: you get useful traces with no accidental data exfiltration, and you make
+the decision to log content a deliberate one.
+
+<Aside type="tip" title="Same log, many consumers">
+The events you fold here are the same ones [React](/guides/react/) renders and
+[evals](/guides/evals/) score — [one canonical stream](/concepts/the-protocol/), many consumers.
+Add tracing without touching the loop.
+</Aside>

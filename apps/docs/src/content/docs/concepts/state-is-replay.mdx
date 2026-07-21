@@ -1,0 +1,49 @@
+---
+title: State = replay(log, cursor)
+description: State is a pure fold over the event log — never a separately stored, desyncable checkpoint.
+sidebar:
+  order: 2
+  label: State = replay()
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Mithril never stores run state as a mutable checkpoint. State is _always_ derived:
+
+```ts
+import { reduce, replay } from "@mithril/core/protocol";
+
+const state = replay(log);          // fold the whole log
+const earlier = replay(log, 5);     // state as of seq 5 — time travel, free
+```
+
+`reduce(state, event)` is a pure, total step; `replay(log, cursor?)` folds the log up to an
+optional cursor. That's it. There is no second source of truth.
+
+## Why a fold, not a checkpoint
+
+A separately-stored checkpoint can drift from the events that produced it, and a run that aborts
+_mid-write_ can leave a half-written checkpoint that corrupts the next resume. An append-only log
+structurally dodges both:
+
+- **No desync** — the state is a function of the log, so it can't disagree with it.
+- **No corruption race** — appending an event is atomic; there's no partial checkpoint to repair.
+- **Time-travel is free** — scrub the cursor and re-fold. That's exactly what the
+  [playground](/playground/)'s scrubber does — drag it and watch `replay(log.slice(0, cursor))`
+  rebuild the transcript.
+
+<Aside type="note">
+One status isn't produced by `reduce()`: `unresumable`. It's environment-relative (a schema was
+removed, a tool drifted) and set at resume time, not derived from the log. Every _other_ state is
+a pure fold.
+</Aside>
+
+## The state you get
+
+`RunState` is small and JSON-safe: `runId`, `status`, `messages`, `usage`, `cursor` (last applied
+seq), an optional `pending` suspension, and span-routed `subruns`. Sub-agent lifecycles accrue
+into their own sub-run — the reducer routes each event by `span`, so a child's events never
+corrupt the root.
+
+Because state is a fold, **durable persistence is just persisting the log** (plus a verified
+token). See [Memory & checkpointing](/guides/memory-and-checkpointing/).

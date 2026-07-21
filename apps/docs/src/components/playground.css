@@ -1,0 +1,534 @@
+.pg {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mth-font-sans);
+  border: 1px solid var(--border);
+  border-radius: var(--mth-radius-lg);
+  overflow: hidden;
+}
+
+/* ── Toolbar ── */
+.pg-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mth-space-3);
+  padding: var(--mth-space-2) var(--mth-space-3);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.pg-presets {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.pg-preset {
+  font: inherit;
+  font-size: var(--mth-fs-xs);
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--mth-radius-full);
+  padding: 5px 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--mth-dur-fast) var(--mth-ease);
+}
+.pg-preset:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+.pg-preset.active {
+  color: var(--accent-contrast);
+  background: var(--accent);
+  border-color: var(--accent);
+  font-weight: var(--mth-weight-medium);
+}
+.pg-actions {
+  display: flex;
+  gap: var(--mth-space-2);
+}
+.pg-btn {
+  font: inherit;
+  font-size: var(--mth-fs-sm);
+  font-weight: var(--mth-weight-medium);
+  color: var(--text);
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--mth-radius-md);
+  padding: 6px 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all var(--mth-dur-fast) var(--mth-ease);
+}
+.pg-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--mth-ink-300);
+}
+.pg-run {
+  color: var(--accent-contrast);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.pg-run:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+.pg-stop {
+  color: var(--mth-rose);
+  border-color: color-mix(in srgb, var(--mth-rose) 40%, transparent);
+}
+.pg-btn kbd {
+  font-family: var(--mth-font-mono);
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: color-mix(in srgb, #000 22%, transparent);
+  border: 1px solid color-mix(in srgb, #fff 14%, transparent);
+}
+
+/* ── Body split ── */
+.pg-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  min-height: 0;
+}
+.pg-editor {
+  min-height: 0;
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bg-deep) 40%, var(--bg));
+}
+.cm-host {
+  height: 100%;
+  min-height: 0;
+}
+.cm-host .cm-editor {
+  height: 100%;
+}
+
+/* ── Panel ── */
+.pg-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+.pg-tabs {
+  display: flex;
+  gap: 2px;
+  padding: var(--mth-space-2) var(--mth-space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+.pg-tab {
+  font: inherit;
+  font-size: var(--mth-fs-sm);
+  text-transform: capitalize;
+  color: var(--text-faint);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 6px 12px 9px;
+  cursor: pointer;
+}
+.pg-tab:hover {
+  color: var(--text);
+}
+.pg-tab.active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+.pg-panel-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  font-family: var(--mth-font-mono);
+  font-size: var(--mth-fs-xs);
+}
+.pg-empty {
+  padding: var(--mth-space-6);
+  color: var(--text-faint);
+  text-align: center;
+  font-family: var(--mth-font-mono);
+  font-size: var(--mth-fs-xs);
+}
+
+/* Event list + state/transcript are rendered by the shared @mithril/devtools/ui components (.mth-dev-*);
+   their styles + token mapping live at the bottom of this file. The playground keeps only its own status
+   badge (.pg-badge) and status colours (.s-*), below. */
+
+/* ── Status badge (playground status bar) ── */
+.pg-badge {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: var(--mth-tracking-wide);
+  padding: 2px 8px;
+  border-radius: var(--mth-radius-full);
+  border: 1px solid var(--border-strong);
+  color: var(--text-muted);
+}
+.s-running {
+  color: var(--mth-accent);
+  border-color: var(--border-accent);
+}
+.s-completed {
+  color: var(--mth-mint);
+  border-color: color-mix(in srgb, var(--mth-mint) 40%, transparent);
+}
+.s-suspended {
+  color: var(--mth-amber);
+  border-color: color-mix(in srgb, var(--mth-amber) 40%, transparent);
+}
+.s-error {
+  color: var(--mth-rose);
+  border-color: color-mix(in srgb, var(--mth-rose) 40%, transparent);
+}
+
+/* ── Output ── */
+.pg-output {
+  padding: var(--mth-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mth-space-3);
+}
+.out-text {
+  margin: 0;
+  font-family: var(--mth-font-sans);
+  font-size: var(--mth-fs-sm);
+  color: var(--text-strong);
+  white-space: pre-wrap;
+}
+.out-object {
+  margin: 0;
+  padding: var(--mth-space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--mth-violet);
+  border-radius: var(--mth-radius-md);
+  color: var(--text);
+  overflow: auto;
+}
+.out-logs {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-top: 1px solid var(--border);
+  padding-top: var(--mth-space-2);
+}
+.log-line {
+  white-space: pre-wrap;
+  color: var(--text-muted);
+}
+.log-warn {
+  color: var(--mth-amber);
+}
+.log-error {
+  color: var(--mth-rose);
+}
+.pg-error {
+  padding: var(--mth-space-3);
+  background: color-mix(in srgb, var(--mth-rose) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mth-rose) 35%, transparent);
+  border-radius: var(--mth-radius-md);
+  color: var(--mth-rose);
+  white-space: pre-wrap;
+}
+
+/* ── Approval (HITL) ── */
+.pg-approval {
+  margin: var(--mth-space-2);
+  padding: var(--mth-space-3);
+  background: color-mix(in srgb, var(--mth-amber) 10%, var(--surface-2));
+  border: 1px solid color-mix(in srgb, var(--mth-amber) 35%, transparent);
+  border-radius: var(--mth-radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mth-space-2);
+}
+.pg-approval-head {
+  display: flex;
+  align-items: center;
+  gap: var(--mth-space-2);
+  flex-wrap: wrap;
+}
+.pg-approval-head code {
+  font-family: var(--mth-font-mono);
+  font-size: var(--mth-fs-xs);
+  color: var(--text);
+}
+.pg-approval-badge {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: var(--mth-tracking-wide);
+  color: var(--mth-amber);
+}
+.pg-approval p {
+  margin: 0;
+  font-size: var(--mth-fs-xs);
+  color: var(--text-muted);
+  font-family: var(--mth-font-sans);
+}
+.pg-approval-actions {
+  display: flex;
+  gap: var(--mth-space-2);
+}
+
+/* ── Scrubber + status ── */
+.pg-scrubber {
+  display: flex;
+  align-items: center;
+  gap: var(--mth-space-3);
+  padding: var(--mth-space-2) var(--mth-space-3);
+  border-top: 1px solid var(--border);
+}
+.pg-scrubber input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent);
+}
+.pg-scrubber-label {
+  font-family: var(--mth-font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  min-width: 4em;
+  text-align: right;
+}
+.pg-status {
+  display: flex;
+  align-items: center;
+  gap: var(--mth-space-3);
+  padding: var(--mth-space-2) var(--mth-space-3);
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+  font-family: var(--mth-font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+/* ── Responsive ── */
+@media (max-width: 54rem) {
+  .pg-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(220px, 40%) 1fr;
+  }
+  .pg-editor {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+/* ── Shared @mithril/devtools/ui components inside the playground ──
+   EventList / StateTree are the single-source-of-truth devtools components. Map their local --d-* / --k-*
+   tokens onto the site theme and strip their standalone chrome so they fill the panel (which already
+   scrolls). Event-family (--k-*) colours are inherited from ui.css. */
+.pg-panel-body :where(.mth-dev-events, .mth-dev-state, .mth-dev-empty) {
+  --d-bg: transparent;
+  --d-surface: transparent;
+  --d-surface-2: var(--surface-2);
+  --d-border: var(--border);
+  --d-text: var(--text);
+  --d-text-muted: var(--text-muted);
+  --d-accent: var(--accent);
+  --d-mono: var(--mth-font-mono);
+  --d-radius: var(--mth-radius-sm);
+}
+.pg-panel-body :where(.mth-dev-events, .mth-dev-state) {
+  max-height: none;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 6px;
+}
+
+/* ── "Run against" model bar (always-visible toolbar row) ── */
+.pg-modelbar {
+  display: flex;
+  align-items: center;
+  gap: var(--mth-space-2) var(--mth-space-3);
+  flex-wrap: wrap;
+  padding: var(--mth-space-2) var(--mth-space-3);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--edge-hi);
+}
+.pg-mb-label {
+  font-family: var(--mth-font-mono);
+  font-size: var(--mth-fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--mth-tracking-caps);
+  color: var(--text-faint);
+}
+.pg-mb-select {
+  font: inherit;
+  font-size: var(--mth-fs-sm);
+  font-weight: var(--mth-weight-medium);
+  color: var(--text);
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--mth-radius-md);
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.pg-mb-select:focus {
+  outline: 2px solid var(--ring);
+  outline-offset: -1px;
+}
+.pg-mb-detail {
+  display: flex;
+  align-items: center;
+  gap: var(--mth-space-2);
+  flex-wrap: wrap;
+}
+.pg-mb-model,
+.pg-mb-key {
+  font: inherit;
+  font-family: var(--mth-font-mono);
+  font-size: var(--mth-fs-xs);
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--mth-radius-md);
+  padding: 5px 9px;
+}
+.pg-mb-model {
+  width: 11rem;
+}
+.pg-mb-key {
+  width: 15rem;
+}
+.pg-mb-model::placeholder,
+.pg-mb-key::placeholder {
+  color: var(--text-faint);
+}
+.pg-mb-hint {
+  font-family: var(--mth-font-sans);
+  font-size: var(--mth-fs-xs);
+  color: var(--text-muted);
+}
+.pg-mb-hint code {
+  font-family: var(--mth-font-mono);
+  color: var(--text-muted);
+}
+.pg-mb-hint.ok {
+  color: var(--mth-mint);
+}
+.pg-mb-hint.warn {
+  color: var(--mth-rose);
+}
+.pg-mb-clear {
+  font: inherit;
+  font-size: var(--mth-fs-xs);
+  color: var(--mth-rose);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.pg-mb-progress {
+  width: 8rem;
+}
+
+/* Shared "get a key" link */
+.pg-link {
+  font-family: var(--mth-font-sans);
+  font-size: var(--mth-fs-2xs);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--link);
+}
+
+/* Download / model-load progress */
+.pg-progress {
+  height: 6px;
+  overflow: hidden;
+  background: var(--surface-3);
+  border-radius: var(--mth-radius-full);
+}
+.pg-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width var(--mth-dur-base) var(--mth-ease);
+}
+.pg-progress-run {
+  margin: var(--mth-space-2) var(--mth-space-3) 0;
+}
+
+/* Live-key confirm gate (untrusted/edited code) */
+.pg-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mth-space-2);
+  margin: var(--mth-space-2) var(--mth-space-3);
+  padding: var(--mth-space-3);
+  background: color-mix(in srgb, var(--mth-rose) 10%, var(--surface-2));
+  border: 1px solid color-mix(in srgb, var(--mth-rose) 35%, transparent);
+  border-radius: var(--mth-radius-md);
+}
+.pg-confirm-head {
+  display: flex;
+  align-items: center;
+  gap: var(--mth-space-2);
+  font-size: var(--mth-fs-sm);
+  color: var(--text-strong);
+}
+.pg-confirm p {
+  margin: 0;
+  font-family: var(--mth-font-sans);
+  font-size: var(--mth-fs-xs);
+  color: var(--text-muted);
+}
+.pg-confirm code {
+  font-family: var(--mth-font-mono);
+  color: var(--text);
+}
+.pg-confirm-actions {
+  display: flex;
+  gap: var(--mth-space-2);
+}
+.pg-approval-badge.warn {
+  color: var(--mth-rose);
+}
+
+/* Mode chip in the status bar */
+.pg-mode-chip {
+  font-family: var(--mth-font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: var(--mth-tracking-wide);
+  padding: 2px 8px;
+  border-radius: var(--mth-radius-full);
+  border: 1px solid var(--border-strong);
+  color: var(--text-muted);
+}
+.pg-mode-chip.mode-live {
+  color: var(--mth-accent);
+  border-color: var(--border-accent);
+}
+.pg-mode-chip.mode-local {
+  color: var(--mth-violet);
+  border-color: color-mix(in srgb, var(--mth-violet) 40%, transparent);
+}
+
+/* Classified error + raw details */
+.pg-error-raw {
+  margin-top: var(--mth-space-2);
+}
+.pg-error-raw summary {
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: var(--mth-fs-2xs);
+}
+.pg-error-raw pre {
+  margin: var(--mth-space-2) 0 0;
+  white-space: pre-wrap;
+  color: var(--text-muted);
+}

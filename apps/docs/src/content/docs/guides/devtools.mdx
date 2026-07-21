@@ -1,0 +1,233 @@
+---
+title: Devtools
+description: A visual, time-travelling inspector for your runs — read the panels, wire it into your app, drive HITL, and capture headlessly.
+sidebar:
+  order: 10
+  label: Devtools
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import DevtoolsDemo from "../../../components/DevtoolsDemo.tsx";
+import DevtoolsVanillaDemo from "../../../components/DevtoolsVanillaDemo.astro";
+
+Every run is a stream of `MithrilEvent`s, so you can *see* one. `@mithril/devtools` is a headless run
+inspector plus a **framework-agnostic** UI that renders it — event stream, span tree, cost + context meters,
+and a **time-travel scrubber** (state is `replay(log, cursor)`, so scrubbing back is free and always correct).
+Use it as a React component, a Web Component, or a plain mount function — [same UI, no React
+required](#use-it-without-react).
+
+## Live inspector
+
+This is the real `<RunInspector>` over a scripted run — a tool call, a delegated sub-agent, then the answer.
+Drag the scrubber to move state through time; click any event to jump to it.
+
+<DevtoolsDemo client:only="react" />
+
+## Reading the inspector
+
+Top to bottom, here's what each panel tells you:
+
+- **Meter bar** — the run's `status`, `steps`, total `tokens`, and `cost` (read straight off `usage`). Pass a
+  `contextWindow` and you also get a **context-fill bar**; if the run compacted, a `compacted` figure shows the
+  tokens reclaimed.
+- **Suspension card** — appears only while the run is `suspended`, showing what it's waiting on (see
+  [Interactive approvals](#interactive-approvals-hitl)).
+- **Scrubber** — a slider over `replay(log, cursor)`. Drag it (or click an event) to view the run's exact
+  state at any point; the **Live** button snaps back to the tail and follows new events.
+- **Event list** — every event in order, colour-coded by family. Events past the cursor are dimmed; the one at
+  the cursor is highlighted.
+- **State & span tree** — the message/tool transcript at the current cursor, plus a **span tree**
+  (`invoke_agent → chat → execute_tool`, with nested sub-runs for `asTool`/handoffs) and a collapsible raw
+  `RunState`.
+
+The event dot colours map to families from `classifyEvent`:
+
+| Colour family | Events | Meaning |
+| --- | --- | --- |
+| lifecycle | `run.*`, `step.*` | Run/step boundaries |
+| text | `text.delta`, `reasoning.delta`, `message.end` | The assistant's message |
+| tool | `tool.call`, `tool.input.delta`, `tool.progress`, `tool.approval.requested` | A tool being called |
+| toolResult | `tool.result` | A tool's output |
+| object | `object.delta`, `object.final` | Structured output |
+| control | `suspend`, `resume`, `handoff*` | Suspension & delegation |
+| meta | `usage`, `compaction` | Accounting & context economics |
+| error | `tool.error`, `run.error`, `object.invalid` | Failures |
+| custom | `custom.*` | Your own `ctx.emit` events |
+
+## Add it to a React app
+
+<Steps>
+
+1. **Import the component and its stylesheet.** React is an optional peer dependency; the CSS is
+   self-contained and themeable. (Not using React? [Jump to the framework-agnostic API](#use-it-without-react).)
+
+   ```tsx
+   import { RunInspector } from "@mithril/devtools/ui";
+   import "@mithril/devtools/ui.css";
+   ```
+
+2. **Start a run and hand its handle to the inspector.** A `RunHandle` from `agent.stream(...)` is a live
+   source — the inspector tails it as it streams.
+
+   ```tsx
+   function Debugger({ agent }) {
+     const handle = useMemo(() => agent.stream("What's the weather in Paris?"), [agent]);
+     return <RunInspector source={handle} contextWindow={200_000} />;
+   }
+   ```
+
+3. **That's it.** The inspector renders live and the scrubber works over the buffered log the moment the run
+   ends. Style it by overriding the `--d-*` / `--k-*` CSS variables (e.g. map them to your app's tokens).
+
+</Steps>
+
+## Point the UI at a run
+
+`<RunInspector>` takes exactly one source:
+
+```tsx
+// 1. a live RunHandle (streams):
+<RunInspector source={agent.stream("hi")} contextWindow={200_000} />
+
+// 2. a static event log (a recording, or InspectedRun.events):
+<RunInspector events={recorded.events} />
+
+// 3. an EventTransport for cross-context live-tail (a run happening in a worker/server):
+<RunInspector transport={busTransport} />
+```
+
+## Use it without React
+
+The UI is **not** React-only. The same inspector ships as a **Web Component** and as plain **mount
+functions**, so it drops into Vue, Svelte, Angular, Solid, or a vanilla page — no React anywhere. This demo is
+a `<mithril-run-inspector>` custom element driven by a plain `<script>` (there is no React island on this
+line):
+
+<DevtoolsVanillaDemo />
+
+**Web Component** — register once, then use the tag and set the run source as a property:
+
+```html
+<script type="module">
+  import { defineDevtoolsElements } from "@mithril/devtools/element";
+  import "@mithril/devtools/ui.css";
+  defineDevtoolsElements(); // registers <mithril-run-inspector> and <mithril-devtools-panel>
+</script>
+
+<mithril-run-inspector context-window="200000"></mithril-run-inspector>
+<script type="module">
+  document.querySelector("mithril-run-inspector").source = agent.stream("hi");
+</script>
+```
+
+In a framework it's just an element — e.g. Svelte `<mithril-run-inspector bind:this={el} />` then
+`el.source = handle`, or Vue `<mithril-run-inspector ref="el" :context-window="200000" />`.
+
+**Mount function** — imperative, for full control; returns a handle to update or destroy:
+
+```ts
+import { mountRunInspector } from "@mithril/devtools/dom";
+import "@mithril/devtools/ui.css";
+
+const view = mountRunInspector(document.getElementById("dev"), {
+  source: agent.stream("hi"),
+  contextWindow: 200_000,
+});
+// view.update({ events }) to swap the source; view.destroy() to tear down.
+```
+
+`@mithril/devtools/dom` also exports `mountDevtoolsPanel`, `mountEventList`, and `mountStateTree`. The React
+components at `@mithril/devtools/ui` are thin wrappers over exactly these — **one rendering implementation,
+every framework**.
+
+## Interactive approvals (HITL)
+
+For a **live, resumable** run, pass `onResolve`. The suspension card then renders controls for every tier —
+Approve / Reject for a `needsApproval` tool, and a Resolve input for a tool-returned `suspend(...)`,
+`ctx.suspend()`, or a handoff. Resume the run and point the inspector at the new handle:
+
+```tsx
+function ResumableRun({ agent }) {
+  const [handle, setHandle] = useState(() => agent.stream("Deploy to production."));
+  const onResolve = async (resolution) => {
+    setHandle(await handle.resolve(resolution)); // continues the SAME run, streamed
+  };
+  return <RunInspector source={handle} onResolve={onResolve} />;
+}
+```
+
+`resolution` is a [`ResumeValue`](/guides/human-in-the-loop/): `{ kind: "approve" }` /
+`{ kind: "reject", message }` for approvals, or `{ kind: "resolve", value }` for the other tiers.
+
+## A devtools panel in its own tab
+
+Combine [zero-touch attach](#zero-touch-attach) with `<DevtoolsPanel>` to watch **every** run in your app
+from a separate route or tab — no per-run wiring. Attach publishes each run to a `BroadcastChannel`; the panel
+subscribes, lists runs, and renders a `<RunInspector>` for the selected one.
+
+```tsx
+// your app entry — capture everything:
+import "mithril/devtools/attach";
+
+// a dedicated /devtools route (or a popped-out window):
+import { DevtoolsPanel } from "@mithril/devtools/ui";
+import "@mithril/devtools/ui.css";
+
+export default function DevtoolsRoute() {
+  return <DevtoolsPanel contextWindow={200_000} />;
+}
+```
+
+## Zero-touch attach
+
+You don't have to wire devtools into every run. Add **one side-effect import** at your entry point (or set
+`MITHRIL_DEVTOOLS=1`) and *every* run in the process fans out to the local inspector:
+
+```ts
+import "mithril/devtools/attach";
+// …every agent.run()/stream() in this process is now captured — no other change.
+```
+
+It no-ops in production builds (unless `MITHRIL_DEVTOOLS` is set) and tree-shakes out. Under the hood it
+registers a process-wide [`registerGlobalConsumer`](/reference/core/agent/functions/registerglobalconsumer/)
+and, in a browser, mirrors events onto a `BroadcastChannel` (`DEVTOOLS_CHANNEL`) so a `<DevtoolsPanel>` in
+another tab can live-tail. For explicit control, call `attachDevtools()` (returns a detach function).
+
+## In tests, or headless
+
+The UI is optional — the inspector is a pure `EventConsumer`. Attach it to assert on a run, or to build your
+own view:
+
+```ts
+import { createInspector } from "@mithril/devtools";
+
+const inspector = createInspector();
+await agent({ model, instructions: "…", use: [{ name: "dev", consumers: [inspector.consumer] }] }).run("hi");
+
+const run = inspector.latest();          // most recent run
+run?.state.status;                        // "completed"
+run?.timeline;                            // [{ seq, ts, type, span }, …]
+inspector.runIds();                       // every retained run id
+```
+
+`createInspector({ maxRuns })` caps retention; `devtoolsPlugin()` bundles the consumer as a plugin for the
+`use:` array; `getGlobalInspector()` is the process-wide instance the attach shim writes to.
+
+## Build your own view
+
+The same package exports the pure, DOM-free selectors the UI renders with, so any framework (or a CLI) can
+render a Mithril run:
+
+```ts
+import { buildSpanTree, contextMeter, classifyEvent, previewEvent } from "@mithril/devtools";
+
+const tree = buildSpanTree(run.events);              // spans → nested sub-runs
+const { tokens, cost, pct } = contextMeter(run.state, { contextWindow: 200_000 });
+run.events.map((e) => ({ family: classifyEvent(e.type), text: previewEvent(e) }));
+```
+
+<Aside type="note">
+The inspector reads only the stamped event stream — never the loop. Cost and context meters read straight
+off `usage`/`compaction` events; the span tree is derived from each event's `span`. Nothing about a run is
+hidden from what devtools can show.
+</Aside>

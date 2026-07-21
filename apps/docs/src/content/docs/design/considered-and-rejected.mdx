@@ -1,0 +1,59 @@
+---
+title: Considered & rejected
+description: The deliberate "we chose X over the obvious Y, and here's why" decisions.
+sidebar:
+  order: 3
+---
+
+Good design is mostly saying no. These are the alternatives Mithril considered and deliberately
+rejected — the honest trade-offs behind the API you actually see.
+
+### Positional `Deps`/`Susp` type args on `agent`/`tool`
+**Rejected** — they destroy `const Tools` inference. Adopted a curried factory (`createHarness<Deps>()`)
+instead, so you bind dependencies once and never restate a generic.
+
+### Making every additive event a MAJOR version
+**Rejected** — it would force a coordinated major across every consumer for a purely additive change.
+The event union is declared **non-exhaustive by contract**: adding an event type is a minor bump, and
+consumers must tolerate unknowns.
+
+### Signing over a canonicalized state body
+**Rejected** — canonicalizing means parsing hostile bytes _before_ verifying them. Mithril signs (and
+verifies) the **exact transmitted bytes**, then parses. See [verify before parse](/concepts/errors/).
+
+### A single durability mode
+**Rejected** both "always require a signing key" and "leave it optional." Adopted a three-way
+`persistence` discriminant: `ephemeral` | `durable-local` (unsigned, same-origin, insecure-context-safe)
+| `durable` (signed).
+
+### The inline `result.resume()` closure
+**Rejected** — an in-process-only trap that can't cross a process boundary. Split into `resume`
+(headless), `rehydrate` (streamed), and an in-process resolve.
+
+### Per-subrun `seq` spaces
+**Rejected** for v1 — a single ordering authority is what makes replay deterministic. The span tree
+stays additive for a future per-subrun `seq` if it's ever needed.
+
+### A private middleware side channel
+**Rejected** — it would reintroduce framework magic and the hidden-prompt class of bug. Middleware
+communicates only through emitted events. See [composability](/concepts/composability/).
+
+### Unioning plugin tool types into the agent's global type
+**Rejected** — it inflates `tsc` instantiation depth. Plugin tool types are recovered locally via
+`InferPluginTools`.
+
+### A single `/sqlite` subpath with runtime detection
+**Rejected** — magic auto-detection breaks portability. Explicit `/sqlite-node` and `/sqlite-bun`
+subpaths, per the [adapter laws](/concepts/capability-adapters/).
+
+### The static `node:`-import scan as the portability _contract_
+**Rejected** as the contract (kept only as a fast pre-filter). The real gate _executes_ golden
+trajectories in a workerd isolate and an insecure-context browser.
+
+### Providers that yield fully-stamped events
+**Rejected** — only the loop may assign `seq`. Providers yield pre-`EventMeta` `ProviderChunk`s; the
+loop stamps them. This is also what keeps eval replay deterministic.
+
+### Replaying evals by re-running the loop
+**Rejected** — replay re-emits the recorded log wholesale; nothing executes, so it's deterministic and
+network-free.

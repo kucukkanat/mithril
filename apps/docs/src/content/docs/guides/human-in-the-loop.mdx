@@ -1,0 +1,143 @@
+---
+title: Human-in-the-loop
+description: Mark a tool needsApproval and the run suspends as a typed, serializable value you resume.
+sidebar:
+  order: 5
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
+
+Some tool calls shouldn't fire without a human. Mithril models that as a **value**, not a thrown
+`interrupt()` — [suspension is a discriminated branch of `RunResult`](/concepts/suspension/) you
+can't ignore at the type level.
+
+## Gate a tool
+
+Set `needsApproval` — a boolean, or a predicate over the input for a case-by-case gate. The run
+pauses *before* `execute`, so nothing side-effecting has run when it suspends:
+
+```ts
+const deploy = tool({
+  name: "deploy",
+  description: "Deploy to an environment.",
+  inputSchema: z.object({ env: z.string() }),
+  needsApproval: ({ env }) => env === "production", // or just: true
+  execute: async ({ env }) => ({ deployed: true, env }),
+});
+```
+
+## Resume with a decision
+
+A suspended result carries a `request` (the UI-facing pending view) and a `token` (the sealed,
+resumable state). Feed the token back with an `ApprovalDecision`:
+
+```ts
+const r = await assistant.run("Deploy to production.");
+
+if (r.status === "suspended") {
+  const done = await assistant.resume(r.token, { kind: "approve" });
+  //                                            or { kind: "reject", message: "not now" }
+  //                                            or { kind: "edit", input: { env: "staging" } }
+}
+```
+
+The three decisions map to the obvious outcomes: **approve** runs the tool as requested,
+**reject** feeds the model a refusal message, and **edit** runs it with a corrected input. The
+token serializes as the event log plus a pending descriptor — never your `deps` or tool
+functions — so you can persist it in a [Checkpointer](/guides/memory-and-checkpointing/) and
+resume in a different process (sign it with `seal`/`open` when it crosses a trust boundary).
+
+## Pause from inside a tool
+
+Approval gates before `execute`. Two more tiers let a tool pause *itself*:
+
+**Tier-1b — return `suspend(...)`.** The tool hands back a request; the resolution you supply
+becomes the tool's result (it does not re-run):
+
+```ts
+const askUser = tool({
+  name: "ask_user",
+  description: "Ask the operator a question.",
+  inputSchema: z.object({ question: z.string() }),
+  execute: async ({ question }) =>
+    suspend({ kind: "user.input", payload: { question }, resolutionSchema: z.string(), resolutionSchemaId: "ask" }),
+});
+```
+
+**Tier-2 — `await ctx.suspend()` mid-execute.** The tool pauses partway through; on resume its
+`execute` re-runs and `ctx.journal(key, fn)` replays recorded effects so they run **exactly once**:
+
+```ts
+execute: async (input, ctx) => {
+  const draft = await ctx.journal("draft", () => createDraft(input)); // runs once across resume
+  const ok = await ctx.suspend({ kind: "confirm", payload: { draft }, resolutionSchema: z.boolean(), resolutionSchemaId: "c" });
+  return ok ? publish(draft) : { cancelled: true };
+};
+```
+
+Resume either tier with a **resolution value** instead of an approval decision:
+
+```ts
+if (r.status === "suspended") {
+  const done = await assistant.resume(r.token, { kind: "resolve", value: "Ada" });
+}
+```
+
+## Stream the continuation, or resume in-process
+
+`resume()` returns the **final `RunResult`**. To stream the resumed run instead, use `rehydrate()`
+— the streaming twin of `resume()`:
+
+```ts
+const handle = assistant.rehydrate(r.token, { kind: "approve" });
+for await (const delta of handle.text) process.stdout.write(delta);
+```
+
+If you already hold the live `RunHandle` (from `stream()`), continue it in-process with no token
+round-trip via `handle.resolve()`:
+
+```ts
+const first = assistant.stream("Deploy to production.");
+if ((await first.result()).status === "suspended") {
+  const resumed = await first.resolve({ kind: "approve" });
+  await resumed.result();
+}
+```
+
+## Try it live
+
+Running this suspends at the `deploy` call and surfaces Approve / Reject. Approve to see the tool
+run and the answer stream in:
+
+<Runnable title="hitl.ts" code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const model = testModel(scriptedProvider([
+  [
+    { type: "tool.call", callId: "c1", name: "deploy", input: { env: "production" } },
+    { type: "message.end", finishReason: "tool_calls", usage },
+  ],
+  [
+    { type: "text.delta", delta: "Deployed to production." },
+    { type: "message.end", finishReason: "stop", usage },
+  ],
+]));
+
+const deploy = tool({
+  name: "deploy",
+  description: "Deploy the app to an environment.",
+  inputSchema: z.object({ env: z.string() }),
+  needsApproval: true,
+  execute: async ({ env }) => ({ deployed: true, env }),
+});
+
+await run(agent({ model, instructions: "Deploy when asked.", tools: [deploy] }), "Deploy to production.");`} />
+
+<Aside type="note" title="What's shipped">
+All three tiers (approval, tool-returned `suspend(...)`, and `ctx.suspend()` mid-execute), plus
+`resume()`, streaming `rehydrate()`, and in-process `RunHandle.resolve()`, are implemented and
+tested. Calling one agent as another's tool with `asTool()` surfaces a suspended sub-agent's child
+token for a manual two-step resume — first-class nested HITL resume is on the [Roadmap](/roadmap/).
+</Aside>

@@ -1,0 +1,12 @@
+{
+  "name": "@mithril/vectors",
+  "version": "0.0.0",
+  "description": "Runtime-agnostic VectorStore for Mithril — the portable core of retrieval (RAG).",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": { "types": "./src/index.ts", "import": "./src/index.ts" },
+    "./sqlite-bun": { "types": "./src/sqlite-bun.ts", "import": "./src/sqlite-bun.ts" }
+  },
+  "scripts": { "test": "bun test" }
+}

@@ -1,0 +1,8 @@
+{
+  "//": "node:vm comes from @types/node.",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"]
+}

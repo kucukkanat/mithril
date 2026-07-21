@@ -1,0 +1,143 @@
+---
+// Marks reflect the in-repo landscape survey (docs/design → /design/landscape).
+// ● = yes · ◐ = partial / with caveats · ○ = no. Kept to architectural properties
+// that are hard to be wrong about, not subjective quality judgements.
+type Mark = "y" | "p" | "n";
+interface Row {
+  label: string;
+  mithril: Mark;
+  langgraph: Mark;
+  aisdk: Mark;
+  mastra: Mark;
+}
+
+const rows: Row[] = [
+  { label: "Full agent loop runs in the browser", mithril: "y", langgraph: "n", aisdk: "p", mastra: "n" },
+  { label: "Ejectable ~100-line readable loop", mithril: "y", langgraph: "n", aisdk: "p", mastra: "n" },
+  { label: "Typed event stream is the public API", mithril: "y", langgraph: "n", aisdk: "n", mastra: "n" },
+  { label: "Durable typed suspension, no server required", mithril: "y", langgraph: "p", aisdk: "n", mastra: "p" },
+  { label: "Per-step trajectory evals", mithril: "y", langgraph: "p", aisdk: "n", mastra: "p" },
+  { label: "No hidden / injected prompts", mithril: "y", langgraph: "n", aisdk: "y", mastra: "p" },
+  { label: "Zero runtime deps in core", mithril: "y", langgraph: "n", aisdk: "p", mastra: "n" },
+];
+
+const glyph: Record<Mark, string> = { y: "●", p: "◐", n: "○" };
+const cols = ["mithril", "langgraph", "aisdk", "mastra"] as const;
+const heads = { mithril: "Mithril", langgraph: "LangGraph", aisdk: "Vercel AI SDK", mastra: "Mastra" };
+---
+
+<section class="cmp mth-container">
+  <div class="cmp-head">
+    <p class="mth-eyebrow">The gaps nobody fills</p>
+    <h2>Harness infrastructure under a loop you can read</h2>
+    <p class="cmp-sub">
+      Model abstraction is a solved, commodity layer. The durable, portable, inspectable harness <em>above</em>
+      it is the part teams keep building by hand. Mithril is that part.
+    </p>
+  </div>
+
+  <div class="cmp-scroll">
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th class="cmp-rowhead"></th>
+          {cols.map((c) => <th class={c === "mithril" ? "cmp-us" : ""}>{heads[c]}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((r) => (
+            <tr>
+              <td class="cmp-rowhead">{r.label}</td>
+              {cols.map((c) => (
+                <td class={`mark m-${r[c]}${c === "mithril" ? " cmp-us" : ""}`}>
+                  <span aria-label={r[c] === "y" ? "yes" : r[c] === "p" ? "partial" : "no"}>{glyph[r[c]]}</span>
+                </td>
+              ))}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+  <p class="cmp-foot">
+    ● full · ◐ partial or with caveats · ○ no. Reflects the
+    <a href="/design/landscape/">July 2026 landscape survey</a>; the ecosystem moves fast — corrections welcome.
+  </p>
+</section>
+
+<style>
+  .cmp {
+    padding-block: var(--mth-space-12);
+  }
+  .cmp-head {
+    max-width: 44rem;
+    margin-bottom: var(--mth-space-7);
+  }
+  .cmp-head h2 {
+    font-size: var(--mth-fs-3xl);
+    letter-spacing: var(--mth-tracking-tight);
+    line-height: var(--mth-lh-snug);
+    margin: var(--mth-space-3) 0;
+  }
+  .cmp-sub {
+    color: var(--text-muted);
+    font-size: var(--mth-fs-lg);
+  }
+  .cmp-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--mth-radius-lg);
+    box-shadow: var(--edge-hi);
+  }
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 40rem;
+    font-size: var(--mth-fs-sm);
+  }
+  .cmp-table th,
+  .cmp-table td {
+    padding: var(--mth-space-3) var(--mth-space-4);
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .cmp-table thead th {
+    color: var(--text-muted);
+    font-weight: var(--mth-weight-medium);
+    font-size: var(--mth-fs-sm);
+  }
+  .cmp-rowhead {
+    text-align: left !important;
+    color: var(--text);
+    font-weight: var(--mth-weight-normal);
+    min-width: 16rem;
+  }
+  .cmp-us {
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+  th.cmp-us {
+    color: var(--accent);
+    font-weight: var(--mth-weight-semibold);
+  }
+  .mark span {
+    font-size: 1.05rem;
+  }
+  .m-y span {
+    color: var(--mth-mint);
+  }
+  .m-p span {
+    color: var(--mth-amber);
+  }
+  .m-n span {
+    color: var(--text-faint);
+  }
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .cmp-foot {
+    margin-top: var(--mth-space-3);
+    font-size: var(--mth-fs-xs);
+    color: var(--text-faint);
+  }
+</style>

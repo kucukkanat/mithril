@@ -1,0 +1,11 @@
+{
+  "name": "@mithril/evals-suite",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Runnable eval suite for Mithril's local/in-browser models — generates a filterable HTML report. Not published.",
+  "scripts": {
+    "eval": "bun run src/suite.ts",
+    "typecheck": "tsc --noEmit"
+  }
+}

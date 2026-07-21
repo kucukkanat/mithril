@@ -1,0 +1,43 @@
+---
+title: Web-standards-only core
+description: The core uses only platform APIs, so it runs identically on Node, Bun, and in the browser.
+sidebar:
+  order: 6
+  label: Web-standards core
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+The `@mithril/core` package imports **zero `node:` modules** and carries **zero runtime
+dependencies** beyond a types-only Standard Schema mirror. It uses only what every modern runtime
+already has:
+
+- `fetch` and WebStreams
+- `AbortSignal`
+- WebCrypto — `getRandomValues` always; `subtle` only at seal/open
+- `structuredClone`
+
+That's why the same loop runs on Node, on Bun, and — genuinely — in a browser tab.
+
+> If it can't run client-side in an insecure context, it isn't in core.
+
+<Aside type="tip" title="Proven by execution, not by a scan">
+A static "no `node:` imports" grep is kept only as a fast pre-filter. The real contract is
+_executed_: a corpus of golden trajectories is replayed inside a real workerd isolate **and**
+inside a headless browser over both `https` and plain `http` (insecure context). If the core
+regresses its portability, that gate goes red.
+</Aside>
+
+## Running in the browser, honestly
+
+Browser support is real, but it comes with honest caveats:
+
+- **BYOK leaks the key.** A key in the browser is visible to the user. Production apps use a
+  `proxy` or `ephemeral`-token [transport](/guides/running-in-the-browser/), not `byok`.
+- **CORS differs by provider.** OpenAI serves `Access-Control-Allow-Origin: *`; Anthropic requires
+  an explicit opt-in header, which Mithril auto-injects for browser-safe providers.
+- **Some capabilities can't exist client-side.** Those are handled by [capability
+  adapters](/concepts/capability-adapters/) that degrade honestly — never a fake local
+  implementation.
+
+Anything runtime-specific is injected, never assumed — which is the subject of the next concept.

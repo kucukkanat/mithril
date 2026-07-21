@@ -1,0 +1,14 @@
+---
+editUrl: false
+next: false
+prev: false
+title: "DEVTOOLS_CHANNEL"
+---
+
+```ts
+const DEVTOOLS_CHANNEL: "mithril.devtools" = "mithril.devtools";
+```
+
+Defined in: packages/devtools/src/dom.ts:24
+
+The default `BroadcastChannel` name the attach shim publishes to (see `@mithril/devtools/attach`).

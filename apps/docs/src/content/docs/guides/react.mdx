@@ -1,0 +1,73 @@
+---
+title: React bindings
+description: A headless store over the event stream — subscribe a component to a live run in one hook.
+sidebar:
+  order: 11
+  label: React
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+The React bindings are a thin store over the same `MithrilEvent` stream everything else consumes.
+They are **headless** — no components, no styling, just state — so they slot into whatever UI you
+already have.
+
+## `useRun` — subscribe to a stream
+
+Pass a `RunHandle` (from `agent.stream(input)`); the hook re-renders as events arrive. Memoize the
+handle so a render doesn't start a new run:
+
+```tsx
+import { useMemo } from "react";
+import { useRun } from "@mithril/react/hooks";
+
+function Chat({ input }: { input: string }) {
+  const run = useMemo(() => assistant.stream(input), [input]);
+  const { text, status, costUsd } = useRun(run);
+
+  return (
+    <div>
+      <pre>{text}</pre>
+      <small>{status} · ${costUsd.toFixed(4)}</small>
+    </div>
+  );
+}
+```
+
+The `RunSnapshot` you get back is `{ state, text, status, events, costUsd }` — the folded
+`RunState`, the concatenated text so far, a `status` (a `RunState` status, or `"streaming"` while
+in flight), the raw `events`, and the running cost in USD.
+
+## `useObject` — typed output as it forms
+
+For a [structured-output](/guides/structured-output/) agent, `useObject` surfaces both the streaming
+partial and the validated final value:
+
+```tsx
+import { useObject } from "@mithril/react/hooks";
+
+function Weather({ input }: { input: string }) {
+  const run = useMemo(() => extractor.stream(input), [input]);
+  const { partial, value } = useObject(run);
+  // partial: paints as JSON streams (object.delta) · value: set once (object.final)
+  return <pre>{JSON.stringify(value ?? partial, null, 2)}</pre>;
+}
+```
+
+## `createRunStore` — the framework-agnostic core
+
+Both hooks are one-line `useSyncExternalStore` wrappers over `createRunStore`, which is plain JS.
+Use it directly outside React — Vue, Svelte, or a test — by subscribing to snapshots:
+
+```ts
+import { createRunStore } from "@mithril/react";
+
+const store = createRunStore(assistant.stream(input).events);
+const unsubscribe = store.subscribe(() => render(store.getSnapshot()));
+```
+
+<Aside type="note" title="Headless, one peer">
+`@mithril/react` itself pulls in **no** React — the hooks live in the separate `@mithril/react/hooks`
+entry so the core store type-checks and tests without a DOM. `react >= 18` is a peer dependency
+(needed only for the hooks, which rely on `useSyncExternalStore`).
+</Aside>

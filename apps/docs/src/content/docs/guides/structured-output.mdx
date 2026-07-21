@@ -1,0 +1,88 @@
+---
+title: Structured output
+description: Ask for a schema and get typed, validated JSON back — streamed as it forms.
+sidebar:
+  order: 4
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
+
+Add an `output` schema and the loop stops handing you a string. It parses the model's JSON,
+validates it against the schema, and types `result.output` for you.
+
+```ts
+import { agent } from "mithril";
+import { z } from "zod";
+
+const extractor = agent({
+  model,
+  instructions: "Extract the weather as JSON.",
+  output: z.object({ city: z.string(), tempC: z.number() }),
+});
+
+const result = await extractor.run("It's 21°C in Istanbul.");
+if (result.status === "completed") {
+  // result.output is typed { city: string; tempC: number }
+  console.log(result.output.city);
+}
+```
+
+## Validate, then retry
+
+If the model returns JSON that fails the schema, the loop emits `object.invalid` and re-asks the
+model with the validation error — up to `outputRetries` times (default 2). You get typed data or a
+typed failure, never a silent `any`.
+
+```ts
+agent({ model, instructions, output: schema, outputRetries: 3 });
+```
+
+## It streams, too
+
+Structured output is not all-or-nothing. As the JSON forms, the run emits `object.delta` with the
+partial value; when it validates, a single `object.final` carries the typed result. Render the
+partial for a live-updating UI, then swap to the final:
+
+- `object.delta` — the best-effort partial object so far.
+- `object.final` — the validated, typed value. Emitted once.
+
+In React, [`useObject`](/guides/react/) gives you both without wiring the events yourself:
+
+```ts
+import { useObject } from "@mithril/react/hooks";
+
+const { partial, value } = useObject(agent.stream(input));
+// partial: paints as it streams · value: set once, on object.final
+```
+
+## Run one now
+
+The scripted model returns its JSON across two `text.delta` chunks; the loop assembles, validates,
+and types it:
+
+<Runnable title="structured.ts" code={`import { agent } from "mithril";
+import { scriptedProvider, testModel } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const model = testModel(scriptedProvider([
+  [
+    { type: "text.delta", delta: '{"city":"Istanbul",' },
+    { type: "text.delta", delta: ' "tempC":21}' },
+    { type: "message.end", finishReason: "stop", usage },
+  ],
+]));
+
+const extractor = agent({
+  model,
+  instructions: "Extract the weather as JSON.",
+  output: z.object({ city: z.string(), tempC: z.number() }),
+});
+
+const result = await run(extractor, "It's 21°C in Istanbul.");
+if (result.status === "completed") console.log("typed output:", result.output);`} />
+
+<Aside type="note" title="Output plus tools">
+`output` composes with `tools` — the model can call tools to gather facts, then return the final
+structured object. The last assistant turn is what's parsed against the schema.
+</Aside>

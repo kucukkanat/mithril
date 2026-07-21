@@ -1,0 +1,67 @@
+---
+title: The landscape
+description: Where Mithril sits in the 2026 AI-agent tooling market, and the gaps it targets.
+sidebar:
+  order: 2
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+<Aside type="note">
+This summarizes an in-repo market survey from **July 2026**. The ecosystem moves fast — treat it as
+a snapshot of intent, not a live scoreboard. Corrections welcome.
+</Aside>
+
+## Three layers, one open gap
+
+The AI-agent tooling market stacks into three layers:
+
+1. **Model abstraction — won.** A commodity base layer (the Vercel AI SDK is the assumed default,
+   the way React once was). You don't displace it; you compose with it. Mithril ships a compat
+   bridge that wraps AI SDK models as a provider.
+2. **Agent orchestration — contested.** Several frameworks fight over DX, durability depth, and
+   minimalism. Each has a structural weakness a focused newcomer can address.
+3. **The harness above — open.** Durable loops without lock-in, context engineering, trajectory
+   evals, local-first observability, and true runtime portability are acknowledged gaps that teams
+   currently build by hand.
+
+Mithril targets layer 3.
+
+## The gaps nobody fills
+
+Each maps directly to a Mithril [concept](/concepts/the-protocol/):
+
+- **The browser as a real runtime.** Nothing runs a full agent loop client-side today — nominal
+  support tends to fail on contact. → [Web-standards core](/concepts/web-standards/).
+- **Durability without a landlord.** Incumbent durability stories ship with an operational string
+  attached (a licensed server, a hosted queue). Nobody ships a plain `Checkpointer` interface with
+  memory / SQLite / Postgres / IndexedDB adapters and a conformance suite. → [Memory](/guides/memory-and-checkpointing/).
+- **Trajectory-level evals.** Most eval tools score final outputs; per-step is where the failure
+  modes hide. A harness that owns the loop can emit structured trajectories natively — an unfair
+  advantage. → [Evals](/guides/evals/).
+- **The laptop dev loop for observability.** Self-hosting a trace stack is a multi-service cluster;
+  a single-process viewer launched by one command serves a need incumbents skip.
+- **Context economics.** Tool-definition bloat is a real cost; the mitigations live in blog posts,
+  not frameworks. Mithril treats context primitives as attachable middleware.
+
+## Anti-patterns Mithril refuses
+
+The survey also catalogs what pushed developers away — and these became explicit "we won't do
+this" rules:
+
+- Rename-heavy majors and an `experimental_` treadmill.
+- MIT framework, commercially-licensed server (bait-and-switch).
+- Exception-based interrupts that re-run pre-interrupt side effects on resume.
+- Multiple state-schema generations — pick one, never add a second.
+- A hard-to-eject monolith with a bespoke build CLI.
+- An eval runner built on another test runner's internals.
+- **Trusting persisted state** — the checkpointer SQL-injection → RCE class. Mithril
+  [verifies before parsing](/concepts/errors/).
+
+## The thesis
+
+> The defensible wedge is not a better framework — it's the harness the community keeps saying it
+> wants and keeps building by hand: a ~100-line readable loop you could copy out, over a tiny
+> web-standards core that runs identically on Node, Bun, and browsers, with durable typed
+> suspension, trajectory-native evals, context engineering, and a free local studio as peer
+> packages. Message against the rewrite cliff, not against DIY.
