@@ -97,6 +97,7 @@ glue today). (Nested-`asTool` HITL resume through the parent's own token IS ship
 ```sh
 bun test              # framework — must stay green (all pass)
 bun run typecheck     # framework — strict tsc across all packages, exit 0
+bun run check:browser-safe  # runtime-agnostic gate: no browser entrypoint statically imports a Node/Bun builtin
 bun run docs:build    # docs build clean; Pagefind search + llms.txt generated
 bun run docs:check    # docs `astro check` — 0 errors, 0 warnings (the docs quality bar)
 bun run docs:check-symbols  # every generated symbol link resolves to a built page (run after build)
@@ -105,6 +106,13 @@ bun run docs:check-pages    # every content page is reachable from the sidebar (
 
 **Editing docs must never change `packages/*`.** If a docs task seems to need a framework change,
 stop and raise it — that's a framework change with its own review, not a docs edit.
+
+**Runtime-agnostic rule.** A browser-reachable package entry must never *statically* `import` a
+Node/Bun builtin (`node:*`, `bun:*`) — a bundler externalizes it and the module throws in the
+browser even when the Node path never runs (this is what broke the playground). Put Node-only code
+behind a dynamic `await import("node:…")`, or move it to a `*-node` / `*/server` subpath (which the
+`exports` map and `check:browser-safe` both treat as Node-only). `bun run check:browser-safe`
+enforces this over every browser-declared entrypoint.
 
 ---
 
