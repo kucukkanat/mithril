@@ -7,7 +7,6 @@
  */
 
 /// <reference types="bun-types" />
-import { fileURLToPath, pathToFileURL } from "node:url";
 import type { EvalRun, Score } from "./index.ts";
 import type { MithrilEvent } from "@mithril/core/protocol";
 
@@ -336,6 +335,10 @@ ${body}
 let inspectorAssets: Promise<{ readonly js: string; readonly css: string }> | undefined;
 function buildInspectorAssets(): Promise<{ readonly js: string; readonly css: string }> {
   inspectorAssets ??= (async () => {
+    // Imported lazily (not at module top level) so `@mithril/evals` stays browser-importable —
+    // the playground worker imports the whole package, and a static `node:url` import would be
+    // externalized by the bundler and throw on access. This Bun-only path never runs in browsers.
+    const { fileURLToPath, pathToFileURL } = await import("node:url");
     const from = fileURLToPath(import.meta.url);
     const entry = fileURLToPath(new URL("./inspector-client.ts", import.meta.url));
     const built = await Bun.build({ entrypoints: [entry], target: "browser", format: "iife", minify: true });
