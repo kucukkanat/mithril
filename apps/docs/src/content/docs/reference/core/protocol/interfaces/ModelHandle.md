@@ -5,7 +5,7 @@ prev: false
 title: "ModelHandle"
 ---
 
-Defined in: [packages/core/src/protocol/provider.ts:94](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L94)
+Defined in: [packages/core/src/protocol/provider.ts:94](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/provider.ts#L94)
 
 A provider-bound model reference.
 
@@ -21,7 +21,7 @@ Referencing it self-wires the provider and autocompletes model names.
 readonly id: `${string}/${string}`;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:95](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L95)
+Defined in: [packages/core/src/protocol/provider.ts:95](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/provider.ts#L95)
 
 ***
 
@@ -31,4 +31,4 @@ Defined in: [packages/core/src/protocol/provider.ts:95](https://github.com/kucuk
 readonly provider: Provider;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:96](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L96)
+Defined in: [packages/core/src/protocol/provider.ts:96](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/provider.ts#L96)

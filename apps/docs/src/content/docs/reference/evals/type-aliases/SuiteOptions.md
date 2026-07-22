@@ -12,7 +12,7 @@ type SuiteOptions<Deps, Ctx> = RunEvalOptions<Deps, Ctx> & {
 };
 ```
 
-Defined in: [index.ts:423](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L423)
+Defined in: [index.ts:423](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L423)
 
 Options for [runSuite](/reference/evals/functions/runsuite/): [RunEvalOptions](/reference/evals/type-aliases/runevaloptions/) plus a CI pass-rate gate and a per-run callback.
 

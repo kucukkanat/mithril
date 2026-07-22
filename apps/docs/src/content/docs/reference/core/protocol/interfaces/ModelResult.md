@@ -5,7 +5,7 @@ prev: false
 title: "ModelResult"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:54](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L54)
+Defined in: [packages/core/src/protocol/middleware.ts:54](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L54)
 
 The result of one model invocation seen by a [Middleware.model](/reference/core/protocol/interfaces/middleware/#model) wrapper.
 
@@ -21,7 +21,7 @@ readonly calls: readonly {
 }[];
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:58](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L58)
+Defined in: [packages/core/src/protocol/middleware.ts:58](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L58)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:58](https://github.com/kuc
 readonly finishReason: FinishReason;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:56](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L56)
+Defined in: [packages/core/src/protocol/middleware.ts:56](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L56)
 
 ***
 
@@ -41,7 +41,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:56](https://github.com/kuc
 readonly text: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:55](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L55)
+Defined in: [packages/core/src/protocol/middleware.ts:55](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L55)
 
 ***
 
@@ -51,4 +51,4 @@ Defined in: [packages/core/src/protocol/middleware.ts:55](https://github.com/kuc
 readonly usage: UsageDelta;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:57](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L57)
+Defined in: [packages/core/src/protocol/middleware.ts:57](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L57)

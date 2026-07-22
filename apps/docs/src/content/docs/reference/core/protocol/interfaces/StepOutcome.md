@@ -5,7 +5,7 @@ prev: false
 title: "StepOutcome"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:74](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L74)
+Defined in: [packages/core/src/protocol/middleware.ts:74](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L74)
 
 The summary of one completed step seen by a [Middleware.step](/reference/core/protocol/interfaces/middleware/#step) wrapper.
 
@@ -23,7 +23,7 @@ the step's own token delta.
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:75](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L75)
+Defined in: [packages/core/src/protocol/middleware.ts:75](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L75)
 
 ***
 
@@ -33,7 +33,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:75](https://github.com/kuc
 readonly stop: "length" | "error" | "output" | "suspend" | "tool" | "text";
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:76](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L76)
+Defined in: [packages/core/src/protocol/middleware.ts:76](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L76)
 
 ***
 
@@ -43,4 +43,4 @@ Defined in: [packages/core/src/protocol/middleware.ts:76](https://github.com/kuc
 readonly usage: UsageDelta;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:77](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L77)
+Defined in: [packages/core/src/protocol/middleware.ts:77](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L77)

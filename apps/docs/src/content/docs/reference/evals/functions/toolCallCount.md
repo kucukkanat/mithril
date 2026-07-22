@@ -9,7 +9,7 @@ title: "toolCallCount"
 function toolCallCount(expected): Scorer;
 ```
 
-Defined in: [index.ts:590](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L590)
+Defined in: [index.ts:590](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L590)
 
 A [Scorer](/reference/evals/type-aliases/scorer/) that scores `1` if the number of `tool.call`s falls within `expected`, else `0`.
 

@@ -5,7 +5,7 @@ prev: false
 title: "PathSegment"
 ---
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:45](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L45)
+Defined in: [packages/core/src/protocol/standard-schema.ts:45](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/standard-schema.ts#L45)
 
 ## Properties
 
@@ -15,4 +15,4 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:45](https://github.co
 readonly key: PropertyKey;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:46](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L46)
+Defined in: [packages/core/src/protocol/standard-schema.ts:46](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/standard-schema.ts#L46)

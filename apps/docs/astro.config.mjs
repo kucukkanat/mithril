@@ -118,8 +118,7 @@ export default defineConfig({
       description:
         "The most developer-friendly AI agent harness. TypeScript-first, provider-agnostic, and it genuinely runs in the browser.",
       favicon: "/favicon.svg",
-      // TODO: point this at the real repository once it's published.
-      social: [{ icon: "github", label: "GitHub", href: "https://github.com/mithril-ai/mithril" }],
+      social: [{ icon: "github", label: "GitHub", href: "https://github.com/kucukkanat/mithril" }],
       lastUpdated: false,
       head: [
         { tag: "meta", attrs: { name: "theme-color", content: "#0b0d11" } },

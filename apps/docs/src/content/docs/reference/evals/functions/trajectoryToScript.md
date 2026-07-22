@@ -9,7 +9,7 @@ title: "trajectoryToScript"
 function trajectoryToScript(t): ProviderChunk[][];
 ```
 
-Defined in: [index.ts:221](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L221)
+Defined in: [index.ts:221](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L221)
 
 Extract the model turns from a recorded [Trajectory](/reference/evals/interfaces/trajectory/) as a scriptedProvider script — one
 `ProviderChunk[]` per step, carrying that step's `text.delta`s and `tool.call`s (tool *results* are

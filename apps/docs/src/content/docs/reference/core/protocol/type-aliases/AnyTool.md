@@ -17,7 +17,7 @@ type AnyTool<Deps> = {
 };
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:61](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L61)
+Defined in: [packages/core/src/protocol/tool.ts:61](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/tool.ts#L61)
 
 The variance-correct upper bound for a heterogeneous tuple of tools.
 
@@ -43,7 +43,7 @@ top types in output positions. Concrete `In`/`Out` survive in a
 readonly description: string;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:63](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L63)
+Defined in: [packages/core/src/protocol/tool.ts:63](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/tool.ts#L63)
 
 ***
 
@@ -53,7 +53,7 @@ Defined in: [packages/core/src/protocol/tool.ts:63](https://github.com/kucukkana
 readonly inputSchema: StandardSchemaV1<unknown, unknown>;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:65](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L65)
+Defined in: [packages/core/src/protocol/tool.ts:65](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/tool.ts#L65)
 
 ***
 
@@ -63,7 +63,7 @@ Defined in: [packages/core/src/protocol/tool.ts:65](https://github.com/kucukkana
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:62](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L62)
+Defined in: [packages/core/src/protocol/tool.ts:62](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/tool.ts#L62)
 
 ***
 
@@ -73,7 +73,7 @@ Defined in: [packages/core/src/protocol/tool.ts:62](https://github.com/kucukkana
 readonly optional needsApproval?: boolean | ((input, ctx) => boolean | Promise<boolean>);
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:67](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L67)
+Defined in: [packages/core/src/protocol/tool.ts:67](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/tool.ts#L67)
 
 ***
 
@@ -83,7 +83,7 @@ Defined in: [packages/core/src/protocol/tool.ts:67](https://github.com/kucukkana
 readonly optional outputSchema?: StandardSchemaV1<unknown, JsonValue>;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:66](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L66)
+Defined in: [packages/core/src/protocol/tool.ts:66](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/tool.ts#L66)
 
 ***
 
@@ -93,7 +93,7 @@ Defined in: [packages/core/src/protocol/tool.ts:66](https://github.com/kucukkana
 readonly optional version?: string;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:64](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L64)
+Defined in: [packages/core/src/protocol/tool.ts:64](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/tool.ts#L64)
 
 ## Methods
 
@@ -103,7 +103,7 @@ Defined in: [packages/core/src/protocol/tool.ts:64](https://github.com/kucukkana
 execute(input, ctx): unknown;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:68](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L68)
+Defined in: [packages/core/src/protocol/tool.ts:68](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/tool.ts#L68)
 
 #### Parameters
 

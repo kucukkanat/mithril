@@ -5,7 +5,7 @@ prev: false
 title: "ToolCallRecord"
 ---
 
-Defined in: [packages/core/src/protocol/state.ts:18](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/state.ts#L18)
+Defined in: [packages/core/src/protocol/state.ts:18](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/state.ts#L18)
 
 A single tool call and its (eventual) output within a [Message](/reference/core/protocol/interfaces/message/).
 
@@ -17,7 +17,7 @@ A single tool call and its (eventual) output within a [Message](/reference/core/
 readonly callId: string;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:19](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/state.ts#L19)
+Defined in: [packages/core/src/protocol/state.ts:19](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/state.ts#L19)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/protocol/state.ts:19](https://github.com/kucukkan
 readonly input: JsonValue;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:21](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/state.ts#L21)
+Defined in: [packages/core/src/protocol/state.ts:21](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/state.ts#L21)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/core/src/protocol/state.ts:21](https://github.com/kucukkan
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:20](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/state.ts#L20)
+Defined in: [packages/core/src/protocol/state.ts:20](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/state.ts#L20)
 
 ***
 
@@ -47,6 +47,6 @@ Defined in: [packages/core/src/protocol/state.ts:20](https://github.com/kucukkan
 readonly optional output?: JsonValue;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:23](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/state.ts#L23)
+Defined in: [packages/core/src/protocol/state.ts:23](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/state.ts#L23)
 
 Present once the corresponding `tool.result` has been reduced.

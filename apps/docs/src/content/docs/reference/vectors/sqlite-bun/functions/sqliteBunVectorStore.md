@@ -9,7 +9,7 @@ title: "sqliteBunVectorStore"
 function sqliteBunVectorStore(pathOrOpts?): VectorStore;
 ```
 
-Defined in: [sqlite-bun.ts:40](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/vectors/src/sqlite-bun.ts#L40)
+Defined in: [sqlite-bun.ts:40](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/vectors/src/sqlite-bun.ts#L40)
 
 Create a durable [VectorStore](/reference/vectors/index/interfaces/vectorstore/) backed by `bun:sqlite` (Bun runtime only).
 

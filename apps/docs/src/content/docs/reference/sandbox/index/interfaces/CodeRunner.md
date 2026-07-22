@@ -5,7 +5,7 @@ prev: false
 title: "CodeRunner"
 ---
 
-Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/sandbox/src/index.ts#L34)
+Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/sandbox/src/index.ts#L34)
 
 A runtime-agnostic seam for running a snippet of code and capturing its result and logs.
 
@@ -23,7 +23,7 @@ trusted sandbox service. Choose the backend explicitly — this package never au
 run(code, opts?): Promise<CodeResult>;
 ```
 
-Defined in: [index.ts:35](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/sandbox/src/index.ts#L35)
+Defined in: [index.ts:35](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/sandbox/src/index.ts#L35)
 
 #### Parameters
 

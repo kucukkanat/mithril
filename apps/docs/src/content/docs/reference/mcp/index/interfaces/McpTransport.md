@@ -5,7 +5,7 @@ prev: false
 title: "McpTransport"
 ---
 
-Defined in: [index.ts:27](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/mcp/src/index.ts#L27)
+Defined in: [index.ts:27](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/mcp/src/index.ts#L27)
 
 The transport you implement to carry MCP JSON-RPC calls to a server.
 
@@ -23,7 +23,7 @@ against. Passed to [mcpClient](/reference/mcp/index/functions/mcpclient/).
 optional close(): Promise<void>;
 ```
 
-Defined in: [index.ts:31](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/mcp/src/index.ts#L31)
+Defined in: [index.ts:31](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/mcp/src/index.ts#L31)
 
 Optional teardown, invoked by [McpClient.close](/reference/mcp/index/interfaces/mcpclient/#close).
 
@@ -39,7 +39,7 @@ Optional teardown, invoked by [McpClient.close](/reference/mcp/index/interfaces/
 request(method, params): Promise<JsonValue>;
 ```
 
-Defined in: [index.ts:29](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/mcp/src/index.ts#L29)
+Defined in: [index.ts:29](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/mcp/src/index.ts#L29)
 
 Send an MCP JSON-RPC request (e.g. `"tools/list"`, `"tools/call"`) and resolve its result.
 

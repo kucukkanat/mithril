@@ -9,7 +9,7 @@ title: "runSuite"
 function runSuite<Deps, Ctx>(entries, ...args): Promise<SuiteResult>;
 ```
 
-Defined in: [index.ts:450](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L450)
+Defined in: [index.ts:450](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L450)
 
 Run a matrix of [SuiteEntry](/reference/evals/interfaces/suiteentry/)s (each an agent + its cases) and aggregate the results behind a
 pass-rate CI gate — the batteries-included counterpart to calling [runEval](/reference/evals/functions/runeval/) in nested loops.

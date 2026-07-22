@@ -12,7 +12,7 @@ function runEval<Deps, Ctx>(
 args): AsyncGenerator<EvalRun>;
 ```
 
-Defined in: [index.ts:119](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L119)
+Defined in: [index.ts:119](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L119)
 
 Runs each [EvalCase](/reference/evals/interfaces/evalcase/) against `agent`, yielding one [EvalRun](/reference/evals/interfaces/evalrun/) per case as it completes.
 

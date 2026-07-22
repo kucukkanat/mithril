@@ -5,7 +5,7 @@ prev: false
 title: "ModelSpec"
 ---
 
-Defined in: [packages/core/src/protocol/provider.ts:31](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L31)
+Defined in: [packages/core/src/protocol/provider.ts:31](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/provider.ts#L31)
 
 The published spec for one model: its capabilities, pricing, and context size.
 
@@ -17,7 +17,7 @@ The published spec for one model: its capabilities, pricing, and context size.
 readonly capabilities: ModelCapabilities;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:32](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L32)
+Defined in: [packages/core/src/protocol/provider.ts:32](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/provider.ts#L32)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/protocol/provider.ts:32](https://github.com/kucuk
 readonly contextWindow: number;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:34](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L34)
+Defined in: [packages/core/src/protocol/provider.ts:34](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/provider.ts#L34)
 
 ***
 
@@ -37,4 +37,4 @@ Defined in: [packages/core/src/protocol/provider.ts:34](https://github.com/kucuk
 readonly pricing: Pricing;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:33](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L33)
+Defined in: [packages/core/src/protocol/provider.ts:33](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/provider.ts#L33)
