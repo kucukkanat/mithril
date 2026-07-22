@@ -6,10 +6,10 @@ title: "nodeFileSystem"
 ---
 
 ```ts
-function nodeFileSystem(root): FileSystem;
+function nodeFileSystem(rootOrOpts): FileSystem;
 ```
 
-Defined in: packages/fs/src/node.ts:25
+Defined in: [packages/fs/src/node.ts:26](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/fs/src/node.ts#L26)
 
 Create a [FileSystem](/reference/fs/index/interfaces/filesystem/) backed by the local disk, confined to `root`.
 
@@ -17,7 +17,7 @@ Create a [FileSystem](/reference/fs/index/interfaces/filesystem/) backed by the 
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `root` | `string` | Base directory all paths are resolved against; created lazily on first write. |
+| `rootOrOpts` | \| `string` \| \{ `root`: `string`; \} | the base directory all paths are resolved against (or `{ root }`); created lazily on first write. |
 
 ## Returns
 

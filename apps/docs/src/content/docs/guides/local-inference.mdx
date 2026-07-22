@@ -2,11 +2,12 @@
 title: Local inference (in-browser)
 description: Run a model entirely in the browser tab with Transformers.js — on-device, no API key, no network.
 sidebar:
-  order: 11
+  order: 13
   label: Local inference
 ---
 
 import { Aside, Steps } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 
 `@mithril/providers/transformers` runs an LLM **inside the browser tab** on WebGPU (falling back to WASM/CPU)
 via Hugging Face [Transformers.js](https://huggingface.co/docs/transformers.js) — no API key, no server, no
@@ -17,8 +18,8 @@ output, and devtools.
 <Aside type="caution" title="Browser-only, and heavy first load">
 This provider is for **browser use**. Model weights are large (~0.4–2 GB) and downloaded on first use, then
 cached across reloads. It needs WebGPU for real speed (it feature-detects and falls back to WASM/CPU). The
-[playground](/playground/) can run this live — pick **Local · in-browser** in ⚙ Settings and click **Download
-weights** first, since the multi-GB download is gated behind a click.
+[playground](/playground/) can run this live — pick a model from the **Local · in-browser** group in the
+**Run against** bar; selecting it downloads the weights once (cached across reloads), then runs on-device.
 </Aside>
 
 ## Install
@@ -32,21 +33,20 @@ bun add @huggingface/transformers
 
 ## Quickstart
 
-```ts
-import { agent } from "@mithril/core/agent";
-import { transformers, preload } from "@mithril/providers/transformers";
+The API is identical to any provider — swap the model handle (highlighted) and everything else is the
+same event stream. The runnable uses the scripted model so it's instant; to run the *real* on-device
+model, pick a **Local · in-browser** model in the Run against bar (a one-time weight download):
 
-// Optional: warm the weight cache and drive a progress bar before the first run.
-await preload("onnx-community/Qwen3-0.6B-ONNX", { onProgress: (p) => setBar(p.progress) }); // p.progress is 0..1
+<Runnable title="local.ts" highlight={[6]} code={`import { agent } from "mithril";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
+// import { transformers, preload } from "@mithril/providers/transformers";
+// await preload("onnx-community/Qwen3-0.6B-ONNX", { onProgress: (p) => setBar(p.progress) }); // 0..1
 
-const assistant = agent({
-  model: transformers("onnx-community/Qwen3-0.6B-ONNX"), // or transformers() for the default
-  instructions: "You are a concise assistant.",
-});
+const model = testModel(scriptedProvider([textTurn("Name booleans as questions: isReady, hasItems.")])); // → transformers("onnx-community/Qwen3-0.6B-ONNX")
+const assistant = agent({ model, instructions: "You are a concise assistant." });
 
 const result = await assistant.run("Give me one tip for naming variables.");
-if (result.status === "completed") console.log(result.output);
-```
+if (result.status === "completed") console.log(result.output);`} />
 
 The handle self-wires (no provider registry, no keys). `transformers()` with no argument uses the default
 model. Download progress rides `onProgress` **outside** the event stream, so the public `MithrilEvent`
@@ -159,29 +159,18 @@ the loop's validate→retry.
 ## Running in a Web Worker
 
 For a smooth UI, run inference off the main thread. The provider is **engine-agnostic**: build a
-`TransformersEngine` inside a Worker and inject it:
-
-```ts
-const worker = new Worker(new URL("./inference.worker.ts", import.meta.url), { type: "module" });
-const engine = workerEngine(worker); // your thin postMessage bridge implementing TransformersEngine
-const model = transformers("onnx-community/Qwen3-0.6B-ONNX", { engine });
-```
-
-The default `transformers(model)` runs in-thread (simplest); the injected `engine` is the seam for a worker,
-or for swapping the runtime entirely.
+`TransformersEngine` inside a Worker and inject it via `transformers(model, { engine })`. Create a
+`Worker` from `./inference.worker.ts`, wrap it in a thin `postMessage` bridge that implements
+`TransformersEngine`, and pass it as the `engine` option. The default `transformers(model)` runs
+in-thread (simplest); the injected `engine` is the seam for a worker, or for swapping the runtime.
 
 ## Testing without a GPU
 
-The provider **core** is a pure function over an injected engine, so you unit-test it with a fake — no ONNX,
-no WebGPU, no network — exactly like `scriptedProvider`:
-
-```ts
-import { transformersProvider } from "@mithril/providers/transformers";
-
-const fake = { async *generate() { yield { kind: "token", text: "hi" }; } };
-const handle = { id: "transformers/x", provider: transformersProvider(fake) } as const;
-// agent({ model: handle }).run("…")  → deterministic, offline
-```
+The provider **core** is a pure function over an injected engine, so you unit-test it with a fake — no
+ONNX, no WebGPU, no network — exactly like `scriptedProvider`. Import `transformersProvider` from
+`@mithril/providers/transformers`, hand it a fake engine (`{ async *generate() { yield { kind: "token",
+text: "hi" } } }`), and build a handle `{ id: "transformers/x", provider: transformersProvider(fake) }` —
+`agent({ model: handle }).run("…")` is then deterministic and offline.
 
 <Aside type="note">
 Weights are the caller's bandwidth and consent — surface `onProgress`, and consider gating the download behind

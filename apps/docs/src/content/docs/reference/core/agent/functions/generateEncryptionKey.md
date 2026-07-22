@@ -9,7 +9,7 @@ title: "generateEncryptionKey"
 function generateEncryptionKey(rt?): Promise<CryptoKey>;
 ```
 
-Defined in: packages/core/src/agent/seal.ts:86
+Defined in: [packages/core/src/agent/seal.ts:86](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/seal.ts#L86)
 
 Generate an extractable AES-GCM-256 key for the [aesGcmCodec](/reference/core/agent/functions/aesgcmcodec/) confidentiality codec.
 

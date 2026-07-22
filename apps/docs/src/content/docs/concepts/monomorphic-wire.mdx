@@ -7,6 +7,7 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 
 Frameworks that thread per-tool generics through a global union pay for it at scale: `tsc`
 instantiation cost explodes, editor hovers become unreadable, and a project with 200 tools grinds
@@ -14,18 +15,26 @@ to a halt. Mithril refuses that trade.
 
 On the wire, tool `input` and `output` are plain `JsonValue`. The global `MithrilEvent` union is
 **monomorphic** — it never indexes over your tool record. You recover precise per-tool types
-_locally, on demand_:
+_locally, on demand_ with `narrow(e, tools)` (highlighted) — run it:
 
-```ts
+<Runnable title="narrow.ts" highlight={["14-16"]} code={`import { agent, tool } from "mithril";
 import { narrow } from "@mithril/core/protocol";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
 
-for (const e of events) {
-  if (narrow(e, tools)) {
-    // e.input is now typed to the matching tool's input
-    e.name; // union of your tool names
-  }
-}
-```
+const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
+});
+const tools = [weather] as const;
+
+const model = testModel(scriptedProvider([toolCallTurn("weather", { city: "Istanbul" }), textTurn("It's 21°C.")]));
+const handle = agent({ model, instructions: "Use weather.", tools }).stream("Weather?");
+for await (const e of handle.events) {
+  if (narrow(e, tools)) console.log("typed call:", e.name, "→", e.input.city); // e.input typed to the tool
+}`} />
 
 `narrow(e, tools)` is a real TypeScript type predicate. `tsc` only pays the instantiation cost at
 the call site that asks for it — not across the entire union, and not on every event everywhere.

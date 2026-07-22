@@ -84,6 +84,13 @@ export function anthropicProvider(config?: { readonly baseUrl?: string; readonly
   return {
     spec: ANTHROPIC_SPEC,
     async *chat(req, rt, transport, signal) {
+      // A missing key resolves to an empty byok key upstream; catch it here with an actionable message
+      // instead of letting the request go out and come back as a bare HTTP 401.
+      if (transport.kind === "byok" && transport.apiKey === "") {
+        throw new Error(
+          'No Anthropic API key found. Set ANTHROPIC_API_KEY in the environment, or pass transport: { kind: "byok", apiKey } (or a proxy transport).',
+        );
+      }
       const { base, headers } = headersFor(transport, config?.baseUrl);
       const auth = transport.kind === "ephemeral" ? { "x-api-key": await transport.token() } : {};
       const res = await rt.fetch(`${base}/messages`, {
@@ -109,18 +116,23 @@ const shared = anthropicProvider();
  *
  * @param model - An Anthropic model id (e.g. `"claude-sonnet-4"`). It is prefixed with `anthropic/` to form
  *   the handle id and slashes are stripped before hitting the wire.
- * @returns A {@link ModelHandle} bound to a shared default-configured {@link anthropicProvider}.
+ * @param opts - Optional overrides. `toolSchema` is a {@link JsonSchemaConverter} for tool parameters —
+ *   supply it when your validator does not self-describe (e.g. Valibot/ArkType without an adapter); Zod v4
+ *   schemas already convert with no converter.
+ * @returns A {@link ModelHandle} bound to a shared default-configured {@link anthropicProvider} (or a
+ *   dedicated one when `toolSchema` is given).
  *
  * @example
  * ```ts
- * import { agent } from "@mithril/core";
+ * import { agent } from "mithril";
  * import { anthropic } from "@mithril/providers/anthropic";
  *
- * const a = agent({ model: anthropic("claude-sonnet-4"), tools: [] });
+ * const a = agent({ model: anthropic("claude-sonnet-4"), instructions: "…", tools: [] });
  * ```
  *
  * @remarks Need a custom `baseUrl`? Build a provider with {@link anthropicProvider} instead.
  */
-export function anthropic(model: string): ModelHandle {
-  return { id: `anthropic/${model}`, provider: shared };
+export function anthropic(model: string, opts?: { readonly toolSchema?: JsonSchemaConverter }): ModelHandle {
+  const provider = opts?.toolSchema !== undefined ? anthropicProvider({ toolSchema: opts.toolSchema }) : shared;
+  return { id: `anthropic/${model}`, provider };
 }

@@ -9,7 +9,7 @@ title: "scaffold"
 function scaffold(template, appName): Readonly<Record<string, string>>;
 ```
 
-Defined in: index.ts:54
+Defined in: [index.ts:136](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/create-mithril/src/index.ts#L136)
 
 Generate the files for a Mithril app as an in-memory map — pure, no disk I/O.
 
@@ -28,12 +28,14 @@ A map of relative file path to file contents.
 
 ## Remarks
 
-Always emits `package.json`, `src/agent.ts`, `README.md`, and a `src/main.ts` whose contents depend
-on `template`. Being side-effect-free, it is trivially testable; use [createApp](/reference/create-mithril/functions/createapp/) to write the result.
+Always emits `package.json`, `src/agent.ts`, and `README.md`, plus a template-specific entry: a streaming
+`src/main.ts` CLI (`node-cli`), a streaming `Bun.serve` HTTP server in `src/main.ts` (`bun-server`), or a
+`useRun`-wired `src/Chat.tsx` component (`react-chat`, whose `package.json` includes the React deps).
+Being side-effect-free, it is trivially testable; use [createApp](/reference/create-mithril/functions/createapp/) to write the result.
 
 ## Example
 
 ```ts
-const files = scaffold("node-cli", "my-agent");
+const files = scaffold("bun-server", "my-agent");
 Object.keys(files); // ["package.json", "src/agent.ts", "README.md", "src/main.ts"]
 ```

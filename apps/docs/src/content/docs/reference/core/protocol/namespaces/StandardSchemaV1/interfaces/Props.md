@@ -5,7 +5,7 @@ prev: false
 title: "Props"
 ---
 
-Defined in: packages/core/src/protocol/standard-schema.ts:25
+Defined in: [packages/core/src/protocol/standard-schema.ts:25](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L25)
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/core/src/protocol/standard-schema.ts:25
 readonly optional types?: Types<Input, Output>;
 ```
 
-Defined in: packages/core/src/protocol/standard-schema.ts:29
+Defined in: [packages/core/src/protocol/standard-schema.ts:31](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L31)
 
 ***
 
@@ -34,7 +34,7 @@ readonly validate: (value) =>
 | Promise<Result<Output>>;
 ```
 
-Defined in: packages/core/src/protocol/standard-schema.ts:28
+Defined in: [packages/core/src/protocol/standard-schema.ts:28](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L28)
 
 #### Parameters
 
@@ -55,7 +55,7 @@ Defined in: packages/core/src/protocol/standard-schema.ts:28
 readonly vendor: string;
 ```
 
-Defined in: packages/core/src/protocol/standard-schema.ts:27
+Defined in: [packages/core/src/protocol/standard-schema.ts:27](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L27)
 
 ***
 
@@ -65,4 +65,4 @@ Defined in: packages/core/src/protocol/standard-schema.ts:27
 readonly version: 1;
 ```
 
-Defined in: packages/core/src/protocol/standard-schema.ts:26
+Defined in: [packages/core/src/protocol/standard-schema.ts:26](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L26)

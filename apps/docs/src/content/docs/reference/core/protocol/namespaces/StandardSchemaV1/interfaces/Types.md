@@ -5,7 +5,7 @@ prev: false
 title: "Types"
 ---
 
-Defined in: packages/core/src/protocol/standard-schema.ts:46
+Defined in: [packages/core/src/protocol/standard-schema.ts:48](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L48)
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: packages/core/src/protocol/standard-schema.ts:46
 readonly input: Input;
 ```
 
-Defined in: packages/core/src/protocol/standard-schema.ts:47
+Defined in: [packages/core/src/protocol/standard-schema.ts:49](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L49)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: packages/core/src/protocol/standard-schema.ts:47
 readonly output: Output;
 ```
 
-Defined in: packages/core/src/protocol/standard-schema.ts:48
+Defined in: [packages/core/src/protocol/standard-schema.ts:50](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L50)

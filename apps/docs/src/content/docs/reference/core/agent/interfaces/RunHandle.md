@@ -5,7 +5,7 @@ prev: false
 title: "RunHandle"
 ---
 
-Defined in: packages/core/src/agent/agent-types.ts:98
+Defined in: [packages/core/src/agent/agent-types.ts:109](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L109)
 
 A live handle over a streaming run, returned by [Agent.stream](/reference/core/agent/interfaces/agent/#stream).
 
@@ -18,7 +18,7 @@ Members:
 - `state()` returns a [RunState](/reference/core/protocol/interfaces/runstate/) replay of the events buffered so far.
 - `result()` resolves with the terminal [RunResult](/reference/core/agent/type-aliases/runresult/) when the run ends.
 - `cancel()` aborts the run at the next step boundary (or mid-provider-stream); `result()` then
-  resolves `"cancelled"`. Equivalent to aborting [RunOptions.signal](/reference/core/agent/interfaces/runoptions/#signal).
+  resolves `"cancelled"`. Equivalent to aborting [RunOptions.signal](/reference/core/agent/interfaces/runoptionsbase/#signal).
 - `resolve()` continues an in-process suspension by streaming the resumed run as a fresh
   [RunHandle](/reference/core/agent/interfaces/runhandle/) — no token round-trip. Rejects if the run did not suspend.
 
@@ -40,7 +40,7 @@ Members:
 readonly events: AsyncIterable<MithrilEvent>;
 ```
 
-Defined in: packages/core/src/agent/agent-types.ts:100
+Defined in: [packages/core/src/agent/agent-types.ts:111](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L111)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: packages/core/src/agent/agent-types.ts:100
 readonly runId: string;
 ```
 
-Defined in: packages/core/src/agent/agent-types.ts:99
+Defined in: [packages/core/src/agent/agent-types.ts:110](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L110)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: packages/core/src/agent/agent-types.ts:99
 readonly text: AsyncIterable<string>;
 ```
 
-Defined in: packages/core/src/agent/agent-types.ts:101
+Defined in: [packages/core/src/agent/agent-types.ts:112](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L112)
 
 ## Methods
 
@@ -90,7 +90,7 @@ AsyncIterable.[asyncIterator]
 cancel(reason?): void;
 ```
 
-Defined in: packages/core/src/agent/agent-types.ts:104
+Defined in: [packages/core/src/agent/agent-types.ts:115](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L115)
 
 #### Parameters
 
@@ -110,7 +110,7 @@ Defined in: packages/core/src/agent/agent-types.ts:104
 resolve(resolution): Promise<RunHandle<Out>>;
 ```
 
-Defined in: packages/core/src/agent/agent-types.ts:106
+Defined in: [packages/core/src/agent/agent-types.ts:117](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L117)
 
 #### Parameters
 
@@ -130,7 +130,7 @@ Defined in: packages/core/src/agent/agent-types.ts:106
 result(): Promise<RunResult<Out>>;
 ```
 
-Defined in: packages/core/src/agent/agent-types.ts:103
+Defined in: [packages/core/src/agent/agent-types.ts:114](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L114)
 
 #### Returns
 
@@ -144,7 +144,7 @@ Defined in: packages/core/src/agent/agent-types.ts:103
 state(): RunState;
 ```
 
-Defined in: packages/core/src/agent/agent-types.ts:102
+Defined in: [packages/core/src/agent/agent-types.ts:113](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L113)
 
 #### Returns
 

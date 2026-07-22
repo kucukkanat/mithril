@@ -5,7 +5,7 @@ prev: false
 title: "ChatRequest"
 ---
 
-Defined in: packages/core/src/protocol/provider.ts:44
+Defined in: [packages/core/src/protocol/provider.ts:44](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L44)
 
 The provider-agnostic semantic input for one model call.
 
@@ -17,7 +17,7 @@ The provider-agnostic semantic input for one model call.
 readonly messages: readonly Message[];
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:47
+Defined in: [packages/core/src/protocol/provider.ts:47](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L47)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: packages/core/src/protocol/provider.ts:47
 readonly model: `${string}/${string}`;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:45
+Defined in: [packages/core/src/protocol/provider.ts:45](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L45)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: packages/core/src/protocol/provider.ts:45
 readonly optional output?: StandardSchemaV1<unknown, JsonValue>;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:50
+Defined in: [packages/core/src/protocol/provider.ts:50](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L50)
 
 When set, the caller wants structured output (JSON mode) validated by this schema.
 
@@ -49,7 +49,7 @@ When set, the caller wants structured output (JSON mode) validated by this schem
 readonly system: string;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:46
+Defined in: [packages/core/src/protocol/provider.ts:46](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L46)
 
 ***
 
@@ -59,4 +59,4 @@ Defined in: packages/core/src/protocol/provider.ts:46
 readonly tools: readonly AnyTool<unknown>[];
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:48
+Defined in: [packages/core/src/protocol/provider.ts:48](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L48)

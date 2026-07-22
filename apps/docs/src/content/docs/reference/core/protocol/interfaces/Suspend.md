@@ -5,14 +5,15 @@ prev: false
 title: "Suspend"
 ---
 
-Defined in: packages/core/src/protocol/suspension.ts:87
+Defined in: [packages/core/src/protocol/suspension.ts:92](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L92)
 
 The marker value a tool's `execute` returns to request a replay-free mid-tool pause.
 
 ## Remarks
 
-Returning this from a tool (Tier-1b) is not wired in the current runtime slice
-— the loop rejects it with a `NOT_IMPLEMENTED` error. The value shape is stable.
+Returning this from a tool (Tier-1b) pauses the run: the loop suspends with the tool's
+[SuspensionRequest](/reference/core/protocol/interfaces/suspensionrequest/), and `resume(token, { kind: "resolve", value })` feeds `value` back as the
+tool result. The `execute` is not re-run on resume (the pause is replay-free).
 
 ## Type Parameters
 
@@ -28,7 +29,7 @@ Returning this from a tool (Tier-1b) is not wired in the current runtime slice
 readonly optional __out?: Out;
 ```
 
-Defined in: packages/core/src/protocol/suspension.ts:89
+Defined in: [packages/core/src/protocol/suspension.ts:94](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L94)
 
 ***
 
@@ -38,7 +39,7 @@ Defined in: packages/core/src/protocol/suspension.ts:89
 readonly [SUSPEND]: true;
 ```
 
-Defined in: packages/core/src/protocol/suspension.ts:88
+Defined in: [packages/core/src/protocol/suspension.ts:93](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L93)
 
 ***
 
@@ -48,4 +49,4 @@ Defined in: packages/core/src/protocol/suspension.ts:88
 readonly request: SuspensionRequest;
 ```
 
-Defined in: packages/core/src/protocol/suspension.ts:90
+Defined in: [packages/core/src/protocol/suspension.ts:95](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L95)

@@ -15,21 +15,24 @@ composable too — so Mithril is a set of lego bricks, not a monolith.
 ## Middleware — the onion
 
 Middleware wraps invocations, outermost-first, at the **tool** and **model** altitudes. Compose by
-array order via `use:`:
+array order via `use:` (highlighted) — run it and watch the onion log around the call:
 
-```ts
-const cache: Middleware = {
-  name: "cache",
-  model: async (ctx, call, next) => (await hit(call)) ?? next(call),
-};
-const guardrail: Middleware = {
-  name: "guardrail",
-  tool: async (ctx, call, next) =>
-    isBlocked(call) ? { callId: call.callId, status: "error", error: block } : next(call),
-};
+<Runnable title="use.ts" highlight={[16]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
 
-agent({ model, instructions, tools, use: [cache, guardrail] });
-```
+const logModel = { name: "log-model", model: async (ctx, call, next) => { console.log("→ model call"); return next(call); } };
+const logTool = { name: "log-tool", tool: async (ctx, call, next) => { console.log("→ tool:", call.name); return next(call); } };
+
+const search = tool({
+  name: "search",
+  description: "Search the docs.",
+  inputSchema: z.object({ q: z.string() }),
+  execute: async ({ q }) => ({ hits: 3, q }),
+});
+
+const model = testModel(scriptedProvider([toolCallTurn("search", { q: "mithril" }), textTurn("Found 3 results.")]));
+await run(agent({ model, instructions: "Use search.", tools: [search], use: [logModel, logTool] }), "Search mithril.");`} />
 
 ## The one law: no private side channel
 

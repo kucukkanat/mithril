@@ -9,7 +9,7 @@ title: "attachDevtools"
 function attachDevtools(): () => void;
 ```
 
-Defined in: packages/devtools/src/attach.ts:36
+Defined in: [packages/devtools/src/attach.ts:36](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/attach.ts#L36)
 
 Attach the global devtools inspector to every run in this process (idempotent).
 

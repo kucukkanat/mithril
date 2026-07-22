@@ -5,35 +5,82 @@ prev: false
 title: "calledToolWith"
 ---
 
+## Call Signature
+
 ```ts
-function calledToolWith(name, match): Scorer;
+function calledToolWith<T>(tool, match): Scorer;
 ```
 
-Defined in: index.ts:343
+Defined in: [index.ts:506](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L506)
 
 A [Scorer](/reference/evals/type-aliases/scorer/) that scores `1` if the trajectory has a `tool.call` for `name` whose input satisfies
 `match`, else `0` — for asserting a tool was called with the *right* arguments (not just that it ran).
 
-## Parameters
+### Type Parameters
+
+| Type Parameter |
+| ------ |
+| `T` *extends* `AnyTool`\<`never`\> |
+
+### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `name` | `string` | the tool name to look for in the event log. |
-| `match` | (`input`) => `boolean` | a predicate over the call's `input` (JsonValue). |
+| `tool` | `T` | - |
+| `match` | (`input`) => `boolean` | a predicate over the call's `input`. |
 
-## Returns
+### Returns
 
 [`Scorer`](/reference/evals/type-aliases/scorer/)
 
 a [Scorer](/reference/evals/type-aliases/scorer/) named `calledWith:{name}`.
 
-## Example
+### Example
 
 ```ts
-// the model converted the right amount:
+// Pass the tool value — `i` is typed, no cast, rename-safe:
+calledToolWith(convertCurrency, (i) => i.amount === 100);
+// Or by name — `i` is a JsonValue:
 calledToolWith("convertCurrency", (i) => (i as { amount?: number }).amount === 100);
 ```
 
-## See
+### See
+
+[calledTool](/reference/evals/functions/calledtool/) for a name-only check.
+
+## Call Signature
+
+```ts
+function calledToolWith(name, match): Scorer;
+```
+
+Defined in: [index.ts:507](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L507)
+
+A [Scorer](/reference/evals/type-aliases/scorer/) that scores `1` if the trajectory has a `tool.call` for `name` whose input satisfies
+`match`, else `0` — for asserting a tool was called with the *right* arguments (not just that it ran).
+
+### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `name` | `string` | - |
+| `match` | (`input`) => `boolean` | a predicate over the call's `input`. |
+
+### Returns
+
+[`Scorer`](/reference/evals/type-aliases/scorer/)
+
+a [Scorer](/reference/evals/type-aliases/scorer/) named `calledWith:{name}`.
+
+### Example
+
+```ts
+// Pass the tool value — `i` is typed, no cast, rename-safe:
+calledToolWith(convertCurrency, (i) => i.amount === 100);
+// Or by name — `i` is a JsonValue:
+calledToolWith("convertCurrency", (i) => (i as { amount?: number }).amount === 100);
+```
+
+### See
 
 [calledTool](/reference/evals/functions/calledtool/) for a name-only check.

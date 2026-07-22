@@ -9,7 +9,7 @@ title: "useRun"
 function useRun(source): RunSnapshot;
 ```
 
-Defined in: hooks.ts:43
+Defined in: [hooks.ts:44](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/react/src/hooks.ts#L44)
 
 Subscribe a component to a streaming run and re-render as events arrive.
 
@@ -17,7 +17,7 @@ Subscribe a component to a streaming run and re-render as events arrive.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | [`RunSource`](/reference/react/hooks/interfaces/runsource/) | A [RunSource](/reference/react/hooks/interfaces/runsource/), e.g. `agent.stream(input)`. |
+| `source` | [`RunSource`](/reference/react/hooks/interfaces/runsource/) \| `undefined` | A [RunSource](/reference/react/hooks/interfaces/runsource/), e.g. `agent.stream(input)`, or `undefined` before a run has started (the hook then reports an empty idle snapshot, so it can be called unconditionally per the rules of hooks). |
 
 ## Returns
 
@@ -32,8 +32,8 @@ Memoizes the store on `source` identity; pass a stable handle to avoid re-subscr
 ## Example
 
 ```tsx
-function Chat({ run }: { run: RunSource }) {
-  const { text, status, costUsd } = useRun(run);
+function Chat({ run }: { run: RunSource | undefined }) {
+  const { text, status, costUsd } = useRun(run); // safe before the first run: run === undefined
   return <pre>{text}{status === "streaming" ? "▍" : ` — $${costUsd.toFixed(4)}`}</pre>;
 }
 ```

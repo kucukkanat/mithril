@@ -1,0 +1,34 @@
+---
+editUrl: false
+next: false
+prev: false
+title: "memoryVectorStore"
+---
+
+```ts
+function memoryVectorStore(): VectorStore;
+```
+
+Defined in: [index.ts:96](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/vectors/src/index.ts#L96)
+
+Create an in-memory [VectorStore](/reference/vectors/index/interfaces/vectorstore/) that answers queries with an exact brute-force cosine scan.
+
+## Returns
+
+[`VectorStore`](/reference/vectors/index/interfaces/vectorstore/)
+
+A fresh, browser-capable store with no shared state.
+
+## Remarks
+
+The reference implementation for [vectorsConformance](/reference/vectors/index/functions/vectorsconformance/). Exact (not approximate) — every
+query scans all records, which is ideal for small collections and for tests; swap in an ANN-indexed
+backend for large corpora. Vectors are copied into `Float32Array` on upsert.
+
+## Example
+
+```ts
+const store = memoryVectorStore();
+await store.upsert([{ id: "a", vector: [1, 0, 0], metadata: { doc: "intro" } }]);
+const [top] = await store.query([0.9, 0.1, 0], { topK: 1 });
+```

@@ -1,0 +1,104 @@
+---
+title: Streaming to a web UI
+description: Serve an agent over HTTP and stream its output to the browser — server and client, end to end.
+sidebar:
+  order: 15
+  label: Streaming to a web UI
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
+
+The agent runs on your server; the browser renders tokens as they arrive. Because a run is just an
+async-iterable of events, the wiring is a plain HTTP stream — no framework, no protocol to learn. The
+runnable below performs the *exact* server production (a `ReadableStream` of the run's text,
+highlighted) and the client consumption (a `TextDecoderStream` reader) end to end:
+
+<Runnable title="stream-server.ts" highlight={["11-18"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const weather = tool({ name: "weather", description: "Weather.", inputSchema: z.object({ city: z.string() }), execute: async ({ city }) => ({ city, tempC: 21 }) });
+const model = testModel(scriptedProvider([toolCallTurn("weather", { city: "Istanbul" }), textTurn("It's 21°C in Istanbul.")]));
+const assistant = agent({ model, instructions: "Use weather.", tools: [weather] });
+
+// The server: this is what the bun-server template's fetch() returns.
+// In your app: Bun.serve({ fetch(req) { return new Response(bodyFor(new URL(req.url).searchParams.get("q"))); } })
+function bodyFor(input) {
+  const handle = assistant.stream(input);
+  return new ReadableStream({
+    async start(controller) {
+      const enc = new TextEncoder();
+      for await (const delta of handle.text) controller.enqueue(enc.encode(delta));
+      controller.close();
+    },
+  });
+}
+
+// The client: read that body with a streaming reader — identical code over real HTTP.
+const reader = bodyFor("Weather in Istanbul?").pipeThrough(new TextDecoderStream()).getReader();
+let out = "";
+for (;;) { const { value, done } = await reader.read(); if (done) break; out += value; console.log("chunk:", value); }
+console.log("full answer:", out);`} />
+
+<Aside type="note">
+The API key never leaves the server — the browser only ever sees the streamed text. Keep it that way:
+never ship a provider key to the client outside a user's own BYOK dev session.
+</Aside>
+
+## Streaming the full event stream
+
+Plain text is enough for a chat bubble. To drive a richer UI — tool-call chips, a cost meter, a step
+timeline — send every [`MithrilEvent`](/reference/core/protocol/type-aliases/mithrilevent/) instead of
+just the text, newline-delimited (NDJSON, highlighted). This runnable produces the NDJSON on the
+"server" and folds it on the "client":
+
+<Runnable title="ndjson.ts" highlight={["9-10", "16-18"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const weather = tool({ name: "weather", description: "Weather.", inputSchema: z.object({ city: z.string() }), execute: async ({ city }) => ({ city, tempC: 21 }) });
+const model = testModel(scriptedProvider([toolCallTurn("weather", { city: "Istanbul" }), textTurn("It's 21°C.")]));
+const assistant = agent({ model, instructions: "Use weather.", tools: [weather] });
+
+// server: one JSON event per line
+let wire = "";
+for await (const e of assistant.stream("Weather?").events) wire += JSON.stringify(e) + "\\n";
+
+// client: parse one event per line and fold it into your view
+for (const line of wire.split("\\n").filter(Boolean)) {
+  const e = JSON.parse(line);
+  if (e.type === "text.delta") console.log("text:", e.delta);
+  if (e.type === "tool.call") console.log("tool chip:", e.name);
+}`} />
+
+<Aside type="tip">
+In React, skip the manual loop: [`useChat`](/reference/react/hooks/functions/usechat/) manages the
+message history and streaming state for you, and [`useRun`](/reference/react/hooks/functions/userun/)
+folds a single run's events into a `{ text, status, costUsd }` snapshot.
+</Aside>
+
+## Cancellation
+
+Aborting the HTTP request should stop the run. Forward the request's signal into the run (highlighted)
+and the loop cancels at the next step boundary — here an already-aborted signal stands in for a
+disconnect:
+
+<Runnable title="cancel.ts" highlight={[7]} code={`import { agent } from "mithril";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
+
+const model = testModel(scriptedProvider([textTurn("Never finishes.")]));
+const assistant = agent({ model, instructions: "Be brief." });
+
+// In a server: assistant.stream(input, { signal: req.signal }) — a disconnect aborts req.signal.
+const result = await assistant.run("Summarize this page.", { signal: AbortSignal.abort("client disconnected") });
+console.log(result.status); // "cancelled"`} />
+
+<Steps>
+
+1. **Serve** — stream `handle.text` (or `handle.events`) into a `Response` body.
+2. **Consume** — read the body with a `TextDecoderStream` reader on the client.
+3. **Enrich** — switch to NDJSON events for tool chips, cost, and timeline.
+4. **Cancel** — pass `req.signal` into `stream(...)` so a disconnect ends the run.
+
+</Steps>

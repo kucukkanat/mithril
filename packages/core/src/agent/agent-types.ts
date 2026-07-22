@@ -33,22 +33,32 @@ export type InputMessage =
 export type Input = string | readonly InputMessage[];
 
 /**
- * Per-run options passed to {@link Agent.run}, {@link Agent.stream}, and {@link Agent.resume}.
- *
- * @typeParam Deps - the dependency object injected into tool/instruction {@link RunContext}s.
- * @remarks
- * `transport` omitted falls back to BYOK resolved from the environment (`<PROVIDER>_API_KEY`).
- * `providers` omitted requires `model` to be a self-wiring {@link ModelHandle}. Cancellation is
- * driven exclusively by `signal` in this slice — the timeout idiom is `AbortSignal.timeout(ms)`.
+ * The `Deps` slot of {@link RunOptions}: required when the agent has dependencies, and optional (may be
+ * omitted, or given as `undefined`) when `Deps` is `void`. This is what lets a no-deps agent pass a bare
+ * `{ signal }` without the `deps: undefined` ceremony.
  */
-export interface RunOptions<Deps> {
-  readonly deps: Deps;
+export type DepsOption<Deps> = [Deps] extends [void] ? { readonly deps?: undefined } : { readonly deps: Deps };
+
+/** The run options common to every agent, independent of whether it has dependencies. */
+export interface RunOptionsBase {
   readonly transport?: Transport; // omitted ⇒ byok from env
   readonly providers?: ProviderRegistry; // omitted ⇒ model must be a self-wiring handle
   readonly signal?: AbortSignal; // timeout idiom: AbortSignal.timeout(ms)
   readonly runtime?: RuntimeAdapter;
   readonly maxSteps?: number;
 }
+
+/**
+ * Per-run options passed to {@link Agent.run}, {@link Agent.stream}, and {@link Agent.resume}.
+ *
+ * @typeParam Deps - the dependency object injected into tool/instruction {@link RunContext}s.
+ * @remarks
+ * `deps` is required only when `Deps` is non-`void`; a no-deps agent may pass `{ signal }` (or any other
+ * option) with no `deps` field at all. `transport` omitted falls back to BYOK resolved from the environment
+ * (`<PROVIDER>_API_KEY`). `providers` omitted requires `model` to be a self-wiring {@link ModelHandle}.
+ * Cancellation is driven by `signal` — the timeout idiom is `AbortSignal.timeout(ms)`.
+ */
+export type RunOptions<Deps> = DepsOption<Deps> & RunOptionsBase;
 
 /**
  * The trailing argument tuple of the run methods, made optional when `Deps` is `void`.
@@ -65,16 +75,17 @@ export type RunArgs<Deps> = [Deps] extends [void] ? [opts?: RunOptions<void>] : 
  * - `"completed"` — carries the final `output` and `usage`.
  * - `"suspended"` — the run is waiting on a human/external resolution (Tier-1 approval, a Tier-1b
  *   tool-returned `suspend(...)`, or a Tier-2 `ctx.suspend()`). `request` is the UI-facing pending view;
- *   `token` is the resume handle (unsigned durable-local JSON — {@link seal} it for cross-trust-boundary
- *   durability). Resume via {@link Agent.resume}/{@link Agent.rehydrate}.
+ *   `token` is the resume handle (unsigned durable-local JSON by default — {@link seal} it before crossing
+ *   a trust boundary). Resume via {@link Agent.resume} (drains to a result) or {@link Agent.resumeStream}
+ *   (streams the resumed run).
  * - `"unresumable"` — a resume `token` no longer matches a pending tool call; `reason` explains why.
  * - `"error"` — carries a {@link SerializedError} and `usage`.
  * - `"cancelled"` — the run's `signal` aborted; carries `usage`.
  */
 export type RunResult<Out> =
   | { readonly status: "completed"; readonly output: Out; readonly usage: UsageTotals }
-  // Tier-1 HITL: a tool needs approval. `token` (unsigned durable-local JSON for now; sealing is a later
-  // slice) is resumed via agent.resume(token, decision, opts). `request` is the UI-facing pending view.
+  // Tier-1 HITL: a tool needs approval. `token` (unsigned durable-local JSON by default — seal() it before
+  // crossing a trust boundary) is resumed via agent.resume(token, decision, opts). `request` is the pending view.
   | { readonly status: "suspended"; readonly request: SuspensionDescriptor; readonly token: string }
   | { readonly status: "unresumable"; readonly request: SuspensionDescriptor; readonly reason: string }
   | { readonly status: "error"; readonly error: SerializedError; readonly usage: UsageTotals }
@@ -157,7 +168,7 @@ export interface AgentConfig<Tools extends readonly AnyTool<Deps>[], Deps, Out e
  * - `resume` continues any suspension from its `token` and a {@link ResumeValue} (an {@link ApprovalDecision}
  *   for Tier-1 approval, or `{ kind: "resolve", value }` for a Tier-1b/Tier-2 resolution). It returns the
  *   final {@link RunResult} and does not re-stream events.
- * - `rehydrate` is `resume`'s streaming form: it returns a {@link RunHandle} over the resumed run.
+ * - `resumeStream` is `resume`'s streaming form: it returns a {@link RunHandle} over the resumed run.
  * - `deps`/`tools`/`instructions` are always re-provided via the reconstructed agent and `opts`; nothing
  *   is deserialized into behavior.
  * - `__tools` is a phantom type carrier for UI-tool inference; it is erased at build and never populated.
@@ -169,7 +180,7 @@ export interface Agent<Tools extends readonly AnyTool<Deps>[], Deps, Out extends
   // Cross-process resume. deps/tools/instructions are re-provided via the reconstructed agent + opts;
   // nothing is deserialized into behavior.
   resume(token: string, resolution: ResumeValue, ...opts: RunArgs<Deps>): Promise<RunResult<Out>>;
-  rehydrate(token: string, resolution: ResumeValue, ...opts: RunArgs<Deps>): RunHandle<Out>;
+  resumeStream(token: string, resolution: ResumeValue, ...opts: RunArgs<Deps>): RunHandle<Out>;
   readonly __tools?: Tools; // phantom carrier for InferUITools; erased at build
 }
 

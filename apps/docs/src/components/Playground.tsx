@@ -10,7 +10,7 @@ import { useRunner } from "../playground/useRunner.ts";
 import { useProviderSettings } from "../playground/useProviderSettings.ts";
 import { DEFAULT_PRESET, PRESETS, type Preset } from "../playground/presets.ts";
 import { LOCAL_MODELS, assembleExample, liveProvider, type LiveProviderId, type ProviderMode, type Target } from "../playground/providers.ts";
-import { codeFromHash, shareUrl } from "../playground/share.ts";
+import { codeFromHash, presetFromHash, shareUrl } from "../playground/share.ts";
 import "./playground.css";
 
 type Tab = "events" | "output" | "state";
@@ -34,8 +34,18 @@ function localModelLabel(id: string): string {
 
 export default function Playground({ embedded = false }: { embedded?: boolean }) {
   const hashCode = useMemo(() => codeFromHash(), []);
-  const initial = useMemo(() => hashCode ?? assembleExample(DEFAULT_PRESET.parts, { kind: "scripted" }), [hashCode]);
-  const [presetId, setPresetId] = useState<string>(hashCode ? "custom" : DEFAULT_PRESET.id);
+  // A `#preset=<id>` deep-link (from a guide's Runnable) boots pristine so the "Run against" picker still
+  // re-assembles the example; it wins over `#code=`. Fall back to the default preset when neither is present.
+  const linkedPreset = useMemo(() => {
+    const id = presetFromHash();
+    return id ? PRESETS.find((p) => p.id === id) : undefined;
+  }, []);
+  const bootPreset = linkedPreset ?? (hashCode ? undefined : DEFAULT_PRESET);
+  const initial = useMemo(
+    () => (bootPreset ? assembleExample(bootPreset.parts, { kind: "scripted" }) : (hashCode ?? "")),
+    [bootPreset, hashCode],
+  );
+  const [presetId, setPresetId] = useState<string>(bootPreset ? bootPreset.id : "custom");
   const [code, setCode] = useState<string>(initial);
   const [tab, setTab] = useState<Tab>("events");
   const [cursor, setCursor] = useState(0);
@@ -52,7 +62,7 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
   const [liveConfirmed, setLiveConfirmed] = useState(false);
   // generatedRef holds the last code WE assembled (trusted). Provider switches re-assemble only while the
   // editor still matches it; hand-edited or shared code is left alone (and a live run must confirm first).
-  const generatedRef = useRef<string | null>(hashCode ? null : initial);
+  const generatedRef = useRef<string | null>(bootPreset ? initial : null);
   const isPristine = () => generatedRef.current !== null && code === generatedRef.current;
 
   const applyGenerated = (next: string, id: string) => {

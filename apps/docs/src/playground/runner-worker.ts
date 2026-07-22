@@ -14,6 +14,13 @@ import { transform } from "sucrase";
 import * as coreAgent from "@mithril/core/agent";
 import * as coreProtocol from "@mithril/core/protocol";
 import * as testkit from "@mithril/core/testkit";
+import * as evals from "@mithril/evals";
+import * as memory from "@mithril/memory";
+import * as kv from "@mithril/kv";
+import * as fs from "@mithril/fs";
+import * as vectors from "@mithril/vectors";
+import * as workflows from "@mithril/workflows";
+import * as otel from "@mithril/otel";
 import * as mithrilMeta from "mithril";
 import { anthropic } from "mithril/anthropic";
 import { openai, openaiProvider } from "mithril/openai";
@@ -43,6 +50,13 @@ const MODULES: Readonly<Record<string, unknown>> = {
   "@mithril/core/agent": coreAgent,
   "@mithril/core/protocol": coreProtocol,
   "@mithril/core/testkit": testkit,
+  "@mithril/evals": evals,
+  "@mithril/memory": memory,
+  "@mithril/kv": kv,
+  "@mithril/fs": fs,
+  "@mithril/vectors": vectors,
+  "@mithril/workflows": workflows,
+  "@mithril/otel": otel,
   zod: { z },
 };
 

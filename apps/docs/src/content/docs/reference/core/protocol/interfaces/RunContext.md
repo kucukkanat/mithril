@@ -5,7 +5,7 @@ prev: false
 title: "RunContext"
 ---
 
-Defined in: packages/core/src/protocol/context.ts:55
+Defined in: [packages/core/src/protocol/context.ts:55](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/context.ts#L55)
 
 The typed dependency-injection context threaded into tools and dynamic
 instructions.
@@ -28,7 +28,7 @@ No globals: `deps` are re-injected every run/resume and are never serialized.
 readonly deps: Deps;
 ```
 
-Defined in: packages/core/src/protocol/context.ts:56
+Defined in: [packages/core/src/protocol/context.ts:56](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/context.ts#L56)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: packages/core/src/protocol/context.ts:56
 readonly runId: string;
 ```
 
-Defined in: packages/core/src/protocol/context.ts:57
+Defined in: [packages/core/src/protocol/context.ts:57](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/context.ts#L57)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: packages/core/src/protocol/context.ts:57
 readonly runtime: RuntimeAdapter;
 ```
 
-Defined in: packages/core/src/protocol/context.ts:61
+Defined in: [packages/core/src/protocol/context.ts:61](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/context.ts#L61)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: packages/core/src/protocol/context.ts:61
 readonly signal: AbortSignal;
 ```
 
-Defined in: packages/core/src/protocol/context.ts:59
+Defined in: [packages/core/src/protocol/context.ts:59](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/context.ts#L59)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: packages/core/src/protocol/context.ts:59
 readonly step: number;
 ```
 
-Defined in: packages/core/src/protocol/context.ts:58
+Defined in: [packages/core/src/protocol/context.ts:58](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/context.ts#L58)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: packages/core/src/protocol/context.ts:58
 readonly usage: Readonly<UsageTotals>;
 ```
 
-Defined in: packages/core/src/protocol/context.ts:60
+Defined in: [packages/core/src/protocol/context.ts:60](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/context.ts#L60)
 
 ## Methods
 
@@ -88,7 +88,7 @@ Defined in: packages/core/src/protocol/context.ts:60
 emit(payload, type?): void;
 ```
 
-Defined in: packages/core/src/protocol/context.ts:63
+Defined in: [packages/core/src/protocol/context.ts:63](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/context.ts#L63)
 
 Push a first-class `custom.*` event into the stream.
 
@@ -114,7 +114,7 @@ journal<T>(
 schema?): Promise<T>;
 ```
 
-Defined in: packages/core/src/protocol/context.ts:73
+Defined in: [packages/core/src/protocol/context.ts:74](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/context.ts#L74)
 
 Journaled, exactly-once effect. Memoized into the log; skipped on Tier-2 replay.
 
@@ -144,9 +144,9 @@ Journaled, exactly-once effect. Memoized into the log; skipped on Tier-2 replay.
 suspend<Req>(req): Promise<ResolutionOf<Req>>;
 ```
 
-Defined in: packages/core/src/protocol/context.ts:71
+Defined in: [packages/core/src/protocol/context.ts:72](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/context.ts#L72)
 
-Tier-2 HITL: suspend mid-tool with a typed, validated resolution.
+Tier-2 HITL: suspend mid-tool execution and resume with the resolution as the return value.
 
 #### Type Parameters
 
@@ -166,5 +166,6 @@ Tier-2 HITL: suspend mid-tool with a typed, validated resolution.
 
 #### Remarks
 
-Not wired in this slice — the runtime implementation rejects with a
-`NOT_IMPLEMENTED` error. The signature is part of the stable protocol shape.
+Calling this pauses the run with `req` as the pending [SuspensionRequest](/reference/core/protocol/interfaces/suspensionrequest/); the effect is
+journaled so the surrounding `execute` is not re-run on resume. Resume via
+`resume(token, { kind: "resolve", value })`, and `value` becomes this call's return.

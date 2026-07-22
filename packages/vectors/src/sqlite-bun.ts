@@ -22,8 +22,8 @@ function matchesFilter(metadata: Readonly<Record<string, unknown>> | undefined, 
 /**
  * Create a durable {@link VectorStore} backed by `bun:sqlite` (Bun runtime only).
  *
- * @param path - SQLite file path; defaults to `":memory:"` (process-lifetime). Pass a file path to persist
- *   across restarts.
+ * @param pathOrOpts - the SQLite file path, or `{ path }`; defaults to `":memory:"` (process-lifetime).
+ *   Pass a file path to persist across restarts.
  * @returns a {@link VectorStore} with the same semantics as `memoryVectorStore`, persisted to SQLite.
  * @remarks The `vectors` table is created on construction. `upsert` is idempotent via
  * `ON CONFLICT(id) DO UPDATE`. Ranking is an **exact** brute-force cosine scan over all rows (not ANN) — ideal
@@ -37,7 +37,8 @@ function matchesFilter(metadata: Readonly<Record<string, unknown>> | undefined, 
  * await store.upsert([{ id: "doc-1", vector: embedding, metadata: { source: "faq" } }]);
  * ```
  */
-export function sqliteBunVectorStore(path = ":memory:"): VectorStore {
+export function sqliteBunVectorStore(pathOrOpts?: string | { readonly path?: string }): VectorStore {
+  const path = (typeof pathOrOpts === "string" ? pathOrOpts : pathOrOpts?.path) ?? ":memory:";
   const db = new Database(path);
   db.run("CREATE TABLE IF NOT EXISTS vectors (id TEXT PRIMARY KEY, vector TEXT NOT NULL, metadata TEXT)");
   return {

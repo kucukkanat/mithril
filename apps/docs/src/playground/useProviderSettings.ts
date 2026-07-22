@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { DEFAULT_LOCAL_MODEL, LIVE_PROVIDERS, liveProvider, localModel, type LiveProviderId, type ProviderMode } from "./providers.ts";
 
 /*
- * Owns the ⚙ settings panel's state — run mode, the active remote provider + model, per-provider
+ * Owns the Run against bar's state — run mode, the active remote provider + model, per-provider
  * keys, and the local-model download — plus its persistence. Mirrors `useRunner`'s shape (a state
  * object + action callbacks) so `Playground.tsx` consumes both the same way.
  *

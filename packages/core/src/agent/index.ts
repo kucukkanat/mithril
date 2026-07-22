@@ -3,17 +3,19 @@
  *
  * @remarks Ships the {@link tool}/{@link agent}/{@link createHarness} factories, the streaming
  * {@link agentLoop}, model/provider resolution, and sealed-token helpers ({@link seal}/{@link open}).
- * Some capabilities are staged: {@link RunHandle}'s `cancel()` is a no-op (cancel via
- * {@link RunOptions.signal}), {@link Agent.resume} returns the final {@link RunResult} without
- * re-streaming, and the deeper HITL tiers (a tool returning `suspend(...)`, or `ctx.suspend()`) are not
- * yet wired and reject/throw {@link MithrilError} `NOT_IMPLEMENTED`.
+ * {@link RunHandle}'s `cancel()` aborts the run at the next step boundary (equivalent to aborting
+ * {@link RunOptions.signal}); {@link Agent.resume} drains a suspension to its final {@link RunResult}
+ * while {@link Agent.resumeStream} is its streaming form; and all three HITL tiers are wired — Tier-1
+ * approval, a tool returning `suspend(...)` (Tier-1b), and `ctx.suspend()` (Tier-2), including
+ * first-class nested `asTool` resume through the parent's own token.
  *
  * @packageDocumentation
  */
 
-// @mithril/core/agent — the ONE producer of the protocol. This slice ships the tool()/agent()/
-// createHarness() factories and the streaming loop (agentLoop). Structured output, HITL suspension,
-// middleware/plugins, persistence, iterate()/resume()/asTool() land in later slices.
+// @mithril/core/agent — the ONE producer of the protocol. Ships the tool()/agent()/createHarness()
+// factories and the streaming loop (agentLoop), structured output, all three HITL suspension tiers,
+// middleware/plugins, iterate()/resume()/resumeStream()/asTool(), and sealed-token helpers. Durable
+// persistence wiring into run() is not yet shipped — see the roadmap.
 
 export type { AsToolOptions, ToolDef, ToolFactory } from "./factory.ts";
 export { agent, asTool, createHarness, plugin, tool } from "./factory.ts";
@@ -26,11 +28,13 @@ export type {
   Agent,
   AgentConfig,
   AgentFactory,
+  DepsOption,
   Input,
   InputMessage,
   RunArgs,
   RunHandle,
   RunOptions,
+  RunOptionsBase,
   RunResult,
   StepSnapshot,
 } from "./agent-types.ts";

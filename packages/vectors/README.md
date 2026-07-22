@@ -47,9 +47,11 @@ const search = tool<Deps>()({
 
 ## As a RAG core
 
-The in-memory store does an **exact** brute-force scan — ideal for small corpora and tests. For large
-collections, swap in an ANN-indexed backend (sqlite-vec / pgvector / Cloudflare Vectorize) behind the same
-interface; those are on the roadmap. Because the interface is identical, your retrieval code doesn't change.
+The in-memory store does an **exact** brute-force scan — ideal for small corpora and tests. For
+persistence across process restarts, use the shipped SQLite backend at `@mithril/vectors/sqlite-bun`
+(`sqliteBunVectorStore(path)`) — same interface, still an exact scan. For large collections an ANN-indexed
+backend (sqlite-vec / pgvector / Cloudflare Vectorize) is on the roadmap; because the interface is
+identical, your retrieval code won't change when you swap it in.
 
 ## Conformance
 
@@ -69,6 +71,10 @@ vectorsConformance(async () => memoryVectorStore(), {
 ## API
 
 - `memoryVectorStore(): VectorStore` — the reference in-memory brute-force store.
+- `sqliteBunVectorStore(path? | { path? }): VectorStore` — durable SQLite-backed store (`@mithril/vectors/sqlite-bun`;
+  defaults to `:memory:`).
+- `sqliteNodeVectorStore(path? | { path? }): VectorStore` — the Node ≥ 22.5 counterpart via built-in
+  `node:sqlite` (`@mithril/vectors/sqlite-node`).
 - `cosineSimilarity(a, b): number` — cosine similarity in `[-1, 1]` (`0` for a zero-magnitude vector).
 - `vectorsConformance(make, adapter)` — the shared conformance suite.
 - Types: `VectorStore`, `VectorRecord`, `VectorMatch`, `QueryOptions`.

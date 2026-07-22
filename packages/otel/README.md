@@ -18,7 +18,9 @@ const spans = toGenAiSpans(log, {
 
 ## API
 
-- `toGenAiSpans(events, sink?, { captureContent? })` → `GenAiSpan[]`.
+- `toGenAiSpans(events, sink?, { captureContent? })` → `GenAiSpan[]` — fold a finished event stream.
+- `otelPlugin(sink, { captureContent? })` → `Plugin` — the live form: add it to an agent's `use` array and
+  each run's spans flush to `sink` on completion, no manual buffering (`use: [otelPlugin(exporter)]`).
 - `GenAiSpan` = `{ spanId, parentSpanId, traceId, name, kind, startTime, endTime?, attributes }`.
 - Attributes include `gen_ai.request.model`, `gen_ai.tool.name`, `gen_ai.usage.output_tokens`.
 

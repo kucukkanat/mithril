@@ -5,7 +5,7 @@ prev: false
 title: "RunTokenV2"
 ---
 
-Defined in: packages/core/src/agent/loop.ts:87
+Defined in: [packages/core/src/agent/loop.ts:87](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L87)
 
 The versioned, serializable run token carried by a `suspended` [RunResult](/reference/core/agent/type-aliases/runresult/).
 
@@ -17,7 +17,7 @@ The versioned, serializable run token carried by a `suspended` [RunResult](/refe
 readonly messages: readonly LoopMessage[];
 ```
 
-Defined in: packages/core/src/agent/loop.ts:91
+Defined in: [packages/core/src/agent/loop.ts:91](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L91)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: packages/core/src/agent/loop.ts:91
 readonly model: string;
 ```
 
-Defined in: packages/core/src/agent/loop.ts:90
+Defined in: [packages/core/src/agent/loop.ts:90](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L90)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: packages/core/src/agent/loop.ts:90
 readonly pending: PendingSuspension;
 ```
 
-Defined in: packages/core/src/agent/loop.ts:94
+Defined in: [packages/core/src/agent/loop.ts:94](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L94)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: packages/core/src/agent/loop.ts:94
 readonly runId: string;
 ```
 
-Defined in: packages/core/src/agent/loop.ts:89
+Defined in: [packages/core/src/agent/loop.ts:89](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L89)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: packages/core/src/agent/loop.ts:89
 readonly step: number;
 ```
 
-Defined in: packages/core/src/agent/loop.ts:93
+Defined in: [packages/core/src/agent/loop.ts:93](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L93)
 
 ***
 
@@ -67,7 +67,7 @@ Defined in: packages/core/src/agent/loop.ts:93
 readonly usage: UsageTotals;
 ```
 
-Defined in: packages/core/src/agent/loop.ts:92
+Defined in: [packages/core/src/agent/loop.ts:92](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L92)
 
 ***
 
@@ -77,4 +77,4 @@ Defined in: packages/core/src/agent/loop.ts:92
 readonly v: 2;
 ```
 
-Defined in: packages/core/src/agent/loop.ts:88
+Defined in: [packages/core/src/agent/loop.ts:88](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L88)

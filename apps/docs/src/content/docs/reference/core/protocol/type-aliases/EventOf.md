@@ -11,7 +11,7 @@ type EventOf<T> = Extract<MithrilEvent, {
 }>;
 ```
 
-Defined in: packages/core/src/protocol/events.ts:95
+Defined in: [packages/core/src/protocol/events.ts:95](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/events.ts#L95)
 
 The specific [MithrilEvent](/reference/core/protocol/type-aliases/mithrilevent/) member whose discriminant is `T`.
 

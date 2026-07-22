@@ -13,7 +13,7 @@ const concise: Scorer = (t) => ({ name: "concise", value: t.final.messages.at(-1
 // Register a bun:test (or vitest) test per case:
 describeEval(test, myAgent, [
   { name: "answers with search", input: "weather in NYC?", scorers: [usedSearch, completed(), concise] },
-], { deps: undefined });
+]); // a no-deps agent needs no options object; pass { deps } only when the agent has dependencies
 ```
 
 Prefer the generator directly when you want the scores/trajectory:
@@ -63,13 +63,24 @@ await Bun.write("report.html", htmlReport(entries, { title: "Nightly evals" }));
 
 ## API
 
-- `runEval(agent, cases, opts)` → async-iterable of `{ case, scores, trajectory, passed }`.
+- `runEval(agent, cases, opts?)` → async-iterable of `{ case, scores, trajectory, passed }` (`opts` optional
+  for a no-deps agent — no `{ deps: undefined }`).
+- `runSuite(entries, opts?)` → `{ runs, passed, total, passRate, ok }` — runs a model×case matrix (each
+  `entry` carries its own agent), times each case, and gates on `minPassRate` (`ok` → `process.exitCode`).
 - `runEvalCached(agent, cases, opts)` — same, with `mode: "live" | "record" | "replay"` and a `store`.
-- `describeEval(register, agent, cases, opts)` — one test per case; fails if any scorer < `threshold` (default 1).
+  Fixtures are keyed by **case name + input hash**, so changing a case's input misses the stale recording.
+- `describeEval(register, agent, cases, opts?)` — one test per case; fails if any scorer < `threshold` (default 1).
 - `htmlReport(entries, opts?)` → a self-contained HTML string; `EvalReportEntry` = `{ run, group?, durationMs? }`.
 - `TrajectoryStore` + `memoryTrajectoryStore()` / `fsTrajectoryStore(fs, { dir? })`; `serializeTrajectory` / `loadTrajectory`.
+- `trajectoryToScript(t)` → `ProviderChunk[][]` — replay a recording through `scriptedProvider` so the **real
+  loop and tools re-run** (event-log replay runs nothing), to regression-test a tool/loop change offline.
 - `Scorer<Ctx>` = `(t: Trajectory, ctx) => Score` where `Score = { name, value, rationale? }`.
 - `Trajectory` = `{ runId, log, final }` (`final` is `replay(log)`).
-- Built-ins: `calledTool(name)`, `calledToolWith(name, match)` (right tool + right args), `completed()`.
+- Tool-trajectory built-ins: `calledTool(name)`, `calledToolWith(name, match)` (right tool + right args),
+  `calledInOrder(names)` (relative call order), `toolCallCount(n | { min, max })`, `noToolErrors()`.
+- Output/status built-ins: `completed()`, `outputIncludes(substring, { ignoreCase? })`,
+  `outputMatches(regex)`, plus the `finalText(t)` helper (folds `text.delta`s into the final string).
+- Budget built-ins: `underCost(maxMicroUsd)`, `underSteps(maxSteps)` — guard efficiency regressions.
+- LLM-as-judge: `llmJudge({ model, rubric, name? })` — runs a judge model over the final text (live/local only).
 
 `opts.makeContext(t)` supplies a typed `Ctx` to every scorer; `opts.threshold` sets the pass bar.

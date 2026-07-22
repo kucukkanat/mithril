@@ -5,7 +5,7 @@ prev: false
 title: "PendingSuspension"
 ---
 
-Defined in: packages/core/src/agent/loop.ts:64
+Defined in: [packages/core/src/agent/loop.ts:64](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L64)
 
 The serialized description of what a suspended run is waiting on — enough to resume it in another
 process. `approval` (Tier-1) resumes with an [ApprovalDecision](/reference/core/protocol/type-aliases/approvaldecision/); `return` (Tier-1b, a tool
@@ -19,7 +19,7 @@ returned `suspend(...)`) and `midtool` (Tier-2, `ctx.suspend()`) resume with a r
 readonly callId: string;
 ```
 
-Defined in: packages/core/src/agent/loop.ts:66
+Defined in: [packages/core/src/agent/loop.ts:66](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L66)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: packages/core/src/agent/loop.ts:66
 readonly descriptor: SuspensionDescriptor;
 ```
 
-Defined in: packages/core/src/agent/loop.ts:67
+Defined in: [packages/core/src/agent/loop.ts:67](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L67)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: packages/core/src/agent/loop.ts:67
 readonly optional journal?: Readonly<Record<string, JsonValue>>;
 ```
 
-Defined in: packages/core/src/agent/loop.ts:69
+Defined in: [packages/core/src/agent/loop.ts:69](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L69)
 
 Tier-2 only: journaled effect values recorded before the pause, replayed on resume.
 
@@ -51,7 +51,7 @@ Tier-2 only: journaled effect values recorded before the pause, replayed on resu
 readonly kind: PendingKind;
 ```
 
-Defined in: packages/core/src/agent/loop.ts:65
+Defined in: [packages/core/src/agent/loop.ts:65](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L65)
 
 ***
 
@@ -61,6 +61,6 @@ Defined in: packages/core/src/agent/loop.ts:65
 readonly optional resolutions?: readonly JsonValue[];
 ```
 
-Defined in: packages/core/src/agent/loop.ts:71
+Defined in: [packages/core/src/agent/loop.ts:71](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/loop.ts#L71)
 
 Tier-2 only: resolutions consumed by prior `ctx.suspend()` calls, replayed in order on resume.

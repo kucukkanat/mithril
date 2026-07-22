@@ -11,40 +11,71 @@ import Runnable from "../../../components/Runnable.astro";
 
 There is exactly one source of truth — the `MithrilEvent` stream. The three ways to consume a run
 are progressively lower-level views of that same stream, so you reach for depth only when you need
-it.
+it. In your app, all three come off the agent directly:
+
+```ts
+const result = await assistant.run(input); // tier 1 — the final RunResult
+const handle = assistant.stream(input); // tiers 2 & 3 — a live handle
+for await (const delta of handle.text) …   //   .text   → token deltas
+for await (const event of handle.events) … //   .events → every typed MithrilEvent
+```
+
+Each example below is the same, wired to a scripted model so it runs in your browser — no key.
 
 ## Tier 1 — the final result
 
-Await it and branch on `.status`. No streaming machinery:
+Await it and branch on `.status` (highlighted). No streaming machinery:
 
-```ts
-const result = await assistant.run("Summarize the incident.");
-if (result.status === "completed") console.log(result.output);
-```
+<Runnable title="tier1.ts" highlight={["6-7"]} code={`import { agent } from "mithril";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
+
+const model = testModel(scriptedProvider([textTurn("The incident was a cache stampede; mitigated at 14:02.")]));
+const assistant = agent({ model, instructions: "Summarize incidents concisely." });
+
+const result = await run(assistant, "Summarize the incident.");
+if (result.status === "completed") console.log(result.output);`} />
 
 ## Tier 2 — text as it arrives
 
-`stream()` returns a `RunHandle`. Iterate `.text` for token deltas; await `.result()` for the final
-`RunResult`:
+`stream()` returns a `RunHandle`. Iterate `.text` for token deltas (highlighted); await `.result()`
+for the final `RunResult`:
 
-```ts
+<Runnable title="tier2.ts" highlight={["7-8"]} code={`import { agent } from "mithril";
+import { scriptedProvider, testModel } from "@mithril/core/testkit";
+
+const model = testModel(scriptedProvider([[
+  { type: "text.delta", delta: "The incident was " },
+  { type: "text.delta", delta: "a cache stampede." },
+  { type: "message.end", finishReason: "stop", usage },
+]]));
+const assistant = agent({ model, instructions: "Summarize incidents concisely." });
+
 const handle = assistant.stream("Summarize the incident.");
-for await (const delta of handle.text) process.stdout.write(delta);
-const result = await handle.result();
-```
+for await (const delta of handle.text) console.log(delta);
+console.log("status:", (await handle.result()).status);`} />
 
 ## Tier 3 — every typed event
 
-The handle is itself an async-iterable of events. `.state()` folds the buffered log into a
-`RunState` at any moment:
+The handle is itself an async-iterable of events (highlighted). Scrub the inspector below — the log
+is the exact stream your `.events` loop sees:
 
-```ts
-const handle = assistant.stream("Summarize the incident.");
+<Runnable title="tier3.ts" highlight={["13-16"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
+});
+
+const model = testModel(scriptedProvider([toolCallTurn("weather", { city: "Istanbul" }), textTurn("It's 21°C in Istanbul.")]));
+const handle = agent({ model, instructions: "Use weather, then answer.", tools: [weather] }).stream("Weather?");
 for await (const event of handle.events) {
   if (event.type === "tool.call") console.log("calling", event.name);
   if (event.type === "run.finish") console.log("done", event.usage);
-}
-```
+}`} />
 
 ## The event families
 
@@ -61,38 +92,9 @@ Every event is dot-namespaced and carries `EventMeta` (`v`, `runId`, `seq`, `ts`
 The union is [non-exhaustive by contract](/concepts/the-protocol/): a new event type is a minor
 version, so switch on the types you care about and ignore the rest.
 
-## Watch it stream
-
-Open this and scrub the inspector — the log below is the exact stream your `.events` loop would
-see:
-
-<Runnable title="stream.ts" code={`import { agent, tool } from "mithril";
-import { scriptedProvider, testModel } from "@mithril/core/testkit";
-import { z } from "zod";
-
-const model = testModel(scriptedProvider([
-  [
-    { type: "tool.call", callId: "c1", name: "weather", input: { city: "Istanbul" } },
-    { type: "message.end", finishReason: "tool_calls", usage },
-  ],
-  [
-    { type: "text.delta", delta: "It's 21°C " },
-    { type: "text.delta", delta: "and clear in Istanbul." },
-    { type: "message.end", finishReason: "stop", usage },
-  ],
-]));
-
-const weather = tool({
-  name: "weather",
-  description: "Current weather for a city.",
-  inputSchema: z.object({ city: z.string() }),
-  execute: async ({ city }) => ({ city, tempC: 21 }),
-});
-
-await run(agent({ model, instructions: "Use weather, then answer.", tools: [weather] }), "Weather in Istanbul?");`} />
-
-<Aside type="caution" title="Cancel via the signal, not the handle">
-`handle.cancel()` is currently a **no-op**. To cancel a run, pass an `AbortSignal` in the run
-options — the timeout idiom is `signal: AbortSignal.timeout(30_000)`. Aborting emits `run.cancel`
-and settles the result as `{ status: "cancelled" }`.
+<Aside type="tip" title="Two ways to cancel">
+Call `handle.cancel()` on a streaming handle to abort the run at the next step boundary, or pass an
+`AbortSignal` in the run options — the timeout idiom is `signal: AbortSignal.timeout(30_000)`. Either
+way emits `run.cancel` and settles the result as `{ status: "cancelled" }`. Both `cancel(reason)` and
+`AbortSignal.abort(reason)` surface a string `reason` on the `run.cancel` event.
 </Aside>

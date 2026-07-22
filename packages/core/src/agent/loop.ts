@@ -157,7 +157,12 @@ function issuesToJson(issues: readonly { readonly message: string }[]): JsonValu
 }
 
 function reqToDescriptor(req: SuspensionRequest, callId: string): SuspensionDescriptor {
-  return { kind: req.kind, callId, payload: req.payload, resolutionSchemaId: req.resolutionSchemaId };
+  return {
+    kind: req.kind,
+    callId,
+    payload: req.payload,
+    ...(req.resolutionSchemaId !== undefined ? { resolutionSchemaId: req.resolutionSchemaId } : {}),
+  };
 }
 
 // Best-effort "partial JSON": close any open strings/objects/arrays so an in-progress structured response
@@ -617,7 +622,10 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
     const attemptRef = { attempt: 0 };
     for (let step = from; step < maxSteps; step++) {
       if (signal.aborted) {
-        yield stamp(rootSpan, { type: "run.cancel", reason: "aborted" });
+        // Surface a caller-supplied abort reason (handle.cancel(reason) / AbortController.abort(reason));
+        // a bare abort leaves signal.reason a DOMException, so fall back to the generic label.
+        const reason = typeof signal.reason === "string" ? signal.reason : "aborted";
+        yield stamp(rootSpan, { type: "run.cancel", reason });
         return { status: "cancelled", usage };
       }
       const chatSpan: SpanRef = { id: rt.randomUUID(), parentId: rootSpan.id, traceId, kind: "chat" };
@@ -645,8 +653,18 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
       }
       // "retry" and "continue" both advance to the next step.
     }
+    // The step budget was exhausted without a terminal step. Returning `completed` here would hand back an
+    // empty `output` indistinguishable from a real answer (and type-unsound for a structured-output agent),
+    // so this is an explicit, actionable error the caller must handle.
     yield stamp(rootSpan, { type: "run.finish", reason: "length", usage });
-    return { status: "completed", output: "", usage };
+    return {
+      status: "error",
+      error: {
+        name: "MaxStepsExceeded",
+        message: `Run hit its ${maxSteps}-step budget (maxSteps) before finishing. Raise maxSteps, or check for a tool/model loop.`,
+      },
+      usage,
+    };
   }
 }
 

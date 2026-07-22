@@ -9,7 +9,7 @@
  * @packageDocumentation
  */
 
-import type { MithrilEvent } from "@mithril/core/protocol";
+import type { EventConsumer, MithrilEvent, Plugin } from "@mithril/core/protocol";
 
 // §9.3 — build the gen_ai.* span hierarchy directly off the wire: invoke_agent > chat > execute_tool. This
 // is a dependency-free shape (a real @opentelemetry/api sink is a thin adapter over onSpan). Metadata is on
@@ -110,4 +110,40 @@ export function toGenAiSpans(
 
   if (sink !== undefined) for (const s of all) sink.onSpan(s);
   return all;
+}
+
+/**
+ * A {@link Plugin} that emits {@link GenAiSpan}s to `sink` as runs complete — the live counterpart to
+ * {@link toGenAiSpans}, so tracing is `use: [otelPlugin(exporter)]` instead of manually buffering a run's
+ * events and folding them yourself.
+ *
+ * @param sink - the {@link SpanSink} each run's reconstructed spans are forwarded to.
+ * @param opts - options; set `captureContent: true` to record tool input payloads.
+ * @returns a plugin whose event consumer buffers each run (keyed by `traceId`) and folds it to spans on the
+ * terminal `run.finish` / `run.error` / `run.cancel` event.
+ * @remarks Spans flush at run completion (not incrementally), so a run that suspends without finishing does
+ * not emit until it resumes and completes. Add to any agent via `AgentConfig`'s `use` array.
+ * @example
+ * ```ts
+ * import { otelPlugin } from "@mithril/otel";
+ *
+ * const a = agent({ model, instructions: "…", use: [otelPlugin({ onSpan: (s) => exporter.export(s) })] });
+ * ```
+ */
+export function otelPlugin(sink: SpanSink, opts?: { readonly captureContent?: boolean }): Plugin {
+  const buffers = new Map<string, MithrilEvent[]>();
+  const consumer: EventConsumer = {
+    name: "otel",
+    onEvent(e) {
+      const key = e.span.traceId;
+      const buf = buffers.get(key) ?? [];
+      buf.push(e);
+      buffers.set(key, buf);
+      if (e.type === "run.finish" || e.type === "run.error" || e.type === "run.cancel") {
+        buffers.delete(key);
+        toGenAiSpans(buf, sink, opts);
+      }
+    },
+  };
+  return { name: "otel", consumers: [consumer] };
 }

@@ -61,7 +61,8 @@ const search = tool({
 
 const assistant = agent({ model, instructions: "Be concise.", tools: [search] });
 
-const { output } = await assistant.run("Best noise-cancelling headphones?");
+const result = await assistant.run("Best noise-cancelling headphones?");
+if (result.status === "completed") console.log(result.output);
 // or stream:
 const run = assistant.stream("…");
 for await (const delta of run.text) process.stdout.write(delta);
@@ -115,10 +116,12 @@ const a = agent({ model, instructions: "…", tools: [/* … */], use: [cache, g
 The loop is exercised end-to-end in tests with a **scripted provider** (`@mithril/core/testkit`) — no network, fully deterministic:
 
 ```ts
-import { scriptedProvider, testModel } from "@mithril/core/testkit";
+import { scriptedProvider, testModel, textTurn, toolCallTurn } from "@mithril/core/testkit";
+
+// textTurn / toolCallTurn build the text.delta + message.end pairs for you (no hand-written usage object):
 const model = testModel(scriptedProvider([
-  [{ type: "tool.call", callId: "c1", name: "search", input: { query: "x" } }, { type: "message.end", usage, finishReason: "tool_calls" }],
-  [{ type: "text.delta", delta: "Here you go" }, { type: "message.end", usage, finishReason: "stop" }],
+  toolCallTurn("search", { query: "x" }),
+  textTurn("Here you go"),
 ]));
 ```
 

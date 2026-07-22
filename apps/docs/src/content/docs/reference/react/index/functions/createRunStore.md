@@ -9,7 +9,7 @@ title: "createRunStore"
 function createRunStore(source): RunStore;
 ```
 
-Defined in: index.ts:58
+Defined in: [index.ts:70](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/react/src/index.ts#L70)
 
 Build a framework-agnostic [RunStore](/reference/react/index/interfaces/runstore/) that folds an event stream into a live [RunSnapshot](/reference/react/index/interfaces/runsnapshot/).
 

@@ -5,7 +5,7 @@ prev: false
 title: "AsToolOptions"
 ---
 
-Defined in: packages/core/src/agent/factory.ts:369
+Defined in: [packages/core/src/agent/factory.ts:375](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L375)
 
 Options for [asTool](/reference/core/agent/functions/astool/): how a sub-agent is exposed as a callable tool.
 
@@ -24,7 +24,7 @@ Options for [asTool](/reference/core/agent/functions/astool/): how a sub-agent i
 readonly optional deps?: (ctx) => ChildDeps;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:378
+Defined in: [packages/core/src/agent/factory.ts:384](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L384)
 
 Provide the sub-agent's dependencies from the calling tool's [RunContext](/reference/core/protocol/interfaces/runcontext/).
 
@@ -46,7 +46,7 @@ Provide the sub-agent's dependencies from the calling tool's [RunContext](/refer
 readonly description: string;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:371
+Defined in: [packages/core/src/agent/factory.ts:377](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L377)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: packages/core/src/agent/factory.ts:371
 readonly optional input?: (input) => Input;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:376
+Defined in: [packages/core/src/agent/factory.ts:382](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L382)
 
 Map the validated tool input to the sub-agent's run input; defaults to `input.task` (or the raw string).
 
@@ -78,7 +78,7 @@ Map the validated tool input to the sub-agent's run input; defaults to `input.ta
 readonly optional inputSchema?: StandardSchemaV1<unknown, In>;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:374
+Defined in: [packages/core/src/agent/factory.ts:380](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L380)
 
 Input schema; defaults to `{ task: string }`. Supply [AsToolOptions.input](/reference/core/agent/interfaces/astooloptions/#input) when you change it.
 
@@ -90,7 +90,7 @@ Input schema; defaults to `{ task: string }`. Supply [AsToolOptions.input](/refe
 readonly name: string;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:370
+Defined in: [packages/core/src/agent/factory.ts:376](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L376)
 
 ***
 
@@ -100,7 +100,7 @@ Defined in: packages/core/src/agent/factory.ts:370
 readonly optional needsApproval?: boolean;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:380
+Defined in: [packages/core/src/agent/factory.ts:386](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L386)
 
 Gate the sub-agent call behind Tier-1 approval.
 
@@ -112,4 +112,4 @@ Gate the sub-agent call behind Tier-1 approval.
 readonly optional version?: string;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:372
+Defined in: [packages/core/src/agent/factory.ts:378](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L378)

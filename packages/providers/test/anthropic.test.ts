@@ -66,3 +66,11 @@ test("drives the full loop through Anthropic (tool_use → text)", async () => {
   if (res.status === "completed") expect(res.output).toBe("Sunny");
   expect(seen).toBe("NYC");
 });
+
+test("an empty byok key throws an actionable error before any request goes out", async () => {
+  let fetched = false;
+  const rt: RuntimeAdapter = { ...defaultRuntime(), fetch: (async () => { fetched = true; return new Response(null, { status: 200 }); }) as typeof fetch };
+  const gen = anthropicProvider().chat(REQ, rt, { kind: "byok", apiKey: "" }, signal);
+  await expect(gen.next()).rejects.toThrow(/ANTHROPIC_API_KEY/);
+  expect(fetched).toBe(false);
+});

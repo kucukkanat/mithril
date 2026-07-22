@@ -8,11 +8,11 @@ title: "runEval"
 ```ts
 function runEval<Deps, Ctx>(
    agent, 
-   cases, 
-opts): AsyncGenerator<EvalRun>;
+   cases, ...
+args): AsyncGenerator<EvalRun>;
 ```
 
-Defined in: index.ts:111
+Defined in: [index.ts:119](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L119)
 
 Runs each [EvalCase](/reference/evals/interfaces/evalcase/) against `agent`, yielding one [EvalRun](/reference/evals/interfaces/evalrun/) per case as it completes.
 
@@ -29,7 +29,7 @@ Runs each [EvalCase](/reference/evals/interfaces/evalcase/) against `agent`, yie
 | ------ | ------ | ------ |
 | `agent` | `Agent`\<readonly `AnyTool`\<`Deps`\>[], `Deps`, `JsonValue`\> | The agent under test; each case is executed via `agent.stream`. |
 | `cases` | readonly [`EvalCase`](/reference/evals/interfaces/evalcase/)\<`Ctx`\>[] | The evaluation cases to run, in order. |
-| `opts` | [`RunEvalOptions`](/reference/evals/interfaces/runevaloptions/)\<`Deps`, `Ctx`\> | [RunEvalOptions](/reference/evals/interfaces/runevaloptions/) supplying `deps`, optional `transport`/`runtime`, `makeContext`, and `threshold`. |
+| ...`args` | [`EvalArgs`](/reference/evals/type-aliases/evalargs/)\<`Deps`, `Ctx`\> | - |
 
 ## Returns
 

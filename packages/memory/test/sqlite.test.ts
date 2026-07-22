@@ -16,3 +16,9 @@ test("sqlite checkpointer survives a fresh connection to the same db path (durab
   const b = sqliteBunCheckpointer(path);
   expect((await b.latest("r"))?.token).toBe("T");
 });
+
+test("sqliteBunCheckpointer accepts an options object { path }", async () => {
+  const cp = sqliteBunCheckpointer({ path: ":memory:" });
+  await cp.put({ runId: "r", checkpointId: "c", parentId: null, token: "t", status: "suspended", createdAt: "1970-01-01T00:00:00.000Z" });
+  expect((await cp.latest("r"))?.token).toBe("t");
+});

@@ -12,6 +12,10 @@
     "./sqlite-bun": {
       "types": "./src/sqlite-bun.ts",
       "import": "./src/sqlite-bun.ts"
+    },
+    "./sqlite-node": {
+      "types": "./src/sqlite-node.ts",
+      "import": "./src/sqlite-node.ts"
     }
   },
   "scripts": {

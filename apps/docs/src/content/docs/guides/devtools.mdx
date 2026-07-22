@@ -2,11 +2,12 @@
 title: Devtools
 description: A visual, time-travelling inspector for your runs — read the panels, wire it into your app, drive HITL, and capture headlessly.
 sidebar:
-  order: 10
+  order: 11
   label: Devtools
 ---
 
 import { Aside, Steps } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 import DevtoolsDemo from "../../../components/DevtoolsDemo.tsx";
 import DevtoolsVanillaDemo from "../../../components/DevtoolsVanillaDemo.astro";
 
@@ -198,17 +199,17 @@ another tab can live-tail. For explicit control, call `attachDevtools()` (return
 The UI is optional — the inspector is a pure `EventConsumer`. Attach it to assert on a run, or to build your
 own view:
 
-```ts
+<Runnable title="inspector.ts" runnable={false} highlight={[6]} code={`import { agent } from "mithril";
 import { createInspector } from "@mithril/devtools";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
 
 const inspector = createInspector();
-await agent({ model, instructions: "…", use: [{ name: "dev", consumers: [inspector.consumer] }] }).run("hi");
+await agent({ model: testModel(scriptedProvider([textTurn("Hello.")])), instructions: "Be brief.", use: [{ name: "dev", consumers: [inspector.consumer] }] }).run("hi");
 
-const run = inspector.latest();          // most recent run
-run?.state.status;                        // "completed"
-run?.timeline;                            // [{ seq, ts, type, span }, …]
-inspector.runIds();                       // every retained run id
-```
+const run = inspector.latest();
+console.log("status:", run?.state.status); // "completed"
+console.log("timeline entries:", run?.timeline.length); // [{ seq, ts, type, span }, …]
+console.log("run ids:", inspector.runIds());`} />
 
 `createInspector({ maxRuns })` caps retention; `devtoolsPlugin()` bundles the consumer as a plugin for the
 `use:` array; `getGlobalInspector()` is the process-wide instance the attach shim writes to.
@@ -218,13 +219,20 @@ inspector.runIds();                       // every retained run id
 The same package exports the pure, DOM-free selectors the UI renders with, so any framework (or a CLI) can
 render a Mithril run:
 
-```ts
-import { buildSpanTree, contextMeter, classifyEvent, previewEvent } from "@mithril/devtools";
+<Runnable title="span-helpers.ts" runnable={false} highlight={["9-11"]} code={`import { agent, tool } from "mithril";
+import { createInspector, buildSpanTree, contextMeter, classifyEvent, previewEvent } from "@mithril/devtools";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
 
-const tree = buildSpanTree(run.events);              // spans → nested sub-runs
-const { tokens, cost, pct } = contextMeter(run.state, { contextWindow: 200_000 });
-run.events.map((e) => ({ family: classifyEvent(e.type), text: previewEvent(e) }));
-```
+const weather = tool({ name: "weather", description: "Weather.", inputSchema: z.object({ city: z.string() }), execute: async ({ city }) => ({ city, tempC: 21 }) });
+const inspector = createInspector();
+const model = testModel(scriptedProvider([toolCallTurn("weather", { city: "Istanbul" }), textTurn("It's 21°C.")]));
+await agent({ model, instructions: "Use weather.", tools: [weather], use: [{ name: "dev", consumers: [inspector.consumer] }] }).run("Weather?");
+const run = inspector.latest();
+
+console.log("span tree roots:", buildSpanTree(run.events).length);
+console.log("context:", contextMeter(run.state, { contextWindow: 200_000 }));
+for (const e of run.events.slice(0, 3)) console.log(classifyEvent(e.type), "→", previewEvent(e));`} />
 
 <Aside type="note">
 The inspector reads only the stamped event stream — never the loop. Cost and context meters read straight

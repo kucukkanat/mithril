@@ -9,7 +9,7 @@ title: "defaultRuntime"
 function defaultRuntime(): RuntimeAdapter;
 ```
 
-Defined in: packages/core/src/agent/runtime.ts:14
+Defined in: [packages/core/src/agent/runtime.ts:14](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/runtime.ts#L14)
 
 Build the default [RuntimeAdapter](/reference/core/protocol/interfaces/runtimeadapter/) backed by `globalThis` (§3.2).
 
@@ -18,7 +18,7 @@ Build the default [RuntimeAdapter](/reference/core/protocol/interfaces/runtimead
 [`RuntimeAdapter`](/reference/core/protocol/interfaces/runtimeadapter/)
 
 a runtime seam wiring `fetch`, `now`, `randomUUID`, `getRandomValues`, and `subtle` to the
-platform globals. Use it as the default when no `runtime` is supplied in [RunOptions](/reference/core/agent/interfaces/runoptions/)/[LoopOptions](/reference/core/agent/interfaces/loopoptions/).
+platform globals. Use it as the default when no `runtime` is supplied in [RunOptions](/reference/core/agent/type-aliases/runoptions/)/[LoopOptions](/reference/core/agent/interfaces/loopoptions/).
 
 ## Remarks
 

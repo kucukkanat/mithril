@@ -9,7 +9,7 @@ title: "JsonSafe"
 type JsonSafe<T> = T extends JsonValue ? T : never;
 ```
 
-Defined in: packages/core/src/protocol/primitives.ts:31
+Defined in: [packages/core/src/protocol/primitives.ts:31](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/primitives.ts#L31)
 
 Compile-time assertion that `T` is [JsonValue](/reference/core/protocol/type-aliases/jsonvalue/): resolves to `T` when
 safe, otherwise `never`.

@@ -19,10 +19,14 @@ export interface SuspensionRequest<
   readonly kind: Kind;
   /** JSON-safe data shown to the human/UI. */
   readonly payload: Payload;
-  /** Validator for the resume input — resolutions are validated, never trusted. */
-  readonly resolutionSchema: StandardSchemaV1<unknown, Resolution>;
-  /** Registry id used to re-resolve the validator on open/resume. */
-  readonly resolutionSchemaId: string;
+  /**
+   * Optional validator for the resume input. Supply it (with {@link SuspensionRequest.resolutionSchemaId})
+   * only when you intend to validate the resolution yourself; the runtime does not validate on resume, so a
+   * plain `ctx.suspend({ kind, payload })` is the common case.
+   */
+  readonly resolutionSchema?: StandardSchemaV1<unknown, Resolution>;
+  /** Optional registry id for the resolution validator; carried on the descriptor for identification. */
+  readonly resolutionSchemaId?: string;
 }
 
 /** Recover the resolution type of a {@link SuspensionRequest}, or `never`. */
@@ -67,7 +71,7 @@ export type SuspensionDescriptor = {
   readonly kind: string;
   readonly callId?: string;
   readonly payload: JsonValue;
-  readonly resolutionSchemaId: string;
+  readonly resolutionSchemaId?: string;
   /** The pending tool's stamped version, checked on resume for drift. */
   readonly toolVersion?: string;
 };
@@ -81,8 +85,9 @@ export const SUSPEND: unique symbol = Symbol("mithril.suspend");
  * @typeParam Out - The resolution type fed back as the tool result on resume.
  *
  * @remarks
- * Returning this from a tool (Tier-1b) is not wired in the current runtime slice
- * — the loop rejects it with a `NOT_IMPLEMENTED` error. The value shape is stable.
+ * Returning this from a tool (Tier-1b) pauses the run: the loop suspends with the tool's
+ * {@link SuspensionRequest}, and `resume(token, { kind: "resolve", value })` feeds `value` back as the
+ * tool result. The `execute` is not re-run on resume (the pause is replay-free).
  */
 export interface Suspend<Out> {
   readonly [SUSPEND]: true;

@@ -9,7 +9,7 @@ title: "isSuspend"
 function isSuspend(value): value is Suspend<unknown>;
 ```
 
-Defined in: packages/core/src/protocol/suspension.ts:114
+Defined in: [packages/core/src/protocol/suspension.ts:119](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L119)
 
 Type-guard for a [Suspend](/reference/core/protocol/interfaces/suspend/) marker.
 

@@ -7,6 +7,7 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 
 [State is a fold over the log](/concepts/state-is-replay/), so durable persistence is just
 persisting the log plus a resumable token. A **Checkpointer** is the append-only store for that;
@@ -14,29 +15,19 @@ it is the only thing you swap to go from in-memory to on-disk.
 
 ## Pick a Checkpointer
 
-Both implement the same interface — start in memory, move to SQLite when you need durability:
+Both implement the same interface — start in memory, move to SQLite when you need durability
+(highlighted). The example runs the in-memory backend; swap it for `sqliteBunCheckpointer("./runs.db")`
+on Bun or `sqliteNodeCheckpointer(...)` on Node — same five append-only methods:
 
-```ts
-import { memoryCheckpointer } from "@mithril/memory";
-import { sqliteBunCheckpointer } from "@mithril/memory/sqlite-bun";
+<Runnable title="checkpointer.ts" highlight={[3]} code={`import { memoryCheckpointer } from "@mithril/memory";
+// on a server: import { sqliteBunCheckpointer } from "@mithril/memory/sqlite-bun"; // (or /sqlite-node)
+const cp = memoryCheckpointer(); // ephemeral, every runtime
 
-const cp = memoryCheckpointer();                  // ephemeral, every runtime
-const disk = sqliteBunCheckpointer("./runs.db");  // Bun; path defaults to ":memory:"
-```
-
-## The interface
-
-Five methods, all append-only. `put` takes an optional `ifParent` for optimistic concurrency —
-it returns `"conflict"` if the latest checkpoint isn't the parent you expected, and is idempotent
-on `checkpointId`:
-
-```ts
-await cp.put(record, { ifParent: null }); // "ok" | "conflict"
-await cp.latest(runId);                   // newest CheckpointRecord | undefined
-await cp.get(runId, checkpointId);
-for await (const rec of cp.history(runId)) { /* insertion order */ }
-await cp.purge(runId);
-```
+// put takes an optional ifParent for optimistic concurrency; it's idempotent on checkpointId.
+await cp.put({ runId: "r1", checkpointId: "c1", parentId: null, token: "TOK", status: "suspended", createdAt: new Date().toISOString() });
+console.log("latest:", (await cp.latest("r1"))?.status); // newest CheckpointRecord | undefined
+console.log("get:", (await cp.get("r1", "c1"))?.token);
+for await (const rec of cp.history("r1")) console.log("history:", rec.checkpointId); // insertion order`} />
 
 A `CheckpointRecord` is JSON-safe: `{ runId, checkpointId, parentId, token, status, createdAt }`,
 plus an optional unsealed `pending` descriptor so a UI can render "awaiting approval" without
@@ -45,68 +36,58 @@ opening the token.
 ## Cross-process resume
 
 Persist a suspended run in one process; resume it in another. The `token` is opaque — you store and
-forward it, never inspect it:
+forward it, never inspect it (highlighted). Run the whole round-trip in one tab:
 
-```ts
-// Process A — suspend and save
+<Runnable title="cross-process.ts" highlight={["17-18", "22-23"]} code={`import { agent, tool } from "mithril";
+import { memoryCheckpointer } from "@mithril/memory";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const deploy = tool({ name: "deploy", description: "Deploy.", inputSchema: z.object({ env: z.string() }), needsApproval: true, execute: async ({ env }) => ({ env }) });
+const model = testModel(scriptedProvider([toolCallTurn("deploy", { env: "prod" }), textTurn("Deployed.")]));
+const assistant = agent({ model, instructions: "Deploy when asked.", tools: [deploy] });
+const cp = memoryCheckpointer();
+
+// "Process A" — suspend and save the opaque token
 const handle = assistant.stream("Deploy to production.");
 const r = await handle.result();
 if (r.status === "suspended") {
-  await cp.put({
-    runId: handle.runId,
-    checkpointId: crypto.randomUUID(),
-    parentId: null,
-    token: r.token,
-    status: "suspended",
-    createdAt: new Date().toISOString(),
-  });
+  await cp.put({ runId: handle.runId, checkpointId: crypto.randomUUID(), parentId: null, token: r.token, status: "suspended", createdAt: new Date().toISOString() });
 }
 
-// Process B — load and resume
-const rec = await cp.latest(runId);
-if (rec?.token) await assistant.resume(rec.token, { kind: "approve" });
-```
+// "Process B" — load and resume
+const rec = await cp.latest(handle.runId);
+if (rec?.token) console.log((await assistant.resume(rec.token, { kind: "approve" })).status);`} />
 
 ## Sealing: integrity and confidentiality
 
 Before persisting sensitive state, seal it. `seal`/`open` produce a three-part authenticated token
 (`header.payload.digest`) and — crucially — **verify before they parse**: the HMAC is checked over
 the exact transmitted bytes *before* the payload is decoded, closing the parse-attacker-bytes
-vulnerability class. A failed check throws `StateIntegrityError`.
+vulnerability class. A failed check throws `StateIntegrityError` (highlighted). Run it:
 
-```ts
-import {
-  seal, open, hmacCodec, aesGcmCodec,
-  singleKeyring, generateStateKey, generateEncryptionKey,
-} from "@mithril/core/agent";
+<Runnable title="seal.ts" highlight={["8-9"]} code={`import { seal, open, aesGcmCodec, singleKeyring, generateStateKey, generateEncryptionKey } from "@mithril/core/agent";
 
-const keyring = singleKeyring(await generateStateKey());       // HMAC signing key
-const token = await seal(JSON.stringify(state), keyring);      // integrity only
-const back = await open(token, keyring);                       // throws on tamper
+const state = JSON.stringify({ runId: "r1", step: 3 });
+
+const keyring = singleKeyring(await generateStateKey()); // HMAC signing key
+const token = await seal(state, keyring); // integrity only
+console.log("opened:", await open(token, keyring)); // throws StateIntegrityError on tamper
 
 // Add at-rest confidentiality (PII) by swapping the codec:
 const codec = aesGcmCodec(await generateEncryptionKey());
-const sealed = await seal(JSON.stringify(state), keyring, undefined, codec);
-const clear = await open(sealed, keyring, undefined, { codec });
-```
+const sealed = await seal(state, keyring, undefined, codec);
+console.log("decrypted:", await open(sealed, keyring, undefined, { codec }));`} />
 
 `hmacCodec` (the default) signs; `aesGcmCodec` additionally encrypts. Rotate by building a keyring
 whose `current()` is new while `resolve()` still returns retired keys.
 
 ## Conformance
 
-Every Checkpointer — including your own backend — must pass one shared suite. Bridge it to
-`bun:test` with a tiny adapter:
-
-```ts
-import { checkpointerConformance } from "@mithril/memory";
-import { test, expect } from "bun:test";
-
-checkpointerConformance(async () => myCheckpointer(), {
-  test,
-  assertEqual: (a, b) => expect(a).toEqual(b),
-});
-```
+Every Checkpointer — including your own backend — must pass one shared suite. Bridge it to your test
+runner with a tiny adapter — `checkpointerConformance(async () => myCheckpointer(), { test, assertEqual })`
+registers the full battery against `bun:test` or Vitest, so a backend that diverges from the observable
+semantics fails the build.
 
 <Aside type="note" title="Sealed run-tokens">
 `seal`/`open` and both codecs are shipped and tested. Wiring them as the *default* envelope for the

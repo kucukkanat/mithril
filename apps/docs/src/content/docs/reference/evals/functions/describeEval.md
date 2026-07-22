@@ -9,11 +9,11 @@ title: "describeEval"
 function describeEval<Deps, Ctx>(
    register, 
    agent, 
-   cases, 
-   opts): void;
+   cases, ...
+   args): void;
 ```
 
-Defined in: index.ts:296
+Defined in: [index.ts:365](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L365)
 
 Registers one host test per [EvalCase](/reference/evals/interfaces/evalcase/) against a `test`-shaped function (bun:test / vitest).
 
@@ -31,7 +31,7 @@ Registers one host test per [EvalCase](/reference/evals/interfaces/evalcase/) ag
 | `register` | (`name`, `fn`) => `void` | The host runner's test registrar, e.g. bun:test's `test` — called as `register(name, fn)` once per case. |
 | `agent` | `Agent`\<readonly `AnyTool`\<`Deps`\>[], `Deps`, `JsonValue`\> | The agent under test. |
 | `cases` | readonly [`EvalCase`](/reference/evals/interfaces/evalcase/)\<`Ctx`\>[] | The evaluation cases to register. |
-| `opts` | [`RunEvalOptions`](/reference/evals/interfaces/runevaloptions/)\<`Deps`, `Ctx`\> | [RunEvalOptions](/reference/evals/interfaces/runevaloptions/); the same `threshold` gates each registered test. |
+| ...`args` | [`EvalArgs`](/reference/evals/type-aliases/evalargs/)\<`Deps`, `Ctx`\> | - |
 
 ## Returns
 

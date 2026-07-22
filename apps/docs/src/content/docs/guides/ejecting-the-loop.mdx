@@ -2,10 +2,11 @@
 title: Ejecting the loop
 description: Drop below agent() to agentLoop — ~100 readable lines emitting the identical event stream.
 sidebar:
-  order: 13
+  order: 16
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 
 `agent()` is the batteries-included loop. When you need full control over the drive — custom
 scheduling, embedding the loop in your own runtime, or just reading exactly what happens — eject to
@@ -15,28 +16,30 @@ scheduling, embedding the loop in your own runtime, or just reading exactly what
 ## Drive it yourself
 
 `agentLoop` is an async generator: it *yields* `MithrilEvent`s and *returns* the final `RunResult`.
-Because the result is the generator's return value, drive it to completion to read it:
+Because the result is the generator's return value, drive it to completion to read it (highlighted).
+Run it — this is the same loop `agent()` runs:
 
-```ts
-import { agentLoop } from "mithril"; // or "@mithril/core/agent"
-import type { MithrilEvent, RunResult, JsonValue } from "@mithril/core/protocol";
+<Runnable title="eject.ts" highlight={["16-22"]} code={`import { agentLoop, tool } from "mithril"; // or "@mithril/core/agent"
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
 
-const gen = agentLoop({
-  model,
-  instructions: "You are a concise assistant.",
-  tools: [weather],
-  input: "Weather in Istanbul?",
-  deps: undefined, // required; pass your Deps, or undefined for a no-deps loop
+const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
 });
 
-let result: RunResult<JsonValue>;
+const model = testModel(scriptedProvider([toolCallTurn("weather", { city: "Istanbul" }), textTurn("It's 21°C in Istanbul.")]));
+const gen = agentLoop({ model, instructions: "Be concise.", tools: [weather], input: "Weather in Istanbul?", deps: undefined });
+
+let result;
 for (;;) {
   const step = await gen.next();
   if (step.done) { result = step.value; break; } // the RunResult
-  const event: MithrilEvent = step.value;
-  if (event.type === "text.delta") process.stdout.write(event.delta);
+  if (step.value.type === "text.delta") console.log(step.value.delta);
 }
-```
+console.log("status:", result.status);`} />
 
 Every event here is identical to what `agent({ … }).stream(…).events` would produce — same `seq`,
 same `span`, same order. That is the contract: [the protocol is the product](/concepts/the-protocol/),
@@ -46,19 +49,25 @@ so swapping the producer changes nothing downstream.
 
 The same middleware you compose on `agent()` work here — you just pass them directly. At the
 `agent()` layer, `use:` is sugar that flattens plugins and middleware into two arrays; at the loop
-layer you pass those arrays yourself:
+layer you pass those arrays yourself (highlighted):
 
-```ts
-agentLoop({
-  model,
-  instructions,
-  tools,
-  input,
-  deps,
-  middlewares: [cache, guardrail], // same Middleware objects as use:
-  consumers: [{ name: "log", onEvent: (e) => sink.push(e) }],
+<Runnable title="eject-middleware.ts" highlight={["12-13"]} code={`import { agentLoop } from "mithril";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
+
+const logModel = { name: "log-model", model: async (ctx, call, next) => { console.log("model call"); return next(call); } };
+const seen = [];
+
+const gen = agentLoop({
+  model: testModel(scriptedProvider([textTurn("Hello there.")])),
+  instructions: "Be concise.",
+  input: "Hi",
+  deps: undefined,
+  middlewares: [logModel], // same Middleware objects as use:
+  consumers: [{ name: "log", onEvent: (e) => seen.push(e.type) }],
 });
-```
+
+for (;;) { const s = await gen.next(); if (s.done) break; }
+console.log("consumer saw", seen.length, "events");`} />
 
 `LoopOptions` also accepts `transport`, `providers`, `runtime`, `signal`, `maxSteps`, `output`,
 `outputRetries`, and — for continuing a suspended run — `runId` and `resume`.

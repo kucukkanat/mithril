@@ -12,7 +12,7 @@ function createApp(
 dir): Promise<readonly string[]>;
 ```
 
-Defined in: index.ts:97
+Defined in: [index.ts:170](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/create-mithril/src/index.ts#L170)
 
 Write a scaffolded template to disk under `dir`, creating parent directories as needed.
 

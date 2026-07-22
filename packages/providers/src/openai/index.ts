@@ -63,6 +63,13 @@ export function openaiProvider(config?: { readonly baseUrl?: string; readonly to
   return {
     spec: OPENAI_SPEC,
     async *chat(req, rt, transport, signal) {
+      // A missing key resolves to an empty byok key upstream; catch it here with an actionable message
+      // instead of letting the request go out and come back as a bare HTTP 401.
+      if (transport.kind === "byok" && transport.apiKey === "") {
+        throw new Error(
+          'No OpenAI API key found. Set OPENAI_API_KEY in the environment, or pass transport: { kind: "byok", apiKey } (or a proxy transport).',
+        );
+      }
       const auth = await resolveAuth(transport, config?.baseUrl);
       const res = await rt.fetch(`${auth.base}/chat/completions`, {
         method: "POST",
@@ -86,18 +93,23 @@ const shared = openaiProvider();
  * Self-wiring model handle: `agent({ model: openai("gpt-4o"), … })` needs no provider registry.
  *
  * @param model - An OpenAI model id (e.g. `"gpt-4o"`). It is prefixed with `openai/` to form the handle id.
- * @returns A {@link ModelHandle} bound to a shared default-configured {@link openaiProvider}.
+ * @param opts - Optional overrides. `toolSchema` is a {@link JsonSchemaConverter} for tool parameters —
+ *   supply it when your validator does not self-describe (e.g. Valibot/ArkType without an adapter); Zod v4
+ *   schemas already convert with no converter.
+ * @returns A {@link ModelHandle} bound to a shared default-configured {@link openaiProvider} (or a
+ *   dedicated one when `toolSchema` is given).
  *
  * @example
  * ```ts
- * import { agent } from "@mithril/core";
+ * import { agent } from "mithril";
  * import { openai } from "@mithril/providers/openai";
  *
- * const a = agent({ model: openai("gpt-4o"), tools: [] });
+ * const a = agent({ model: openai("gpt-4o"), instructions: "…", tools: [] });
  * ```
  *
  * @remarks Need a custom `baseUrl`? Build a provider with {@link openaiProvider} instead.
  */
-export function openai(model: string): ModelHandle {
-  return { id: `openai/${model}`, provider: shared };
+export function openai(model: string, opts?: { readonly toolSchema?: JsonSchemaConverter }): ModelHandle {
+  const provider = opts?.toolSchema !== undefined ? openaiProvider({ toolSchema: opts.toolSchema }) : shared;
+  return { id: `openai/${model}`, provider };
 }

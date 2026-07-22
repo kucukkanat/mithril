@@ -5,7 +5,7 @@ prev: false
 title: "EventConsumer"
 ---
 
-Defined in: packages/core/src/protocol/middleware.ts:120
+Defined in: [packages/core/src/protocol/middleware.ts:120](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L120)
 
 A passive observer that receives every [MithrilEvent](/reference/core/protocol/type-aliases/mithrilevent/) in order.
 
@@ -17,7 +17,7 @@ A passive observer that receives every [MithrilEvent](/reference/core/protocol/t
 readonly name: string;
 ```
 
-Defined in: packages/core/src/protocol/middleware.ts:121
+Defined in: [packages/core/src/protocol/middleware.ts:121](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L121)
 
 ## Methods
 
@@ -27,7 +27,7 @@ Defined in: packages/core/src/protocol/middleware.ts:121
 onEvent(e): void;
 ```
 
-Defined in: packages/core/src/protocol/middleware.ts:122
+Defined in: [packages/core/src/protocol/middleware.ts:122](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L122)
 
 #### Parameters
 

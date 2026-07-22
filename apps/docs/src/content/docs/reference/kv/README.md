@@ -5,15 +5,8 @@ prev: false
 title: "@mithril/kv"
 ---
 
-Runtime-agnostic key-value store for Mithril tools — the [KeyValue](/reference/kv/interfaces/keyvalue/) interface, an in-memory impl,
-and a conformance kit.
+## Modules
 
-## Interfaces
-
-- [KeyValue](/reference/kv/interfaces/keyvalue/)
-- [KvTestAdapter](/reference/kv/interfaces/kvtestadapter/)
-
-## Functions
-
-- [kvConformance](/reference/kv/functions/kvconformance/)
-- [memoryKv](/reference/kv/functions/memorykv/)
+- [index](/reference/kv/index/readme/)
+- [indexeddb](/reference/kv/indexeddb/readme/)
+- [sqlite-node](/reference/kv/sqlite-node/readme/)

@@ -6,18 +6,18 @@ title: "sqliteBunCheckpointer"
 ---
 
 ```ts
-function sqliteBunCheckpointer(path?): Checkpointer;
+function sqliteBunCheckpointer(pathOrOpts?): Checkpointer;
 ```
 
-Defined in: sqlite-bun.ts:44
+Defined in: [sqlite-bun.ts:44](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/memory/src/sqlite-bun.ts#L44)
 
 Creates a durable Checkpointer backed by `bun:sqlite` (Bun runtime only).
 
 ## Parameters
 
-| Parameter | Type | Default value | Description |
-| ------ | ------ | ------ | ------ |
-| `path` | `string` | `":memory:"` | SQLite database file path. Defaults to `":memory:"` (process-lifetime only); pass a file path for persistence across restarts. |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `pathOrOpts?` | \| `string` \| \{ `path?`: `string`; \} | the SQLite database file path, or `{ path }`. Defaults to `":memory:"` (process-lifetime only); pass a file path for persistence across restarts. |
 
 ## Returns
 

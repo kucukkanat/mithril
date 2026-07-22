@@ -28,7 +28,7 @@ verifies) the **exact transmitted bytes**, then parses. See [verify before parse
 
 ### The inline `result.resume()` closure
 **Rejected** — an in-process-only trap that can't cross a process boundary. Split into `resume`
-(headless), `rehydrate` (streamed), and an in-process resolve.
+(headless), `resumeStream` (streamed), and an in-process resolve.
 
 ### Per-subrun `seq` spaces
 **Rejected** for v1 — a single ordering authority is what makes replay deterministic. The span tree

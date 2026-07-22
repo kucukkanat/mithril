@@ -6,36 +6,50 @@ sidebar:
   label: Three verbs
 ---
 
-The entire surface is three verbs: **`tool`**, **`agent`**, **`run`**. Everything past the 90%
-path is _one more argument_ — never one more import.
+import Runnable from "../../../components/Runnable.astro";
 
-```ts
-// escalate by argument, not import:
-agent({ model, instructions });                      // plain
-agent({ model, instructions, tools });               // + tools
-agent({ model, instructions, output: schema });      // + structured output
-agent({ model, instructions, tools, use: [mw] });    // + middleware/plugins
-```
+The entire surface is three verbs: **`tool`**, **`agent`**, **`run`**. Everything past the 90%
+path is _one more argument_ (highlighted) — never one more import. Run it:
+
+<Runnable title="escalate.ts" highlight={["11-16"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
+});
+
+// Escalate by argument, not import — tools, then output, then use: middleware/plugins.
+const model = testModel(scriptedProvider([toolCallTurn("weather", { city: "Istanbul" }), textTurn("It's 21°C.")]));
+const assistant = agent({ model, instructions: "Use weather.", tools: [weather] });
+
+await run(assistant, "Weather in Istanbul?");`} />
 
 ## Bind dependencies once
 
-Apps with dependencies (a database, an API client) bind them a single time with `createHarness`,
-so no definition ever restates a generic:
+Apps with dependencies bind them a single time with `createHarness` (highlighted), so no definition
+ever restates a generic — `ctx.deps` is typed everywhere:
 
-```ts
-import { createHarness } from "mithril";
+<Runnable title="harness.ts" highlight={[5]} code={`import { agent, createHarness } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
 
-interface AppDeps { db: Database }
-const { agent, tool } = createHarness<AppDeps>();
+interface AppDeps { users: Map<string, { name: string }> }
+const { agent: buildAgent, tool } = createHarness<AppDeps>();
 
-// ctx.deps is typed as AppDeps everywhere, with no per-call <Deps>()
 const lookup = tool({
   name: "lookup",
   description: "Find a user by id.",
   inputSchema: z.object({ id: z.string() }),
-  execute: async ({ id }, ctx) => ctx.deps.db.users.get(id),
+  execute: async ({ id }, ctx) => ctx.deps.users.get(id) ?? { name: "unknown" }, // ctx.deps: AppDeps
 });
-```
+
+const model = testModel(scriptedProvider([toolCallTurn("lookup", { id: "42" }), textTurn("That's Ada.")]));
+const app = buildAgent({ model, instructions: "Look up the user.", tools: [lookup] });
+await run(app, "Who is user 42?", { deps: { users: new Map([["42", { name: "Ada" }]]) } });`} />
 
 ## Three ways to run
 

@@ -20,7 +20,7 @@ type ApprovalDecision<I> =
 };
 ```
 
-Defined in: packages/core/src/protocol/suspension.ts:36
+Defined in: [packages/core/src/protocol/suspension.ts:40](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L40)
 
 A human's decision on a tool-approval suspension.
 

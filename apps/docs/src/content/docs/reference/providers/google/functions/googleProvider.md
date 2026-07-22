@@ -9,7 +9,7 @@ title: "googleProvider"
 function googleProvider(config?): Provider;
 ```
 
-Defined in: google/index.ts:109
+Defined in: [google/index.ts:109](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/google/index.ts#L109)
 
 Creates a Google Gemini Provider whose `chat` method streams `:streamGenerateContent` responses.
 

@@ -7,24 +7,35 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 
 When an agent needs a human — an approval, a clarification — many frameworks throw an
 `interrupt()`. That's a footgun: a `try/catch` can swallow it, and side effects that ran _before_
 the interrupt run again on resume.
 
 Mithril makes suspension a **value you can't ignore at the type level** — a discriminated branch
-of `RunResult`:
+of `RunResult` (highlighted). Run it: the `deploy` tool is `needsApproval`, so the run suspends
+before executing, and you resume from the token:
 
-```ts
-const r = await assistant.run("deploy to prod");
+<Runnable title="suspension.ts" preset="hitl" highlight={[9, 15]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
 
+const deploy = tool({
+  name: "deploy",
+  description: "Deploy to an environment.",
+  inputSchema: z.object({ env: z.string() }),
+  needsApproval: true, // pause before execute — nothing side-effecting has run yet
+  execute: async ({ env }) => ({ deployed: true, env }),
+});
+
+const model = testModel(scriptedProvider([toolCallTurn("deploy", { env: "prod" }), textTurn("Deployed.")]));
+const assistant = agent({ model, instructions: "Deploy when asked.", tools: [deploy] });
+const r = await assistant.run("Deploy to prod.");
 if (r.status === "suspended") {
-  // r.request.payload = { name, input } — nothing side-effecting has run yet
-  const done = await assistant.resume(r.token, { kind: "approve" });
-  //                                            or { kind: "reject", message }
-  //                                            or { kind: "edit", input }
-}
-```
+  const done = await assistant.resume(r.token, { kind: "approve" }); // or { kind: "reject", message } / { kind: "edit", input }
+  console.log(done.status);
+}`} />
 
 A suspended run serializes as the **event log + a pending descriptor** — never your `deps`, tool
 functions, DB handles, or the instructions closure. Today that token is unsigned `durable-local`
@@ -34,20 +45,9 @@ before parse](/concepts/errors/).
 
 ## The approval gate
 
-Mark a tool `needsApproval` and the run pauses _before_ `execute` runs:
-
-```ts
-const deploy = tool({
-  name: "deploy",
-  description: "Deploy to an environment.",
-  inputSchema: z.object({ env: z.string() }),
-  needsApproval: true,
-  execute: async ({ env }) => ({ deployed: true, env }),
-});
-```
-
-Try it live — the [Human-in-the-loop preset](/playground/) suspends, shows Approve / Reject, and
-resumes from the sealed token. Full walkthrough: [Human-in-the-loop](/guides/human-in-the-loop/).
+Marking a tool `needsApproval` (as above) pauses the run _before_ `execute` runs. Try it live — the
+[Human-in-the-loop preset](/playground/#preset=hitl) suspends, shows Approve / Reject, and resumes
+from the token. Full walkthrough: [Human-in-the-loop](/guides/human-in-the-loop/).
 
 ## Three tiers of suspension
 
@@ -63,17 +63,29 @@ The approval gate is the common case, but a run can pause in three ways — all 
   once** across the boundary.
 
 For Tier-1b and Tier-2, resume with a resolution value: `resume(token, { kind: "resolve", value })`.
+Here Tier-2 runs a journaled effect exactly once, then pauses for confirmation (highlighted):
 
-```ts
-// Tier-2: an exactly-once effect, then a pause for confirmation
-execute: async (input, ctx) => {
-  const draft = await ctx.journal("draft", () => createDraft(input)); // runs once, even across resume
-  const approved = await ctx.suspend({ kind: "confirm", payload: { draft }, resolutionSchema, resolutionSchemaId: "c" });
-  return approved ? publish(draft) : { cancelled: true };
-};
-```
+<Runnable title="tier-2.ts" highlight={["9-10"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
 
-Resume either to a final `RunResult` (`resume`) or as a live stream (`rehydrate`), and continue an
+const publish = tool({
+  name: "publish",
+  description: "Draft, confirm, then publish.",
+  inputSchema: z.object({ topic: z.string() }),
+  execute: async ({ topic }, ctx) => {
+    const draft = await ctx.journal("draft", async () => \`Draft: \${topic}\`); // runs once, even across resume
+    const approved = await ctx.suspend({ kind: "confirm", payload: { draft } });
+    return approved ? { published: draft } : { cancelled: true };
+  },
+});
+
+const model = testModel(scriptedProvider([toolCallTurn("publish", { topic: "QUIC" }), textTurn("Published.")]));
+const assistant = agent({ model, instructions: "Publish when asked.", tools: [publish] });
+const r = await assistant.run("Publish about QUIC.");
+if (r.status === "suspended") console.log((await assistant.resume(r.token, { kind: "resolve", value: true })).status);`} />
+
+Resume either to a final `RunResult` (`resume`) or as a live stream (`resumeStream`), and continue an
 in-process suspension without a token round-trip via `RunHandle.resolve()`.
 
 Because the suspended state is just the log plus a verified token, you can persist it in any

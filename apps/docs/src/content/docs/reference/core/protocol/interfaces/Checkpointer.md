@@ -5,7 +5,7 @@ prev: false
 title: "Checkpointer"
 ---
 
-Defined in: packages/core/src/protocol/checkpointer.ts:33
+Defined in: [packages/core/src/protocol/checkpointer.ts:33](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L33)
 
 The persistence contract for durable runs.
 
@@ -26,7 +26,7 @@ get(runId, checkpointId): Promise<
 | undefined>;
 ```
 
-Defined in: packages/core/src/protocol/checkpointer.ts:36
+Defined in: [packages/core/src/protocol/checkpointer.ts:36](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L36)
 
 #### Parameters
 
@@ -49,7 +49,7 @@ Defined in: packages/core/src/protocol/checkpointer.ts:36
 history(runId): AsyncIterable<CheckpointRecord>;
 ```
 
-Defined in: packages/core/src/protocol/checkpointer.ts:37
+Defined in: [packages/core/src/protocol/checkpointer.ts:37](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L37)
 
 #### Parameters
 
@@ -71,7 +71,7 @@ latest(runId): Promise<
 | undefined>;
 ```
 
-Defined in: packages/core/src/protocol/checkpointer.ts:35
+Defined in: [packages/core/src/protocol/checkpointer.ts:35](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L35)
 
 #### Parameters
 
@@ -93,7 +93,7 @@ Defined in: packages/core/src/protocol/checkpointer.ts:35
 purge(runId): Promise<void>;
 ```
 
-Defined in: packages/core/src/protocol/checkpointer.ts:38
+Defined in: [packages/core/src/protocol/checkpointer.ts:38](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L38)
 
 #### Parameters
 
@@ -113,7 +113,7 @@ Defined in: packages/core/src/protocol/checkpointer.ts:38
 put(rec, opts?): Promise<"ok" | "conflict">;
 ```
 
-Defined in: packages/core/src/protocol/checkpointer.ts:34
+Defined in: [packages/core/src/protocol/checkpointer.ts:34](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L34)
 
 #### Parameters
 

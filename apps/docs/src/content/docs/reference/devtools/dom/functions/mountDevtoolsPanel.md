@@ -9,7 +9,7 @@ title: "mountDevtoolsPanel"
 function mountDevtoolsPanel(target, options): DevtoolsHandle<DevtoolsPanelOptions>;
 ```
 
-Defined in: packages/devtools/src/dom.ts:362
+Defined in: [packages/devtools/src/dom.ts:362](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/dom.ts#L362)
 
 Mount a multi-run panel that live-tails every run in the process via the attach shim's `BroadcastChannel`.
 

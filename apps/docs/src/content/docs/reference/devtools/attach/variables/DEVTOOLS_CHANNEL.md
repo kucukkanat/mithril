@@ -9,6 +9,6 @@ title: "DEVTOOLS_CHANNEL"
 const DEVTOOLS_CHANNEL: "mithril.devtools" = "mithril.devtools";
 ```
 
-Defined in: packages/devtools/src/attach.ts:12
+Defined in: [packages/devtools/src/attach.ts:12](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/attach.ts#L12)
 
 The `BroadcastChannel` name the attach shim publishes to and `DevtoolsPanel` subscribes to.

@@ -42,7 +42,19 @@ export interface RunStore {
   getSnapshot(): RunSnapshot;
 }
 
-const EMPTY: RunSnapshot = { state: replay([]), text: "", status: "streaming", events: [], costUsd: 0 };
+/**
+ * The snapshot for a component with no run yet — an empty transcript. Returned by {@link useRun} when its
+ * source is `undefined`, so a component can call the hook unconditionally before a run has started.
+ */
+export const IDLE_SNAPSHOT: RunSnapshot = { state: replay([]), text: "", status: "streaming", events: [], costUsd: 0 };
+
+/** A stable, inert {@link RunStore} that always reports {@link IDLE_SNAPSHOT} (used when no run is active). */
+export function idleRunStore(): RunStore {
+  return {
+    subscribe: () => () => {},
+    getSnapshot: () => IDLE_SNAPSHOT,
+  };
+}
 
 /**
  * Build a framework-agnostic {@link RunStore} that folds an event stream into a live {@link RunSnapshot}.
@@ -57,7 +69,7 @@ const EMPTY: RunSnapshot = { state: replay([]), text: "", status: "streaming", e
  */
 export function createRunStore(source: AsyncIterable<MithrilEvent>): RunStore {
   const events: MithrilEvent[] = [];
-  let snapshot: RunSnapshot = EMPTY;
+  let snapshot: RunSnapshot = IDLE_SNAPSHOT;
   let ended = false;
   const subs = new Set<() => void>();
 
@@ -92,6 +104,92 @@ export function createRunStore(source: AsyncIterable<MithrilEvent>): RunStore {
     },
     getSnapshot() {
       return snapshot;
+    },
+  };
+}
+
+// ── chat store (multi-turn) ────────────────────────────────────────────────────────────────────────────
+
+/** A single chat turn — structurally an `InputMessage`, so the history feeds straight back into a run. */
+export interface ChatMessage {
+  readonly role: "user" | "assistant";
+  readonly content: string;
+}
+
+/** An immutable view of a chat: completed `messages`, the in-flight assistant `streaming` text, and `status`. */
+export interface ChatSnapshot {
+  readonly messages: readonly ChatMessage[];
+  readonly streaming: string;
+  readonly status: "idle" | "streaming" | "error";
+}
+
+/** The minimal agent shape {@link createChatStore} needs: `stream(history)` yielding a run's events. */
+export interface ChatAgent {
+  stream(input: readonly ChatMessage[]): { readonly events: AsyncIterable<MithrilEvent> };
+}
+
+/** A `useSyncExternalStore`-compatible chat store with a `send` action. Created by {@link createChatStore}. */
+export interface ChatStore {
+  subscribe(onChange: () => void): () => void;
+  getSnapshot(): ChatSnapshot;
+  /** Append a user message and stream the assistant's reply, accumulating history. Ignored mid-stream. */
+  send(input: string): void;
+}
+
+const IDLE_CHAT: ChatSnapshot = { messages: [], streaming: "", status: "idle" };
+
+/**
+ * Build a framework-agnostic multi-turn {@link ChatStore} over an agent — the DOM-free core that
+ * {@link useChat} wraps, so the conversation logic is tested without React.
+ *
+ * @remarks On `send`, appends the user message, streams `agent.stream(history)` while accumulating the
+ * assistant's `text.delta`s into `streaming`, then commits the assistant turn to `messages`. Concurrent
+ * `send`s while a reply is streaming are ignored. A `run.error` (or a thrown stream) settles `status: "error"`.
+ * @param agent - the agent to converse with (a Mithril `Agent` satisfies {@link ChatAgent}).
+ * @returns a store exposing `subscribe`, `getSnapshot`, and `send`.
+ */
+export function createChatStore(agent: ChatAgent): ChatStore {
+  let snapshot: ChatSnapshot = IDLE_CHAT;
+  const subs = new Set<() => void>();
+  const set = (next: ChatSnapshot): void => {
+    snapshot = next;
+    for (const s of subs) s();
+  };
+  return {
+    subscribe(onChange) {
+      subs.add(onChange);
+      return () => {
+        subs.delete(onChange);
+      };
+    },
+    getSnapshot() {
+      return snapshot;
+    },
+    send(input) {
+      if (snapshot.status === "streaming") return;
+      const messages = [...snapshot.messages, { role: "user" as const, content: input }];
+      set({ messages, streaming: "", status: "streaming" });
+      void (async () => {
+        let text = "";
+        let errored = false;
+        try {
+          for await (const e of agent.stream(messages).events) {
+            if (e.type === "text.delta") {
+              text += e.delta;
+              set({ messages, streaming: text, status: "streaming" });
+            } else if (e.type === "run.error") {
+              errored = true;
+            }
+          }
+        } catch {
+          errored = true;
+        }
+        set({
+          messages: [...messages, { role: "assistant", content: text }],
+          streaming: "",
+          status: errored ? "error" : "idle",
+        });
+      })();
     },
   };
 }

@@ -149,8 +149,10 @@ type LooseConfig = AgentConfig<readonly AnyTool<unknown>[], unknown, JsonValue>;
 // both abort the run.
 function linkSignal(ctrl: AbortController, external: AbortSignal | undefined): void {
   if (external === undefined) return;
-  if (external.aborted) ctrl.abort();
-  else external.addEventListener("abort", () => ctrl.abort(), { once: true });
+  // Forward the external signal's reason so a caller-supplied AbortSignal.timeout(ms)/abort(reason) surfaces
+  // on the run.cancel event, rather than being flattened to the generic "aborted" label.
+  if (external.aborted) ctrl.abort(external.reason);
+  else external.addEventListener("abort", () => ctrl.abort(external.reason), { once: true });
 }
 
 function makeAgent<Tools extends readonly AnyTool<Deps>[], Deps, Out extends JsonValue>(
@@ -212,7 +214,7 @@ function makeAgent<Tools extends readonly AnyTool<Deps>[], Deps, Out extends Jso
     const gen = make(ctrl.signal, runId);
     const resume = (token: string, resolution: ResumeValue): RunHandle<Out> =>
       streamFrom((sig, rid) => build("", o, { resume: toResumeState(token, resolution), signal: sig, runId: rid }), o);
-    return makeRunHandle<Out>(gen, runId, { cancel: () => ctrl.abort(), resume });
+    return makeRunHandle<Out>(gen, runId, { cancel: (reason?: string) => ctrl.abort(reason), resume });
   };
 
   // Step-level control: drive the loop, yielding a snapshot at each step boundary. Abandoning the iterator
@@ -258,7 +260,7 @@ function makeAgent<Tools extends readonly AnyTool<Deps>[], Deps, Out extends Jso
       const o = args[0] as RunOptions<Deps> | undefined;
       return drain(build("", o, { resume: toResumeState(token, resolution) }));
     },
-    rehydrate(token, resolution, ...args) {
+    resumeStream(token, resolution, ...args) {
       const o = args[0] as RunOptions<Deps> | undefined;
       return streamFrom((sig, rid) => build("", o, { resume: toResumeState(token, resolution), signal: sig, runId: rid }), o);
     },
@@ -313,8 +315,8 @@ export function agent(config?: unknown): unknown {
  * Bind `Deps` once for a whole app and get back `Deps`-typed {@link agent} and {@link tool} factories.
  *
  * @typeParam Deps - the shared dependency object all agents and tools in this harness receive.
- * @returns an object with `agent` ({@link AgentFactory}) and `tool` ({@link ToolFactory}), so no
- * individual definition has to restate `<Deps>()`.
+ * @returns an object with `agent` ({@link AgentFactory}), `tool` ({@link ToolFactory}), and `plugin`
+ * (a `Deps`-bound {@link plugin} factory), so no individual definition has to restate `<Deps>()`.
  * @example
  * ```ts
  * import { createHarness } from "@mithril/core/agent";
@@ -335,10 +337,17 @@ export function agent(config?: unknown): unknown {
  * await app.run("Who is user 42?", { deps: { db } });
  * ```
  */
-export function createHarness<Deps>(): { readonly agent: AgentFactory<Deps>; readonly tool: ToolFactory<Deps> } {
+export function createHarness<Deps>(): {
+  readonly agent: AgentFactory<Deps>;
+  readonly tool: ToolFactory<Deps>;
+  readonly plugin: <const Tools extends readonly AnyTool<Deps>[] = []>(p: Plugin<Deps, Tools>) => Plugin<Deps, Tools>;
+} {
   return {
     agent: ((c: AgentConfig<readonly AnyTool<Deps>[], Deps, JsonValue>) => makeAgent(c)) as AgentFactory<Deps>,
     tool: ((d: unknown) => d) as ToolFactory<Deps>,
+    plugin: (<Tools extends readonly AnyTool<Deps>[]>(p: Plugin<Deps, Tools>) => p) as <
+      const Tools extends readonly AnyTool<Deps>[] = [],
+    >(p: Plugin<Deps, Tools>) => Plugin<Deps, Tools>,
   };
 }
 
@@ -355,9 +364,6 @@ function taskSchema(): StandardSchemaV1<unknown, { readonly task: string }> {
       },
     },
   };
-}
-function passthroughSchema<T>(): StandardSchemaV1<unknown, T> {
-  return { "~standard": { version: 1, vendor: "mithril", validate: (v) => ({ value: v as T }) } };
 }
 
 /**
@@ -437,7 +443,8 @@ export function asTool<In, ChildDeps, COut extends JsonValue>(
     inputSchema,
     ...(opts.needsApproval !== undefined ? { needsApproval: opts.needsApproval } : {}),
     async execute(input: In, ctx: RunContext<unknown>): Promise<COut> {
-      const runOpts = { deps: (opts.deps?.(ctx) ?? undefined) as ChildDeps };
+      // Cast to RunOptions<ChildDeps>: DepsOption's conditional can't resolve against a free `ChildDeps`.
+      const runOpts = { deps: (opts.deps?.(ctx) ?? undefined) as ChildDeps } as RunOptions<ChildDeps>;
       // Journaled so a Tier-2 replay of THIS execute never re-runs the child (exactly-once).
       let res = await ctx.journal<RunResult<COut>>("child.run", () => runChild(toInput(input), runOpts));
       let hop = 0;
@@ -447,7 +454,6 @@ export function asTool<In, ChildDeps, COut extends JsonValue>(
         const resolution = (await ctx.suspend({
           kind: "handoff.suspended",
           payload: { to: opts.name, child: res.request },
-          resolutionSchema: passthroughSchema<ResumeValue>(),
           resolutionSchemaId: "mithril.handoff",
         })) as ResumeValue;
         res = await ctx.journal<RunResult<COut>>(`child.resume.${hop}`, () => resumeChild(token, resolution, runOpts));

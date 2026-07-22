@@ -12,15 +12,13 @@ function useObject(source): {
 };
 ```
 
-Defined in: hooks.ts:55
-
-Track a run's structured output as it streams.
+Defined in: [hooks.ts:89](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/react/src/hooks.ts#L89)
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `source` | [`RunSource`](/reference/react/hooks/interfaces/runsource/) | A [RunSource](/reference/react/hooks/interfaces/runsource/) whose run emits `object.delta` / `object.final` events. |
+| Parameter | Type |
+| ------ | ------ |
+| `source` | [`RunSource`](/reference/react/hooks/interfaces/runsource/) \| `undefined` |
 
 ## Returns
 
@@ -30,9 +28,6 @@ Track a run's structured output as it streams.
   value: JsonValue | undefined;
 }
 ```
-
-`{ partial, value }` — `partial` is the latest in-flight object (from `object.delta`),
-`value` is the finalized object (from `object.final`); each is `undefined` until seen.
 
 ### partial
 

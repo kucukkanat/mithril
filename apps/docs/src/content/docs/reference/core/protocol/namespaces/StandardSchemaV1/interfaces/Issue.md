@@ -5,7 +5,7 @@ prev: false
 title: "Issue"
 ---
 
-Defined in: packages/core/src/protocol/standard-schema.ts:39
+Defined in: [packages/core/src/protocol/standard-schema.ts:41](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L41)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: packages/core/src/protocol/standard-schema.ts:39
 readonly message: string;
 ```
 
-Defined in: packages/core/src/protocol/standard-schema.ts:40
+Defined in: [packages/core/src/protocol/standard-schema.ts:42](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L42)
 
 ***
 
@@ -27,4 +27,4 @@ readonly optional path?: readonly (
   | PathSegment)[];
 ```
 
-Defined in: packages/core/src/protocol/standard-schema.ts:41
+Defined in: [packages/core/src/protocol/standard-schema.ts:43](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L43)

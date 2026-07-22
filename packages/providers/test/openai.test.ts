@@ -98,3 +98,11 @@ test("drives the FULL agent loop through a real provider (tool call → text ans
   if (res.status === "completed") expect(res.output).toBe("It is sunny");
   expect(seen).toBe("NYC"); // the tool executed with the model's streamed arguments
 });
+
+test("an empty byok key throws an actionable error before any request goes out", async () => {
+  let fetched = false;
+  const rt: RuntimeAdapter = { ...defaultRuntime(), fetch: (async () => { fetched = true; return new Response(null, { status: 200 }); }) as typeof fetch };
+  const gen = openaiProvider().chat(REQ, rt, { kind: "byok", apiKey: "" }, signal);
+  await expect(gen.next()).rejects.toThrow(/OPENAI_API_KEY/);
+  expect(fetched).toBe(false);
+});

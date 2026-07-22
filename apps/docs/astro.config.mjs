@@ -4,7 +4,6 @@ import starlight from "@astrojs/starlight";
 import react from "@astrojs/react";
 import { fileURLToPath } from "node:url";
 import rehypeSymbolLinks from "./src/lib/rehype-symbol-links.ts";
-import { ecSymbolLinks } from "./src/lib/ec-symbol-links.ts";
 import { createStarlightTypeDocPlugin } from "starlight-typedoc";
 import { generateSymbols } from "./scripts/gen-symbols.ts";
 
@@ -33,13 +32,15 @@ const src = (p) => fileURLToPath(new URL(p, import.meta.url));
 const TD_PACKAGES = [
   { name: "core", label: "@mithril/core", entryPoints: ["core/src/protocol/index.ts", "core/src/agent/index.ts", "core/src/testkit/index.ts"] },
   { name: "providers", label: "@mithril/providers", entryPoints: ["providers/src/openai/index.ts", "providers/src/anthropic/index.ts", "providers/src/google/index.ts", "providers/src/transformers/index.ts"] },
-  { name: "memory", label: "@mithril/memory", entryPoints: ["memory/src/index.ts", "memory/src/sqlite-bun.ts"] },
+  { name: "memory", label: "@mithril/memory", entryPoints: ["memory/src/index.ts", "memory/src/sqlite-bun.ts", "memory/src/sqlite-node.ts"] },
   { name: "evals", label: "@mithril/evals", entryPoints: ["evals/src/index.ts"] },
-  { name: "kv", label: "@mithril/kv", entryPoints: ["kv/src/index.ts"] },
+  { name: "kv", label: "@mithril/kv", entryPoints: ["kv/src/index.ts", "kv/src/indexeddb.ts", "kv/src/sqlite-node.ts"] },
   { name: "fs", label: "@mithril/fs", entryPoints: ["fs/src/index.ts", "fs/src/node.ts", "fs/src/opfs.ts"] },
   { name: "otel", label: "@mithril/otel", entryPoints: ["otel/src/index.ts"] },
   { name: "workflows", label: "@mithril/workflows", entryPoints: ["workflows/src/index.ts"] },
-  { name: "mcp", label: "@mithril/mcp", entryPoints: ["mcp/src/index.ts"] },
+  { name: "mcp", label: "@mithril/mcp", entryPoints: ["mcp/src/index.ts", "mcp/src/http.ts", "mcp/src/server.ts"] },
+  { name: "vectors", label: "@mithril/vectors", entryPoints: ["vectors/src/index.ts", "vectors/src/sqlite-bun.ts", "vectors/src/sqlite-node.ts"] },
+  { name: "sandbox", label: "@mithril/sandbox", entryPoints: ["sandbox/src/index.ts", "sandbox/src/node.ts"] },
   { name: "react", label: "@mithril/react", entryPoints: ["react/src/index.ts", "react/src/hooks.ts"] },
   { name: "devtools", label: "@mithril/devtools", entryPoints: ["devtools/src/index.ts", "devtools/src/dom.ts", "devtools/src/element.ts", "devtools/src/attach.ts"] },
   { name: "create-mithril", label: "create-mithril", entryPoints: ["create-mithril/src/index.ts"] },
@@ -84,6 +85,15 @@ const mithrilAliases = [
   { find: "@mithril/providers/anthropic", replacement: src("../../packages/providers/src/anthropic/index.ts") },
   { find: "@mithril/providers/google", replacement: src("../../packages/providers/src/google/index.ts") },
   { find: "@mithril/providers/transformers", replacement: src("../../packages/providers/src/transformers/index.ts") },
+  { find: "@mithril/evals", replacement: src("../../packages/evals/src/index.ts") },
+  { find: "@mithril/memory", replacement: src("../../packages/memory/src/index.ts") },
+  { find: "@mithril/kv", replacement: src("../../packages/kv/src/index.ts") },
+  { find: "@mithril/fs", replacement: src("../../packages/fs/src/index.ts") },
+  { find: "@mithril/vectors", replacement: src("../../packages/vectors/src/index.ts") },
+  { find: "@mithril/workflows", replacement: src("../../packages/workflows/src/index.ts") },
+  { find: "@mithril/otel", replacement: src("../../packages/otel/src/index.ts") },
+  { find: "@mithril/mcp/server", replacement: src("../../packages/mcp/src/server.ts") },
+  { find: "@mithril/mcp", replacement: src("../../packages/mcp/src/index.ts") },
   { find: "@mithril/react/hooks", replacement: src("../../packages/react/src/hooks.ts") },
   { find: "@mithril/react", replacement: src("../../packages/react/src/index.ts") },
   { find: "@mithril/devtools/ui.css", replacement: src("../../packages/devtools/src/ui/ui.css") },
@@ -116,18 +126,67 @@ export default defineConfig({
         { tag: "meta", attrs: { property: "og:site_name", content: "Mithril" } },
       ],
       customCss: ["./src/styles/tokens.css", "./src/styles/theme.css"],
-      expressiveCode: {
-        themes: ["github-dark-default", "github-light-default"],
-        styleOverrides: { borderRadius: "0.5rem" },
-        plugins: [ecSymbolLinks()],
-      },
+      // Expressive Code config moved to ./ec.config.mjs so the <Code> component (Runnable blocks) can load it.
       sidebar: [
         {
           label: "Getting started",
           items: [{ autogenerate: { directory: "getting-started" } }],
         },
         { label: "Concepts", items: [{ autogenerate: { directory: "concepts" } }] },
-        { label: "Guides", items: [{ autogenerate: { directory: "guides" } }] },
+        {
+          // Grouped by task rather than a flat 21-item list, so a newcomer can scan by intent.
+          // Entries are slugs (no file moves → every URL and cross-link stays stable); order here
+          // is the source of truth for the sidebar, so the pages' frontmatter `order` is unused.
+          label: "Guides",
+          items: [
+            {
+              label: "Core",
+              items: [
+                "guides/defining-tools",
+                "guides/building-agents",
+                "guides/streaming",
+                "guides/structured-output",
+                "guides/error-handling",
+              ],
+            },
+            {
+              label: "State & humans",
+              items: [
+                "guides/human-in-the-loop",
+                "guides/memory-and-checkpointing",
+                "guides/multi-agent",
+              ],
+            },
+            {
+              label: "Extending the loop",
+              items: [
+                "guides/middleware-and-plugins",
+                "guides/mcp",
+                "guides/workflows",
+                "guides/rag-and-vectors",
+                "guides/ejecting-the-loop",
+              ],
+            },
+            {
+              label: "Frontend & browser",
+              items: [
+                "guides/react",
+                "guides/devtools",
+                "guides/streaming-to-a-web-ui",
+                "guides/running-in-the-browser",
+                "guides/local-inference",
+              ],
+            },
+            {
+              label: "Quality & ops",
+              items: [
+                "guides/testing-your-agent",
+                "guides/evals",
+                "guides/observability",
+              ],
+            },
+          ],
+        },
         { label: "API reference", collapsed: true, items: [{ label: "Overview", link: "/reference/" }, ...typeDocSidebar] },
         {
           label: "Playground",

@@ -5,7 +5,7 @@ prev: false
 title: "ToolDef"
 ---
 
-Defined in: packages/core/src/agent/factory.ts:43
+Defined in: [packages/core/src/agent/factory.ts:43](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L43)
 
 The definition object passed to [tool](/reference/core/agent/functions/tool/) to declare a single tool.
 
@@ -35,7 +35,7 @@ The definition object passed to [tool](/reference/core/agent/functions/tool/) to
 description: string;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:45
+Defined in: [packages/core/src/agent/factory.ts:45](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L45)
 
 ***
 
@@ -51,7 +51,7 @@ execute: (input, ctx) =>
 | Suspend<NoInfer<Out>>, any>;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:50
+Defined in: [packages/core/src/agent/factory.ts:50](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L50)
 
 #### Parameters
 
@@ -77,7 +77,7 @@ Defined in: packages/core/src/agent/factory.ts:50
 inputSchema: SIn;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:47
+Defined in: [packages/core/src/agent/factory.ts:47](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L47)
 
 ***
 
@@ -87,7 +87,7 @@ Defined in: packages/core/src/agent/factory.ts:47
 name: Name;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:44
+Defined in: [packages/core/src/agent/factory.ts:44](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L44)
 
 ***
 
@@ -97,7 +97,7 @@ Defined in: packages/core/src/agent/factory.ts:44
 optional needsApproval?: boolean | ((input, ctx) => boolean | Promise<boolean>);
 ```
 
-Defined in: packages/core/src/agent/factory.ts:49
+Defined in: [packages/core/src/agent/factory.ts:49](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L49)
 
 ***
 
@@ -107,7 +107,7 @@ Defined in: packages/core/src/agent/factory.ts:49
 optional outputSchema?: StandardSchemaV1<unknown, Out>;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:48
+Defined in: [packages/core/src/agent/factory.ts:48](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L48)
 
 ***
 
@@ -117,4 +117,4 @@ Defined in: packages/core/src/agent/factory.ts:48
 optional version?: string;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:46
+Defined in: [packages/core/src/agent/factory.ts:46](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L46)

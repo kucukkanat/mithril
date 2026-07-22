@@ -9,7 +9,7 @@ title: "withJsonSchema"
 function withJsonSchema<In, Out>(schema, jsonSchema): StandardSchemaV1<In, Out>;
 ```
 
-Defined in: packages/core/src/protocol/json-schema.ts:91
+Defined in: [packages/core/src/protocol/json-schema.ts:91](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/json-schema.ts#L91)
 
 Attach an explicit JSON Schema to a Standard Schema so [toJsonSchema](/reference/core/protocol/functions/tojsonschema/) recovers it with no converter.
 

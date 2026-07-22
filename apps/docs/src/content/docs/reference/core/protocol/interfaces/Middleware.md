@@ -5,7 +5,7 @@ prev: false
 title: "Middleware"
 ---
 
-Defined in: packages/core/src/protocol/middleware.ts:93
+Defined in: [packages/core/src/protocol/middleware.ts:93](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L93)
 
 Producer-side composability: observe or transform a run purely by wrapping
 model and tool invocations.
@@ -32,7 +32,7 @@ fallback models), and `tool` (one tool call — guardrails, memoization, drift).
 optional model?: (ctx, call, next) => Promise<ModelResult>;
 ```
 
-Defined in: packages/core/src/protocol/middleware.ts:106
+Defined in: [packages/core/src/protocol/middleware.ts:106](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L106)
 
 Wrap a single model invocation (retries, caching, prompt-cache ordering, fallback models).
 
@@ -56,7 +56,7 @@ Wrap a single model invocation (retries, caching, prompt-cache ordering, fallbac
 readonly name: string;
 ```
 
-Defined in: packages/core/src/protocol/middleware.ts:94
+Defined in: [packages/core/src/protocol/middleware.ts:94](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L94)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: packages/core/src/protocol/middleware.ts:94
 optional step?: (ctx, input, next) => Promise<StepOutcome>;
 ```
 
-Defined in: packages/core/src/protocol/middleware.ts:100
+Defined in: [packages/core/src/protocol/middleware.ts:100](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L100)
 
 Wrap a whole step (its model call plus any tool execution). Runs outside `model`/`tool`. Short-circuit
 by returning a [StepOutcome](/reference/core/protocol/interfaces/stepoutcome/) without calling `next` (skip the step); enforce a token/step budget by
@@ -92,7 +92,7 @@ inspecting `ctx` before `next` and aborting via `ctx.signal`.
 optional tool?: (ctx, call, next) => Promise<ToolOutcome>;
 ```
 
-Defined in: packages/core/src/protocol/middleware.ts:112
+Defined in: [packages/core/src/protocol/middleware.ts:112](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L112)
 
 Wrap a single tool invocation. Short-circuit by returning without calling `next` (cache hit / block).
 

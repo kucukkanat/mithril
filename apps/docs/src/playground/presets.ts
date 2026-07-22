@@ -1,6 +1,6 @@
 /*
  * Playground examples. Each is provider-agnostic: `bodyImports` + `scriptedTurns` + `body`, where
- * `body` references a `model` that `assembleExample` (providers.ts) slots in for the chosen ⚙ target —
+ * `body` references a `model` that `assembleExample` (providers.ts) slots in for the chosen Run against target —
  * the scripted test double by default, or a real remote/local provider. Picking a provider re-assembles
  * the SAME example against it, so there's no separate "live" or "local" example to maintain.
  *
@@ -260,14 +260,86 @@ const assistant = agent({
 await run(assistant, "Deploy to production.");`,
 };
 
+const evalsExample: ExampleParts = {
+  bodyImports: `import { agent, tool } from "mithril";
+import { runEval, calledTool, completed, outputIncludes } from "@mithril/evals";
+import { z } from "zod";`,
+  scriptedTurns: `[
+  [
+    { type: "tool.call", callId: "c1", name: "weather", input: { city: "Istanbul" } },
+    { type: "message.end", finishReason: "tool_calls", usage },
+  ],
+  [
+    { type: "text.delta", delta: "It's 21°C and clear in Istanbul." },
+    { type: "message.end", finishReason: "stop", usage },
+  ],
+]`,
+  body: `const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
+});
+
+const assistant = agent({
+  model,
+  instructions: "You are a concise weather assistant.",
+  tools: [weather],
+});
+
+// Scorers are pure functions over the recorded event log — no mocking.
+for await (const r of runEval(assistant, [{
+  name: "reports Istanbul weather",
+  input: "What's the weather in Istanbul?",
+  scorers: [calledTool("weather"), completed(), outputIncludes("Istanbul")],
+}])) {
+  console.log(\`\${r.case}: \${r.passed ? "PASS ✓" : "FAIL ✗"}\`);
+  for (const s of r.scores) console.log(\`  \${s.name} = \${s.value}\`);
+}`,
+};
+
+const multiAgent: ExampleParts = {
+  bodyImports: `import { agent, asTool } from "mithril";`,
+  // Parent and child share this one scripted provider, so the turns advance globally: parent calls the
+  // research tool (turn 0), the sub-agent answers (turn 1), the parent summarizes (turn 2).
+  scriptedTurns: `[
+  [
+    { type: "tool.call", callId: "c1", name: "research", input: { task: "HTTP/3 vs HTTP/2" } },
+    { type: "message.end", finishReason: "tool_calls", usage },
+  ],
+  [
+    { type: "text.delta", delta: "HTTP/3 runs over QUIC (UDP); HTTP/2 over TCP." },
+    { type: "message.end", finishReason: "stop", usage },
+  ],
+  [
+    { type: "text.delta", delta: "In short: HTTP/3 moves to QUIC/UDP, cutting head-of-line blocking." },
+    { type: "message.end", finishReason: "stop", usage },
+  ],
+]`,
+  body: `const researcher = agent({
+  model,
+  instructions: "Research the question and return concise findings.",
+});
+
+const lead = agent({
+  model,
+  instructions: "Delegate research to the tool, then summarize the answer.",
+  tools: [asTool(researcher, { name: "research", description: "Deep-dive a question." })],
+});
+
+await run(lead, "How does HTTP/3 differ from HTTP/2?");`,
+};
+
 export const PRESETS: readonly Preset[] = [
   { id: "tool-call", label: "Tool call", blurb: "Model calls a tool, then answers.", parts: toolCall },
+  { id: "multi-agent", label: "Multi-agent", blurb: "One agent calls another via asTool.", parts: multiAgent },
   { id: "multi-tool", label: "Multi-tool", blurb: "Six tools, several calls in sequence.", parts: multiTool },
   { id: "streaming", label: "Streaming text", blurb: "Watch text.delta events stream.", parts: streaming },
   { id: "chat-history", label: "Chat history", blurb: "Continue a conversation from prior turns.", parts: chatHistory },
   { id: "structured", label: "Structured output", blurb: "Typed JSON via an output schema.", parts: structured },
   { id: "middleware", label: "Middleware", blurb: "Emit a custom event around a tool.", parts: middleware },
   { id: "hitl", label: "Human-in-the-loop", blurb: "Approve before a tool runs.", parts: hitl },
+  { id: "evals", label: "Evals", blurb: "Score an agent's trajectory with scorers.", parts: evalsExample },
 ];
 
 export const DEFAULT_PRESET = PRESETS[0]!;

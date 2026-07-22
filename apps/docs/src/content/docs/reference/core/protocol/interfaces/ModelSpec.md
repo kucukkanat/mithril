@@ -5,7 +5,7 @@ prev: false
 title: "ModelSpec"
 ---
 
-Defined in: packages/core/src/protocol/provider.ts:31
+Defined in: [packages/core/src/protocol/provider.ts:31](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L31)
 
 The published spec for one model: its capabilities, pricing, and context size.
 
@@ -17,7 +17,7 @@ The published spec for one model: its capabilities, pricing, and context size.
 readonly capabilities: ModelCapabilities;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:32
+Defined in: [packages/core/src/protocol/provider.ts:32](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L32)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: packages/core/src/protocol/provider.ts:32
 readonly contextWindow: number;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:34
+Defined in: [packages/core/src/protocol/provider.ts:34](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L34)
 
 ***
 
@@ -37,4 +37,4 @@ Defined in: packages/core/src/protocol/provider.ts:34
 readonly pricing: Pricing;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:33
+Defined in: [packages/core/src/protocol/provider.ts:33](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L33)

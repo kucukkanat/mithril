@@ -12,7 +12,7 @@ function toGenAiSpans(
    opts?): readonly GenAiSpan[];
 ```
 
-Defined in: index.ts:70
+Defined in: [index.ts:70](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/otel/src/index.ts#L70)
 
 Reconstruct [GenAiSpan](/reference/otel/interfaces/genaispan/)s from a Mithril event stream, optionally forwarding them to a [SpanSink](/reference/otel/interfaces/spansink/).
 

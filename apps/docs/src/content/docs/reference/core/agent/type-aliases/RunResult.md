@@ -33,7 +33,7 @@ type RunResult<Out> =
 };
 ```
 
-Defined in: packages/core/src/agent/agent-types.ts:74
+Defined in: [packages/core/src/agent/agent-types.ts:85](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L85)
 
 The discriminated result of a completed, suspended, or failed run.
 
@@ -49,8 +49,9 @@ Discriminate on `.status`:
 - `"completed"` — carries the final `output` and `usage`.
 - `"suspended"` — the run is waiting on a human/external resolution (Tier-1 approval, a Tier-1b
   tool-returned `suspend(...)`, or a Tier-2 `ctx.suspend()`). `request` is the UI-facing pending view;
-  `token` is the resume handle (unsigned durable-local JSON — [seal](/reference/core/agent/functions/seal/) it for cross-trust-boundary
-  durability). Resume via [Agent.resume](/reference/core/agent/interfaces/agent/#resume)/[Agent.rehydrate](/reference/core/agent/interfaces/agent/#rehydrate).
+  `token` is the resume handle (unsigned durable-local JSON by default — [seal](/reference/core/agent/functions/seal/) it before crossing
+  a trust boundary). Resume via [Agent.resume](/reference/core/agent/interfaces/agent/#resume) (drains to a result) or [Agent.resumeStream](/reference/core/agent/interfaces/agent/#resumestream)
+  (streams the resumed run).
 - `"unresumable"` — a resume `token` no longer matches a pending tool call; `reason` explains why.
 - `"error"` — carries a [SerializedError](/reference/core/protocol/interfaces/serializederror/) and `usage`.
 - `"cancelled"` — the run's `signal` aborted; carries `usage`.

@@ -5,7 +5,7 @@ prev: false
 title: "ProtocolVersionError"
 ---
 
-Defined in: packages/core/src/protocol/migrate.ts:48
+Defined in: [packages/core/src/protocol/migrate.ts:48](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/migrate.ts#L48)
 
 Thrown by [migrate](/reference/core/protocol/functions/migrate/) when an event's protocol MAJOR version is unsupported.
 
@@ -21,7 +21,7 @@ Thrown by [migrate](/reference/core/protocol/functions/migrate/) when an event's
 new ProtocolVersionError(found): ProtocolVersionError;
 ```
 
-Defined in: packages/core/src/protocol/migrate.ts:50
+Defined in: [packages/core/src/protocol/migrate.ts:50](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/migrate.ts#L50)
 
 #### Parameters
 
@@ -63,7 +63,7 @@ Error.cause
 readonly found: number;
 ```
 
-Defined in: packages/core/src/protocol/migrate.ts:50
+Defined in: [packages/core/src/protocol/migrate.ts:50](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/migrate.ts#L50)
 
 The unsupported `v` encountered on the event.
 

@@ -26,6 +26,16 @@ export function codeFromHash(): string | null {
   return m?.[1] ? decodeCode(m[1]) : null;
 }
 
+/**
+ * Read `#preset=…` (a preset id) from the current URL, if present. A preset deep-link boots the playground
+ * pristine — the "Run against" picker can still re-assemble the example — unlike `#code=` (opaque custom code).
+ */
+export function presetFromHash(): string | null {
+  if (typeof location === "undefined") return null;
+  const m = /[#&]preset=([^&]+)/.exec(location.hash);
+  return m?.[1] ? decodeURIComponent(m[1]) : null;
+}
+
 /** Build a shareable absolute URL for the given code. */
 export function shareUrl(code: string): string {
   const base = `${location.origin}${location.pathname}`;

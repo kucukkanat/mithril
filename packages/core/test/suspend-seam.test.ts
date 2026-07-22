@@ -104,8 +104,8 @@ test("Tier-2: a tool that suspends twice resolves each pause in order", async ()
   expect(r3.status).toBe("completed");
 });
 
-// ── rehydrate(): streaming resume ────────────────────────────────────────────────────────────────────────
-test("rehydrate() resumes a suspension as a live streaming RunHandle", async () => {
+// ── resumeStream(): streaming resume ────────────────────────────────────────────────────────────────────────
+test("resumeStream() resumes a suspension as a live streaming RunHandle", async () => {
   const ask = tool({
     name: "ask",
     description: "ask",
@@ -118,7 +118,7 @@ test("rehydrate() resumes a suspension as a live streaming RunHandle", async () 
   const r = await a.run("hi");
   if (r.status !== "suspended") throw new Error("expected suspended");
 
-  const handle = a.rehydrate(r.token, { kind: "resolve", value: "y" });
+  const handle = a.resumeStream(r.token, { kind: "resolve", value: "y" });
   const events: MithrilEvent[] = [];
   for await (const e of handle.events) events.push(e);
   const done = await handle.result();
@@ -178,4 +178,25 @@ test("asTool() runs a sub-agent and returns its output as the tool result", asyn
   const r = await parent.run("do research");
   expect(r.status).toBe("completed");
   if (r.status === "completed") expect(r.output).toBe("done");
+});
+
+// ── resolutionSchema is optional: a plain ctx.suspend({ kind, payload }) works ───────────────────────────
+test("Tier-2: ctx.suspend needs no resolutionSchema — a bare { kind, payload } pauses and resumes", async () => {
+  const confirm = tool({
+    name: "confirm",
+    description: "ask for confirmation",
+    inputSchema: schema<{ a: number }>(),
+    execute: async ({ a }, ctx) => {
+      const ok = (await ctx.suspend({ kind: "confirm", payload: { a } })) as boolean;
+      return { doubled: ok ? a * 2 : 0 };
+    },
+  });
+  const a = agent({ model: testModel(scriptedProvider(callThenAnswer("confirm", { a: 21 }))), instructions: "x", tools: [confirm] });
+  const r = await a.run("go");
+  expect(r.status).toBe("suspended");
+  if (r.status !== "suspended") return;
+  expect(r.request.kind).toBe("confirm");
+  expect(r.request.resolutionSchemaId).toBeUndefined(); // no schema ceremony
+  const done = await a.resume(r.token, { kind: "resolve", value: true });
+  expect(done.status).toBe("completed");
 });

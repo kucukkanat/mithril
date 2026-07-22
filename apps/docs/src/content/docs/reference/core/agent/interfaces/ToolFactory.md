@@ -5,7 +5,7 @@ prev: false
 title: "ToolFactory"
 ---
 
-Defined in: packages/core/src/agent/factory.ts:63
+Defined in: [packages/core/src/agent/factory.ts:63](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L63)
 
 A `Deps`-bound tool constructor: call it with a [ToolDef](/reference/core/agent/interfaces/tooldef/) to get a fully typed [Tool](/reference/core/protocol/interfaces/tool/).
 
@@ -24,7 +24,7 @@ restate `<Deps>`. `Name`, the input type, and `Out` are all inferred from the de
 ToolFactory<Name, SIn, Out>(def): Tool<Name, Infer<SIn>, Out, Deps>;
 ```
 
-Defined in: packages/core/src/agent/factory.ts:64
+Defined in: [packages/core/src/agent/factory.ts:64](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L64)
 
 A `Deps`-bound tool constructor: call it with a [ToolDef](/reference/core/agent/interfaces/tooldef/) to get a fully typed [Tool](/reference/core/protocol/interfaces/tool/).
 

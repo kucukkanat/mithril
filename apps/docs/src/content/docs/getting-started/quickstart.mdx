@@ -5,70 +5,52 @@ sidebar:
   order: 3
 ---
 
-import { Steps, Aside } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 import Runnable from "../../../components/Runnable.astro";
 
-Let's build a weather assistant that calls a tool and then answers. You'll write three things —
-a **tool**, an **agent**, and a **run** — and watch the typed event stream it produces.
+Let's build a weather assistant that calls a tool and then answers. You write three things — a
+**tool**, an **agent**, and a **run** — and watch the typed event stream it produces. The example
+below is complete and runs in the browser with **Open in playground**: no API key, no install.
 
-<Steps>
+## Build it
 
-1. **Define a tool.** A tool is a name, a description, an input schema (any Standard Schema
-   validator), and an `execute` function. Input and output types are inferred for you.
-
-   ```ts
-   import { tool } from "mithril";
-   import { z } from "zod";
-
-   const weather = tool({
-     name: "weather",
-     description: "Current weather for a city.",
-     inputSchema: z.object({ city: z.string() }),
-     execute: async ({ city }) => ({ city, tempC: 21 }),
-   });
-   ```
-
-2. **Create an agent.** Give it a model, instructions, and its tools. A provider handle like
-   `anthropic("…")` self-wires the provider — no registry required.
-
-   ```ts
-   import { agent } from "mithril";
-   import { anthropic } from "mithril/anthropic";
-
-   const assistant = agent({
-     model: anthropic("claude-fable-5"),
-     instructions: "You are a concise weather assistant.",
-     tools: [weather],
-   });
-   ```
-
-3. **Run it.** With no dependencies, `run` takes no options object — the API key comes from
-   `ANTHROPIC_API_KEY`.
-
-   ```ts
-   const result = await assistant.run("What's the weather in Istanbul?");
-   if (result.status === "completed") console.log(result.output);
-   ```
-
-</Steps>
-
-## Watch the event stream
-
-Prefer streaming? `stream()` returns a handle you can iterate for typed events or plain text:
+Here's the whole thing — a **tool**, an **agent**, and a **run**. This is real, shippable code:
 
 ```ts
-const run = assistant.stream("What's the weather in Istanbul?");
-for await (const delta of run.text) process.stdout.write(delta);
-const final = await run.result();
+import { agent, tool } from "mithril";
+import { anthropic } from "mithril/anthropic";
+import { z } from "zod"; // any Standard Schema validator
+
+const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
+});
+
+const assistant = agent({
+  model: anthropic("claude-fable-5"), // self-wires the provider; key from ANTHROPIC_API_KEY
+  instructions: "You are a concise weather assistant.",
+  tools: [weather],
+});
+
+const result = await assistant.run("What's the weather in Istanbul?");
+if (result.status === "completed") console.log(result.output);
 ```
 
-## Run it right now — no API key
+- **The tool** is a name, a description the model reads, an `inputSchema` (any Standard Schema
+  validator), and an `execute` function. Its input and output types are inferred for you.
+- **The agent** takes a model, instructions, and its tools. The handle `anthropic("claude-fable-5")`
+  self-wires the provider — no registry, just the `ANTHROPIC_API_KEY` env var.
+- **The run** drives the loop. `assistant.run(input)` returns a `RunResult` you branch on by
+  `.status`; `assistant.stream(input)` gives you tokens as they arrive (below).
 
-The scripted provider replays model turns with zero network, so you can run this exact loop in
-the browser. Open it in the playground and watch `run.start → tool.call → tool.result →
-text.delta → run.finish` stream in:
+### Run it here — no key
 
-<Runnable title="quickstart.ts" code={`import { agent, tool } from "mithril";
+The exact same agent, but a **scripted model** stands in for the provider so it runs offline in your
+browser. Click **Open in playground** — the tool call and answer stream into the inspector:
+
+<Runnable title="quickstart.ts" highlight={["16-22"]} code={`import { agent, tool } from "mithril";
 import { scriptedProvider, testModel } from "@mithril/core/testkit";
 import { z } from "zod";
 
@@ -90,19 +72,57 @@ const weather = tool({
   execute: async ({ city }) => ({ city, tempC: 21 }),
 });
 
-const assistant = agent({
-  model,
-  instructions: "You are a concise weather assistant.",
-  tools: [weather],
-});
+const assistant = agent({ model, instructions: "You are a concise weather assistant.", tools: [weather] });
 
 await run(assistant, "What's the weather in Istanbul?");`} />
 
-<Aside type="note" title="What's `usage` and `run`?">
-Those two are provided by the playground harness so scripted examples stay terse — `run(agent,
-input)` streams the agent into the inspector, and `usage` is a default token/cost delta. In a
-real app you'd call `assistant.run(...)` or `assistant.stream(...)` yourself.
+<Aside type="note" title="What changed for the playground?">
+Only the model wiring. The `testModel(scriptedProvider(…))` block replaces `anthropic("claude-fable-5")`
+so there's no network or key, and `run(agent, input)` / `usage` are playground globals that keep
+snippets terse. In your own app you write the real version above — `assistant.run(...)`. See
+[The playground](/getting-started/the-playground/) for the full list of injected globals.
 </Aside>
+
+## Watch the event stream
+
+Prefer streaming? `stream()` returns a handle you iterate for plain text or typed events — same
+agent, no `await` on the whole result:
+
+```ts
+const handle = assistant.stream("What's the weather in Istanbul?");
+for await (const delta of handle.text) process.stdout.write(delta);
+const { status } = await handle.result();
+```
+
+The playground version below runs it offline — watch the console fill token by token (highlighted):
+
+<Runnable title="streaming.ts" highlight={["26-28"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const model = testModel(scriptedProvider([
+  [
+    { type: "tool.call", callId: "c1", name: "weather", input: { city: "Istanbul" } },
+    { type: "message.end", finishReason: "tool_calls", usage },
+  ],
+  [
+    { type: "text.delta", delta: "It's 21°C and clear in Istanbul." },
+    { type: "message.end", finishReason: "stop", usage },
+  ],
+]));
+
+const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
+});
+
+const assistant = agent({ model, instructions: "You are a concise weather assistant.", tools: [weather] });
+
+const handle = assistant.stream("What's the weather in Istanbul?");
+for await (const delta of handle.text) console.log(delta);
+console.log("status:", (await handle.result()).status);`} />
 
 ## Where to go next
 

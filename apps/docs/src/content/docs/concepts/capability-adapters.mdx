@@ -7,6 +7,7 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 
 A file system, a key-value store, a vector index — these exist on every runtime, but not
 identically. If your tool reaches for `node:fs`, it breaks in the browser. Mithril's answer is a
@@ -32,17 +33,21 @@ Every capability falls into one of three buckets:
 </Aside>
 
 So `@mithril/fs` is async-only, path-based, and **rooted** (it cannot escape its base directory).
-You pick the backend explicitly:
+You pick the backend explicitly (highlighted). The example below runs the in-memory backend in the
+browser; swap it for `nodeFileSystem({ root })` on a server or `opfsFileSystem()` in a browser tab —
+same interface, same rooted-confinement guarantee:
 
-```ts
-import { nodeFileSystem } from "@mithril/fs/node";   // server
-// import { opfsFileSystem } from "@mithril/fs/opfs"; // browser
-// import { memoryFileSystem } from "@mithril/fs";     // tests
+<Runnable title="fs.ts" highlight={[1]} code={`import { memoryFileSystem } from "@mithril/fs"; // browser-safe; nodeFileSystem / opfsFileSystem are drop-in
 
-const fs = nodeFileSystem("./workspace");
+const fs = memoryFileSystem();
 await fs.writeFile("notes/todo.md", "- ship it");
-await fs.readText("../../../etc/passwd"); // throws — escapes the root
-```
+console.log(await fs.readText("notes/todo.md"));
+
+try {
+  await fs.readText("../../../etc/passwd"); // rooted: escaping the base directory throws
+} catch (e) {
+  console.log("blocked:", e.message);
+}`} />
 
 Each adapter ships a **conformance kit**, so every backend meets identical observable semantics —
 your tool behaves the same whether it's talking to memory, Node's fs, or OPFS.

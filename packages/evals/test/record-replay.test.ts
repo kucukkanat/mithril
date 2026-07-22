@@ -87,3 +87,44 @@ test("fsTrajectoryStore persists via a minimal FileSystem surface", async () => 
   expect(await store.get("case one")).toBe("hello");
   expect([...files.keys()][0]).toBe("fx/case_one.json"); // sanitized key
 });
+
+test("replay keyed on input hash: changing a case's input misses the stale fixture", async () => {
+  const { runEvalCached, memoryTrajectoryStore, calledTool } = await import("../src/index.ts");
+  const store = memoryTrajectoryStore();
+  const { a } = makeAgent();
+  const recorded = [{ name: "case-1", input: "original question", scorers: [calledTool("search")] }];
+  for await (const _ of runEvalCached(a, recorded, { deps: undefined, mode: "record", store })) void _;
+
+  // Same name, different input → must NOT resolve to the recorded trajectory.
+  const changed = [{ name: "case-1", input: "a totally different question", scorers: [calledTool("search")] }];
+  let threw = false;
+  try {
+    for await (const _ of runEvalCached(a, changed, { deps: undefined, mode: "replay", store })) void _;
+  } catch (e) {
+    threw = true;
+    expect((e as Error).message).toContain("input may have changed");
+  }
+  expect(threw).toBe(true);
+});
+
+test("trajectoryToScript rebuilds a script that re-runs the real loop and tools", async () => {
+  const { runEval, trajectoryToScript, calledTool, completed } = await import("../src/index.ts");
+  const { scriptedProvider, testModel } = await import("@mithril/core/testkit");
+  const { agent: buildAgent, tool: buildTool } = await import("@mithril/core/agent");
+
+  // Record a real run.
+  const { a } = makeAgent();
+  let recorded;
+  for await (const r of runEval(a, [{ name: "rec", input: "go", scorers: [completed()] }])) recorded = r;
+
+  // Rebuild a script from the recording and run a fresh agent whose tool ACTUALLY executes.
+  let toolRan = 0;
+  const search = buildTool({ name: "search", description: "", inputSchema: schema<{ q: string }>(), execute: async () => { toolRan++; return { hits: [] }; } });
+  const script = trajectoryToScript(recorded!.trajectory);
+  const replayed = buildAgent({ model: testModel(scriptedProvider(script)), instructions: "help", tools: [search] });
+  const runs = [];
+  for await (const r of runEval(replayed, [{ name: "replayed", input: "go", scorers: [calledTool("search"), completed()] }])) runs.push(r);
+
+  expect(toolRan).toBeGreaterThan(0); // the REAL tool ran during replay (unlike event-log replay)
+  expect(runs[0]?.passed).toBe(true);
+});

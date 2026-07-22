@@ -5,7 +5,7 @@ prev: false
 title: "EvalCase"
 ---
 
-Defined in: index.ts:51
+Defined in: [index.ts:52](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L52)
 
 One evaluation case: a named input paired with the [Scorer](/reference/evals/type-aliases/scorer/)s to apply to its resulting trajectory.
 
@@ -23,7 +23,7 @@ One evaluation case: a named input paired with the [Scorer](/reference/evals/typ
 readonly input: Input;
 ```
 
-Defined in: index.ts:53
+Defined in: [index.ts:54](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L54)
 
 ***
 
@@ -33,7 +33,7 @@ Defined in: index.ts:53
 readonly name: string;
 ```
 
-Defined in: index.ts:52
+Defined in: [index.ts:53](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L53)
 
 ***
 
@@ -43,4 +43,4 @@ Defined in: index.ts:52
 readonly scorers: readonly Scorer<Ctx>[];
 ```
 
-Defined in: index.ts:54
+Defined in: [index.ts:55](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L55)

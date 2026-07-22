@@ -36,3 +36,39 @@ test("subscribers are notified as events arrive", async () => {
   unsub();
   expect(notifications).toBeGreaterThan(0);
 });
+
+test("idleRunStore reports a stable empty snapshot and never notifies", async () => {
+  const { idleRunStore, IDLE_SNAPSHOT } = await import("../src/index.ts");
+  const store = idleRunStore();
+  expect(store.getSnapshot()).toBe(IDLE_SNAPSHOT);
+  expect(store.getSnapshot().text).toBe("");
+  expect(store.getSnapshot().events).toEqual([]);
+  let notified = false;
+  const unsub = store.subscribe(() => { notified = true; });
+  unsub();
+  expect(notified).toBe(false);
+});
+
+test("createChatStore accumulates a multi-turn conversation", async () => {
+  const { createChatStore } = await import("../src/index.ts");
+  const echo = tool({ name: "echo", description: "", inputSchema: schema<{ s: string }>(), execute: async () => ({}) });
+  const turns: ProviderChunk[][] = [
+    [{ type: "text.delta", delta: "Hi " }, { type: "text.delta", delta: "there" }, { type: "message.end", usage: NO_USAGE, finishReason: "stop" }],
+  ];
+  const a = agent({ model: testModel(scriptedProvider(turns)), instructions: "x", tools: [echo] });
+  const store = createChatStore(a);
+  expect(store.getSnapshot().status).toBe("idle");
+
+  store.send("hello");
+  expect(store.getSnapshot().status).toBe("streaming");
+  expect(store.getSnapshot().messages).toEqual([{ role: "user", content: "hello" }]);
+
+  await new Promise((r) => setTimeout(r, 40));
+  const snap = store.getSnapshot();
+  expect(snap.status).toBe("idle");
+  expect(snap.messages).toEqual([
+    { role: "user", content: "hello" },
+    { role: "assistant", content: "Hi there" },
+  ]);
+  expect(snap.streaming).toBe("");
+});

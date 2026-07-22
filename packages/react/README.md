@@ -7,8 +7,8 @@ Headless React bindings for streaming agent runs. The logic lives in a framework
 import { useRun } from "@mithril/react/hooks";
 
 function Chat({ assistant }) {
-  const [handle, setHandle] = useState(null);
-  const run = useRun(handle ?? EMPTY); // { text, status, state, events, costUsd }
+  const [handle, setHandle] = useState(undefined);
+  const run = useRun(handle); // undefined until the first run → an empty idle snapshot
 
   return (
     <>
@@ -31,4 +31,6 @@ store.subscribe(() => render(store.getSnapshot()));
 ## API
 
 - `@mithril/react` → `createRunStore(source)` → `{ subscribe, getSnapshot }`; `RunSnapshot = { state, text, status, events, costUsd }`.
-- `@mithril/react/hooks` → `useRun(source)`, `useObject(source)` (streamed structured output). `react` is a peer dep.
+- `@mithril/react` → `createChatStore(agent)` → `{ subscribe, getSnapshot, send }` for multi-turn chat (`ChatSnapshot = { messages, streaming, status }`).
+- `@mithril/react/hooks` → `useRun(source)`, `useObject(source)` (streamed structured output), and
+  `useChat(agent)` → `{ messages, streaming, status, send }` for a multi-turn conversation. `react` is a peer dep.

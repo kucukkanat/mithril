@@ -20,9 +20,9 @@ type RunEvalCachedOptions<Deps, Ctx> = RunEvalOptions<Deps, Ctx> &
 };
 ```
 
-Defined in: index.ts:230
+Defined in: [index.ts:296](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L296)
 
-Options for [runEvalCached](/reference/evals/functions/runevalcached/): the base [RunEvalOptions](/reference/evals/interfaces/runevaloptions/) plus a discriminated cache `mode`.
+Options for [runEvalCached](/reference/evals/functions/runevalcached/): the base [RunEvalOptions](/reference/evals/type-aliases/runevaloptions/) plus a discriminated cache `mode`.
 
 ## Type Parameters
 

@@ -19,6 +19,6 @@ type EngineChunk =
 };
 ```
 
-Defined in: transformers/core.ts:22
+Defined in: [transformers/core.ts:22](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/core.ts#L22)
 
 One item a [TransformersEngine](/reference/providers/transformers/interfaces/transformersengine/) yields: a visible text token, or a fully-parsed tool call.

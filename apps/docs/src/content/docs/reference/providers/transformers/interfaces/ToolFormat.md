@@ -5,7 +5,7 @@ prev: false
 title: "ToolFormat"
 ---
 
-Defined in: transformers/tool-formats.ts:16
+Defined in: [transformers/tool-formats.ts:16](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/tool-formats.ts#L16)
 
 How one model family delimits + encodes tool calls in generated text.
 
@@ -22,7 +22,7 @@ to end-of-stream). `extract` turns the raw payload between them into zero-or-mor
 readonly end: string | null;
 ```
 
-Defined in: transformers/tool-formats.ts:19
+Defined in: [transformers/tool-formats.ts:19](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/tool-formats.ts#L19)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: transformers/tool-formats.ts:19
 readonly name: string;
 ```
 
-Defined in: transformers/tool-formats.ts:17
+Defined in: [transformers/tool-formats.ts:17](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/tool-formats.ts#L17)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: transformers/tool-formats.ts:17
 readonly start: string;
 ```
 
-Defined in: transformers/tool-formats.ts:18
+Defined in: [transformers/tool-formats.ts:18](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/tool-formats.ts#L18)
 
 ## Methods
 
@@ -55,7 +55,7 @@ extract(payload): {
 }[];
 ```
 
-Defined in: transformers/tool-formats.ts:20
+Defined in: [transformers/tool-formats.ts:20](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/tool-formats.ts#L20)
 
 #### Parameters
 

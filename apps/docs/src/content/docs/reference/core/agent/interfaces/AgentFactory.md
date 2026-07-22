@@ -5,7 +5,7 @@ prev: false
 title: "AgentFactory"
 ---
 
-Defined in: packages/core/src/agent/agent-types.ts:183
+Defined in: [packages/core/src/agent/agent-types.ts:194](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L194)
 
 A `Deps`-bound agent constructor: call it with an [AgentConfig](/reference/core/agent/interfaces/agentconfig/) to get an [Agent](/reference/core/agent/interfaces/agent/).
 
@@ -24,7 +24,7 @@ don't have to restate `<Deps>` at each call site. `Tools` and `Out` are inferred
 AgentFactory<Tools, Out>(config): Agent<Tools, Deps, Out>;
 ```
 
-Defined in: packages/core/src/agent/agent-types.ts:184
+Defined in: [packages/core/src/agent/agent-types.ts:195](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L195)
 
 A `Deps`-bound agent constructor: call it with an [AgentConfig](/reference/core/agent/interfaces/agentconfig/) to get an [Agent](/reference/core/agent/interfaces/agent/).
 

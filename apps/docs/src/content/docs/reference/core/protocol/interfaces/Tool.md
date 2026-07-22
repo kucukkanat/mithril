@@ -5,7 +5,7 @@ prev: false
 title: "Tool"
 ---
 
-Defined in: packages/core/src/protocol/tool.ts:27
+Defined in: [packages/core/src/protocol/tool.ts:27](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L27)
 
 A typed tool: Standard Schema in/out plus typed dependency injection.
 
@@ -33,7 +33,7 @@ returns the final output.
 readonly description: string;
 ```
 
-Defined in: packages/core/src/protocol/tool.ts:29
+Defined in: [packages/core/src/protocol/tool.ts:29](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L29)
 
 ***
 
@@ -43,7 +43,7 @@ Defined in: packages/core/src/protocol/tool.ts:29
 readonly inputSchema: StandardSchemaV1<unknown, In>;
 ```
 
-Defined in: packages/core/src/protocol/tool.ts:32
+Defined in: [packages/core/src/protocol/tool.ts:32](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L32)
 
 ***
 
@@ -53,7 +53,7 @@ Defined in: packages/core/src/protocol/tool.ts:32
 readonly name: Name;
 ```
 
-Defined in: packages/core/src/protocol/tool.ts:28
+Defined in: [packages/core/src/protocol/tool.ts:28](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L28)
 
 ***
 
@@ -63,7 +63,7 @@ Defined in: packages/core/src/protocol/tool.ts:28
 readonly optional needsApproval?: boolean | ((input, ctx) => boolean | Promise<boolean>);
 ```
 
-Defined in: packages/core/src/protocol/tool.ts:35
+Defined in: [packages/core/src/protocol/tool.ts:35](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L35)
 
 Whether the call requires human approval; a predicate can decide per-input.
 
@@ -75,7 +75,7 @@ Whether the call requires human approval; a predicate can decide per-input.
 readonly optional outputSchema?: StandardSchemaV1<unknown, JsonSafe<Out>>;
 ```
 
-Defined in: packages/core/src/protocol/tool.ts:33
+Defined in: [packages/core/src/protocol/tool.ts:33](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L33)
 
 ***
 
@@ -85,7 +85,7 @@ Defined in: packages/core/src/protocol/tool.ts:33
 readonly optional version?: string;
 ```
 
-Defined in: packages/core/src/protocol/tool.ts:31
+Defined in: [packages/core/src/protocol/tool.ts:31](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L31)
 
 Optional version, stamped onto `tool.call` and diffed on durable resume for drift.
 
@@ -103,7 +103,7 @@ execute(input, ctx):
 | Suspend<JsonSafe<Out>>, any>;
 ```
 
-Defined in: packages/core/src/protocol/tool.ts:36
+Defined in: [packages/core/src/protocol/tool.ts:36](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/tool.ts#L36)
 
 #### Parameters
 

@@ -14,8 +14,16 @@ import { dirname, join } from "node:path";
 // Scaffolds a runnable Mithril app in <10 lines of user-facing code — the strongest DX statement is the
 // first-run experience. Templates return a { path: contents } map so the generator is pure and testable.
 
-/** The available starter templates. `node-cli` and `bun-server` produce a CLI entry; `react-chat` exports the agent for a UI. */
+/** The available starter templates: a streaming CLI, a streaming HTTP server, or a React chat component. */
 export type Template = "node-cli" | "bun-server" | "react-chat";
+
+/** The templates, as a runtime-checkable list (used to validate the CLI argument). */
+export const TEMPLATES: readonly Template[] = ["node-cli", "bun-server", "react-chat"];
+
+/** Type guard: is `s` one of the known {@link Template}s? */
+export function isTemplate(s: string): s is Template {
+  return (TEMPLATES as readonly string[]).includes(s);
+}
 
 const AGENT_TS = `import { agent, tool } from "mithril";
 import { openai } from "mithril/openai";
@@ -35,52 +43,117 @@ export const assistant = agent({
 });
 `;
 
+// A streaming CLI: prints the answer token-by-token, then reports a non-completed status.
+const NODE_CLI_MAIN = `import { assistant } from "./agent.ts";
+
+const input = process.argv.slice(2).join(" ") || "Weather in Istanbul?";
+const handle = assistant.stream(input);
+for await (const delta of handle.text) process.stdout.write(delta);
+process.stdout.write("\\n");
+const result = await handle.result();
+if (result.status !== "completed") console.error(\`Run ended: \${result.status}\`);
+`;
+
+// A real HTTP server that streams a run's text over the wire — the "serve an agent" starting point.
+const BUN_SERVER_MAIN = `import { assistant } from "./agent.ts";
+
+const server = Bun.serve({
+  port: Number(process.env.PORT ?? 3000),
+  fetch(req) {
+    const input = new URL(req.url).searchParams.get("q") ?? "Weather in Istanbul?";
+    const handle = assistant.stream(input);
+    const body = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        const enc = new TextEncoder();
+        for await (const delta of handle.text) controller.enqueue(enc.encode(delta));
+        controller.close();
+      },
+    });
+    return new Response(body, { headers: { "content-type": "text/plain; charset=utf-8" } });
+  },
+});
+console.log(\`Listening on http://localhost:\${server.port} — try /?q=Weather+in+Paris\`);
+`;
+
+// A headless React chat component wired to useRun. Bring your own bundler (e.g. Vite) to render it.
+const REACT_CHAT_TSX = `import { useState } from "react";
+import { useRun, type RunSource } from "@mithril/react/hooks";
+import { assistant } from "./agent.ts";
+
+export function Chat() {
+  const [handle, setHandle] = useState<RunSource | undefined>(undefined);
+  const run = useRun(handle); // undefined until the first run → an empty idle snapshot
+
+  return (
+    <div>
+      <button onClick={() => setHandle(assistant.stream("Weather in Istanbul?"))}>Ask</button>
+      <pre>{run.text}</pre>
+      <small>{run.status}</small>
+    </div>
+  );
+}
+`;
+
+interface TemplatePlan {
+  readonly entry: readonly [path: string, contents: string];
+  readonly extraDeps: Readonly<Record<string, string>>;
+  readonly runHint: string;
+}
+
+function planFor(template: Template): TemplatePlan {
+  switch (template) {
+    case "node-cli":
+      return { entry: ["src/main.ts", NODE_CLI_MAIN], extraDeps: {}, runHint: "OPENAI_API_KEY=… bun run start" };
+    case "bun-server":
+      return { entry: ["src/main.ts", BUN_SERVER_MAIN], extraDeps: {}, runHint: "OPENAI_API_KEY=… bun run start  # then open http://localhost:3000/?q=Weather+in+Paris" };
+    case "react-chat":
+      return {
+        entry: ["src/Chat.tsx", REACT_CHAT_TSX],
+        extraDeps: { react: "^19", "react-dom": "^19", "@mithril/react": "^0" },
+        runHint: "render <Chat /> with your bundler of choice (e.g. Vite); set OPENAI_API_KEY for live runs",
+      };
+  }
+}
+
 /**
  * Generate the files for a Mithril app as an in-memory map — pure, no disk I/O.
  *
  * @remarks
- * Always emits `package.json`, `src/agent.ts`, `README.md`, and a `src/main.ts` whose contents depend
- * on `template`. Being side-effect-free, it is trivially testable; use {@link createApp} to write the result.
+ * Always emits `package.json`, `src/agent.ts`, and `README.md`, plus a template-specific entry: a streaming
+ * `src/main.ts` CLI (`node-cli`), a streaming `Bun.serve` HTTP server in `src/main.ts` (`bun-server`), or a
+ * `useRun`-wired `src/Chat.tsx` component (`react-chat`, whose `package.json` includes the React deps).
+ * Being side-effect-free, it is trivially testable; use {@link createApp} to write the result.
  *
  * @param template - Which starter to generate.
  * @param appName - Used as the package `name` and in the generated README.
  * @returns A map of relative file path to file contents.
  * @example
  * ```ts
- * const files = scaffold("node-cli", "my-agent");
+ * const files = scaffold("bun-server", "my-agent");
  * Object.keys(files); // ["package.json", "src/agent.ts", "README.md", "src/main.ts"]
  * ```
  */
 export function scaffold(template: Template, appName: string): Readonly<Record<string, string>> {
+  const plan = planFor(template);
+  const [entryPath, entryContents] = plan.entry;
+  const isServerLike = template === "node-cli" || template === "bun-server";
   const pkg = JSON.stringify(
     {
       name: appName,
       private: true,
       type: "module",
-      scripts: { start: "bun run src/main.ts" },
-      dependencies: { mithril: "^0", zod: "^3" },
+      ...(isServerLike ? { scripts: { start: "bun run src/main.ts" } } : {}),
+      dependencies: { mithril: "^0", zod: "^4", ...plan.extraDeps },
     },
     null,
     2,
   );
-  const files: Record<string, string> = {
+  return {
     "package.json": `${pkg}\n`,
     "src/agent.ts": AGENT_TS,
-    "README.md": `# ${appName}\n\nRun: \`OPENAI_API_KEY=… bun run start\`\n`,
+    [entryPath]: entryContents,
+    "README.md": `# ${appName}\n\nRun: \`${plan.runHint}\`\n`,
   };
-  if (template === "node-cli" || template === "bun-server") {
-    files["src/main.ts"] = `import { assistant } from "./agent.ts";
-
-const { output } = await assistant.run(process.argv.slice(2).join(" ") || "Weather in Istanbul?");
-console.log(output);
-`;
-  } else {
-    files["src/main.ts"] = `import { assistant } from "./agent.ts";
-// Wire assistant.stream(...) into useRun from "@mithril/react/hooks" in your component.
-export { assistant };
-`;
-  }
-  return files;
 }
 
 /**

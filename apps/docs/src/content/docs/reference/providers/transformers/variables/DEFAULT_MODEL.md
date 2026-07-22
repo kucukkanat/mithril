@@ -9,6 +9,6 @@ title: "DEFAULT_MODEL"
 const DEFAULT_MODEL: "onnx-community/Qwen3-0.6B-ONNX" = "onnx-community/Qwen3-0.6B-ONNX";
 ```
 
-Defined in: transformers/index.ts:29
+Defined in: [transformers/index.ts:29](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/index.ts#L29)
 
 The default model — the smallest ONNX chat model with a verified tool-call template (`~0.4 GB`, WebGPU/WASM).

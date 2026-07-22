@@ -25,8 +25,8 @@ const toRecord = (r: Row): CheckpointRecord => ({
 /**
  * Creates a durable {@link Checkpointer} backed by `bun:sqlite` (Bun runtime only).
  *
- * @param path - SQLite database file path. Defaults to `":memory:"` (process-lifetime only); pass a file
- *   path for persistence across restarts.
+ * @param pathOrOpts - the SQLite database file path, or `{ path }`. Defaults to `":memory:"`
+ *   (process-lifetime only); pass a file path for persistence across restarts.
  * @returns A {@link Checkpointer} with the same semantics as {@link memoryCheckpointer}, persisted to SQLite.
  *
  * @remarks
@@ -41,7 +41,8 @@ const toRecord = (r: Row): CheckpointRecord => ({
  * await cp.put({ runId: "r1", checkpointId: "c1", parentId: null, token: "…", status: "suspended", createdAt: new Date().toISOString() });
  * ```
  */
-export function sqliteBunCheckpointer(path = ":memory:"): Checkpointer {
+export function sqliteBunCheckpointer(pathOrOpts?: string | { readonly path?: string }): Checkpointer {
+  const path = (typeof pathOrOpts === "string" ? pathOrOpts : pathOrOpts?.path) ?? ":memory:";
   const db = new Database(path);
   db.run(
     `CREATE TABLE IF NOT EXISTS checkpoints (

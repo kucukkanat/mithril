@@ -20,8 +20,9 @@ import type { JsonValue, StandardSchemaV1, Tool } from "@mithril/core/protocol";
  * The transport you implement to carry MCP JSON-RPC calls to a server.
  *
  * @remarks
- * This package provides no concrete transport — implement this interface over HTTP/SSE, stdio, or an
- * in-memory server (which is how the client is tested). Passed to {@link mcpClient}.
+ * An official Streamable-HTTP transport ships at `@mithril/mcp/http` ({@link httpTransport}). Implement
+ * this interface yourself only for other carriers — stdio, or the in-memory server the client is tested
+ * against. Passed to {@link mcpClient}.
  */
 export interface McpTransport {
   /** Send an MCP JSON-RPC request (e.g. `"tools/list"`, `"tools/call"`) and resolve its result. */
@@ -57,14 +58,11 @@ export interface McpClient {
  * @returns A client that can list and call the server's tools.
  * @example
  * ```ts
- * import { mcpClient, mcpTools, type McpTransport } from "@mithril/mcp";
+ * import { mcpClient, mcpTools } from "@mithril/mcp";
+ * import { httpTransport } from "@mithril/mcp/http";
  *
- * // You implement the transport — this package ships none.
- * const transport: McpTransport = {
- *   request: (method, params) => rpc.send(method, params),
- * };
- *
- * const client = mcpClient(transport);
+ * // Use the official Streamable-HTTP transport (or implement McpTransport for stdio/in-memory).
+ * const client = mcpClient(httpTransport({ url: "https://example.com/mcp" }));
  * const tools = await mcpTools(client); // hand these to an agent
  * ```
  */

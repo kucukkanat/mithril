@@ -9,7 +9,7 @@ title: "addUsage"
 function addUsage(totals, delta): UsageTotals;
 ```
 
-Defined in: packages/core/src/protocol/primitives.ts:90
+Defined in: [packages/core/src/protocol/primitives.ts:90](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/primitives.ts#L90)
 
 Immutably sum a totals accumulator and a per-event delta.
 

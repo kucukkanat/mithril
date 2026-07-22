@@ -29,7 +29,7 @@ const readDoc = tool({
 | Import | Runtime |
 |---|---|
 | `@mithril/fs` → `memoryFileSystem()` | any |
-| `@mithril/fs/node` → `nodeFileSystem(root)` | Node / Bun (root-confined) |
+| `@mithril/fs/node` → `nodeFileSystem(root | { root })` | Node / Bun (root-confined) |
 | `@mithril/fs/opfs` → `opfsFileSystem()` | browser (Origin Private File System) |
 
 ## API

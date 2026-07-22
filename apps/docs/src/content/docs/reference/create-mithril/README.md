@@ -16,7 +16,12 @@ Scaffold a runnable Mithril app from a template.
 
 - [Template](/reference/create-mithril/type-aliases/template/)
 
+## Variables
+
+- [TEMPLATES](/reference/create-mithril/variables/templates/)
+
 ## Functions
 
 - [createApp](/reference/create-mithril/functions/createapp/)
+- [isTemplate](/reference/create-mithril/functions/istemplate/)
 - [scaffold](/reference/create-mithril/functions/scaffold/)

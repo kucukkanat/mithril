@@ -1,0 +1,102 @@
+---
+title: The playground
+description: How the in-browser playground runs your code — and the run(), usage, and console globals it injects.
+sidebar:
+  order: 4
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Every runnable example in these docs — the **Open in playground** button, and every `<Runnable>`
+snippet — executes in an in-browser playground. It transpiles your TypeScript with
+[sucrase](https://github.com/alangpierce/sucrase) and runs it inside a **Web Worker**, so a runaway
+loop can be terminated and your code never blocks the page. The `@mithril/*` modules you `import` are
+the **real, published packages** — the same code that ships to npm — not stubs.
+
+To keep example snippets terse, the playground injects a few **globals you don't import**: `run`,
+`usage`, and a shimmed `console`. This page documents them — especially `run`, which is easy to
+confuse with the framework's `Agent.run` method.
+
+## `run(agent, input, opts?)` — the playground helper
+
+`run` is **not part of the framework.** It exists only inside the playground worker, injected as a
+global so scripted snippets can stream an agent into the inspector in one line:
+
+```ts
+await run(assistant, "What's the weather in Istanbul?");
+```
+
+What it does under the hood:
+
+1. Calls `agent.stream(input, opts)` and forwards **every** `MithrilEvent` to the inspector panel as
+   it arrives.
+2. Cooperatively handles [suspension](/concepts/suspension/): if the run suspends on a human-in-the-loop
+   approval, it surfaces the request in the UI, waits for your decision, and `resume()`s with the
+   token — repeating for chained approvals.
+3. Returns the terminal `RunResult` once the run finishes.
+
+The optional third argument is forwarded straight to `agent.stream`, so per-run options work exactly
+as they do in your app:
+
+```ts
+await run(assistant, "Where can I run this?", { deps: { vectors: store } });
+```
+
+<Aside type="caution" title="Argument order differs from `Agent.run`">
+The playground helper takes the **agent first**: `run(agent, input)`. The framework method takes the
+**input first**: `agent.run(input)` — the agent is the receiver. Same word, reversed arguments,
+different thing. See the table below.
+</Aside>
+
+### `run(...)` vs. `agent.run(...)` vs. `agent.stream(...)`
+
+| Call | What it is | First argument | Returns |
+| --- | --- | --- | --- |
+| `run(agent, input, opts?)` | **Playground-only** global (wraps `.stream`) | the **agent** | the terminal `RunResult` |
+| `agent.run(input, opts?)` | Framework method — drains the loop | the **input** | `Promise<RunResult>` |
+| `agent.stream(input, opts?)` | Framework method — incremental | the **input** | a `RunHandle` you iterate |
+
+In your own code you never call `run` — you call `assistant.run(...)` (read `result.output`) or
+`assistant.stream(...)` (iterate `handle.events` / `handle.text`). The playground helper just spares
+each snippet from re-writing the stream-and-inspect plumbing.
+
+## `usage` — a default token/cost delta
+
+Scripted model turns need a `UsageDelta` to report, and spelling one out in every example would be
+noise. The playground injects a sensible default so you can drop it straight into a scripted
+`message.end`:
+
+```ts
+{ type: "message.end", finishReason: "stop", usage }
+```
+
+It's a constant equivalent to:
+
+```ts
+const usage = { input: 8, output: 24, cacheRead: 0, cacheWrite: 0, reasoning: 0, costMicroUsd: 600 };
+```
+
+In a real app, usage is reported by the provider — you never construct it yourself.
+
+## `console`
+
+`console.log` / `info` / `warn` / `error` / `debug` are shimmed to pipe their output into the
+playground's console panel (objects are JSON-stringified). Use them exactly as you would in Node or
+the browser.
+
+## What you can import
+
+The playground's `require` shim resolves only the real Mithril entrypoints and `zod`:
+
+`mithril`, `mithril/anthropic`, `mithril/openai`, `mithril/transformers`, `@mithril/providers/google`,
+`@mithril/core/agent`, `@mithril/core/protocol`, `@mithril/core/testkit`, `@mithril/evals`,
+`@mithril/memory`, `@mithril/kv`, `@mithril/fs`, `@mithril/vectors`, `@mithril/workflows`,
+`@mithril/otel`, and `zod`. Importing anything else throws with the list of what's available.
+
+<Aside type="note" title="Run targets">
+The picker in the playground's **Run against** bar has three targets: **scripted** (the default —
+zero network, model turns come from `scriptedProvider`), **live** (BYOK — your key is injected as
+`process.env.<PROVIDER>_API_KEY` and sent straight to the real provider), and **local** (an on-device
+Transformers.js model). The injected globals behave identically across all three; only the model
+source changes.
+</Aside>

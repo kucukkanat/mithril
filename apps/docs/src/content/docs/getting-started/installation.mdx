@@ -30,13 +30,13 @@ pnpm create mithril my-agent
   </TabItem>
 </Tabs>
 
-Pick a template when prompted:
+Pass a template as the second argument (defaults to `node-cli`), e.g. `bunx create-mithril my-agent bun-server`:
 
 | Template | What it is |
 | --- | --- |
-| `node-cli` | A streaming CLI agent for Node. |
-| `bun-server` | An HTTP server that streams a run over the wire. |
-| `react-chat` | A headless React chat UI wired to `useRun`. |
+| `node-cli` | A streaming CLI agent (`bun run start`). |
+| `bun-server` | A `Bun.serve` HTTP server that streams a run over the wire. |
+| `react-chat` | A `useRun`-wired React chat component (bring your own bundler). |
 
 <Aside type="tip">
 Mithril ships as **source-as-published ESM** — no build step in the library itself, strict

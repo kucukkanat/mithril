@@ -72,16 +72,32 @@ Everything below is implemented and tested against the source — not aspiration
   client, deterministic **workflows**, and headless **React** bindings.
 
 <Aside type="note">
-Some parts of the v1 spec aren't shipped yet (streaming resume, a visual devtools UI, the
-Standard-Schema → JSON-Schema converter, and more). Mithril documents only what's real — the
-rest lives on the honest [Roadmap](/roadmap/).
+Some parts of the v1 spec aren't shipped yet (a standalone studio app, realtime/voice, ANN-indexed
+vector backends, and durable persistence wired directly into `run()`, among others). Mithril documents
+only what's real — the rest lives on the honest [Roadmap](/roadmap/).
 </Aside>
 
-## Next steps
+## Start here
+
+The short path from zero to a running agent — in order:
+
+1. **[Install](/getting-started/installation/)** — scaffold a runnable app with `create-mithril`,
+   or add `mithril` to an existing project.
+2. **[Quickstart](/getting-started/quickstart/)** — build a tool-using agent and watch its event
+   stream. Runs in your browser, no key.
+3. **[Defining tools](/guides/defining-tools/)** → **[Building agents](/guides/building-agents/)**
+   — the two guides that cover the 90% path.
+4. **[Streaming](/guides/streaming/)** and **[Structured output](/guides/structured-output/)** —
+   the next two things most apps need.
+
+Then reach for the rest of the [Guides](/guides/defining-tools/) by task as you hit them.
+
+<Aside type="tip" title="Want the “why” first?">
+The [Concepts](/concepts/the-protocol/) section is the nine ideas the whole harness is built on —
+a deeper read you can take any time. It explains the design; it isn't a prerequisite for building.
+</Aside>
 
 <CardGrid>
-  <LinkCard title="Installation" href="/getting-started/installation/" description="Scaffold a runnable app with create-mithril." />
   <LinkCard title="Quickstart" href="/getting-started/quickstart/" description="Build and run your first agent in a few minutes." />
-  <LinkCard title="Concepts" href="/concepts/the-protocol/" description="The nine ideas the whole harness is built on." />
   <LinkCard title="Playground" href="/playground/" description="Run a real agent loop in your browser — no keys." />
 </CardGrid>

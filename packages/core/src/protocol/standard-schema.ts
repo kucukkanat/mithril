@@ -26,7 +26,9 @@ export declare namespace StandardSchemaV1 {
     readonly version: 1;
     readonly vendor: string;
     readonly validate: (value: unknown) => Result<Output> | Promise<Result<Output>>;
-    readonly types?: Types<Input, Output>;
+    // `| undefined` is upstream-verbatim (@standard-schema/spec) and load-bearing: without it a consumer
+    // compiling under `exactOptionalPropertyTypes: true` cannot assign a Zod/Valibot schema here.
+    readonly types?: Types<Input, Output> | undefined;
   }
   export type Result<Output> = SuccessResult<Output> | FailureResult;
   export interface SuccessResult<Output> {
@@ -38,7 +40,7 @@ export declare namespace StandardSchemaV1 {
   }
   export interface Issue {
     readonly message: string;
-    readonly path?: readonly (PropertyKey | PathSegment)[];
+    readonly path?: readonly (PropertyKey | PathSegment)[] | undefined;
   }
   export interface PathSegment {
     readonly key: PropertyKey;

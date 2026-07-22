@@ -5,7 +5,7 @@ prev: false
 title: "ProgressReport"
 ---
 
-Defined in: transformers/edge.ts:31
+Defined in: [transformers/edge.ts:31](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/edge.ts#L31)
 
 A model-download progress report (see [EdgeOptions.onProgress](/reference/providers/transformers/interfaces/transformershandleoptions/#onprogress)).
 
@@ -17,7 +17,7 @@ A model-download progress report (see [EdgeOptions.onProgress](/reference/provid
 readonly optional file?: string;
 ```
 
-Defined in: transformers/edge.ts:33
+Defined in: [transformers/edge.ts:33](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/edge.ts#L33)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: transformers/edge.ts:33
 readonly loaded: number;
 ```
 
-Defined in: transformers/edge.ts:36
+Defined in: [transformers/edge.ts:36](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/edge.ts#L36)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: transformers/edge.ts:36
 readonly progress: number;
 ```
 
-Defined in: transformers/edge.ts:35
+Defined in: [transformers/edge.ts:35](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/edge.ts#L35)
 
 Overall fraction across all files, `0..1`.
 
@@ -49,7 +49,7 @@ Overall fraction across all files, `0..1`.
 readonly status: string;
 ```
 
-Defined in: transformers/edge.ts:32
+Defined in: [transformers/edge.ts:32](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/edge.ts#L32)
 
 ***
 
@@ -59,4 +59,4 @@ Defined in: transformers/edge.ts:32
 readonly total: number;
 ```
 
-Defined in: transformers/edge.ts:37
+Defined in: [transformers/edge.ts:37](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/providers/src/transformers/edge.ts#L37)

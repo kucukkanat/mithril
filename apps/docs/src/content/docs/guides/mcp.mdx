@@ -7,6 +7,7 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 
 An [MCP](https://modelcontextprotocol.io) server exposes tools over a transport. Mithril's client
 lists them and wraps each as a normal Mithril `tool`, so they drop straight into an agent's
@@ -15,41 +16,30 @@ lists them and wraps each as a normal Mithril `tool`, so they drop straight into
 ## The HTTP transport
 
 The official Streamable-HTTP transport ships at `@mithril/mcp/http` — it POSTs JSON-RPC and handles
-either a plain-JSON or a `text/event-stream` reply, with an injectable `fetch`:
+either a plain-JSON or a `text/event-stream` reply, with an injectable `fetch`. In production you'd
+write `httpTransport({ url, headers })`; a transport is just a two-method interface, so the runnable
+below uses an in-memory one (highlighted) — `request(method, params)` is all the client calls:
 
-```ts
-import { httpTransport } from "@mithril/mcp/http";
-
-const transport = httpTransport({
-  url: "https://mcp.example.com/rpc",
-  headers: { authorization: `Bearer ${token}` },
-});
-```
-
-A transport is a two-method interface, so you can still implement your own for **stdio** or an
-**in-memory** server — `request(method, params)` is all the client calls (it issues `"tools/list"`
-and `"tools/call"` and unwraps MCP's `{ content: [...] }` results); add an optional `close()` to
-release resources.
-
-## Wire it up
-
-```ts
+<Runnable title="mcp-agent.ts" runnable={false} highlight={["5-11"]} code={`import { agent } from "mithril";
 import { mcpClient, mcpTools } from "@mithril/mcp";
-import { httpTransport } from "@mithril/mcp/http";
-import { agent } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
 
-const client = mcpClient(httpTransport({ url: "https://mcp.example.com/rpc" }));
+// In your app: import { httpTransport } from "@mithril/mcp/http"; mcpClient(httpTransport({ url }))
+const transport = {
+  async request(method, params) {
+    if (method === "tools/list") return { tools: [{ name: "incidents", description: "List today's incidents." }] };
+    if (method === "tools/call") return { content: [{ type: "text", text: JSON.stringify({ count: 2 }) }] };
+    return {};
+  },
+};
+
+const client = mcpClient(transport);
 const tools = await mcpTools(client); // one Mithril tool per MCP tool
 
-const assistant = agent({
-  model,
-  instructions: "Use the connected tools when helpful.",
-  tools,
-});
-
-const result = await assistant.run("Summarize today's incidents.");
-await client.close();
-```
+const model = testModel(scriptedProvider([toolCallTurn("incidents", {}), textTurn("There were 2 incidents today.")]));
+const assistant = agent({ model, instructions: "Use the connected tools when helpful.", tools });
+console.log((await assistant.run("Summarize today's incidents.")).status);
+await client.close();`} />
 
 From here the MCP tools are indistinguishable from hand-written ones: they call, stream, and record
 into the same event log.
@@ -65,16 +55,26 @@ Standard-Schema bridge that would validate MCP inputs the way a Zod tool does is
 
 The other direction: expose your Mithril tools *as* an MCP server so any MCP client can call them.
 `mcpServer` from `@mithril/mcp/server` implements `initialize`, `tools/list` (advertising each tool's
-real JSON-Schema parameters via `toJsonSchema`), and `tools/call`:
+real JSON-Schema parameters via `toJsonSchema`), and `tools/call`. `serve` is a fetch handler
+(highlighted) — in production you mount it with `Bun.serve({ fetch: (req) => server.serve(req) })`;
+here we call it directly:
 
-```ts
+<Runnable title="mcp-server.ts" runnable={false} highlight={[11]} code={`import { tool } from "mithril";
 import { mcpServer } from "@mithril/mcp/server";
+import { z } from "zod";
 
-const server = mcpServer([weatherTool, searchTool], { name: "my-tools", version: "1.0.0" });
+const weatherTool = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
+});
 
-// `serve` is a fetch handler — mount it on any HTTP framework:
-Bun.serve({ port: 8787, fetch: (req) => server.serve(req) });
-```
+const server = mcpServer([weatherTool], { name: "my-tools", version: "1.0.0" });
+
+const req = new Request("http://localhost/rpc", { method: "POST", body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }) });
+const res = await server.serve(req);
+console.log(await res.json()); // advertises each tool's real JSON-Schema parameters`} />
 
 Any Mithril tool works, including one that wraps a sub-agent via `asTool` — so a whole agent can be
 served as a single MCP tool.

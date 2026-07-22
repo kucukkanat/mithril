@@ -5,7 +5,7 @@ prev: false
 title: "CheckpointRecord"
 ---
 
-Defined in: packages/core/src/protocol/checkpointer.ts:10
+Defined in: [packages/core/src/protocol/checkpointer.ts:10](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L10)
 
 One persisted checkpoint in a run's history — an opaque run token plus routing metadata.
 
@@ -17,7 +17,7 @@ One persisted checkpoint in a run's history — an opaque run token plus routing
 readonly checkpointId: string;
 ```
 
-Defined in: packages/core/src/protocol/checkpointer.ts:13
+Defined in: [packages/core/src/protocol/checkpointer.ts:13](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L13)
 
 Monotonic ULID, `getRandomValues`-derived so it is insecure-context safe.
 
@@ -29,7 +29,7 @@ Monotonic ULID, `getRandomValues`-derived so it is insecure-context safe.
 readonly createdAt: string;
 ```
 
-Defined in: packages/core/src/protocol/checkpointer.ts:19
+Defined in: [packages/core/src/protocol/checkpointer.ts:19](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L19)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: packages/core/src/protocol/checkpointer.ts:19
 readonly parentId: string | null;
 ```
 
-Defined in: packages/core/src/protocol/checkpointer.ts:15
+Defined in: [packages/core/src/protocol/checkpointer.ts:15](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L15)
 
 The prior checkpoint id this one descends from, or `null` for the first.
 
@@ -51,7 +51,7 @@ The prior checkpoint id this one descends from, or `null` for the first.
 readonly optional pending?: SuspensionDescriptor;
 ```
 
-Defined in: packages/core/src/protocol/checkpointer.ts:21
+Defined in: [packages/core/src/protocol/checkpointer.ts:21](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L21)
 
 Unsealed, non-sensitive pending suspension — lets a UI render "awaiting approval" without opening the token.
 
@@ -63,7 +63,7 @@ Unsealed, non-sensitive pending suspension — lets a UI render "awaiting approv
 readonly runId: string;
 ```
 
-Defined in: packages/core/src/protocol/checkpointer.ts:11
+Defined in: [packages/core/src/protocol/checkpointer.ts:11](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L11)
 
 ***
 
@@ -73,7 +73,7 @@ Defined in: packages/core/src/protocol/checkpointer.ts:11
 readonly status: string;
 ```
 
-Defined in: packages/core/src/protocol/checkpointer.ts:18
+Defined in: [packages/core/src/protocol/checkpointer.ts:18](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L18)
 
 ***
 
@@ -83,6 +83,6 @@ Defined in: packages/core/src/protocol/checkpointer.ts:18
 readonly token: string | null;
 ```
 
-Defined in: packages/core/src/protocol/checkpointer.ts:17
+Defined in: [packages/core/src/protocol/checkpointer.ts:17](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/checkpointer.ts#L17)
 
 Opaque (sealed or unsigned) state blob; `null` when unsealable.

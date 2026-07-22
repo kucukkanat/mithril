@@ -5,7 +5,7 @@ prev: false
 title: "ModelCapabilities"
 ---
 
-Defined in: packages/core/src/protocol/provider.ts:11
+Defined in: [packages/core/src/protocol/provider.ts:11](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L11)
 
 The feature flags a model supports, used for capability-gated routing.
 
@@ -17,7 +17,7 @@ The feature flags a model supports, used for capability-gated routing.
 readonly browserSafe: boolean;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:18
+Defined in: [packages/core/src/protocol/provider.ts:18](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L18)
 
 Whether the model is safe to call directly from a browser (BYOK) context.
 
@@ -29,7 +29,7 @@ Whether the model is safe to call directly from a browser (BYOK) context.
 readonly promptCaching: boolean;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:15
+Defined in: [packages/core/src/protocol/provider.ts:15](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L15)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: packages/core/src/protocol/provider.ts:15
 readonly reasoning: boolean;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:14
+Defined in: [packages/core/src/protocol/provider.ts:14](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L14)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: packages/core/src/protocol/provider.ts:14
 readonly structuredOutput: boolean;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:13
+Defined in: [packages/core/src/protocol/provider.ts:13](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L13)
 
 ***
 
@@ -59,7 +59,7 @@ Defined in: packages/core/src/protocol/provider.ts:13
 readonly tools: boolean;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:12
+Defined in: [packages/core/src/protocol/provider.ts:12](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L12)
 
 ***
 
@@ -69,4 +69,4 @@ Defined in: packages/core/src/protocol/provider.ts:12
 readonly vision: boolean;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:16
+Defined in: [packages/core/src/protocol/provider.ts:16](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L16)

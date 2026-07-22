@@ -2,11 +2,12 @@
 title: Running in the browser
 description: The loop runs client-side — pick a transport that fits your trust model, persist to OPFS.
 sidebar:
-  order: 12
+  order: 14
   label: In the browser
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 
 Mithril genuinely runs in the browser — the [playground](/playground/) on this site executes the
 real loop in a Web Worker. Against a cloud provider, the only thing that changes client-side is **how
@@ -16,22 +17,22 @@ the request reaches the provider** — that is the `transport` (below). Or you c
 
 ## Three transports, three trust models
 
-```ts
-// BYOK — the key lives in the browser. Fine for local, personal, or trusted-user tools.
-const byok = { kind: "byok", apiKey: myOpenAiKey } as const;
+The `transport` (highlighted) is the only thing that changes client-side. The runnable uses the
+scripted model so it needs none; against a real provider you pass one of the three:
 
-// Proxy — your server holds the key and forwards the call. The browser never sees it.
-const proxy = { kind: "proxy", baseUrl: "https://api.example.com/llm" } as const;
+<Runnable title="transports.ts" highlight={["4-12"]} code={`import { agent } from "mithril";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
 
-// Ephemeral — your server mints a short-lived token per session.
-const ephemeral = {
-  kind: "ephemeral",
-  baseUrl: "https://api.example.com/llm",
-  token: () => fetchSessionToken(),
-} as const;
+// The three trust models (used with a real provider handle, not the scripted model below):
+const byok = { kind: "byok", apiKey: "sk-…" };                              // key in the browser — dev / personal
+const proxy = { kind: "proxy", baseUrl: "https://api.example.com/llm" };    // your server holds the key
+const ephemeral = { kind: "ephemeral", baseUrl: "https://api.example.com/llm", token: async () => "short-lived" };
 
-await assistant.run("Summarize this page.", { transport: proxy });
-```
+const model = testModel(scriptedProvider([textTurn("This page is about running agents in the browser.")]));
+const assistant = agent({ model, instructions: "Summarize pages." });
+
+// With openai("gpt-4o") you'd pass e.g. { transport: proxy }; the scripted model ignores it.
+console.log((await assistant.run("Summarize this page.")).status);`} />
 
 Omit `transport` entirely and BYOK is read from `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` — handy on a
 server, but there is no such env in a browser, so pass one explicitly.
@@ -43,8 +44,8 @@ untrusted. BYOK is for local dev and personal tools.
 </Aside>
 
 <Aside type="tip" title="Try BYOK in the playground">
-The [playground](/playground/) can run these examples against a real model: open ⚙ Settings, choose
-**Live · your key**, and paste a key for OpenAI, Anthropic, Google, or Groq. It's pure BYOK — the key
+The [playground](/playground/) can run these examples against a real model: in the **Run against** bar,
+pick a live provider (OpenAI, Anthropic, Google, or Groq) and paste a key. It's pure BYOK — the key
 stays in your browser and is sent straight to the provider, exactly as described here.
 </Aside>
 
@@ -69,20 +70,20 @@ Transports solve "how does the key reach a cloud model." The other option is to 
 (WebGPU, falling back to WASM/CPU). There's no transport, no key, and no network after the one-time weight
 download — everything else about the agent is identical.
 
-```ts
-import { agent } from "@mithril/core/agent";
-import { transformers, preload } from "@mithril/providers/transformers";
+The API is identical to any provider — swap the model handle (highlighted) and the run behaves the
+same. The runnable uses the scripted model so it's instant; to run the *real* on-device model, pick a
+**Local · in-browser** model in the Run against bar (a one-time weight download):
 
-// One-time weight download (cached across reloads); drive a progress bar with onProgress.
-await preload("onnx-community/Qwen3-0.6B-ONNX", { onProgress: (p) => setBar(p.progress) });
+<Runnable title="local.ts" highlight={[7]} code={`import { agent } from "mithril";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
+// import { transformers, preload } from "@mithril/providers/transformers"; // on-device, no key
+// await preload("onnx-community/Qwen3-0.6B-ONNX", { onProgress: (p) => setBar(p.progress) });
 
-const local = agent({
-  model: transformers("onnx-community/Qwen3-0.6B-ONNX"), // self-wires — no transport, no key
-  instructions: "You are a concise assistant.",
-});
+const model = testModel(scriptedProvider([textTurn("A concise summary.")])); // → transformers("onnx-community/Qwen3-0.6B-ONNX")
+const local = agent({ model, instructions: "You are a concise assistant." });
 
-const result = await local.run("Summarize this page."); // runs entirely in the tab
-```
+const result = await local.run("Summarize this page."); // same event stream as any provider
+console.log(result.status);`} />
 
 `@huggingface/transformers` is an **optional peer dependency** — install it only in the app that uses local
 inference. Weights are ~0.4–2 GB (feature-detect WebGPU; it falls back to WASM), and tool-calling on small
@@ -95,14 +96,16 @@ For durable client-side state — resumable tokens, cached transcripts — use t
 System adapter. It is the same `FileSystem` interface as the Node and in-memory backends, so code
 written against it ports unchanged:
 
-```ts
-import { opfsFileSystem } from "@mithril/fs/opfs";
+The runnable uses the in-memory backend (highlighted); in a browser tab, swap it for
+`opfsFileSystem()` — the same rooted interface, but durable and per-origin — to persist a suspended
+token across reloads:
 
-const fs = opfsFileSystem(); // durable, per-origin, no permission prompt
+<Runnable title="opfs.ts" highlight={[1]} code={`import { memoryFileSystem } from "@mithril/fs"; // in a tab: import { opfsFileSystem } from "@mithril/fs/opfs"
+
+const fs = memoryFileSystem(); // opfsFileSystem() is durable, per-origin, no permission prompt
 await fs.mkdir("runs");
-await fs.writeFile("runs/last.token", suspendedToken);
-const token = await fs.readText("runs/last.token");
-```
+await fs.writeFile("runs/last.token", "a-suspended-token");
+console.log("restored:", await fs.readText("runs/last.token"));`} />
 
 Pair it with a [Checkpointer](/guides/memory-and-checkpointing/) to suspend a run in one tab and
 resume it in another.

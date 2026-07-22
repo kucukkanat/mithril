@@ -8,11 +8,12 @@ title: "createHarness"
 ```ts
 function createHarness<Deps>(): {
   agent: AgentFactory<Deps>;
+  plugin: <Tools>(p) => Plugin<Deps, Tools>;
   tool: ToolFactory<Deps>;
 };
 ```
 
-Defined in: packages/core/src/agent/factory.ts:338
+Defined in: [packages/core/src/agent/factory.ts:340](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/factory.ts#L340)
 
 Bind `Deps` once for a whole app and get back `Deps`-typed [agent](/reference/core/agent/functions/agent/) and [tool](/reference/core/agent/functions/tool/) factories.
 
@@ -27,18 +28,41 @@ Bind `Deps` once for a whole app and get back `Deps`-typed [agent](/reference/co
 ```ts
 {
   agent: AgentFactory<Deps>;
+  plugin: <Tools>(p) => Plugin<Deps, Tools>;
   tool: ToolFactory<Deps>;
 }
 ```
 
-an object with `agent` ([AgentFactory](/reference/core/agent/interfaces/agentfactory/)) and `tool` ([ToolFactory](/reference/core/agent/interfaces/toolfactory/)), so no
-individual definition has to restate `<Deps>()`.
+an object with `agent` ([AgentFactory](/reference/core/agent/interfaces/agentfactory/)), `tool` ([ToolFactory](/reference/core/agent/interfaces/toolfactory/)), and `plugin`
+(a `Deps`-bound [plugin](/reference/core/agent/functions/plugin/) factory), so no individual definition has to restate `<Deps>()`.
 
 ### agent
 
 ```ts
 readonly agent: AgentFactory<Deps>;
 ```
+
+### plugin
+
+```ts
+readonly plugin: <Tools>(p) => Plugin<Deps, Tools>;
+```
+
+#### Type Parameters
+
+| Type Parameter | Default type |
+| ------ | ------ |
+| `Tools` *extends* readonly [`AnyTool`](/reference/core/protocol/type-aliases/anytool/)\<`Deps`\>[] | \[\] |
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `p` | [`Plugin`](/reference/core/protocol/interfaces/plugin/)\<`Deps`, `Tools`\> |
+
+#### Returns
+
+[`Plugin`](/reference/core/protocol/interfaces/plugin/)\<`Deps`, `Tools`\>
 
 ### tool
 

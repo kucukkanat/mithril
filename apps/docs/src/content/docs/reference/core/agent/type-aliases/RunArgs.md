@@ -9,7 +9,7 @@ title: "RunArgs"
 type RunArgs<Deps> = [Deps] extends [void] ? [RunOptions<void>] : [RunOptions<Deps>];
 ```
 
-Defined in: packages/core/src/agent/agent-types.ts:58
+Defined in: [packages/core/src/agent/agent-types.ts:68](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L68)
 
 The trailing argument tuple of the run methods, made optional when `Deps` is `void`.
 

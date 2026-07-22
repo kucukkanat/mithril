@@ -7,15 +7,22 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 
-Mithril never stores run state as a mutable checkpoint. State is _always_ derived:
+Mithril never stores run state as a mutable checkpoint. State is _always_ derived — a pure fold over
+the event log (highlighted). Run a scripted agent, capture its log, and re-fold it at any cursor:
 
-```ts
-import { reduce, replay } from "@mithril/core/protocol";
+<Runnable title="replay.ts" highlight={["9-10"]} code={`import { agent } from "mithril";
+import { replay } from "@mithril/core/protocol";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
 
-const state = replay(log);          // fold the whole log
-const earlier = replay(log, 5);     // state as of seq 5 — time travel, free
-```
+const model = testModel(scriptedProvider([textTurn("Hello there.")]));
+const handle = agent({ model, instructions: "Be brief." }).stream("Hi");
+
+const log = [];
+for await (const e of handle.events) log.push(e);
+console.log("final status:", replay(log).status); // fold the whole log
+console.log("as of seq 2:", replay(log, 2).status); // time travel — re-fold up to a cursor`} />
 
 `reduce(state, event)` is a pure, total step; `replay(log, cursor?)` folds the log up to an
 optional cursor. That's it. There is no second source of truth.

@@ -22,3 +22,10 @@ test("nodeFileSystem persists to a real directory and confines to root", async (
   expect(await fs.readText("notes/a.txt")).toBe("hello");
   await expect(fs.readText("../../../etc/hosts")).rejects.toBeDefined(); // escape rejected
 });
+
+test("nodeFileSystem accepts an options object { root }", async () => {
+  const root = await mkdtemp(join(tmpdir(), "mithril-fs-opts-"));
+  const fs = nodeFileSystem({ root });
+  await fs.writeFile("a.txt", "hi");
+  expect(await fs.readText("a.txt")).toBe("hi");
+});

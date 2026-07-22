@@ -7,21 +7,25 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 
 "Errors that tell you the fix" is a deliverable, not a hope. Every throw in Mithril is a typed
 `MithrilError` carrying a **stable `code`**, the offending value, and a **one-line fix** — so you
-catch by code, never by string-matching:
+catch by code, never by string-matching (highlighted). Run this: a bare `"provider/model"` string
+with no registry throws `NO_PROVIDER`:
 
-```ts
+<Runnable title="errors.ts" highlight={[7]} code={`import { agent } from "mithril";
+import { MithrilError } from "@mithril/core/agent";
+
+const assistant = agent({ model: "anthropic/claude-fable-5", instructions: "Be terse." });
+
 try {
   await assistant.run("hi");
 } catch (e) {
   if (e instanceof MithrilError && e.code === "NO_PROVIDER") {
-    // e.message: No provider for "anthropic/claude-fable-5".
-    //            Use model: anthropic("claude-fable-5"), or pass providers:.
+    console.log(e.code, "—", e.message); // names the fix: use a handle or pass providers:
   }
-}
-```
+}`} />
 
 A few representative codes:
 

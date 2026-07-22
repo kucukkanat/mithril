@@ -5,7 +5,7 @@ prev: false
 title: "SuccessResult"
 ---
 
-Defined in: packages/core/src/protocol/standard-schema.ts:32
+Defined in: [packages/core/src/protocol/standard-schema.ts:34](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L34)
 
 ## Type Parameters
 
@@ -21,7 +21,7 @@ Defined in: packages/core/src/protocol/standard-schema.ts:32
 readonly optional issues?: undefined;
 ```
 
-Defined in: packages/core/src/protocol/standard-schema.ts:34
+Defined in: [packages/core/src/protocol/standard-schema.ts:36](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L36)
 
 ***
 
@@ -31,4 +31,4 @@ Defined in: packages/core/src/protocol/standard-schema.ts:34
 readonly value: Output;
 ```
 
-Defined in: packages/core/src/protocol/standard-schema.ts:33
+Defined in: [packages/core/src/protocol/standard-schema.ts:35](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/standard-schema.ts#L35)

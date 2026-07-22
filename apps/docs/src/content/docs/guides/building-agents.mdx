@@ -9,19 +9,47 @@ import { Aside } from "@astrojs/starlight/components";
 import Runnable from "../../../components/Runnable.astro";
 
 An agent binds a **model**, **instructions**, and (optionally) **tools** into a loop you can `run`
-or `stream`. Everything past the 90% path is one more argument — never one more import.
+or `stream`. Everything past the 90% path is one more argument — never one more import:
 
 ```ts
-import { agent } from "mithril";
+import { agent, tool } from "mithril";
 import { anthropic } from "mithril/anthropic";
 
 const assistant = agent({
-  model: anthropic("claude-fable-5"),
+  model: anthropic("claude-fable-5"), // self-wires the provider
   instructions: "You are a concise assistant.",
   tools: [weather],
-  maxSteps: 8, // hard cap on model↔tool round-trips (default 16)
+  maxSteps: 8, // cap the model↔tool round-trips (default 16)
 });
+
+const result = await assistant.run("Weather in Istanbul?");
+if (result.status === "completed") console.log(result.output);
 ```
+
+The same agent runs **offline in your browser** below (a scripted `model` replaces the real handle;
+`maxSteps` highlighted) — click **Open in playground**:
+
+<Runnable title="agent.ts" highlight={[14]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
+});
+
+const model = testModel(scriptedProvider([toolCallTurn("weather", { city: "Istanbul" }), textTurn("It's 21°C in Istanbul.")]));
+const assistant = agent({
+  model,
+  instructions: "You are a concise assistant.",
+  tools: [weather],
+  maxSteps: 8,
+});
+
+const result = await run(assistant, "Weather in Istanbul?");
+if (result.status === "completed") console.log(result.output);`} />
 
 ## Model handles vs. registry strings
 
@@ -33,19 +61,23 @@ fix](/concepts/errors/).
 
 ## Instructions: string or function
 
-`instructions` is a `string`, or a function of the `RunContext` — sync or async — for
-per-run system prompts built from `ctx.deps`:
+`instructions` is a `string`, or a function of the `RunContext` (highlighted) — sync or async — for
+per-run system prompts built from `ctx.deps`. It's computed fresh each run and never captured in the
+serialized state:
 
-```ts
-const support = agent({
+<Runnable title="dynamic-instructions.ts" highlight={[15]} code={`import { agent, createHarness } from "mithril";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
+
+interface Deps { company: string }
+const { agent: buildAgent } = createHarness<Deps>();
+
+const model = testModel(scriptedProvider([textTurn("Your order shipped yesterday.")]));
+const support = buildAgent({
   model,
-  instructions: (ctx) => `You help ${ctx.deps.company} customers. Be terse.`,
-  tools: [lookupOrder],
+  instructions: (ctx) => \`You help \${ctx.deps.company} customers. Be terse.\`,
 });
-```
 
-Because it takes `ctx`, the prompt is computed fresh each run and never captured in the serialized
-state — only its output is.
+await run(support, "Where is my order?", { deps: { company: "Acme" } });`} />
 
 ## Run it, or stream it
 
@@ -58,85 +90,55 @@ state — only its output is.
 | `agent.resume(token, decision)` | `Promise<RunResult>` | You're resuming a [suspended](/guides/human-in-the-loop/) run. |
 
 `RunResult` is a discriminated union — branch on `.status` (`"completed"`, `"suspended"`,
-`"unresumable"`, `"error"`, `"cancelled"`); never a bare try/catch. `Input` is a `string` or an
-`InputMessage[]`. With no dependencies, the options object is fully optional — the API key comes
-from `ANTHROPIC_API_KEY` / `OPENAI_API_KEY`.
+`"unresumable"`, `"error"`, `"cancelled"`; highlighted); never a bare try/catch. With no
+dependencies, the options object is fully optional — the API key comes from `ANTHROPIC_API_KEY` /
+`OPENAI_API_KEY`:
 
-```ts
-const result = await assistant.run("What's the weather in Istanbul?");
-if (result.status === "completed") console.log(result.output);
-```
+<Runnable title="run.ts" highlight={["12-14"]} code={`import { agent } from "mithril";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
+
+const model = testModel(scriptedProvider([textTurn("It's 21°C and clear in Istanbul.")]));
+const assistant = agent({ model, instructions: "You are a concise weather assistant." });
+
+const result = await run(assistant, "What's the weather in Istanbul?");
+switch (result.status) {
+  case "completed":
+    console.log(result.output);
+    break;
+  case "error":
+    console.error(result.error.message);
+    break;
+  default:
+    console.log(result.status);
+}`} />
 
 ## Continuing a conversation
 
-The `string` form is shorthand for a single `user` message. To send **chat history**, pass an
-array of messages instead — `InputMessage` is `{ role: "user" | "assistant"; content: string }`:
+The `string` form is shorthand for a single `user` message. To send **chat history**, pass an array
+of `InputMessage`s (`{ role: "user" | "assistant"; content: string }`, highlighted). There's no
+`system` role — the system prompt comes only from `instructions`. You own the transcript: append the
+model's answer and pass the grown array to the next call. Mithril holds no hidden session — that's
+the [state = `replay(log)`](/concepts/state-is-replay/) principle:
 
-```ts
+<Runnable title="chat-history.ts" highlight={["6-10"]} code={`import { agent } from "mithril";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
+
+const model = testModel(scriptedProvider([textTurn("About 2.1 million people.")]));
+const assistant = agent({ model, instructions: "Answer follow-ups using the conversation so far." });
+
 const history = [
   { role: "user", content: "What's the capital of France?" },
   { role: "assistant", content: "Paris." },
   { role: "user", content: "And its population?" },
 ] as const;
 
-const { output } = await assistant.run(history); // or assistant.stream(history)
-```
-
-Two rules the type enforces:
-
-- **No `system` role.** The system prompt comes only from `instructions` — keep it there, not in
-  the history.
-- **`content` is text.** Each `{ role, content }` seeds one message; anything non-string is skipped.
-
-You own the transcript: after each run, append the model's answer to your array and pass the grown
-array to the next call. Mithril holds no hidden session between runs — that's the [state =
-`replay(log)`](/concepts/state-is-replay/) principle. Durable *resume* of a single suspended run is
-a separate, explicit [Checkpointer](/guides/memory-and-checkpointing/) concern.
-
-Run the **Chat history** preset in the [playground](/playground/) to watch a transcript seeded from
-prior turns, then answered.
+await run(assistant, history);`} />
 
 <Aside type="note">
 Threading the history yourself is deliberate — it keeps context construction visible and in your
-control, with no framework guessing what to include or hidden session to reason about.
+control, with no framework guessing what to include. Durable *resume* of a single suspended run is a
+separate, explicit [Checkpointer](/guides/memory-and-checkpointing/) concern.
 </Aside>
-
-## Run one now
-
-A two-tool round-trip, scripted with zero network — watch `run.start → tool.call → tool.result →
-text.delta → run.finish` in the inspector:
-
-<Runnable title="calculator.ts" code={`import { agent, tool } from "mithril";
-import { scriptedProvider, testModel } from "@mithril/core/testkit";
-import { z } from "zod";
-
-const model = testModel(scriptedProvider([
-  [
-    { type: "tool.call", callId: "c1", name: "add", input: { a: 2, b: 40 } },
-    { type: "message.end", finishReason: "tool_calls", usage },
-  ],
-  [
-    { type: "text.delta", delta: "2 + 40 = 42." },
-    { type: "message.end", finishReason: "stop", usage },
-  ],
-]));
-
-const add = tool({
-  name: "add",
-  description: "Add two numbers.",
-  inputSchema: z.object({ a: z.number(), b: z.number() }),
-  execute: async ({ a, b }) => ({ sum: a + b }),
-});
-
-const calculator = agent({
-  model,
-  instructions: "Use add for arithmetic, then state the result.",
-  tools: [add],
-  maxSteps: 4,
-});
-
-const result = await run(calculator, "What is 2 + 40?");
-if (result.status === "completed") console.log(result.output);`} />
 
 <Aside type="tip" title="Outgrew the loop?">
 `agent()` is the batteries-included loop. When you need full control, [eject

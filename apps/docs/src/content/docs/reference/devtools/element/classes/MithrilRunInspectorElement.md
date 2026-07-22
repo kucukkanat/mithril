@@ -5,7 +5,7 @@ prev: false
 title: "MithrilRunInspectorElement"
 ---
 
-Defined in: packages/devtools/src/element.ts:16
+Defined in: [packages/devtools/src/element.ts:16](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L16)
 
 `<mithril-run-inspector>` — the visual inspector as a custom element.
 
@@ -4548,7 +4548,7 @@ HTMLElement.classList
 get events(): readonly MithrilEvent[] | undefined;
 ```
 
-Defined in: packages/devtools/src/element.ts:31
+Defined in: [packages/devtools/src/element.ts:31](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L31)
 
 ##### Returns
 
@@ -4560,7 +4560,7 @@ readonly `MithrilEvent`[] \| `undefined`
 set events(v): void;
 ```
 
-Defined in: packages/devtools/src/element.ts:27
+Defined in: [packages/devtools/src/element.ts:27](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L27)
 
 ##### Parameters
 
@@ -4582,7 +4582,7 @@ Defined in: packages/devtools/src/element.ts:27
 get onResolve(): ((resolution) => void) | undefined;
 ```
 
-Defined in: packages/devtools/src/element.ts:52
+Defined in: [packages/devtools/src/element.ts:52](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L52)
 
 ##### Returns
 
@@ -4594,7 +4594,7 @@ Defined in: packages/devtools/src/element.ts:52
 set onResolve(v): void;
 ```
 
-Defined in: packages/devtools/src/element.ts:48
+Defined in: [packages/devtools/src/element.ts:48](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L48)
 
 ##### Parameters
 
@@ -4662,7 +4662,7 @@ get source():
   | undefined;
 ```
 
-Defined in: packages/devtools/src/element.ts:38
+Defined in: [packages/devtools/src/element.ts:38](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L38)
 
 ##### Returns
 
@@ -4675,7 +4675,7 @@ Defined in: packages/devtools/src/element.ts:38
 set source(v): void;
 ```
 
-Defined in: packages/devtools/src/element.ts:34
+Defined in: [packages/devtools/src/element.ts:34](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L34)
 
 ##### Parameters
 
@@ -4785,7 +4785,7 @@ HTMLElement.textContent
 get transport(): EventTransport | undefined;
 ```
 
-Defined in: packages/devtools/src/element.ts:45
+Defined in: [packages/devtools/src/element.ts:45](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L45)
 
 ##### Returns
 
@@ -4797,7 +4797,7 @@ Defined in: packages/devtools/src/element.ts:45
 set transport(v): void;
 ```
 
-Defined in: packages/devtools/src/element.ts:41
+Defined in: [packages/devtools/src/element.ts:41](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L41)
 
 ##### Parameters
 
@@ -4819,7 +4819,7 @@ Defined in: packages/devtools/src/element.ts:41
 get static observedAttributes(): readonly string[];
 ```
 
-Defined in: packages/devtools/src/element.ts:23
+Defined in: [packages/devtools/src/element.ts:23](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L23)
 
 ##### Returns
 
@@ -5084,7 +5084,7 @@ HTMLElement.attachShadow
 attributeChangedCallback(): void;
 ```
 
-Defined in: packages/devtools/src/element.ts:63
+Defined in: [packages/devtools/src/element.ts:63](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L63)
 
 #### Returns
 
@@ -5418,7 +5418,7 @@ HTMLElement.computedStyleMap
 connectedCallback(): void;
 ```
 
-Defined in: packages/devtools/src/element.ts:56
+Defined in: [packages/devtools/src/element.ts:56](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L56)
 
 #### Returns
 
@@ -5462,7 +5462,7 @@ HTMLElement.contains
 disconnectedCallback(): void;
 ```
 
-Defined in: packages/devtools/src/element.ts:59
+Defined in: [packages/devtools/src/element.ts:59](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/element.ts#L59)
 
 #### Returns
 

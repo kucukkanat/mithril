@@ -1,5 +1,5 @@
 /*
- * The provider catalog + example assembler behind the playground's ⚙ settings panel. Pure data +
+ * The provider catalog + example assembler behind the playground's Run against bar. Pure data +
  * string assembly — no React, no side effects.
  *
  * Accuracy first: every assembled example is REAL, portable @mithril/* code. The only thing the
@@ -13,7 +13,7 @@
 /** The playground's three run modes: offline scripted (default), remote BYOK, or on-device. */
 export type ProviderMode = "scripted" | "live" | "local";
 
-/** The remote providers the ⚙ panel supports — the four that make reliable direct-browser BYOK calls. */
+/** The remote providers the Run against bar supports — the four that make reliable direct-browser BYOK calls. */
 export type LiveProviderId = "openai" | "anthropic" | "google" | "groq";
 
 export interface LiveProvider {
@@ -134,7 +134,7 @@ function modelBlock(target: Target, scriptedTurns: string): { readonly imp: stri
     return {
       imp: `import { scriptedProvider, testModel } from "@mithril/core/testkit";`,
       decl: `// Offline default: the scripted provider replays these turns (zero network). Pick a real provider
-// or a local model in ⚙ Settings to run this exact example against it instead.
+// or a local model in the Run against bar to run this exact example against it instead.
 const model = testModel(scriptedProvider(${scriptedTurns}));`,
     };
   }
@@ -152,7 +152,7 @@ const model = transformers(${JSON.stringify(target.model)}${opts});`,
   if (p.kind === "openai-compat") {
     return {
       imp: `import { openaiProvider } from "mithril/openai";`,
-      decl: `// ${p.label} speaks the OpenAI wire format; ${p.envVar} (⚙ Settings) is injected as process.env.
+      decl: `// ${p.label} speaks the OpenAI wire format; ${p.envVar} (set in the Run against bar) is injected as process.env.
 const ${p.id} = openaiProvider({ baseUrl: ${JSON.stringify(p.baseUrl)} });
 const model = { id: ${JSON.stringify(`${p.id}/${target.model}`)}, provider: ${p.id} };`,
     };
@@ -160,7 +160,7 @@ const model = { id: ${JSON.stringify(`${p.id}/${target.model}`)}, provider: ${p.
   const { imp, expr } = nativeParts(p.id, target.model);
   return {
     imp,
-    decl: `// ${p.envVar} (⚙ Settings) is injected as process.env — omit \`transport\`, BYOK resolves from env.
+    decl: `// ${p.envVar} (set in the Run against bar) is injected as process.env — omit \`transport\`, BYOK resolves from env.
 const model = ${expr};`,
   };
 }

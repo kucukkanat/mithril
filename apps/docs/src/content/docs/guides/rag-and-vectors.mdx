@@ -1,0 +1,87 @@
+---
+title: RAG & vector search
+description: Store embeddings, retrieve by similarity, and give an agent a retrieval tool — with @mithril/vectors.
+sidebar:
+  order: 20
+  label: RAG & vectors
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
+
+Retrieval-augmented generation is a vector store plus a tool. [`@mithril/vectors`](/reference/vectors/readme/)
+is the portable store — same `VectorStore` interface in memory, in the browser, and on durable SQLite.
+The examples below run in the browser with a toy `embed`; swap it for a real embedding model in your app.
+
+<Aside type="note">
+A store **persists and searches** vectors; it does not compute them. Embeddings are yours to produce
+(an embedding model, a local encoder, whatever) — the store takes the numbers.
+</Aside>
+
+## Store and query
+
+`upsert` records, then `query` by similarity — `query` returns nearest matches, most similar first
+(highlighted). For persistence across restarts, swap `memoryVectorStore()` for
+`sqliteBunVectorStore("./rag.db")` (Bun) or `sqliteNodeVectorStore(...)` (Node) behind the **same**
+interface — your retrieval code doesn't change:
+
+<Runnable title="store.ts" highlight={["13-14"]} code={`import { memoryVectorStore } from "@mithril/vectors";
+
+// A toy embedding so this runs offline — use a real embedding model in your app.
+const embed = (text) => {
+  const v = [0, 0, 0];
+  for (const ch of text) v[ch.charCodeAt(0) % 3] += 1;
+  return v;
+};
+
+const store = memoryVectorStore();
+await store.upsert([
+  { id: "doc-1", vector: embed("Mithril runs on Node, Bun, and browsers."), metadata: { title: "Runtimes" } },
+  { id: "doc-2", vector: embed("Tokens are unsigned JSON unless you seal them."), metadata: { title: "Tokens" } },
+]);
+
+const hits = await store.query(embed("where does it run?"), { topK: 2 });
+for (const h of hits) console.log(h.metadata.title, "→", h.score.toFixed(3));`} />
+
+## Give the agent a retrieval tool
+
+Inject the store through `Deps` and expose a `search` tool (highlighted). The agent decides when to
+retrieve; the tool returns the passages, and the model grounds its answer in them:
+
+<Runnable title="rag-tool.ts" highlight={["19-26"]} code={`import { agent, createHarness } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { memoryVectorStore } from "@mithril/vectors";
+import { z } from "zod";
+
+const embed = (text) => {
+  const v = [0, 0, 0];
+  for (const ch of text) v[ch.charCodeAt(0) % 3] += 1;
+  return v;
+};
+
+const store = memoryVectorStore();
+await store.upsert([{ id: "doc-1", vector: embed("Mithril runs on Node, Bun, and browsers."), metadata: { title: "Runtimes" } }]);
+
+interface Deps { vectors: typeof store }
+const { agent: buildAgent, tool } = createHarness<Deps>();
+
+const search = tool({
+  name: "search_docs",
+  description: "Find passages relevant to a question.",
+  inputSchema: z.object({ query: z.string() }),
+  execute: async ({ query }, ctx) => {
+    const hits = await ctx.deps.vectors.query(embed(query), { topK: 3 });
+    return hits.map((h) => ({ title: h.metadata.title, score: h.score }));
+  },
+});
+
+const model = testModel(scriptedProvider([toolCallTurn("search_docs", { query: "where does it run?" }), textTurn("It runs on Node, Bun, and browsers.")]));
+const assistant = buildAgent({ model, instructions: "Answer using search_docs; cite the titles.", tools: [search] });
+
+await run(assistant, "Where can I run this?", { deps: { vectors: store } });`} />
+
+<Aside type="tip">
+`query` accepts a `filter` — `{ topK: 5, filter: { lang: "en" } }` keeps only records whose metadata
+matches every pair. ANN-indexed backends (sqlite-vec / pgvector / Vectorize) for larger corpora are on
+the [roadmap](/roadmap/), behind the same interface.
+</Aside>

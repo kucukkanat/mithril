@@ -5,7 +5,7 @@ prev: false
 title: "UsageTotals"
 ---
 
-Defined in: packages/core/src/protocol/primitives.ts:57
+Defined in: [packages/core/src/protocol/primitives.ts:57](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/primitives.ts#L57)
 
 A running usage accumulator: a [UsageDelta](/reference/core/protocol/interfaces/usagedelta/) plus a completed-step count.
 
@@ -21,7 +21,7 @@ A running usage accumulator: a [UsageDelta](/reference/core/protocol/interfaces/
 readonly cacheRead: number;
 ```
 
-Defined in: packages/core/src/protocol/primitives.ts:49
+Defined in: [packages/core/src/protocol/primitives.ts:49](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/primitives.ts#L49)
 
 #### Inherited from
 
@@ -35,7 +35,7 @@ Defined in: packages/core/src/protocol/primitives.ts:49
 readonly cacheWrite: number;
 ```
 
-Defined in: packages/core/src/protocol/primitives.ts:50
+Defined in: [packages/core/src/protocol/primitives.ts:50](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/primitives.ts#L50)
 
 #### Inherited from
 
@@ -49,7 +49,7 @@ Defined in: packages/core/src/protocol/primitives.ts:50
 readonly costMicroUsd: number;
 ```
 
-Defined in: packages/core/src/protocol/primitives.ts:53
+Defined in: [packages/core/src/protocol/primitives.ts:53](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/primitives.ts#L53)
 
 Cost in integer micro-USD — avoids float drift when summing thousands of deltas.
 
@@ -65,7 +65,7 @@ Cost in integer micro-USD — avoids float drift when summing thousands of delta
 readonly input: number;
 ```
 
-Defined in: packages/core/src/protocol/primitives.ts:47
+Defined in: [packages/core/src/protocol/primitives.ts:47](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/primitives.ts#L47)
 
 #### Inherited from
 
@@ -79,7 +79,7 @@ Defined in: packages/core/src/protocol/primitives.ts:47
 readonly output: number;
 ```
 
-Defined in: packages/core/src/protocol/primitives.ts:48
+Defined in: [packages/core/src/protocol/primitives.ts:48](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/primitives.ts#L48)
 
 #### Inherited from
 
@@ -93,7 +93,7 @@ Defined in: packages/core/src/protocol/primitives.ts:48
 readonly reasoning: number;
 ```
 
-Defined in: packages/core/src/protocol/primitives.ts:51
+Defined in: [packages/core/src/protocol/primitives.ts:51](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/primitives.ts#L51)
 
 #### Inherited from
 
@@ -107,6 +107,6 @@ Defined in: packages/core/src/protocol/primitives.ts:51
 readonly steps: number;
 ```
 
-Defined in: packages/core/src/protocol/primitives.ts:59
+Defined in: [packages/core/src/protocol/primitives.ts:59](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/primitives.ts#L59)
 
 Number of completed steps; carried (not summed) by [addUsage](/reference/core/protocol/functions/addusage/).

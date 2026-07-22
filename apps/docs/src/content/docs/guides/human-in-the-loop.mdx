@@ -12,12 +12,18 @@ Some tool calls shouldn't fire without a human. Mithril models that as a **value
 `interrupt()` — [suspension is a discriminated branch of `RunResult`](/concepts/suspension/) you
 can't ignore at the type level.
 
-## Gate a tool
+## Gate a tool, resume with a decision
 
-Set `needsApproval` — a boolean, or a predicate over the input for a case-by-case gate. The run
-pauses *before* `execute`, so nothing side-effecting has run when it suspends:
+Set `needsApproval` — a boolean, or a predicate over the input (highlighted). The run pauses *before*
+`execute`, carrying a `request` (the pending view) and a `token` (the resumable state). Feed the token
+back with an `ApprovalDecision` — **approve** runs the tool, **reject** feeds the model a refusal,
+**edit** runs it with a corrected input. The `run`/`resume` calls below are the real API — only the
+`model` is scripted so it runs with no key (in your app: `anthropic("claude-fable-5")`):
 
-```ts
+<Runnable title="hitl.ts" preset="hitl" highlight={[10, 18]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
 const deploy = tool({
   name: "deploy",
   description: "Deploy to an environment.",
@@ -25,119 +31,103 @@ const deploy = tool({
   needsApproval: ({ env }) => env === "production", // or just: true
   execute: async ({ env }) => ({ deployed: true, env }),
 });
-```
 
-## Resume with a decision
+const model = testModel(scriptedProvider([toolCallTurn("deploy", { env: "production" }), textTurn("Deployed to production.")]));
+const assistant = agent({ model, instructions: "Deploy when asked.", tools: [deploy] });
 
-A suspended result carries a `request` (the UI-facing pending view) and a `token` (the sealed,
-resumable state). Feed the token back with an `ApprovalDecision`:
-
-```ts
 const r = await assistant.run("Deploy to production.");
-
 if (r.status === "suspended") {
-  const done = await assistant.resume(r.token, { kind: "approve" });
-  //                                            or { kind: "reject", message: "not now" }
-  //                                            or { kind: "edit", input: { env: "staging" } }
-}
-```
+  const done = await assistant.resume(r.token, { kind: "approve" }); // or { kind: "reject", message } / { kind: "edit", input }
+  console.log(done.status);
+}`} />
 
-The three decisions map to the obvious outcomes: **approve** runs the tool as requested,
-**reject** feeds the model a refusal message, and **edit** runs it with a corrected input. The
-token serializes as the event log plus a pending descriptor — never your `deps` or tool
-functions — so you can persist it in a [Checkpointer](/guides/memory-and-checkpointing/) and
-resume in a different process (sign it with `seal`/`open` when it crosses a trust boundary).
+The token serializes as the event log plus a pending descriptor — never your `deps` or tool
+functions — so you can persist it in a [Checkpointer](/guides/memory-and-checkpointing/) and resume
+in a different process (sign it with `seal`/`open` when it crosses a trust boundary).
 
 ## Pause from inside a tool
 
-Approval gates before `execute`. Two more tiers let a tool pause *itself*:
+Approval gates *before* `execute`. Two more tiers let a tool pause *itself*, resumed with a
+**resolution value** (`{ kind: "resolve", value }`) instead of an approval decision.
 
-**Tier-1b — return `suspend(...)`.** The tool hands back a request; the resolution you supply
-becomes the tool's result (it does not re-run):
+**Tier-1b — return `suspend(...)`** (highlighted). The tool hands back a request; the resolution you
+supply becomes the tool's result (it does not re-run):
 
-```ts
+<Runnable title="tier-1b.ts" highlight={["12-13", 22]} code={`import { agent, tool, suspend } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
 const askUser = tool({
   name: "ask_user",
   description: "Ask the operator a question.",
   inputSchema: z.object({ question: z.string() }),
-  execute: async ({ question }) =>
-    suspend({ kind: "user.input", payload: { question }, resolutionSchema: z.string(), resolutionSchemaId: "ask" }),
+  execute: async ({ question }) => suspend({ kind: "user.input", payload: { question } }),
 });
-```
 
-**Tier-2 — `await ctx.suspend()` mid-execute.** The tool pauses partway through; on resume its
-`execute` re-runs and `ctx.journal(key, fn)` replays recorded effects so they run **exactly once**:
+const model = testModel(scriptedProvider([toolCallTurn("ask_user", { question: "Your name?" }), textTurn("Hi Ada!")]));
+const assistant = agent({ model, instructions: "Ask, then greet.", tools: [askUser] });
 
-```ts
-execute: async (input, ctx) => {
-  const draft = await ctx.journal("draft", () => createDraft(input)); // runs once across resume
-  const ok = await ctx.suspend({ kind: "confirm", payload: { draft }, resolutionSchema: z.boolean(), resolutionSchemaId: "c" });
-  return ok ? publish(draft) : { cancelled: true };
-};
-```
-
-Resume either tier with a **resolution value** instead of an approval decision:
-
-```ts
+const r = await assistant.run("Greet me by name.");
 if (r.status === "suspended") {
-  const done = await assistant.resume(r.token, { kind: "resolve", value: "Ada" });
-}
-```
+  const done = await assistant.resume(r.token, { kind: "resolve", value: "Ada" }); // becomes the tool's result
+  console.log(done.status);
+}`} />
+
+**Tier-2 — `await ctx.suspend()` mid-execute** (highlighted). The tool pauses partway through; on
+resume its `execute` re-runs and `ctx.journal(key, fn)` replays recorded effects so they run
+**exactly once**:
+
+<Runnable title="tier-2.ts" highlight={["8-9"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const publishDraft = tool({
+  name: "publish",
+  description: "Draft, confirm, then publish.",
+  inputSchema: z.object({ topic: z.string() }),
+  execute: async ({ topic }, ctx) => {
+    const draft = await ctx.journal("draft", async () => \`Draft about \${topic}\`); // runs once across resume
+    const ok = await ctx.suspend({ kind: "confirm", payload: { draft } });
+    return ok ? { published: draft } : { cancelled: true };
+  },
+});
+
+const model = testModel(scriptedProvider([toolCallTurn("publish", { topic: "QUIC" }), textTurn("Published.")]));
+const assistant = agent({ model, instructions: "Publish when asked.", tools: [publishDraft] });
+
+const r = await assistant.run("Publish a post about QUIC.");
+if (r.status === "suspended") console.log((await assistant.resume(r.token, { kind: "resolve", value: true })).status);`} />
 
 ## Stream the continuation, or resume in-process
 
-`resume()` returns the **final `RunResult`**. To stream the resumed run instead, use `rehydrate()`
-— the streaming twin of `resume()`:
+`resume()` returns the **final `RunResult`**. To stream the resumed run instead, use `resumeStream()`
+(highlighted) — the streaming twin. Or, if you hold the live `RunHandle` from `stream()`, continue it
+in-process with `handle.resolve()` — no token round-trip:
 
-```ts
-const handle = assistant.rehydrate(r.token, { kind: "approve" });
-for await (const delta of handle.text) process.stdout.write(delta);
-```
-
-If you already hold the live `RunHandle` (from `stream()`), continue it in-process with no token
-round-trip via `handle.resolve()`:
-
-```ts
-const first = assistant.stream("Deploy to production.");
-if ((await first.result()).status === "suspended") {
-  const resumed = await first.resolve({ kind: "approve" });
-  await resumed.result();
-}
-```
-
-## Try it live
-
-Running this suspends at the `deploy` call and surfaces Approve / Reject. Approve to see the tool
-run and the answer stream in:
-
-<Runnable title="hitl.ts" code={`import { agent, tool } from "mithril";
-import { scriptedProvider, testModel } from "@mithril/core/testkit";
+<Runnable title="resume-stream.ts" highlight={[16]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
 import { z } from "zod";
-
-const model = testModel(scriptedProvider([
-  [
-    { type: "tool.call", callId: "c1", name: "deploy", input: { env: "production" } },
-    { type: "message.end", finishReason: "tool_calls", usage },
-  ],
-  [
-    { type: "text.delta", delta: "Deployed to production." },
-    { type: "message.end", finishReason: "stop", usage },
-  ],
-]));
 
 const deploy = tool({
   name: "deploy",
-  description: "Deploy the app to an environment.",
+  description: "Deploy.",
   inputSchema: z.object({ env: z.string() }),
   needsApproval: true,
-  execute: async ({ env }) => ({ deployed: true, env }),
+  execute: async ({ env }) => ({ deployed: env }),
 });
 
-await run(agent({ model, instructions: "Deploy when asked.", tools: [deploy] }), "Deploy to production.");`} />
+const model = testModel(scriptedProvider([toolCallTurn("deploy", { env: "prod" }), textTurn("Deployed.")]));
+const assistant = agent({ model, instructions: "Deploy when asked.", tools: [deploy] });
+
+const r = await assistant.run("Deploy to prod.");
+if (r.status === "suspended") {
+  const handle = assistant.resumeStream(r.token, { kind: "approve" }); // streaming twin of resume()
+  for await (const delta of handle.text) console.log(delta);
+}`} />
 
 <Aside type="note" title="What's shipped">
-All three tiers (approval, tool-returned `suspend(...)`, and `ctx.suspend()` mid-execute), plus
-`resume()`, streaming `rehydrate()`, and in-process `RunHandle.resolve()`, are implemented and
-tested. Calling one agent as another's tool with `asTool()` surfaces a suspended sub-agent's child
-token for a manual two-step resume — first-class nested HITL resume is on the [Roadmap](/roadmap/).
+All three tiers plus `resume()`, streaming `resumeStream()`, and in-process `RunHandle.resolve()` are
+implemented and tested. Nested HITL is first-class: when a sub-agent wrapped with `asTool()` suspends,
+the parent suspends too, and resuming the parent with `{ kind: "resolve", value: <decision> }` drives
+the child to completion — all through the parent's own token. See [Multi-agent](/guides/multi-agent/).
 </Aside>

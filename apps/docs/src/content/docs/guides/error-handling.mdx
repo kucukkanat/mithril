@@ -1,0 +1,91 @@
+---
+title: Error handling & cancellation
+description: Discriminate a run's outcome, read typed errors, and cancel with a signal or a reason.
+sidebar:
+  order: 19
+  label: Errors & cancellation
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
+
+A run never throws for an expected outcome — it settles into a discriminated
+[`RunResult`](/reference/core/agent/type-aliases/runresult/) you narrow on `status`. Thrown errors
+are reserved for programming mistakes (a bad config, a missing key) and carry a typed
+[`MithrilError`](/reference/core/agent/classes/mithrilerror/) code:
+
+```ts
+const result = await assistant.run("Deploy to production.");
+switch (result.status) {
+  case "completed": console.log(result.output); break;
+  case "suspended": console.log("awaiting approval"); break;
+  case "error": console.error(result.error.name, result.error.message); break;
+  case "cancelled": console.log("aborted after", result.usage.steps, "steps"); break;
+  case "unresumable": console.warn(result.reason); break;
+}
+```
+
+Run the offline version below to watch a result settle (the `switch` is highlighted):
+
+<Runnable title="narrow.ts" highlight={["7-12"]} code={`import { agent } from "mithril";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
+
+const model = testModel(scriptedProvider([textTurn("Deploying to production…")]));
+const assistant = agent({ model, instructions: "Be terse." });
+
+const result = await run(assistant, "Deploy to production.");
+switch (result.status) {
+  case "completed": console.log(result.output); break;
+  case "suspended": console.log("awaiting approval"); break;
+  case "error": console.error(result.error.name, result.error.message); break;
+  case "cancelled": console.log("aborted after", result.usage.steps, "steps"); break;
+  case "unresumable": console.warn(result.reason); break;
+}`} />
+
+`error` carries a `{ name, message }` — e.g. `OutputInvalid` when structured output fails validation
+after its retries, or `MaxStepsExceeded` when a run hits its `maxSteps` budget without finishing
+(that case is a real error, not a silent empty answer).
+
+## Typed errors that tell you the fix
+
+Thrown `MithrilError`s discriminate on a stable `.code` (highlighted), and the message names the
+remedy. Here a bare `"provider/model"` string with no registry throws `NO_PROVIDER`:
+
+<Runnable title="typed-errors.ts" highlight={["7-9"]} code={`import { agent } from "mithril";
+import { MithrilError } from "@mithril/core/agent";
+
+const assistant = agent({ model: "anthropic/claude-fable-5", instructions: "Be terse." });
+
+try {
+  await assistant.run("hi");
+} catch (e) {
+  if (e instanceof MithrilError) console.log(e.code, "—", e.message);
+}`} />
+
+A missing API key is caught before the request leaves your process — you get an actionable message
+(`Set OPENAI_API_KEY …, or pass transport: { kind: "byok", apiKey }`) instead of a bare HTTP 401.
+
+## Cancellation
+
+Cancel a run two ways — both settle the result as `cancelled` and emit a `run.cancel` event. Here an
+already-aborted signal cancels at the first step boundary (highlighted); the reason surfaces on the
+event:
+
+<Runnable title="cancel.ts" highlight={[7]} code={`import { agent } from "mithril";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
+
+const model = testModel(scriptedProvider([textTurn("This won't finish.")]));
+const assistant = agent({ model, instructions: "Be terse." });
+
+// A live app would use { signal: AbortSignal.timeout(30_000) }, or handle.cancel("reason").
+const result = await assistant.run("Summarize the incident.", { signal: AbortSignal.abort("user navigated away") });
+console.log(result.status); // "cancelled"`} />
+
+Both `handle.cancel(reason)` and `AbortSignal.abort(reason)` carry a string `reason` through to the
+`run.cancel` event, so a UI can distinguish a timeout from a user abort. Cancellation takes effect at
+the next step boundary (or mid-provider-stream).
+
+<Aside type="tip">
+Forwarding an incoming request's `signal` into `stream(input, { signal })` ties the run's lifetime to
+the HTTP connection — see [Streaming to a web UI](/guides/streaming-to-a-web-ui/).
+</Aside>

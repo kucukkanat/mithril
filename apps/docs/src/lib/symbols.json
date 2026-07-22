@@ -42,7 +42,7 @@
   "anthropic": {
     "href": "/reference/providers/anthropic/functions/anthropic/",
     "kind": "fn",
-    "sig": "function anthropic(model): ModelHandle;"
+    "sig": "function anthropic(model, opts?): ModelHandle;"
   },
   "anthropicProvider": {
     "href": "/reference/providers/anthropic/functions/anthropicprovider/",
@@ -94,6 +94,11 @@
     "kind": "fn",
     "sig": "function buildSpanTree(events): readonly SpanNode[];"
   },
+  "calledInOrder": {
+    "href": "/reference/evals/functions/calledinorder/",
+    "kind": "fn",
+    "sig": "function calledInOrder(names): Scorer;"
+  },
   "calledTool": {
     "href": "/reference/evals/functions/calledtool/",
     "kind": "fn",
@@ -102,12 +107,32 @@
   "calledToolWith": {
     "href": "/reference/evals/functions/calledtoolwith/",
     "kind": "fn",
-    "sig": "function calledToolWith(name, match): Scorer;"
+    "sig": "function calledToolWith<T>(tool, match): Scorer;"
+  },
+  "ChatAgent": {
+    "href": "/reference/react/index/interfaces/chatagent/",
+    "kind": "type",
+    "sig": "The minimal agent shape createChatStore needs: stream(history) yielding a run's events."
+  },
+  "ChatMessage": {
+    "href": "/reference/react/index/interfaces/chatmessage/",
+    "kind": "type",
+    "sig": "A single chat turn — structurally an InputMessage, so the history feeds straight back into a run."
   },
   "ChatRequest": {
     "href": "/reference/core/protocol/interfaces/chatrequest/",
     "kind": "type",
     "sig": "The provider-agnostic semantic input for one model call."
+  },
+  "ChatSnapshot": {
+    "href": "/reference/react/index/interfaces/chatsnapshot/",
+    "kind": "type",
+    "sig": "An immutable view of a chat: completed messages, the in-flight assistant streaming text, and status."
+  },
+  "ChatStore": {
+    "href": "/reference/react/index/interfaces/chatstore/",
+    "kind": "type",
+    "sig": "A useSyncExternalStore-compatible chat store with a send action. Created by createChatStore."
   },
   "Checkpointer": {
     "href": "/reference/core/protocol/interfaces/checkpointer/",
@@ -129,6 +154,16 @@
     "kind": "fn",
     "sig": "function classifyEvent(type): EventKind;"
   },
+  "CodeResult": {
+    "href": "/reference/sandbox/index/type-aliases/coderesult/",
+    "kind": "type",
+    "sig": "type CodeResult = | { logs: readonly string[]; ok: true; value: unknown; } | { error: string; logs: readonly string[]; ok: false; };"
+  },
+  "CodeRunner": {
+    "href": "/reference/sandbox/index/interfaces/coderunner/",
+    "kind": "type",
+    "sig": "A runtime-agnostic seam for running a snippet of code and capturing its result and logs."
+  },
   "compactionSavings": {
     "href": "/reference/devtools/index/functions/compactionsavings/",
     "kind": "fn",
@@ -149,15 +184,25 @@
     "kind": "type",
     "sig": "type ContiguityResult = | { ok: true; } | { missingFrom: number; ok: false; };"
   },
+  "cosineSimilarity": {
+    "href": "/reference/vectors/index/functions/cosinesimilarity/",
+    "kind": "fn",
+    "sig": "function cosineSimilarity(a, b): number;"
+  },
   "createApp": {
     "href": "/reference/create-mithril/functions/createapp/",
     "kind": "fn",
     "sig": "function createApp( template, appName, dir): Promise<readonly string[]>;"
   },
+  "createChatStore": {
+    "href": "/reference/react/index/functions/createchatstore/",
+    "kind": "fn",
+    "sig": "function createChatStore(agent): ChatStore;"
+  },
   "createHarness": {
     "href": "/reference/core/agent/functions/createharness/",
     "kind": "fn",
-    "sig": "function createHarness<Deps>(): { agent: AgentFactory<Deps>; tool: ToolFactory<Deps>; };"
+    "sig": "function createHarness<Deps>(): { agent: AgentFactory<Deps>; plugin: <Tools>(p) => Plugin<Deps, Tools>; tool: ToolFactory<Deps>; };"
   },
   "createInspector": {
     "href": "/reference/devtools/index/functions/createinspector/",
@@ -194,10 +239,15 @@
     "kind": "fn",
     "sig": "function defineWorkflow<S>(steps, opts): Workflow<S>;"
   },
+  "DepsOption": {
+    "href": "/reference/core/agent/type-aliases/depsoption/",
+    "kind": "type",
+    "sig": "type DepsOption<Deps> = [Deps] extends [void] ? { deps?: undefined; } : { deps: Deps; };"
+  },
   "describeEval": {
     "href": "/reference/evals/functions/describeeval/",
     "kind": "fn",
-    "sig": "function describeEval<Deps, Ctx>( register, agent, cases, opts): void;"
+    "sig": "function describeEval<Deps, Ctx>( register, agent, cases, ... args): void;"
   },
   "DEVTOOLS_CHANNEL": {
     "href": "/reference/devtools/attach/variables/devtools_channel/",
@@ -243,6 +293,11 @@
     "href": "/reference/providers/transformers/interfaces/enginerequest/",
     "kind": "type",
     "sig": "The semantic request handed to a TransformersEngine (a flattened ChatRequest)."
+  },
+  "EvalArgs": {
+    "href": "/reference/evals/type-aliases/evalargs/",
+    "kind": "type",
+    "sig": "type EvalArgs<Deps, Ctx> = [Deps] extends [void] ? [RunEvalOptions<void, Ctx>] : [RunEvalOptions<Deps, Ctx>];"
   },
   "EvalCase": {
     "href": "/reference/evals/interfaces/evalcase/",
@@ -313,6 +368,11 @@
     "href": "/reference/fs/index/functions/filesystemconformance/",
     "kind": "fn",
     "sig": "function fileSystemConformance(make, t): void;"
+  },
+  "finalText": {
+    "href": "/reference/evals/functions/finaltext/",
+    "kind": "fn",
+    "sig": "function finalText(t): string;"
   },
   "FinishReason": {
     "href": "/reference/core/protocol/type-aliases/finishreason/",
@@ -404,6 +464,26 @@
     "kind": "type",
     "sig": "Options for htmlReport."
   },
+  "httpTransport": {
+    "href": "/reference/mcp/http/functions/httptransport/",
+    "kind": "fn",
+    "sig": "function httpTransport(opts): McpTransport;"
+  },
+  "IDLE_SNAPSHOT": {
+    "href": "/reference/react/index/variables/idle_snapshot/",
+    "kind": "const",
+    "sig": "const IDLE_SNAPSHOT: RunSnapshot;"
+  },
+  "idleRunStore": {
+    "href": "/reference/react/index/functions/idlerunstore/",
+    "kind": "fn",
+    "sig": "function idleRunStore(): RunStore;"
+  },
+  "indexedDbKv": {
+    "href": "/reference/kv/indexeddb/functions/indexeddbkv/",
+    "kind": "fn",
+    "sig": "function indexedDbKv(opts?): KeyValue;"
+  },
   "InferInput": {
     "href": "/reference/core/protocol/namespaces/standardschemav1/type-aliases/inferinput/",
     "kind": "type",
@@ -469,6 +549,11 @@
     "kind": "fn",
     "sig": "function isSuspend(value): value is Suspend<unknown>;"
   },
+  "isTemplate": {
+    "href": "/reference/create-mithril/functions/istemplate/",
+    "kind": "fn",
+    "sig": "function isTemplate(s): s is Template;"
+  },
   "JsonSafe": {
     "href": "/reference/core/protocol/type-aliases/jsonsafe/",
     "kind": "type",
@@ -495,19 +580,24 @@
     "sig": "A source of signing/verification keys for sealed tokens, indexed by key id (kid)."
   },
   "KeyValue": {
-    "href": "/reference/kv/interfaces/keyvalue/",
+    "href": "/reference/kv/index/interfaces/keyvalue/",
     "kind": "type",
     "sig": "A runtime-agnostic async key-value store (§10.2) for tools — caches, dedup sets, counters, scratch state."
   },
   "kvConformance": {
-    "href": "/reference/kv/functions/kvconformance/",
+    "href": "/reference/kv/index/functions/kvconformance/",
     "kind": "fn",
     "sig": "function kvConformance(make, t): void;"
   },
   "KvTestAdapter": {
-    "href": "/reference/kv/interfaces/kvtestadapter/",
+    "href": "/reference/kv/index/interfaces/kvtestadapter/",
     "kind": "type",
     "sig": "Minimal test-runner shim that lets kvConformance register cases against bun:test / vitest without"
+  },
+  "llmJudge": {
+    "href": "/reference/evals/functions/llmjudge/",
+    "kind": "fn",
+    "sig": "function llmJudge(opts): Scorer;"
   },
   "loadTrajectory": {
     "href": "/reference/evals/functions/loadtrajectory/",
@@ -525,27 +615,42 @@
     "sig": "function makeRunHandle<Out>( gen, runId, controls): RunHandle<Out>;"
   },
   "mcpClient": {
-    "href": "/reference/mcp/functions/mcpclient/",
+    "href": "/reference/mcp/index/functions/mcpclient/",
     "kind": "fn",
     "sig": "function mcpClient(transport): McpClient;"
   },
   "McpClient": {
-    "href": "/reference/mcp/interfaces/mcpclient/",
+    "href": "/reference/mcp/index/interfaces/mcpclient/",
     "kind": "type",
     "sig": "A connected MCP client over an McpTransport. Create one with mcpClient."
   },
+  "mcpServer": {
+    "href": "/reference/mcp/server/functions/mcpserver/",
+    "kind": "fn",
+    "sig": "function mcpServer( tools, info?, opts?): McpServer;"
+  },
+  "McpServer": {
+    "href": "/reference/mcp/server/interfaces/mcpserver/",
+    "kind": "type",
+    "sig": "A Mithril-tools-backed MCP server. Create one with mcpServer."
+  },
+  "McpServerInfo": {
+    "href": "/reference/mcp/server/interfaces/mcpserverinfo/",
+    "kind": "type",
+    "sig": "Identifies an mcpServer to connecting clients."
+  },
   "McpToolDef": {
-    "href": "/reference/mcp/interfaces/mcptooldef/",
+    "href": "/reference/mcp/index/interfaces/mcptooldef/",
     "kind": "type",
     "sig": "An MCP server's description of one tool, as returned by tools/list."
   },
   "mcpTools": {
-    "href": "/reference/mcp/functions/mcptools/",
+    "href": "/reference/mcp/index/functions/mcptools/",
     "kind": "fn",
     "sig": "function mcpTools(client): Promise<readonly Tool<string, JsonValue, JsonValue, unknown>[]>;"
   },
   "McpTransport": {
-    "href": "/reference/mcp/interfaces/mcptransport/",
+    "href": "/reference/mcp/index/interfaces/mcptransport/",
     "kind": "type",
     "sig": "The transport you implement to carry MCP JSON-RPC calls to a server."
   },
@@ -560,7 +665,7 @@
     "sig": "function memoryFileSystem(now?): FileSystem;"
   },
   "memoryKv": {
-    "href": "/reference/kv/functions/memorykv/",
+    "href": "/reference/kv/index/functions/memorykv/",
     "kind": "fn",
     "sig": "function memoryKv(now?): KeyValue;"
   },
@@ -568,6 +673,11 @@
     "href": "/reference/evals/functions/memorytrajectorystore/",
     "kind": "fn",
     "sig": "function memoryTrajectoryStore(): TrajectoryStore;"
+  },
+  "memoryVectorStore": {
+    "href": "/reference/vectors/index/functions/memoryvectorstore/",
+    "kind": "fn",
+    "sig": "function memoryVectorStore(): VectorStore;"
   },
   "Message": {
     "href": "/reference/core/protocol/interfaces/message/",
@@ -672,7 +782,17 @@
   "nodeFileSystem": {
     "href": "/reference/fs/node/functions/nodefilesystem/",
     "kind": "fn",
-    "sig": "function nodeFileSystem(root): FileSystem;"
+    "sig": "function nodeFileSystem(rootOrOpts): FileSystem;"
+  },
+  "nodeVmRunner": {
+    "href": "/reference/sandbox/node/functions/nodevmrunner/",
+    "kind": "fn",
+    "sig": "function nodeVmRunner(): CodeRunner;"
+  },
+  "noToolErrors": {
+    "href": "/reference/evals/functions/notoolerrors/",
+    "kind": "fn",
+    "sig": "function noToolErrors(): Scorer;"
   },
   "open": {
     "href": "/reference/core/agent/functions/open/",
@@ -682,7 +802,7 @@
   "openai": {
     "href": "/reference/providers/openai/functions/openai/",
     "kind": "fn",
-    "sig": "function openai(model): ModelHandle;"
+    "sig": "function openai(model, opts?): ModelHandle;"
   },
   "openaiProvider": {
     "href": "/reference/providers/openai/functions/openaiprovider/",
@@ -693,6 +813,21 @@
     "href": "/reference/fs/opfs/functions/opfsfilesystem/",
     "kind": "fn",
     "sig": "function opfsFileSystem(): FileSystem;"
+  },
+  "otelPlugin": {
+    "href": "/reference/otel/functions/otelplugin/",
+    "kind": "fn",
+    "sig": "function otelPlugin(sink, opts?): Plugin;"
+  },
+  "outputIncludes": {
+    "href": "/reference/evals/functions/outputincludes/",
+    "kind": "fn",
+    "sig": "function outputIncludes(substring, opts?): Scorer;"
+  },
+  "outputMatches": {
+    "href": "/reference/evals/functions/outputmatches/",
+    "kind": "fn",
+    "sig": "function outputMatches(pattern): Scorer;"
   },
   "PathSegment": {
     "href": "/reference/core/protocol/namespaces/standardschemav1/interfaces/pathsegment/",
@@ -784,6 +919,11 @@
     "kind": "type",
     "sig": "A provider's published spec: its id and the models it offers keyed by name."
   },
+  "QueryOptions": {
+    "href": "/reference/vectors/index/interfaces/queryoptions/",
+    "kind": "type",
+    "sig": "Options for a VectorStore.query."
+  },
   "reduce": {
     "href": "/reference/core/protocol/functions/reduce/",
     "kind": "fn",
@@ -793,6 +933,11 @@
     "href": "/reference/core/agent/functions/registerglobalconsumer/",
     "kind": "fn",
     "sig": "function registerGlobalConsumer(consumer): () => void;"
+  },
+  "remoteRunner": {
+    "href": "/reference/sandbox/index/functions/remoterunner/",
+    "kind": "fn",
+    "sig": "function remoteRunner(opts): CodeRunner;"
   },
   "replay": {
     "href": "/reference/core/protocol/functions/replay/",
@@ -842,7 +987,7 @@
   "runEval": {
     "href": "/reference/evals/functions/runeval/",
     "kind": "fn",
-    "sig": "function runEval<Deps, Ctx>( agent, cases, opts): AsyncGenerator<EvalRun>;"
+    "sig": "function runEval<Deps, Ctx>( agent, cases, ... args): AsyncGenerator<EvalRun>;"
   },
   "runEvalCached": {
     "href": "/reference/evals/functions/runevalcached/",
@@ -855,9 +1000,9 @@
     "sig": "type RunEvalCachedOptions<Deps, Ctx> = RunEvalOptions<Deps, Ctx> & | { mode: \"live\"; } | { mode: \"record\"; store: TrajectoryStore; } | { mo…"
   },
   "RunEvalOptions": {
-    "href": "/reference/evals/interfaces/runevaloptions/",
+    "href": "/reference/evals/type-aliases/runevaloptions/",
     "kind": "type",
-    "sig": "Options controlling how runEval / describeEval execute and score cases."
+    "sig": "type RunEvalOptions<Deps, Ctx> = DepsOption<Deps> & { makeContext?: (t) => Ctx | Promise<Ctx>; runtime?: RuntimeAdapter; threshold?: number…"
   },
   "RunHandle": {
     "href": "/reference/core/agent/interfaces/runhandle/",
@@ -870,9 +1015,14 @@
     "sig": "Options for mountRunInspector. Provide exactly one of events / source / transport."
   },
   "RunOptions": {
-    "href": "/reference/core/agent/interfaces/runoptions/",
+    "href": "/reference/core/agent/type-aliases/runoptions/",
     "kind": "type",
-    "sig": "Per-run options passed to Agent.run, Agent.stream, and Agent.resume."
+    "sig": "type RunOptions<Deps> = DepsOption<Deps> & RunOptionsBase;"
+  },
+  "RunOptionsBase": {
+    "href": "/reference/core/agent/interfaces/runoptionsbase/",
+    "kind": "type",
+    "sig": "The run options common to every agent, independent of whether it has dependencies."
   },
   "RunResult": {
     "href": "/reference/core/agent/type-aliases/runresult/",
@@ -903,6 +1053,11 @@
     "href": "/reference/react/index/interfaces/runstore/",
     "kind": "type",
     "sig": "A useSyncExternalStore-compatible store over a run's events. Created by createRunStore."
+  },
+  "runSuite": {
+    "href": "/reference/evals/functions/runsuite/",
+    "kind": "fn",
+    "sig": "function runSuite<Deps, Ctx>(entries, ...args): Promise<SuiteResult>;"
   },
   "RuntimeAdapter": {
     "href": "/reference/core/protocol/interfaces/runtimeadapter/",
@@ -997,7 +1152,27 @@
   "sqliteBunCheckpointer": {
     "href": "/reference/memory/sqlite-bun/functions/sqlitebuncheckpointer/",
     "kind": "fn",
-    "sig": "function sqliteBunCheckpointer(path?): Checkpointer;"
+    "sig": "function sqliteBunCheckpointer(pathOrOpts?): Checkpointer;"
+  },
+  "sqliteBunVectorStore": {
+    "href": "/reference/vectors/sqlite-bun/functions/sqlitebunvectorstore/",
+    "kind": "fn",
+    "sig": "function sqliteBunVectorStore(pathOrOpts?): VectorStore;"
+  },
+  "sqliteNodeCheckpointer": {
+    "href": "/reference/memory/sqlite-node/functions/sqlitenodecheckpointer/",
+    "kind": "fn",
+    "sig": "function sqliteNodeCheckpointer(pathOrOpts?): Checkpointer;"
+  },
+  "sqliteNodeKv": {
+    "href": "/reference/kv/sqlite-node/functions/sqlitenodekv/",
+    "kind": "fn",
+    "sig": "function sqliteNodeKv(opts?): KeyValue;"
+  },
+  "sqliteNodeVectorStore": {
+    "href": "/reference/vectors/sqlite-node/functions/sqlitenodevectorstore/",
+    "kind": "fn",
+    "sig": "function sqliteNodeVectorStore(pathOrOpts?): VectorStore;"
   },
   "StandardSchemaV1": {
     "href": "/reference/core/protocol/interfaces/standardschemav1/",
@@ -1039,6 +1214,31 @@
     "kind": "type",
     "sig": "readonly optional issues?: undefined;"
   },
+  "SuiteArgs": {
+    "href": "/reference/evals/type-aliases/suiteargs/",
+    "kind": "type",
+    "sig": "type SuiteArgs<Deps, Ctx> = [Deps] extends [void] ? [SuiteOptions<void, Ctx>] : [SuiteOptions<Deps, Ctx>];"
+  },
+  "SuiteEntry": {
+    "href": "/reference/evals/interfaces/suiteentry/",
+    "kind": "type",
+    "sig": "One group of cases run against a specific agent in a runSuite matrix — e.g. one model, or one"
+  },
+  "SuiteOptions": {
+    "href": "/reference/evals/type-aliases/suiteoptions/",
+    "kind": "type",
+    "sig": "type SuiteOptions<Deps, Ctx> = RunEvalOptions<Deps, Ctx> & { minPassRate?: number; onRun?: (run) => void; };"
+  },
+  "SuiteResult": {
+    "href": "/reference/evals/interfaces/suiteresult/",
+    "kind": "type",
+    "sig": "The aggregate outcome of runSuite: every SuiteRun, the pass counts, and the CI gate verdict."
+  },
+  "SuiteRun": {
+    "href": "/reference/evals/interfaces/suiterun/",
+    "kind": "type",
+    "sig": "One EvalRun within a suite, tagged with its group label and wall-clock durationMs."
+  },
   "suspend": {
     "href": "/reference/core/protocol/functions/suspend/",
     "kind": "fn",
@@ -1057,7 +1257,7 @@
   "SuspensionDescriptor": {
     "href": "/reference/core/protocol/type-aliases/suspensiondescriptor/",
     "kind": "type",
-    "sig": "type SuspensionDescriptor = { callId?: string; kind: string; payload: JsonValue; resolutionSchemaId: string; toolVersion?: string; };"
+    "sig": "type SuspensionDescriptor = { callId?: string; kind: string; payload: JsonValue; resolutionSchemaId?: string; toolVersion?: string; };"
   },
   "SuspensionRequest": {
     "href": "/reference/core/protocol/interfaces/suspensionrequest/",
@@ -1069,6 +1269,11 @@
     "kind": "type",
     "sig": "type Template = \"node-cli\" | \"bun-server\" | \"react-chat\";"
   },
+  "TEMPLATES": {
+    "href": "/reference/create-mithril/variables/templates/",
+    "kind": "const",
+    "sig": "const TEMPLATES: readonly Template[];"
+  },
   "TestAdapter": {
     "href": "/reference/core/protocol/interfaces/testadapter/",
     "kind": "type",
@@ -1078,6 +1283,11 @@
     "href": "/reference/core/testkit/functions/testmodel/",
     "kind": "fn",
     "sig": "function testModel(provider, id?): ModelHandle;"
+  },
+  "textTurn": {
+    "href": "/reference/core/testkit/functions/textturn/",
+    "kind": "fn",
+    "sig": "function textTurn(text, finishReason?): readonly ProviderChunk[];"
   },
   "TimelineEntry": {
     "href": "/reference/devtools/index/interfaces/timelineentry/",
@@ -1104,6 +1314,11 @@
     "kind": "type",
     "sig": "A typed tool: Standard Schema in/out plus typed dependency injection."
   },
+  "toolCallCount": {
+    "href": "/reference/evals/functions/toolcallcount/",
+    "kind": "fn",
+    "sig": "function toolCallCount(expected): Scorer;"
+  },
   "ToolCallFor": {
     "href": "/reference/core/protocol/type-aliases/toolcallfor/",
     "kind": "type",
@@ -1113,6 +1328,11 @@
     "href": "/reference/core/protocol/interfaces/toolcallrecord/",
     "kind": "type",
     "sig": "A single tool call and its (eventual) output within a Message."
+  },
+  "toolCallTurn": {
+    "href": "/reference/core/testkit/functions/toolcallturn/",
+    "kind": "fn",
+    "sig": "function toolCallTurn( name, input, callId?): readonly ProviderChunk[];"
   },
   "ToolDef": {
     "href": "/reference/core/agent/interfaces/tooldef/",
@@ -1174,6 +1394,11 @@
     "kind": "type",
     "sig": "A key→string store for persisted trajectories, backing the record/replay split."
   },
+  "trajectoryToScript": {
+    "href": "/reference/evals/functions/trajectorytoscript/",
+    "kind": "fn",
+    "sig": "function trajectoryToScript(t): ProviderChunk[][];"
+  },
   "transformers": {
     "href": "/reference/providers/transformers/functions/transformers/",
     "kind": "fn",
@@ -1209,6 +1434,16 @@
     "kind": "type",
     "sig": "readonly input: Input;"
   },
+  "underCost": {
+    "href": "/reference/evals/functions/undercost/",
+    "kind": "fn",
+    "sig": "function underCost(maxMicroUsd): Scorer;"
+  },
+  "underSteps": {
+    "href": "/reference/evals/functions/understeps/",
+    "kind": "fn",
+    "sig": "function underSteps(maxSteps): Scorer;"
+  },
   "UsageDelta": {
     "href": "/reference/core/protocol/interfaces/usagedelta/",
     "kind": "type",
@@ -1219,6 +1454,16 @@
     "kind": "type",
     "sig": "A running usage accumulator: a UsageDelta plus a completed-step count."
   },
+  "useChat": {
+    "href": "/reference/react/hooks/functions/usechat/",
+    "kind": "fn",
+    "sig": "function useChat(agent): UseChatResult;"
+  },
+  "UseChatResult": {
+    "href": "/reference/react/hooks/interfaces/usechatresult/",
+    "kind": "type",
+    "sig": "The value returned by useChat: the current ChatSnapshot plus a send action."
+  },
   "useObject": {
     "href": "/reference/react/hooks/functions/useobject/",
     "kind": "fn",
@@ -1228,6 +1473,31 @@
     "href": "/reference/react/hooks/functions/userun/",
     "kind": "fn",
     "sig": "function useRun(source): RunSnapshot;"
+  },
+  "VectorMatch": {
+    "href": "/reference/vectors/index/interfaces/vectormatch/",
+    "kind": "type",
+    "sig": "A single nearest-neighbour hit returned by VectorStore.query, ordered by descending score."
+  },
+  "VectorRecord": {
+    "href": "/reference/vectors/index/interfaces/vectorrecord/",
+    "kind": "type",
+    "sig": "A record written to a VectorStore: an id, its embedding, and optional JSON-safe metadata."
+  },
+  "vectorsConformance": {
+    "href": "/reference/vectors/index/functions/vectorsconformance/",
+    "kind": "fn",
+    "sig": "function vectorsConformance(make, t): void;"
+  },
+  "VectorsTestAdapter": {
+    "href": "/reference/vectors/index/interfaces/vectorstestadapter/",
+    "kind": "type",
+    "sig": "Minimal test-runner shim so vectorsConformance runs under bun:test / vitest with no hard dependency."
+  },
+  "VectorStore": {
+    "href": "/reference/vectors/index/interfaces/vectorstore/",
+    "kind": "type",
+    "sig": "A runtime-agnostic vector store (§10.4) — the portable core of retrieval-augmented generation."
   },
   "withJsonSchema": {
     "href": "/reference/core/protocol/functions/withjsonschema/",
@@ -1248,6 +1518,11 @@
     "href": "/reference/workflows/type-aliases/workflowstep/",
     "kind": "type",
     "sig": "type WorkflowStep<S> = (state) => | StepResult<S> | Promise<StepResult<S>>;"
+  },
+  "ZERO_DELTA": {
+    "href": "/reference/core/testkit/variables/zero_delta/",
+    "kind": "const",
+    "sig": "const ZERO_DELTA: UsageDelta;"
   },
   "ZERO_USAGE": {
     "href": "/reference/core/protocol/variables/zero_usage/",

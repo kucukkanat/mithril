@@ -5,7 +5,7 @@ prev: false
 title: "SuspensionRequest"
 ---
 
-Defined in: packages/core/src/protocol/suspension.ts:14
+Defined in: [packages/core/src/protocol/suspension.ts:14](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L14)
 
 A request to pause a run until a human (or external system) supplies a
 validated resolution.
@@ -26,7 +26,7 @@ validated resolution.
 readonly kind: Kind;
 ```
 
-Defined in: packages/core/src/protocol/suspension.ts:19
+Defined in: [packages/core/src/protocol/suspension.ts:19](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L19)
 
 ***
 
@@ -36,30 +36,32 @@ Defined in: packages/core/src/protocol/suspension.ts:19
 readonly payload: Payload;
 ```
 
-Defined in: packages/core/src/protocol/suspension.ts:21
+Defined in: [packages/core/src/protocol/suspension.ts:21](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L21)
 
 JSON-safe data shown to the human/UI.
 
 ***
 
-### resolutionSchema
+### resolutionSchema?
 
 ```ts
-readonly resolutionSchema: StandardSchemaV1<unknown, Resolution>;
+readonly optional resolutionSchema?: StandardSchemaV1<unknown, Resolution>;
 ```
 
-Defined in: packages/core/src/protocol/suspension.ts:23
+Defined in: [packages/core/src/protocol/suspension.ts:27](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L27)
 
-Validator for the resume input — resolutions are validated, never trusted.
+Optional validator for the resume input. Supply it (with [SuspensionRequest.resolutionSchemaId](/reference/core/protocol/interfaces/suspensionrequest/#resolutionschemaid))
+only when you intend to validate the resolution yourself; the runtime does not validate on resume, so a
+plain `ctx.suspend({ kind, payload })` is the common case.
 
 ***
 
-### resolutionSchemaId
+### resolutionSchemaId?
 
 ```ts
-readonly resolutionSchemaId: string;
+readonly optional resolutionSchemaId?: string;
 ```
 
-Defined in: packages/core/src/protocol/suspension.ts:25
+Defined in: [packages/core/src/protocol/suspension.ts:29](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L29)
 
-Registry id used to re-resolve the validator on open/resume.
+Optional registry id for the resolution validator; carried on the descriptor for identification.

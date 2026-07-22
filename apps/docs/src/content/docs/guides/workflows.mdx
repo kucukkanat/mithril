@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 
 Not every decision needs a model. A **workflow** is plain, deterministic routing over a shared
 typed state — cheap branching *before* and *around* LLM calls. A step may run an agent, but the
@@ -14,11 +15,10 @@ routing itself is code you can read, so there is no hidden LLM router unless you
 ## Define, route, finish
 
 `defineWorkflow` takes a map of named steps and a `start`. Each step returns `goto(next, state)` to
-continue or `done(state)` to stop. `run` folds from the start and returns the final `state` plus the
-`path` it took:
+continue or `done(state)` to stop. `run` folds from the start and returns the final `state` plus the `path` it took (highlighted). Run
+it — no model involved:
 
-```ts
-import { defineWorkflow, goto, done } from "@mithril/workflows";
+<Runnable title="refunds.ts" highlight={["24-25"]} code={`import { defineWorkflow, goto, done } from "@mithril/workflows";
 
 interface Refund {
   readonly orderId: string;
@@ -41,26 +41,42 @@ const refunds = defineWorkflow<Refund>(
 );
 
 const { state, path } = await refunds.run({ orderId: "A-1", amountUsd: 40 });
-// path:  ["triage", "autoApprove"]
-// state: { orderId: "A-1", amountUsd: 40, approved: true, reason: "under threshold" }
-```
+console.log("path:", path); // ["triage", "autoApprove"]
+console.log("state:", state); // { …, approved: true, reason: "under threshold" }`} />
 
 State is threaded immutably — each step receives the current state and returns the next. Nothing is
 mutated in place.
 
 ## A step can call an agent
 
-The routing is deterministic, but a step is free to `await` anything — including an agent run —
-before it decides where to go:
+The routing is deterministic, but a step is free to `await` anything — including an agent run
+(highlighted) — before it decides where to go. The *model* classifies; the *code* routes:
 
-```ts
-classify: async (s) => {
-  const r = await classifier.run(s.reason ?? "");
-  return goto(r.status === "completed" && r.output === "fraud" ? "escalate" : "review", s);
-},
-```
+<Runnable title="agent-step.ts" highlight={["14-15"]} code={`import { agent } from "mithril";
+import { defineWorkflow, goto, done } from "@mithril/workflows";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
 
-This is the point: the *model* classifies, the *code* routes. You can see every branch.
+interface Ticket { readonly reason: string; readonly route?: string }
+
+const classifier = agent({
+  model: testModel(scriptedProvider([textTurn("fraud")])),
+  instructions: "Classify the ticket as 'fraud' or 'normal'. Reply with one word.",
+});
+
+const triage = defineWorkflow<Ticket>(
+  {
+    classify: async (s) => {
+      const r = await classifier.run(s.reason);
+      return goto(r.status === "completed" && r.output.includes("fraud") ? "escalate" : "review", s);
+    },
+    escalate: (s) => done({ ...s, route: "escalate" }),
+    review: (s) => done({ ...s, route: "review" }),
+  },
+  { start: "classify" },
+);
+
+const { state, path } = await triage.run({ reason: "unauthorized charge" });
+console.log(path, "→", state.route);`} />
 
 ## Termination is guaranteed
 

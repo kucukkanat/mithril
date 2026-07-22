@@ -23,7 +23,7 @@ Everything under "Shipped" below is implemented and covered by the test suite. E
   (`@mithril/providers/transformers` — on-device WebGPU/WASM, no keys).
 - **Human-in-the-loop** — all three suspension tiers: Tier-1 approval (`needsApproval`), Tier-1b (a tool
   _returns_ `suspend(...)`), and Tier-2 (`await ctx.suspend()` mid-execute, resumed by replaying journaled
-  effects). Resume with `resume()` (to a final `RunResult`) or `rehydrate()` (streaming), plus in-process
+  effects). Resume with `resume()` (to a final `RunResult`) or `resumeStream()` (streaming), plus in-process
   `RunHandle.resolve()`. `seal`/`open` sealing (HMAC + AES-GCM) for persisted tokens.
 - **Run control** — real `RunHandle.cancel()` (aborts at the next step boundary), `iterate()` step-level
   snapshots, and `asTool()` to call one agent as another's tool — with **first-class nested HITL**: a

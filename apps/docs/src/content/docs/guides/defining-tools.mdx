@@ -10,10 +10,26 @@ import Runnable from "../../../components/Runnable.astro";
 
 A tool is four things: a `name`, a `description` the model reads, an `inputSchema`, and an
 `execute` function. Nothing else is required — input and output types are inferred, so you never
-restate a generic.
+restate a generic:
 
 ```ts
 import { tool } from "mithril";
+import { z } from "zod"; // any Standard Schema validator
+
+const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }), // ({ city }) is typed; returns { city, tempC }
+});
+```
+
+That's the whole tool. Below is the same definition wired into an agent that runs **offline in your
+browser** — click **Open in playground** (the scripted `model` and `run`/`toolCallTurn` helpers are
+playground scaffolding; in your app you pass a real `anthropic(…)` handle and call `agent.run(...)`):
+
+<Runnable title="weather-tool.ts" highlight={["5-10"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
 import { z } from "zod";
 
 const weather = tool({
@@ -22,7 +38,9 @@ const weather = tool({
   inputSchema: z.object({ city: z.string() }),
   execute: async ({ city }) => ({ city, tempC: 21 }),
 });
-```
+
+const model = testModel(scriptedProvider([toolCallTurn("weather", { city: "Istanbul" }), textTurn("It's 21°C in Istanbul.")]));
+await run(agent({ model, instructions: "Use weather, then answer.", tools: [weather] }), "Weather in Istanbul?");`} />
 
 ## Any Standard Schema validator
 
@@ -31,16 +49,16 @@ Valibot, and ArkType all work unchanged, because the tool only touches the `~sta
 The `execute` argument is typed as the schema's **output**, so validation and types come from one
 source.
 
-## Inferred I/O
+## Inferred I/O, plus an output schema
 
 `In` is recovered from the schema; `Out` from `execute`'s naked return value — so a tool that
-returns an object does not collapse to `string`. `Out` must be a `JsonValue` (the return crosses
-the wire and lands in the replayable log). With no schema and a string return, `Out` defaults to
-`string`.
+returns an object does not collapse to `string`. `Out` must be a `JsonValue`. Add an `outputSchema`
+(highlighted) to validate what you return, too:
 
-Add an `outputSchema` to validate what you return, too:
+<Runnable title="price-tool.ts" highlight={[8]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
 
-```ts
 const price = tool({
   name: "price",
   description: "Latest price for a ticker.",
@@ -48,38 +66,50 @@ const price = tool({
   outputSchema: z.object({ ticker: z.string(), usd: z.number() }),
   execute: async ({ ticker }) => ({ ticker, usd: 187.4 }),
 });
-```
+
+const model = testModel(scriptedProvider([toolCallTurn("price", { ticker: "AAPL" }), textTurn("AAPL is $187.40.")]));
+await run(agent({ model, instructions: "Look up the price, then answer.", tools: [price] }), "Price of AAPL?");`} />
 
 ## Typed dependencies
 
 `execute`'s second argument is the `RunContext`. Bind your dependencies once with
-[`createHarness`](/concepts/three-verbs/) and `ctx.deps` is typed in every tool — no per-call
-`<Deps>()`:
+[`createHarness`](/concepts/three-verbs/) and `ctx.deps` is typed in every tool (highlighted) — no
+per-call `<Deps>()`. `deps` are re-injected every run and never serialized:
 
-```ts
-import { createHarness } from "mithril";
+<Runnable title="typed-deps.ts" highlight={[16]} code={`import { agent, createHarness } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
 
-interface Deps { db: Database }
-const { tool } = createHarness<Deps>();
+interface Deps { users: Map<string, { name: string }> }
+const { agent: buildAgent, tool } = createHarness<Deps>();
 
 const getUser = tool({
   name: "get_user",
   description: "Look up a user by id.",
   inputSchema: z.object({ id: z.string() }),
-  execute: async ({ id }, ctx) => ctx.deps.db.users.get(id), // ctx.deps: Deps
+  execute: async ({ id }, ctx) => ctx.deps.users.get(id) ?? { name: "unknown" }, // ctx.deps: Deps
 });
-```
 
-`ctx` also carries `runId`, `step`, `signal`, `usage`, `runtime`, `emit`, and `journal`. `deps` are
-re-injected every run and never serialized.
+const model = testModel(scriptedProvider([toolCallTurn("get_user", { id: "42" }), textTurn("That's Ada.")]));
+const app = buildAgent({ model, instructions: "Look up the user, then answer.", tools: [getUser] });
+await run(app, "Who is user 42?", { deps: { users: new Map([["42", { name: "Ada" }]]) } });`} />
+
+<Aside type="note">
+`ctx` also carries `runId`, `step`, `signal`, `usage`, `runtime`, `emit`, and `journal`. In the
+playground, `run(agent, input, opts)` forwards `opts` (like `deps`) to the underlying run.
+</Aside>
 
 ## Approval gates and progress
 
 Set `needsApproval: true` (a boolean, or a predicate over the input) to pause the run before
 `execute` — see [Human-in-the-loop](/guides/human-in-the-loop/). For long work, make `execute` an
-async generator that yields `{ payload }` progress; each yield emits a `tool.progress` event:
+async generator that yields `{ payload }` progress (highlighted); each yield emits a `tool.progress`
+event:
 
-```ts
+<Runnable title="progress-tool.ts" highlight={["10-11"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
 const index = tool({
   name: "index",
   description: "Index a document.",
@@ -90,37 +120,6 @@ const index = tool({
     return { indexed: true, url };
   },
 });
-```
 
-## Run one now
-
-The scripted provider replays a tool call, then a text answer — zero network:
-
-<Runnable title="weather-tool.ts" code={`import { agent, tool } from "mithril";
-import { scriptedProvider, testModel } from "@mithril/core/testkit";
-import { z } from "zod";
-
-const model = testModel(scriptedProvider([
-  [
-    { type: "tool.call", callId: "c1", name: "weather", input: { city: "Istanbul" } },
-    { type: "message.end", finishReason: "tool_calls", usage },
-  ],
-  [
-    { type: "text.delta", delta: "It's 21°C in Istanbul." },
-    { type: "message.end", finishReason: "stop", usage },
-  ],
-]));
-
-const weather = tool({
-  name: "weather",
-  description: "Current weather for a city.",
-  inputSchema: z.object({ city: z.string() }),
-  execute: async ({ city }) => ({ city, tempC: 21 }),
-});
-
-await run(agent({ model, instructions: "Use weather, then answer.", tools: [weather] }), "Weather in Istanbul?");`} />
-
-<Aside type="note" title="`run` and `usage`">
-Both are provided by the playground so scripted snippets stay terse. In your app you call
-`agent.run(...)` or `agent.stream(...)`; `usage` is a per-turn token/cost delta.
-</Aside>
+const model = testModel(scriptedProvider([toolCallTurn("index", { url: "https://example.com" }), textTurn("Indexed.")]));
+await run(agent({ model, instructions: "Index the URL, then confirm.", tools: [index] }), "Index example.com");`} />

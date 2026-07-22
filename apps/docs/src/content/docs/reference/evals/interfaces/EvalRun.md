@@ -5,7 +5,7 @@ prev: false
 title: "EvalRun"
 ---
 
-Defined in: index.ts:62
+Defined in: [index.ts:63](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L63)
 
 The outcome of evaluating one [EvalCase](/reference/evals/interfaces/evalcase/): its scores, the captured [Trajectory](/reference/evals/interfaces/trajectory/), and whether
 every score met the threshold.
@@ -13,6 +13,10 @@ every score met the threshold.
 ## Remarks
 
 `passed` is `true` only when all `scores` have `value >= threshold`.
+
+## Extended by
+
+- [`SuiteRun`](/reference/evals/interfaces/suiterun/)
 
 ## Properties
 
@@ -22,7 +26,7 @@ every score met the threshold.
 readonly case: string;
 ```
 
-Defined in: index.ts:63
+Defined in: [index.ts:64](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L64)
 
 ***
 
@@ -32,7 +36,7 @@ Defined in: index.ts:63
 readonly passed: boolean;
 ```
 
-Defined in: index.ts:66
+Defined in: [index.ts:67](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L67)
 
 ***
 
@@ -42,7 +46,7 @@ Defined in: index.ts:66
 readonly scores: readonly Score[];
 ```
 
-Defined in: index.ts:64
+Defined in: [index.ts:65](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L65)
 
 ***
 
@@ -52,4 +56,4 @@ Defined in: index.ts:64
 readonly trajectory: Trajectory;
 ```
 
-Defined in: index.ts:65
+Defined in: [index.ts:66](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L66)

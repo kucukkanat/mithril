@@ -17,7 +17,8 @@ const weather = tool({
 
 const assistant = agent({ model: openai("gpt-4o"), instructions: "Be concise.", tools: [weather] });
 
-const { output } = await assistant.run("Weather in Istanbul?"); // key from OPENAI_API_KEY
+const result = await assistant.run("Weather in Istanbul?"); // key from OPENAI_API_KEY
+if (result.status === "completed") console.log(result.output);
 // or stream:  for await (const e of assistant.stream("…").events) …
 ```
 
@@ -37,4 +38,5 @@ plugins, sealed run tokens — all from `mithril`. Reach for the individual `@mi
 ## Entrypoints
 
 `mithril` (core) · `mithril/openai` · `mithril/anthropic` — `openai("gpt-4o")` / `anthropic("claude-…")`
-return self-wiring model handles.
+return self-wiring model handles. `mithril/transformers` — `transformers("…")` for on-device inference.
+`mithril/devtools/attach` — a side-effect import that zero-touch attaches the devtools inspector.

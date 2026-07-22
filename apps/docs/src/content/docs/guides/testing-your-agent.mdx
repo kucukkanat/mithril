@@ -1,0 +1,108 @@
+---
+title: Testing your agent
+description: Drive the real loop with a scripted provider — deterministic, zero-network, zero-mock unit tests.
+sidebar:
+  order: 18
+  label: Testing your agent
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
+
+Because a run is a stream of typed events over a swappable `Provider`, you test an agent by scripting
+the model's turns and asserting on what the loop actually did — no network, no mocking your own code.
+The [`@mithril/core/testkit`](/reference/core/testkit/readme/) ships exactly that.
+
+## The scripted provider
+
+[`scriptedProvider`](/reference/core/testkit/functions/scriptedprovider/) replays one array of provider
+chunks per model turn; [`testModel`](/reference/core/testkit/functions/testmodel/) wraps it as a
+self-wiring model handle. The **real** agent loop, tools, and middleware run — only the network is
+faked. Run the example below; the highlighted lines are what a test would assert with
+`expect(...)`. Wrap it in `test("...", async () => { ... })` in `bun:test` or Vitest:
+
+<Runnable title="agent.test.ts" highlight={["19-21"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+let calledWith = "";
+const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => {
+    calledWith = city; // your real tool runs
+    return { city, tempC: 21 };
+  },
+});
+
+// textTurn / toolCallTurn build the text.delta + message.end pairs for you.
+const model = testModel(scriptedProvider([toolCallTurn("weather", { city: "Istanbul" }), textTurn("It's 21°C in Istanbul.")]));
+const result = await agent({ model, instructions: "Be concise.", tools: [weather] }).run("Weather?");
+
+console.log("tool ran with:", calledWith); // expect(calledWith).toBe("Istanbul")
+console.log("status:", result.status); // expect(result.status).toBe("completed")
+if (result.status === "completed") console.log("output:", result.output); // expect(...).toContain("21°C")`} />
+
+<Aside type="tip">
+`textTurn(text)` and `toolCallTurn(name, input)` replace hand-writing the `message.end` boilerplate
+(with its zero `usage`). Reach for the raw chunk arrays only when a turn needs a custom `finishReason`
+or `usage`.
+</Aside>
+
+## Asserting on the trajectory
+
+The result's `status` and `output` cover the happy path. For tool selection, ordering, or streamed
+events, iterate the run — every fact is in the event stream (highlighted):
+
+<Runnable title="trajectory.test.ts" highlight={["11-14"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const weather = tool({ name: "weather", description: "Weather.", inputSchema: z.object({ city: z.string() }), execute: async ({ city }) => ({ city, tempC: 21 }) });
+const model = testModel(scriptedProvider([toolCallTurn("weather", { city: "Istanbul" }), textTurn("It's 21°C.")]));
+const assistant = agent({ model, instructions: "Use weather.", tools: [weather] });
+
+const handle = assistant.stream("Weather?");
+const toolCalls = [];
+for await (const e of handle.events) {
+  if (e.type === "tool.call") toolCalls.push(e.name);
+}
+console.log(toolCalls); // expect(toolCalls).toEqual(["weather"])`} />
+
+For a whole suite of behavioral checks — tool order, cost budgets, output matching — reach for
+[`@mithril/evals`](/guides/evals/), whose scorers are pure functions over this same trajectory.
+
+## Testing suspensions (HITL)
+
+A scripted tool-call turn plus a tool that needs approval lets you test the suspend/resume seam with
+no real human in the loop (highlighted):
+
+<Runnable title="hitl.test.ts" highlight={["12-16"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const deploy = tool({ name: "deploy", description: "Deploy.", inputSchema: z.object({ env: z.string() }), needsApproval: true, execute: async ({ env }) => ({ env }) });
+const model = testModel(scriptedProvider([toolCallTurn("deploy", { env: "prod" }), textTurn("Skipped.")]));
+const assistant = agent({ model, instructions: "Deploy when asked.", tools: [deploy] });
+
+const result = await assistant.run("Deploy to production.");
+console.log("suspended?", result.status === "suspended"); // expect(...).toBe("suspended")
+if (result.status === "suspended") {
+  const done = await assistant.resume(result.token, { kind: "reject", message: "not now" });
+  console.log("after reject:", done.status); // expect(done.status).toBe("completed")
+}`} />
+
+<Steps>
+
+1. **Script the model** — `scriptedProvider([...turns])` with `textTurn` / `toolCallTurn`.
+2. **Run the real agent** — `agent({ model: testModel(...), tools })` executes your actual tools.
+3. **Assert** — on `result.status`/`output`, or fold `handle.events` for tool calls and ordering.
+4. **Scale up** — move recurring behavioral checks into `@mithril/evals` scorers.
+
+</Steps>
+
+<Aside type="note">
+Keep unit tests (this page) and any live-model E2E checks in **separate commands** — the scripted tests
+stay network-free and deterministic, so they belong in the fast path your CI runs on every push.
+</Aside>

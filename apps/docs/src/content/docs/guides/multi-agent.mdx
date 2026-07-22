@@ -1,0 +1,109 @@
+---
+title: Multi-agent (sub-agents)
+description: Call one agent as another's tool with asTool — delegation, typed I/O, and nested HITL for free.
+sidebar:
+  order: 21
+  label: Multi-agent
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
+
+A sub-agent is just a tool. [`asTool`](/reference/core/agent/functions/astool/) wraps an
+[`Agent`](/reference/core/agent/interfaces/agent/) as a callable tool (highlighted), so a coordinator
+can delegate a sub-task, get the sub-agent's output back as the tool result, and keep going — all
+over the same event stream, with the child's run nested under the parent's. Run it in the browser:
+
+<Runnable title="delegate.ts" preset="multi-agent" highlight={["11-15"]} code={`import { agent, asTool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+
+// Parent and child share one scripted provider, so turns advance globally:
+// parent calls the tool (turn 0), the sub-agent answers (turn 1), the parent summarizes (turn 2).
+const model = testModel(scriptedProvider([
+  toolCallTurn("research", { task: "HTTP/3 vs HTTP/2" }),
+  textTurn("HTTP/3 runs over QUIC (UDP); HTTP/2 over TCP."),
+  textTurn("In short: HTTP/3 moves to QUIC/UDP, cutting head-of-line blocking."),
+]));
+
+const researcher = agent({ model, instructions: "Research the question and return findings." });
+const lead = agent({
+  model,
+  instructions: "Delegate research to the tool, then summarize.",
+  tools: [asTool(researcher, { name: "research", description: "Deep-dive a question." })],
+});
+
+await run(lead, "How does HTTP/3 differ from HTTP/2?");`} />
+
+## Shape the tool's I/O
+
+By default the tool takes `{ task: string }` and passes `task` as the sub-agent's input. Change the
+shape with `inputSchema` + `input` (a mapper), and provide the child's dependencies with `deps`
+(highlighted):
+
+<Runnable title="shaped.ts" highlight={["16-20"]} code={`import { agent, asTool, createHarness } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+interface Deps { researchKey: string }
+const { agent: buildAgent } = createHarness<Deps>();
+
+const model = testModel(scriptedProvider([
+  toolCallTurn("research", { topic: "QUIC", lang: "English" }),
+  textTurn("QUIC is a UDP-based transport."),
+  textTurn("Done: QUIC underpins HTTP/3."),
+]));
+
+const researcher = buildAgent({ model, instructions: "Research the topic." });
+const lead = buildAgent({
+  model,
+  instructions: "Delegate, then summarize.",
+  tools: [asTool(researcher, {
+    name: "research",
+    description: "Research a topic in a language.",
+    inputSchema: z.object({ topic: z.string(), lang: z.string() }),
+    input: ({ topic, lang }) => \`Research "\${topic}" and answer in \${lang}.\`,
+    deps: (ctx) => ({ researchKey: ctx.deps.researchKey }),
+  })],
+});
+
+await run(lead, "Explain QUIC", { deps: { researchKey: "demo" } });`} />
+
+## Nested human-in-the-loop is first-class
+
+If a sub-agent suspends — its own tool needs approval, or it calls `ctx.suspend()` — the **parent**
+suspends too, carrying the child's pending request. Resume the parent with the child's decision and
+the tool drives the child to completion, across as many nested pauses as needed — all through the
+parent's single token:
+
+<Runnable title="nested-hitl.ts" highlight={["21-23"]} code={`import { agent, asTool, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const deploy = tool({
+  name: "deploy",
+  description: "Deploy the release.",
+  inputSchema: z.object({ env: z.string() }),
+  needsApproval: true, // the child suspends before this runs
+  execute: async ({ env }) => ({ deployed: env }),
+});
+
+const model = testModel(scriptedProvider([
+  toolCallTurn("release", { task: "ship" }),
+  toolCallTurn("deploy", { env: "production" }),
+  textTurn("Shipped to production."),
+  textTurn("Release complete."),
+]));
+
+const shipper = agent({ model, instructions: "Deploy when asked.", tools: [deploy] });
+const lead = agent({ model, instructions: "Delegate the release.", tools: [asTool(shipper, { name: "release", description: "Cut a release." })] });
+
+const result = await lead.run("Ship the release notes.");
+if (result.status === "suspended") {
+  const done = await lead.resume(result.token, { kind: "resolve", value: { kind: "approve" } });
+  console.log(done.status);
+}`} />
+
+<Aside type="note">
+The child's run is journaled, so resuming never re-executes work the sub-agent already did — nested
+delegation stays exactly-once.
+</Aside>

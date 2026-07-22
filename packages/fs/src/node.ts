@@ -10,7 +10,8 @@ import { type FileSystem, FsError } from "./index.ts";
  * outside `root` is rejected with an {@link FsError}, giving the same confinement guarantee as the
  * in-memory and OPFS adapters. Writes create parent directories automatically.
  *
- * @param root - Base directory all paths are resolved against; created lazily on first write.
+ * @param rootOrOpts - the base directory all paths are resolved against (or `{ root }`); created lazily
+ *   on first write.
  * @returns A rooted filesystem over `root`.
  * @throws {@link FsError} on any operation whose path escapes `root`.
  * @example
@@ -22,8 +23,8 @@ import { type FileSystem, FsError } from "./index.ts";
  * const text = await fs.readText("out/result.json");
  * ```
  */
-export function nodeFileSystem(root: string): FileSystem {
-  const rootAbs = resolve(root);
+export function nodeFileSystem(rootOrOpts: string | { readonly root: string }): FileSystem {
+  const rootAbs = resolve(typeof rootOrOpts === "string" ? rootOrOpts : rootOrOpts.root);
   const full = (p: string): string => {
     const abs = resolve(rootAbs, p);
     const rel = relative(rootAbs, abs);

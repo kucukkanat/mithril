@@ -5,7 +5,7 @@ prev: false
 title: "Provider"
 ---
 
-Defined in: packages/core/src/protocol/provider.ts:70
+Defined in: [packages/core/src/protocol/provider.ts:70](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L70)
 
 A model provider: its [ProviderSpec](/reference/core/protocol/interfaces/providerspec/) plus a streaming `chat` entry point.
 
@@ -17,7 +17,7 @@ A model provider: its [ProviderSpec](/reference/core/protocol/interfaces/provide
 readonly spec: ProviderSpec;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:71
+Defined in: [packages/core/src/protocol/provider.ts:71](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L71)
 
 ## Methods
 
@@ -31,7 +31,7 @@ chat(
 signal): AsyncGenerator<ProviderChunk>;
 ```
 
-Defined in: packages/core/src/protocol/provider.ts:80
+Defined in: [packages/core/src/protocol/provider.ts:80](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/provider.ts#L80)
 
 Stream one model call as [ProviderChunk](/reference/core/protocol/type-aliases/providerchunk/)s.
 

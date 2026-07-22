@@ -31,3 +31,23 @@ test("folds a run's events into a gen_ai span tree (invoke_agent > chat > execut
   // execute_tool spans nest under a chat span, chat under invoke_agent
   expect(closed.some((s) => s.kind === "execute_tool" && s.endTime !== undefined)).toBe(true);
 });
+
+test("otelPlugin emits spans to the sink when a run completes, via the use: seam", async () => {
+  const { otelPlugin } = await import("../src/index.ts");
+  const search = tool({ name: "search", description: "", inputSchema: schema<{ q: string }>(), execute: async () => ({ hits: [] }) });
+  const turns = [
+    [{ type: "tool.call" as const, callId: "c1", name: "search", input: { q: "x" } }, { type: "message.end" as const, usage: NO_USAGE, finishReason: "tool_calls" as const }],
+    [{ type: "text.delta" as const, delta: "ok" }, { type: "message.end" as const, usage: NO_USAGE, finishReason: "stop" as const }],
+  ];
+  const spans: GenAiSpan[] = [];
+  const a = agent({
+    model: testModel(scriptedProvider(turns)),
+    instructions: "x",
+    tools: [search],
+    use: [otelPlugin({ onSpan: (s) => spans.push(s) })],
+  });
+  const r = await a.run("go");
+  expect(r.status).toBe("completed");
+  expect(spans.some((s) => s.kind === "invoke_agent")).toBe(true);
+  expect(spans.some((s) => s.name === "execute_tool search")).toBe(true);
+});

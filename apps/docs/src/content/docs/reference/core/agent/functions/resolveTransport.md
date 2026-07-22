@@ -9,7 +9,7 @@ title: "resolveTransport"
 function resolveTransport(explicit, modelId): Transport;
 ```
 
-Defined in: packages/core/src/agent/registry.ts:87
+Defined in: [packages/core/src/agent/registry.ts:87](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/registry.ts#L87)
 
 Resolve the [Transport](/reference/core/protocol/type-aliases/transport/) for a run, defaulting to BYOK from the environment.
 

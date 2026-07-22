@@ -16,24 +16,24 @@ the loop — Mithril stays a set of bricks, not a monolith. Compose them by arra
 ## Two altitudes
 
 A `Middleware` is `{ name, tool?, model? }`. Each hook is an onion layer: receive the call, do
-work, call `next` — or short-circuit by returning without it.
+work, call `next` — or short-circuit by returning without it. Compose by array order via `use:`
+(highlighted) — run it:
 
-```ts
+<Runnable title="altitudes.ts" highlight={[16]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
 // tool altitude — guardrails, memoization, drift checks
-const guardrail: Middleware = {
+const guardrail = {
   name: "guardrail",
-  tool: async (ctx, call, next) =>
-    isBlocked(call) ? { callId: call.callId, status: "error", error: block } : next(call),
+  tool: async (ctx, call, next) => { console.log("tool:", call.name); return next(call); },
 };
-
 // model altitude — caching, fallback models, prompt-cache ordering
-const cache: Middleware = {
-  name: "cache",
-  model: async (ctx, call, next) => (await hit(call)) ?? next(call),
-};
+const logModel = { name: "log-model", model: async (ctx, call, next) => { console.log("model call"); return next(call); } };
 
-agent({ model, instructions, tools, use: [cache, guardrail] });
-```
+const search = tool({ name: "search", description: "Search the docs.", inputSchema: z.object({ q: z.string() }), execute: async ({ q }) => ({ hits: 3, q }) });
+const model = testModel(scriptedProvider([toolCallTurn("search", { q: "mithril" }), textTurn("Found 3 results.")]));
+await run(agent({ model, instructions: "Use search.", tools: [search], use: [logModel, guardrail] }), "Search mithril.");`} />
 
 `call` is a `ToolInvocation` (`{ callId, name, input, version? }`) or a `ModelCall`; the return is a
 `ToolOutcome` (`{ status: "ok", output }` | `{ status: "error", error }`) or a `ModelResult`.
@@ -55,19 +55,21 @@ hidden-prompt class of bug.
 
 A `plugin({ name, tools?, middleware?, consumers?, setup? })` packs tools, middleware, event
 consumers, and setup behind one `use:` entry. Its tools are runtime-callable; static types are
-recovered locally via `InferPluginTools`, so bundling a plugin never inflates the type-checker.
+recovered locally via `InferPluginTools`, so bundling a plugin never inflates the type-checker
+(highlighted):
 
-```ts
-import { plugin } from "mithril";
+<Runnable title="plugin.ts" highlight={["4-8"]} code={`import { agent, plugin } from "mithril";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
 
+const seen = [];
 const observability = plugin({
   name: "observability",
-  middleware: [cache],
-  consumers: [{ name: "log", onEvent: (e) => sink.push(e) }],
+  consumers: [{ name: "log", onEvent: (e) => seen.push(e.type) }],
 });
 
-agent({ model, instructions, use: [observability] });
-```
+const model = testModel(scriptedProvider([textTurn("Done.")]));
+await run(agent({ model, instructions: "Be brief.", use: [observability] }), "Hi");
+console.log("plugin saw", seen.length, "events");`} />
 
 ## See it in the stream
 
@@ -116,15 +118,32 @@ Middleware wraps at three altitudes, widest to narrowest:
 - **`model`** — one model call. Caching, fallback models, prompt-cache ordering.
 - **`tool`** — one tool call. Guardrails, memoization, drift checks.
 
-```ts
-const budget: Middleware = {
+A step-altitude budget ends a runaway run by aborting a shared signal (highlighted) — here a model
+that never stops calling a tool is capped at two steps:
+
+<Runnable title="step-budget.ts" highlight={["8-12"]} code={`import { agent, tool } from "mithril";
+import { testModel, ZERO_DELTA } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const controller = new AbortController();
+let steps = 0;
+const budget = {
   name: "budget",
   async step(ctx, input, next) {
-    if (input.step >= maxSteps) { controller.abort(); return { step: input.step, stop: "text", usage: zero }; }
+    if (steps >= 2) { controller.abort("budget"); return { step: input.step, stop: "text", usage: ZERO_DELTA }; }
+    steps++;
     return next(input);
   },
 };
-```
+
+const noop = tool({ name: "noop", description: "loops", inputSchema: z.object({}), execute: async () => ({ ok: true }) });
+const looping = { spec: { id: "test", models: {} }, async *chat() {
+  yield { type: "tool.call", callId: "c1", name: "noop", input: {} };
+  yield { type: "message.end", usage: ZERO_DELTA, finishReason: "tool_calls" };
+} };
+
+const r = await agent({ model: testModel(looping), instructions: "loop", tools: [noop], use: [budget] }).run("go", { signal: controller.signal });
+console.log(r.status); // "cancelled" — the budget aborted the signal`} />
 
 All three act only by reading and emitting events (no private side channel), so every extension stays
 replayable and inspectable.

@@ -19,7 +19,8 @@ const latest = await cp.latest(runId); // → CheckpointRecord | undefined
 | Import | Runtime | Notes |
 |---|---|---|
 | `@mithril/memory` → `memoryCheckpointer()` | any | in-memory; the reference impl |
-| `@mithril/memory/sqlite-bun` → `sqliteBunCheckpointer(path?)` | Bun | durable; `:memory:` by default |
+| `@mithril/memory/sqlite-bun` → `sqliteBunCheckpointer(path? | { path? })` | Bun | durable; `:memory:` by default |
+| `@mithril/memory/sqlite-node` → `sqliteNodeCheckpointer(path? | { path? })` | Node ≥ 22.5 | durable; built-in `node:sqlite` |
 
 Both pass the same suite:
 

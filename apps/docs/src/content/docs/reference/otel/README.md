@@ -20,4 +20,5 @@ no dependency on `@opentelemetry/api`. A real OTel exporter is a thin adapter ov
 
 ## Functions
 
+- [otelPlugin](/reference/otel/functions/otelplugin/)
 - [toGenAiSpans](/reference/otel/functions/togenaispans/)

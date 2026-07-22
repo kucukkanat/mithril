@@ -21,3 +21,9 @@ test("sqliteBunVectorStore persists across store instances on the same file", as
   expect(hit?.id).toBe("a");
   expect(hit?.metadata).toEqual({ doc: "x" });
 });
+
+test("sqliteBunVectorStore accepts an options object { path }", async () => {
+  const s = sqliteBunVectorStore({ path: ":memory:" });
+  await s.upsert([{ id: "a", vector: [1, 0], metadata: {} }]);
+  expect(await s.size()).toBe(1);
+});

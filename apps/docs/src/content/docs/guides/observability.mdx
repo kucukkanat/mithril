@@ -2,10 +2,11 @@
 title: Observability
 description: Fold a run's events into gen_ai.* spans — no separate instrumentation, content opt-in.
 sidebar:
-  order: 14
+  order: 17
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import Runnable from "../../../components/Runnable.astro";
 
 Every `MithrilEvent` carries a `span` (`id`, `parentId`, `traceId`, `kind`). Because that linkage
 rides on *every* event, OpenTelemetry export is a **pure fold** over the stream — there is no
@@ -14,47 +15,60 @@ separate instrumentation layer to wire, drift, or forget.
 ## Fold events into spans
 
 `toGenAiSpans` groups events by `span.id` and reconstructs the semantic-convention hierarchy —
-`invoke_agent` > `chat` > `execute_tool` — with `gen_ai.*` attributes:
+`invoke_agent` > `chat` > `execute_tool` — with `gen_ai.*` attributes (highlighted). Run it:
 
-```ts
+<Runnable title="spans.ts" highlight={[16]} code={`import { agent, tool } from "mithril";
 import { toGenAiSpans } from "@mithril/otel";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
 
-const handle = assistant.stream(input);
+const weather = tool({
+  name: "weather",
+  description: "Current weather for a city.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
+});
+
+const model = testModel(scriptedProvider([toolCallTurn("weather", { city: "Istanbul" }), textTurn("It's 21°C.")]));
+const handle = agent({ model, instructions: "Use weather.", tools: [weather] }).stream("Weather?");
 const events = [];
 for await (const e of handle.events) events.push(e);
 
 const spans = toGenAiSpans(events);
-// each: { spanId, parentSpanId, traceId, name, kind, startTime, endTime, attributes }
-```
+for (const s of spans) console.log(s.kind, "→", s.name);`} />
 
 Attributes follow the GenAI conventions: `gen_ai.request.model`, `gen_ai.usage.output_tokens`,
 `gen_ai.tool.name`, `gen_ai.span.kind`. An `execute_tool` span is named for the tool it ran.
 
 ## Stream into your exporter
 
-Pass a `SpanSink` and each reconstructed span is handed to `onSpan` — a thin adapter is all it takes
-to bridge to `@opentelemetry/api` (or any backend):
+Pass a `SpanSink` and each reconstructed span is handed to `onSpan` (highlighted) — a thin adapter is
+all it takes to bridge to `@opentelemetry/api` (or any backend). Here the sink just logs; for a live
+run, `otelPlugin(sink)` folds spans incrementally via `use:`:
 
-```ts
+<Runnable title="sink.ts" highlight={["16-19"]} code={`import { agent } from "mithril";
+import { toGenAiSpans } from "@mithril/otel";
+import { scriptedProvider, testModel, textTurn } from "@mithril/core/testkit";
+
+const model = testModel(scriptedProvider([textTurn("Done.")]));
+const handle = agent({ model, instructions: "Be brief." }).stream("Hi");
+const events = [];
+for await (const e of handle.events) events.push(e);
+
 const sink = {
   onSpan(span) {
-    tracer
-      .startSpan(span.name, { startTime: span.startTime, attributes: span.attributes })
-      .end(span.endTime);
+    // In production: tracer.startSpan(span.name, { startTime, attributes }).end(span.endTime)
+    console.log("span:", span.name, span.attributes["gen_ai.span.kind"]);
   },
 };
 
-toGenAiSpans(events, sink);
-```
+toGenAiSpans(events, sink);`} />
 
 ## Content is opt-in
 
 Metadata — model, token counts, tool names, timing — is captured **by default**. Prompts and tool
-outputs are **not**, because they may carry PII. Turn them on explicitly when you need them:
-
-```ts
-toGenAiSpans(events, sink, { captureContent: true }); // include prompts & outputs
-```
+outputs are **not**, because they may carry PII. Turn them on explicitly with the third argument:
+`toGenAiSpans(events, sink, { captureContent: true })` to include prompts & outputs.
 
 This is the safe default: you get useful traces with no accidental data exfiltration, and you make
 the decision to log content a deliberate one.

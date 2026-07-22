@@ -5,7 +5,7 @@ prev: false
 title: "Score"
 ---
 
-Defined in: index.ts:33
+Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L34)
 
 A single scoring result produced by a [Scorer](/reference/evals/type-aliases/scorer/).
 
@@ -22,7 +22,7 @@ A single scoring result produced by a [Scorer](/reference/evals/type-aliases/sco
 readonly name: string;
 ```
 
-Defined in: index.ts:34
+Defined in: [index.ts:35](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L35)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: index.ts:34
 readonly optional rationale?: string;
 ```
 
-Defined in: index.ts:36
+Defined in: [index.ts:37](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L37)
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: index.ts:36
 readonly value: number;
 ```
 
-Defined in: index.ts:35
+Defined in: [index.ts:36](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/evals/src/index.ts#L36)

@@ -9,7 +9,48 @@
  * @packageDocumentation
  */
 
-import type { ModelHandle, ModelId, Provider, ProviderChunk, ProviderSpec } from "../protocol/index.ts";
+import type { FinishReason, JsonValue, ModelHandle, ModelId, Provider, ProviderChunk, ProviderSpec, UsageDelta } from "../protocol/index.ts";
+
+/** A zero-cost {@link UsageDelta} — the usage every scripted turn reports (tests run no real model). */
+export const ZERO_DELTA: UsageDelta = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, costMicroUsd: 0 };
+
+/**
+ * Build a single model turn that streams `text` and ends — the common "the model just answers" turn, so a
+ * test doesn't hand-write the `text.delta` + `message.end` pair.
+ *
+ * @param text - the assistant text to stream as one `text.delta`.
+ * @param finishReason - the turn's finish reason (default `"stop"`).
+ * @returns a {@link ProviderChunk} array to place in a {@link scriptedProvider} script.
+ * @example
+ * ```ts
+ * scriptedProvider([textTurn("It is 22°C.")]);
+ * ```
+ */
+export function textTurn(text: string, finishReason: FinishReason = "stop"): readonly ProviderChunk[] {
+  return [
+    { type: "text.delta", delta: text },
+    { type: "message.end", usage: ZERO_DELTA, finishReason },
+  ];
+}
+
+/**
+ * Build a single model turn that calls one tool and ends — the common "the model invokes a tool" turn.
+ *
+ * @param name - the tool name to call.
+ * @param input - the tool-call arguments ({@link JsonValue}).
+ * @param callId - the call id correlating this call to its result (default `"c1"`).
+ * @returns a {@link ProviderChunk} array to place in a {@link scriptedProvider} script.
+ * @example
+ * ```ts
+ * scriptedProvider([toolCallTurn("weather", { city: "NYC" }), textTurn("It is sunny.")]);
+ * ```
+ */
+export function toolCallTurn(name: string, input: JsonValue, callId = "c1"): readonly ProviderChunk[] {
+  return [
+    { type: "tool.call", callId, name, input },
+    { type: "message.end", usage: ZERO_DELTA, finishReason: "tool_calls" },
+  ];
+}
 
 // A deterministic provider for tests: each call to chat() replays the next scripted "turn" of chunks. This
 // is the record/replay philosophy as a test double — the loop is exercised end-to-end with zero network.

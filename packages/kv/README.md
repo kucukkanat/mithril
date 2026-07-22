@@ -38,11 +38,12 @@ The same interface + conformance suite, different storage:
 ```ts
 import { memoryKv } from "@mithril/kv";              // everywhere (in-memory)
 import { indexedDbKv } from "@mithril/kv/indexeddb"; // browser (persistent, per-origin)
+import { sqliteNodeKv } from "@mithril/kv/sqlite-node"; // server (Node ≥ 22.5, durable)
 
-const kv = indexedDbKv({ dbName: "my-app" });
+const kv = sqliteNodeKv({ path: "./cache.db" });
 await kv.set("session", { token }, { ttlMs: 3_600_000 });
 ```
 
 `indexedDbKv({ dbName?, storeName?, now? })` is browser-only (needs the `indexedDB` global) and persists
-across sessions per origin, with the same lazy-TTL semantics as `memoryKv`. SQLite/workerd-KV backends
-follow the same pattern.
+per origin; `sqliteNodeKv({ path?, now? })` is the server-durable backend via built-in `node:sqlite`. Both
+share the same lazy-TTL semantics as `memoryKv`. A workerd-KV backend follows the same pattern.

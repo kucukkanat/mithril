@@ -62,11 +62,12 @@ export interface RunContext<Deps> {
   /** Push a first-class `custom.*` event into the stream. */
   emit(payload: JsonValue, type?: `custom.${string}`): void;
   /**
-   * Tier-2 HITL: suspend mid-tool with a typed, validated resolution.
+   * Tier-2 HITL: suspend mid-tool execution and resume with the resolution as the return value.
    *
    * @remarks
-   * Not wired in this slice — the runtime implementation rejects with a
-   * `NOT_IMPLEMENTED` error. The signature is part of the stable protocol shape.
+   * Calling this pauses the run with `req` as the pending {@link SuspensionRequest}; the effect is
+   * journaled so the surrounding `execute` is not re-run on resume. Resume via
+   * `resume(token, { kind: "resolve", value })`, and `value` becomes this call's return.
    */
   suspend<Req extends SuspensionRequest>(req: Req): Promise<ResolutionOf<Req>>;
   /** Journaled, exactly-once effect. Memoized into the log; skipped on Tier-2 replay. */

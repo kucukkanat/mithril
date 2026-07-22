@@ -5,7 +5,7 @@ prev: false
 title: "Plugin"
 ---
 
-Defined in: packages/core/src/protocol/middleware.ts:141
+Defined in: [packages/core/src/protocol/middleware.ts:141](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L141)
 
 A bundle of tools, middleware, and event consumers registered as a unit.
 
@@ -30,7 +30,7 @@ call signature, not here — it is invalid on an interface type parameter.
 readonly optional __tools?: Tools;
 ```
 
-Defined in: packages/core/src/protocol/middleware.ts:148
+Defined in: [packages/core/src/protocol/middleware.ts:148](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L148)
 
 Phantom carrier for `Tools` inference; erased at build.
 
@@ -42,7 +42,7 @@ Phantom carrier for `Tools` inference; erased at build.
 readonly optional consumers?: readonly EventConsumer[];
 ```
 
-Defined in: packages/core/src/protocol/middleware.ts:145
+Defined in: [packages/core/src/protocol/middleware.ts:145](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L145)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: packages/core/src/protocol/middleware.ts:145
 readonly optional middleware?: readonly Middleware<Deps>[];
 ```
 
-Defined in: packages/core/src/protocol/middleware.ts:144
+Defined in: [packages/core/src/protocol/middleware.ts:144](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L144)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: packages/core/src/protocol/middleware.ts:144
 readonly name: string;
 ```
 
-Defined in: packages/core/src/protocol/middleware.ts:142
+Defined in: [packages/core/src/protocol/middleware.ts:142](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L142)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: packages/core/src/protocol/middleware.ts:142
 readonly optional setup?: (host) => void | Promise<void>;
 ```
 
-Defined in: packages/core/src/protocol/middleware.ts:146
+Defined in: [packages/core/src/protocol/middleware.ts:146](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L146)
 
 #### Parameters
 
@@ -92,4 +92,4 @@ Defined in: packages/core/src/protocol/middleware.ts:146
 readonly optional tools?: Tools;
 ```
 
-Defined in: packages/core/src/protocol/middleware.ts:143
+Defined in: [packages/core/src/protocol/middleware.ts:143](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/middleware.ts#L143)

@@ -5,7 +5,7 @@ prev: false
 title: "RunInspectorOptions"
 ---
 
-Defined in: packages/devtools/src/dom.ts:212
+Defined in: [packages/devtools/src/dom.ts:212](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/dom.ts#L212)
 
 Options for [mountRunInspector](/reference/devtools/dom/functions/mountruninspector/). Provide exactly one of `events` / `source` / `transport`.
 
@@ -17,7 +17,7 @@ Options for [mountRunInspector](/reference/devtools/dom/functions/mountruninspec
 readonly optional contextWindow?: number;
 ```
 
-Defined in: packages/devtools/src/dom.ts:216
+Defined in: [packages/devtools/src/dom.ts:216](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/dom.ts#L216)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: packages/devtools/src/dom.ts:216
 readonly optional events?: readonly MithrilEvent[];
 ```
 
-Defined in: packages/devtools/src/dom.ts:213
+Defined in: [packages/devtools/src/dom.ts:213](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/dom.ts#L213)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: packages/devtools/src/dom.ts:213
 readonly optional onResolve?: (resolution) => void;
 ```
 
-Defined in: packages/devtools/src/dom.ts:217
+Defined in: [packages/devtools/src/dom.ts:217](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/dom.ts#L217)
 
 #### Parameters
 
@@ -57,7 +57,7 @@ Defined in: packages/devtools/src/dom.ts:217
 readonly optional source?: RunSource;
 ```
 
-Defined in: packages/devtools/src/dom.ts:214
+Defined in: [packages/devtools/src/dom.ts:214](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/dom.ts#L214)
 
 ***
 
@@ -67,4 +67,4 @@ Defined in: packages/devtools/src/dom.ts:214
 readonly optional transport?: EventTransport;
 ```
 
-Defined in: packages/devtools/src/dom.ts:215
+Defined in: [packages/devtools/src/dom.ts:215](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/devtools/src/dom.ts#L215)

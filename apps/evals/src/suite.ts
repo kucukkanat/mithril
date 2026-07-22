@@ -15,7 +15,7 @@ import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { agent } from "@mithril/core/agent";
 import { transformers } from "@mithril/providers/transformers";
-import { htmlReport, runEval, type EvalReportEntry } from "@mithril/evals";
+import { htmlReport, runSuite, type EvalReportEntry, type SuiteEntry } from "@mithril/evals";
 import { SCENARIOS, TOOLBOX, getWeather } from "./cases.ts";
 
 // The shipped playground catalog (kept in sync with apps/docs providers.ts LOCAL_MODELS). All
@@ -73,29 +73,34 @@ async function main(): Promise<void> {
       },
     });
 
-    for (const sc of SCENARIOS) {
-      const cases = [{ name: sc.name, input: sc.input, scorers: [...sc.scorers] }];
-      const t0 = performance.now();
-      // Branch (not a ternary on the agent) so each runEval sees a concrete agent type.
-      const gen =
+    // Each scenario becomes a suite entry with its own agent (instructions + toolset); runSuite runs the
+    // model × scenario matrix, times each case, and streams progress via onRun.
+    const suiteEntries: SuiteEntry<void>[] = SCENARIOS.map((sc) => ({
+      label: id,
+      agent:
         sc.toolset === "multi"
-          ? runEval(agent({ model, instructions: sc.instructions, tools: TOOLBOX }), cases, { deps: undefined })
+          ? agent({ model, instructions: sc.instructions, tools: TOOLBOX })
           : sc.toolset === "single"
-            ? runEval(agent({ model, instructions: sc.instructions, tools: [getWeather] }), cases, { deps: undefined })
-            : runEval(agent({ model, instructions: sc.instructions }), cases, { deps: undefined });
-      for await (const run of gen) {
-        const durationMs = performance.now() - t0;
-        entries.push({ run, group: id, durationMs });
+            ? agent({ model, instructions: sc.instructions, tools: [getWeather] })
+            : agent({ model, instructions: sc.instructions }),
+      cases: [{ name: sc.name, input: sc.input, scorers: [...sc.scorers] }],
+    }));
+    const { runs } = await runSuite(suiteEntries, {
+      onRun: (run) => {
         const marks = run.scores.map((s) => `${s.name}=${s.value}`).join(" ");
-        console.log(`\r  ${run.passed ? "✓" : "✗"} ${run.case}  (${Math.round(durationMs)}ms)  ${marks}`);
-      }
-    }
+        console.log(`\r  ${run.passed ? "✓" : "✗"} ${run.case}  (${Math.round(run.durationMs)}ms)  ${marks}`);
+      },
+    });
+    for (const run of runs) entries.push({ run, group: run.group, durationMs: run.durationMs });
   }
 
   const out = fileURLToPath(new URL("../report.html", import.meta.url));
   writeFileSync(out, htmlReport(entries, { title: "Mithril local-model evals" }));
   const passed = entries.filter((e) => e.run.passed).length;
   console.log(`\n${passed}/${entries.length} passed · report → ${out}`);
+  // Fail the run when it's broken — nothing ran, or nothing passed at all (a signal that the harness or
+  // every model regressed, not just the expected partial misses of small local models).
+  if (entries.length === 0 || passed === 0) process.exitCode = 1;
 }
 
 main().catch((e: unknown) => {

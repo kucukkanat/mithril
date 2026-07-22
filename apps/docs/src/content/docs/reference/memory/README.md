@@ -9,3 +9,4 @@ title: "@mithril/memory"
 
 - [index](/reference/memory/index/readme/)
 - [sqlite-bun](/reference/memory/sqlite-bun/readme/)
+- [sqlite-node](/reference/memory/sqlite-node/readme/)

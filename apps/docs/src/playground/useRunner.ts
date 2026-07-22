@@ -44,7 +44,7 @@ function describeError(raw: string): string | null {
   if (/dynamically imported module|failed to resolve module|importing a module/i.test(raw))
     return "Couldn't load the local-model runtime. Reload the page and try again.";
   if (/\b40[13]\b|unauthor|invalid.*(api|key)|missing.*key/i.test(raw))
-    return "Invalid or missing API key — check the key for this provider in ⚙ Settings.";
+    return "Invalid or missing API key — check the key for this provider in the Run against bar.";
   if (/failed to fetch|networkerror|load failed|cors/i.test(raw))
     return "Network or CORS error — this provider may block direct browser calls. Try OpenAI, Anthropic, Google, or Groq, or route through a proxy transport.";
   if (/\b429\b|rate.?limit/i.test(raw)) return "Rate-limited by the provider — wait a moment and retry.";
