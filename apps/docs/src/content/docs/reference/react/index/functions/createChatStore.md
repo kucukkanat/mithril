@@ -9,7 +9,7 @@ title: "createChatStore"
 function createChatStore(agent): ChatStore;
 ```
 
-Defined in: [index.ts:151](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/react/src/index.ts#L151)
+Defined in: [index.ts:151](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/react/src/index.ts#L151)
 
 Build a framework-agnostic multi-turn [ChatStore](/reference/react/index/interfaces/chatstore/) over an agent — the DOM-free core that
 useChat wraps, so the conversation logic is tested without React.

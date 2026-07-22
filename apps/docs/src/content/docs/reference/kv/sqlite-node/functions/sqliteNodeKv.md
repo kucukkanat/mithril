@@ -9,7 +9,7 @@ title: "sqliteNodeKv"
 function sqliteNodeKv(opts?): KeyValue;
 ```
 
-Defined in: sqlite-node.ts:29
+Defined in: [sqlite-node.ts:29](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/kv/src/sqlite-node.ts#L29)
 
 Creates a durable [KeyValue](/reference/kv/index/interfaces/keyvalue/) store backed by `node:sqlite` (Node >= 22.5, no native dependency).
 

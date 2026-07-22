@@ -12,7 +12,7 @@ function makeRunHandle<Out>(
 controls): RunHandle<Out>;
 ```
 
-Defined in: [packages/core/src/agent/handle.ts:27](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/handle.ts#L27)
+Defined in: [packages/core/src/agent/handle.ts:27](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/handle.ts#L27)
 
 Wrap the loop generator in a [RunHandle](/reference/core/agent/interfaces/runhandle/) backed by a buffered broadcast.
 

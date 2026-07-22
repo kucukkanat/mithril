@@ -5,7 +5,7 @@ prev: false
 title: "SuspensionRequest"
 ---
 
-Defined in: [packages/core/src/protocol/suspension.ts:14](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L14)
+Defined in: [packages/core/src/protocol/suspension.ts:14](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/suspension.ts#L14)
 
 A request to pause a run until a human (or external system) supplies a
 validated resolution.
@@ -26,7 +26,7 @@ validated resolution.
 readonly kind: Kind;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:19](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L19)
+Defined in: [packages/core/src/protocol/suspension.ts:19](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/suspension.ts#L19)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [packages/core/src/protocol/suspension.ts:19](https://github.com/kuc
 readonly payload: Payload;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:21](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L21)
+Defined in: [packages/core/src/protocol/suspension.ts:21](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/suspension.ts#L21)
 
 JSON-safe data shown to the human/UI.
 
@@ -48,7 +48,7 @@ JSON-safe data shown to the human/UI.
 readonly optional resolutionSchema?: StandardSchemaV1<unknown, Resolution>;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:27](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L27)
+Defined in: [packages/core/src/protocol/suspension.ts:27](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/suspension.ts#L27)
 
 Optional validator for the resume input. Supply it (with [SuspensionRequest.resolutionSchemaId](/reference/core/protocol/interfaces/suspensionrequest/#resolutionschemaid))
 only when you intend to validate the resolution yourself; the runtime does not validate on resume, so a
@@ -62,6 +62,6 @@ plain `ctx.suspend({ kind, payload })` is the common case.
 readonly optional resolutionSchemaId?: string;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:29](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/protocol/suspension.ts#L29)
+Defined in: [packages/core/src/protocol/suspension.ts:29](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/suspension.ts#L29)
 
 Optional registry id for the resolution validator; carried on the descriptor for identification.

@@ -9,7 +9,7 @@ title: "otelPlugin"
 function otelPlugin(sink, opts?): Plugin;
 ```
 
-Defined in: [index.ts:133](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/otel/src/index.ts#L133)
+Defined in: [index.ts:133](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/otel/src/index.ts#L133)
 
 A Plugin that emits [GenAiSpan](/reference/otel/interfaces/genaispan/)s to `sink` as runs complete — the live counterpart to
 [toGenAiSpans](/reference/otel/functions/togenaispans/), so tracing is `use: [otelPlugin(exporter)]` instead of manually buffering a run's

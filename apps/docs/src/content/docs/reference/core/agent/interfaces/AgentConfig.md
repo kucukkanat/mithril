@@ -5,7 +5,7 @@ prev: false
 title: "AgentConfig"
 ---
 
-Defined in: [packages/core/src/agent/agent-types.ts:147](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L147)
+Defined in: [packages/core/src/agent/agent-types.ts:147](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L147)
 
 The declarative configuration of an agent, passed to [agent](/reference/core/agent/functions/agent/) (or a harness-bound factory).
 
@@ -34,7 +34,7 @@ The declarative configuration of an agent, passed to [agent](/reference/core/age
 readonly instructions: string | ((ctx) => string | Promise<string>);
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:149](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L149)
+Defined in: [packages/core/src/agent/agent-types.ts:149](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L149)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:149](https://github.com/kucu
 readonly optional maxSteps?: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:151](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L151)
+Defined in: [packages/core/src/agent/agent-types.ts:151](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L151)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:151](https://github.com/kucu
 readonly model: ModelInput;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:148](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L148)
+Defined in: [packages/core/src/agent/agent-types.ts:148](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L148)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:148](https://github.com/kucu
 readonly optional output?: StandardSchemaV1<unknown, Out>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:152](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L152)
+Defined in: [packages/core/src/agent/agent-types.ts:152](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L152)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:152](https://github.com/kucu
 readonly optional outputRetries?: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:153](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L153)
+Defined in: [packages/core/src/agent/agent-types.ts:153](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L153)
 
 ***
 
@@ -84,7 +84,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:153](https://github.com/kucu
 readonly optional tools?: Tools;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:150](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L150)
+Defined in: [packages/core/src/agent/agent-types.ts:150](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L150)
 
 ***
 
@@ -96,4 +96,4 @@ readonly optional use?: readonly (
   | Middleware<Deps>)[];
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:154](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L154)
+Defined in: [packages/core/src/agent/agent-types.ts:154](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L154)

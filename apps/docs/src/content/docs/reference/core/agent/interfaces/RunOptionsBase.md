@@ -5,7 +5,7 @@ prev: false
 title: "RunOptionsBase"
 ---
 
-Defined in: [packages/core/src/agent/agent-types.ts:43](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L43)
+Defined in: [packages/core/src/agent/agent-types.ts:43](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L43)
 
 The run options common to every agent, independent of whether it has dependencies.
 
@@ -17,7 +17,7 @@ The run options common to every agent, independent of whether it has dependencie
 readonly optional maxSteps?: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:48](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L48)
+Defined in: [packages/core/src/agent/agent-types.ts:48](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L48)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:48](https://github.com/kucuk
 readonly optional providers?: ProviderRegistry;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:45](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L45)
+Defined in: [packages/core/src/agent/agent-types.ts:45](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L45)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:45](https://github.com/kucuk
 readonly optional runtime?: RuntimeAdapter;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:47](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L47)
+Defined in: [packages/core/src/agent/agent-types.ts:47](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L47)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:47](https://github.com/kucuk
 readonly optional signal?: AbortSignal;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:46](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L46)
+Defined in: [packages/core/src/agent/agent-types.ts:46](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L46)
 
 ***
 
@@ -57,4 +57,4 @@ Defined in: [packages/core/src/agent/agent-types.ts:46](https://github.com/kucuk
 readonly optional transport?: Transport;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:44](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/core/src/agent/agent-types.ts#L44)
+Defined in: [packages/core/src/agent/agent-types.ts:44](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L44)

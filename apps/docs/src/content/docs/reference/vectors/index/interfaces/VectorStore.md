@@ -5,7 +5,7 @@ prev: false
 title: "VectorStore"
 ---
 
-Defined in: [index.ts:44](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/vectors/src/index.ts#L44)
+Defined in: [index.ts:44](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/vectors/src/index.ts#L44)
 
 A runtime-agnostic vector store (§10.4) — the portable core of retrieval-augmented generation.
 
@@ -24,7 +24,7 @@ vectors; it does not compute them).
 delete(ids): Promise<void>;
 ```
 
-Defined in: [index.ts:50](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/vectors/src/index.ts#L50)
+Defined in: [index.ts:50](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/vectors/src/index.ts#L50)
 
 Remove records by id; unknown ids are ignored.
 
@@ -46,7 +46,7 @@ Remove records by id; unknown ids are ignored.
 query(vector, opts?): Promise<readonly VectorMatch[]>;
 ```
 
-Defined in: [index.ts:48](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/vectors/src/index.ts#L48)
+Defined in: [index.ts:48](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/vectors/src/index.ts#L48)
 
 Return the nearest records to `vector` by cosine similarity, most similar first.
 
@@ -69,7 +69,7 @@ Return the nearest records to `vector` by cosine similarity, most similar first.
 size(): Promise<number>;
 ```
 
-Defined in: [index.ts:52](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/vectors/src/index.ts#L52)
+Defined in: [index.ts:52](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/vectors/src/index.ts#L52)
 
 The number of stored records.
 
@@ -85,7 +85,7 @@ The number of stored records.
 upsert(records): Promise<void>;
 ```
 
-Defined in: [index.ts:46](https://github.com/kucukkanat/mithril/blob/3e93b53558d82d0c9f009d0bc9676d68bfb30a88/packages/vectors/src/index.ts#L46)
+Defined in: [index.ts:46](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/vectors/src/index.ts#L46)
 
 Insert or replace records by id.
 
