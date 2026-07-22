@@ -9,6 +9,6 @@ title: "FileKind"
 type FileKind = "file" | "directory";
 ```
 
-Defined in: [packages/fs/src/index.ts:22](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/fs/src/index.ts#L22)
+Defined in: [packages/fs/src/index.ts:22](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/fs/src/index.ts#L22)
 
 Whether a filesystem entry is a regular file or a directory.

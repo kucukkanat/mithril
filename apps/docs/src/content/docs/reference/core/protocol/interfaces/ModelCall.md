@@ -5,7 +5,7 @@ prev: false
 title: "ModelCall"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:46](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L46)
+Defined in: [packages/core/src/protocol/middleware.ts:46](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/middleware.ts#L46)
 
 The model-call input a [Middleware.model](/reference/core/protocol/interfaces/middleware/#model) wrapper observes or transforms.
 
@@ -17,7 +17,7 @@ The model-call input a [Middleware.model](/reference/core/protocol/interfaces/mi
 readonly messages: readonly Message[];
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:49](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L49)
+Defined in: [packages/core/src/protocol/middleware.ts:49](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/middleware.ts#L49)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:49](https://github.com/kuc
 readonly model: `${string}/${string}`;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:47](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L47)
+Defined in: [packages/core/src/protocol/middleware.ts:47](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/middleware.ts#L47)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:47](https://github.com/kuc
 readonly system: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:48](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L48)
+Defined in: [packages/core/src/protocol/middleware.ts:48](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/middleware.ts#L48)
 
 ***
 
@@ -47,4 +47,4 @@ Defined in: [packages/core/src/protocol/middleware.ts:48](https://github.com/kuc
 readonly tools: readonly AnyTool<unknown>[];
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:50](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/middleware.ts#L50)
+Defined in: [packages/core/src/protocol/middleware.ts:50](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/middleware.ts#L50)

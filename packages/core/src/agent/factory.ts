@@ -44,6 +44,8 @@ export interface ToolDef<Name extends string, SIn extends StandardSchemaV1, Deps
   name: Name;
   description: string;
   version?: string;
+  /** Optional few-shot example inputs, surfaced into the tool's wire description to steer small models. */
+  examples?: readonly JsonValue[];
   inputSchema: SIn;
   outputSchema?: StandardSchemaV1<unknown, Out>;
   needsApproval?: boolean | ((input: Infer<SIn>, ctx: RunContext<Deps>) => boolean | Promise<boolean>);
@@ -179,6 +181,12 @@ function makeAgent<Tools extends readonly AnyTool<Deps>[], Deps, Out extends Jso
       ...(o?.maxSteps ?? config.maxSteps ? { maxSteps: o?.maxSteps ?? config.maxSteps } : {}),
       ...(config.output !== undefined ? { output: config.output } : {}),
       ...(config.outputRetries !== undefined ? { outputRetries: config.outputRetries } : {}),
+      ...(o?.toolRetries ?? config.toolRetries ? { toolRetries: o?.toolRetries ?? config.toolRetries } : {}),
+      ...((o?.loopDetection ?? config.loopDetection) !== undefined ? { loopDetection: o?.loopDetection ?? config.loopDetection } : {}),
+      ...(o?.maxTokens ?? config.maxTokens ? { maxTokens: o?.maxTokens ?? config.maxTokens } : {}),
+      ...(o?.maxCostMicroUsd ?? config.maxCostMicroUsd ? { maxCostMicroUsd: o?.maxCostMicroUsd ?? config.maxCostMicroUsd } : {}),
+      ...((o?.repair ?? config.repair) !== undefined ? { repair: o?.repair ?? config.repair } : {}),
+      ...((o?.selfCorrection ?? config.selfCorrection) !== undefined ? { selfCorrection: o?.selfCorrection ?? config.selfCorrection } : {}),
       ...(flat.middlewares.length > 0 ? { middlewares: flat.middlewares } : {}),
       ...(flat.consumers.length > 0 ? { consumers: flat.consumers } : {}),
       ...(extra?.runId !== undefined ? { runId: extra.runId } : {}),

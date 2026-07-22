@@ -12,7 +12,7 @@ function toolCallTurn(
    callId?): readonly ProviderChunk[];
 ```
 
-Defined in: [packages/core/src/testkit/index.ts:48](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/testkit/index.ts#L48)
+Defined in: [packages/core/src/testkit/index.ts:48](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/testkit/index.ts#L48)
 
 Build a single model turn that calls one tool and ends — the common "the model invokes a tool" turn.
 

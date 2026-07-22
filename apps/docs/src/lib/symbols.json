@@ -52,7 +52,7 @@
   "AnyTool": {
     "href": "/reference/core/protocol/type-aliases/anytool/",
     "kind": "type",
-    "sig": "type AnyTool<Deps> = { description: string; inputSchema: StandardSchemaV1<unknown, unknown>; name: string; needsApproval?: boolean | ((inpu…"
+    "sig": "type AnyTool<Deps> = { description: string; examples?: readonly JsonValue[]; inputSchema: StandardSchemaV1<unknown, unknown>; name: string;…"
   },
   "ApprovalDecision": {
     "href": "/reference/core/protocol/type-aliases/approvaldecision/",
@@ -83,6 +83,16 @@
     "href": "/reference/devtools/attach/functions/attachdevtools/",
     "kind": "fn",
     "sig": "function attachDevtools(): () => void;"
+  },
+  "bestOfN": {
+    "href": "/reference/core/agent/functions/bestofn/",
+    "kind": "fn",
+    "sig": "function bestOfN(opts): Middleware;"
+  },
+  "BestOfNOptions": {
+    "href": "/reference/core/agent/interfaces/bestofnoptions/",
+    "kind": "type",
+    "sig": "Options for bestOfN."
   },
   "browserEngine": {
     "href": "/reference/providers/transformers/functions/browserengine/",
@@ -148,6 +158,11 @@
     "href": "/reference/core/protocol/interfaces/checkpointrecord/",
     "kind": "type",
     "sig": "One persisted checkpoint in a run's history — an opaque run token plus routing metadata."
+  },
+  "classifiedError": {
+    "href": "/reference/core/protocol/functions/classifiederror/",
+    "kind": "fn",
+    "sig": "function classifiedError( name, message, cls, opts?): SerializedError;"
   },
   "classifyEvent": {
     "href": "/reference/devtools/index/functions/classifyevent/",
@@ -273,6 +288,11 @@
     "href": "/reference/devtools/index/functions/devtoolsplugin/",
     "kind": "fn",
     "sig": "function devtoolsPlugin(inspector?): Plugin<unknown, readonly AnyTool<unknown>[]> & { inspector: Inspector; };"
+  },
+  "didNotCallTool": {
+    "href": "/reference/evals/functions/didnotcalltool/",
+    "kind": "fn",
+    "sig": "function didNotCallTool(name): Scorer;"
   },
   "DraftEvent": {
     "href": "/reference/core/protocol/type-aliases/draftevent/",
@@ -533,6 +553,16 @@
     "href": "/reference/devtools/index/interfaces/inspector/",
     "kind": "type",
     "sig": "A headless run inspector."
+  },
+  "inspectorReport": {
+    "href": "/reference/evals/functions/inspectorreport/",
+    "kind": "fn",
+    "sig": "function inspectorReport(entries, opts?): Promise<string>;"
+  },
+  "InspectorReportOptions": {
+    "href": "/reference/evals/interfaces/inspectorreportoptions/",
+    "kind": "type",
+    "sig": "Options for inspectorReport — HtmlReportOptions plus the inspector's context window."
   },
   "isKnownEvent": {
     "href": "/reference/core/protocol/functions/isknownevent/",
@@ -939,6 +969,11 @@
     "kind": "fn",
     "sig": "function remoteRunner(opts): CodeRunner;"
   },
+  "repairJson": {
+    "href": "/reference/core/protocol/functions/repairjson/",
+    "kind": "fn",
+    "sig": "function repairJson(s): | JsonValue | undefined;"
+  },
   "replay": {
     "href": "/reference/core/protocol/functions/replay/",
     "kind": "fn",
@@ -1109,6 +1144,16 @@
     "kind": "type",
     "sig": "A payload transform applied before signing (encode) and after verifying (decode) in the seal envelope."
   },
+  "selfConsistency": {
+    "href": "/reference/core/agent/functions/selfconsistency/",
+    "kind": "fn",
+    "sig": "function selfConsistency(opts): Middleware;"
+  },
+  "SelfConsistencyOptions": {
+    "href": "/reference/core/agent/interfaces/selfconsistencyoptions/",
+    "kind": "type",
+    "sig": "Options for selfConsistency."
+  },
   "SerializedError": {
     "href": "/reference/core/protocol/interfaces/serializederror/",
     "kind": "type",
@@ -1188,6 +1233,11 @@
     "href": "/reference/devtools/dom/interfaces/statetreeoptions/",
     "kind": "type",
     "sig": "Options for mountStateTree."
+  },
+  "staysBounded": {
+    "href": "/reference/evals/functions/staysbounded/",
+    "kind": "fn",
+    "sig": "function staysBounded(): Scorer;"
   },
   "StepInput": {
     "href": "/reference/core/protocol/interfaces/stepinput/",
@@ -1338,6 +1388,16 @@
     "href": "/reference/core/agent/interfaces/tooldef/",
     "kind": "type",
     "sig": "The definition object passed to tool to declare a single tool."
+  },
+  "toolErrorClass": {
+    "href": "/reference/core/protocol/functions/toolerrorclass/",
+    "kind": "fn",
+    "sig": "function toolErrorClass(err): | ToolErrorClass | undefined;"
+  },
+  "ToolErrorClass": {
+    "href": "/reference/core/protocol/type-aliases/toolerrorclass/",
+    "kind": "type",
+    "sig": "type ToolErrorClass = | \"unknown_tool\" | \"malformed_json\" | \"invalid_args\" | \"invalid_output\" | \"handler_error\" | \"timeout\";"
   },
   "ToolFactory": {
     "href": "/reference/core/agent/interfaces/toolfactory/",

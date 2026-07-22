@@ -5,7 +5,7 @@ prev: false
 title: "ProviderRegistry"
 ---
 
-Defined in: [packages/core/src/protocol/provider.ts:103](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/provider.ts#L103)
+Defined in: [packages/core/src/protocol/provider.ts:116](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/provider.ts#L116)
 
 Resolves a [ModelId](/reference/core/protocol/type-aliases/modelid/) to its [Provider](/reference/core/protocol/interfaces/provider/) over the set of registered [ProviderSpec](/reference/core/protocol/interfaces/providerspec/)s.
 
@@ -17,7 +17,7 @@ Resolves a [ModelId](/reference/core/protocol/type-aliases/modelid/) to its [Pro
 readonly specs: readonly ProviderSpec[];
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:105](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/provider.ts#L105)
+Defined in: [packages/core/src/protocol/provider.ts:118](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/provider.ts#L118)
 
 ## Methods
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/protocol/provider.ts:105](https://github.com/kucu
 resolve(model): Provider;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:104](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/provider.ts#L104)
+Defined in: [packages/core/src/protocol/provider.ts:117](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/provider.ts#L117)
 
 #### Parameters
 

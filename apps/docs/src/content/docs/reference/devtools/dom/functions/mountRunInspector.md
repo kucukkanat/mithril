@@ -9,7 +9,7 @@ title: "mountRunInspector"
 function mountRunInspector(target, options): DevtoolsHandle<RunInspectorOptions>;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:236](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/devtools/src/dom.ts#L236)
+Defined in: [packages/devtools/src/dom.ts:236](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/devtools/src/dom.ts#L236)
 
 Mount the full visual inspector into `target` — no framework required.
 

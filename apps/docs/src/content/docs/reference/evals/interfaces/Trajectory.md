@@ -5,7 +5,7 @@ prev: false
 title: "Trajectory"
 ---
 
-Defined in: [index.ts:23](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L23)
+Defined in: [index.ts:23](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L23)
 
 The observable result of a single agent run: `{ runId, log, final }`, where `log` is the ordered event
 stream and `final` is the RunState reconstructed from it via `replay`.
@@ -22,7 +22,7 @@ The event log is the fixture — [Scorer](/reference/evals/type-aliases/scorer/)
 readonly final: RunState;
 ```
 
-Defined in: [index.ts:26](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L26)
+Defined in: [index.ts:26](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L26)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [index.ts:26](https://github.com/kucukkanat/mithril/blob/652e28d3d2a
 readonly log: readonly MithrilEvent[];
 ```
 
-Defined in: [index.ts:25](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L25)
+Defined in: [index.ts:25](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L25)
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: [index.ts:25](https://github.com/kucukkanat/mithril/blob/652e28d3d2a
 readonly runId: string;
 ```
 
-Defined in: [index.ts:24](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L24)
+Defined in: [index.ts:24](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L24)

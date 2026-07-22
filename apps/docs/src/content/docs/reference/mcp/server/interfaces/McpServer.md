@@ -5,7 +5,7 @@ prev: false
 title: "McpServer"
 ---
 
-Defined in: [server.ts:18](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/mcp/src/server.ts#L18)
+Defined in: [server.ts:18](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/mcp/src/server.ts#L18)
 
 A Mithril-tools-backed MCP server. Create one with [mcpServer](/reference/mcp/server/functions/mcpserver/).
 
@@ -17,7 +17,7 @@ A Mithril-tools-backed MCP server. Create one with [mcpServer](/reference/mcp/se
 handle(request): Promise<JsonValue>;
 ```
 
-Defined in: [server.ts:20](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/mcp/src/server.ts#L20)
+Defined in: [server.ts:20](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/mcp/src/server.ts#L20)
 
 Dispatch one JSON-RPC request object and resolve its JSON-RPC response.
 
@@ -39,7 +39,7 @@ Dispatch one JSON-RPC request object and resolve its JSON-RPC response.
 serve(request): Promise<Response>;
 ```
 
-Defined in: [server.ts:22](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/mcp/src/server.ts#L22)
+Defined in: [server.ts:22](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/mcp/src/server.ts#L22)
 
 Fetch-style handler: read a JSON-RPC request from `request`, dispatch it, and reply with JSON.
 

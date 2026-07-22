@@ -5,7 +5,7 @@ prev: false
 title: "StepSnapshot"
 ---
 
-Defined in: [packages/core/src/agent/agent-types.ts:124](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L124)
+Defined in: [packages/core/src/agent/agent-types.ts:131](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L131)
 
 A per-step view yielded by [Agent.iterate](/reference/core/agent/interfaces/agent/#iterate): the step index, the events emitted during it, and a
 [RunState](/reference/core/protocol/interfaces/runstate/) replay of the whole run so far.
@@ -18,7 +18,7 @@ A per-step view yielded by [Agent.iterate](/reference/core/agent/interfaces/agen
 readonly events: readonly MithrilEvent[];
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:126](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L126)
+Defined in: [packages/core/src/agent/agent-types.ts:133](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L133)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:126](https://github.com/kucu
 readonly state: RunState;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:127](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L127)
+Defined in: [packages/core/src/agent/agent-types.ts:134](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L134)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [packages/core/src/agent/agent-types.ts:127](https://github.com/kucu
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:125](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L125)
+Defined in: [packages/core/src/agent/agent-types.ts:132](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L132)

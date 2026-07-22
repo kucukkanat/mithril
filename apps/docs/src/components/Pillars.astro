@@ -74,7 +74,7 @@ const pillars: Pillar[] = [
 ];
 ---
 
-<section class="pillars mth-container">
+<section class="pillars mth-container" data-testid="pillars-section">
   <div class="pillars-head">
     <p class="mth-eyebrow">Nine load-bearing ideas</p>
     <h2>A harness built on principles, not vibes</h2>
@@ -83,10 +83,10 @@ const pillars: Pillar[] = [
       boundaries, the type system, or CI. Not documentation you hope holds.
     </p>
   </div>
-  <div class="pillars-grid">
+  <div class="pillars-grid" data-testid="pillars-grid">
     {
       pillars.map((p) => (
-        <a class="pillar mth-card" href={p.href}>
+        <a class="pillar mth-card" href={p.href} data-testid={`pillar-card-${p.n}`}>
           <div class="pillar-top">
             <span class="pillar-n">{p.n}</span>
             <code class="pillar-tag">{p.tag}</code>

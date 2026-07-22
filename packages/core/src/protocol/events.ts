@@ -1,3 +1,4 @@
+import type { ToolErrorClass } from "./errors.ts";
 import type { FinishReason, JsonValue, SerializedError, UsageDelta, UsageTotals } from "./primitives.ts";
 import type { SuspensionDescriptor } from "./suspension.ts";
 
@@ -58,7 +59,7 @@ export type MithrilEvent =
   | (EventMeta & { readonly type: "run.error"; readonly error: SerializedError })
   | (EventMeta & { readonly type: "run.cancel"; readonly reason: string })
   | (EventMeta & { readonly type: "step.start"; readonly step: number })
-  | (EventMeta & { readonly type: "step.finish"; readonly step: number; readonly stop: "tool" | "text" | "output"; readonly usage: UsageDelta })
+  | (EventMeta & { readonly type: "step.finish"; readonly step: number; readonly stop: "tool" | "text" | "output" | "length" | "error"; readonly usage: UsageDelta })
   // ── assistant message body (streaming) ────────────────────────────
   | (EventMeta & { readonly type: "text.delta"; readonly delta: string })
   | (EventMeta & { readonly type: "reasoning.delta"; readonly delta: string })
@@ -67,6 +68,9 @@ export type MithrilEvent =
   | (EventMeta & { readonly type: "tool.progress"; readonly callId: string; readonly payload: JsonValue })
   | (EventMeta & { readonly type: "tool.result"; readonly callId: string; readonly output: JsonValue; readonly ms: number })
   | (EventMeta & { readonly type: "tool.error"; readonly callId: string; readonly error: SerializedError })
+  // ── self-correction: a deterministic repair fired, or a failed call is being re-asked under budget ──
+  | (EventMeta & { readonly type: "tool.repair"; readonly callId: string; readonly name: string; readonly mechanism: "parse" | "coerce"; readonly before: JsonValue; readonly after: JsonValue })
+  | (EventMeta & { readonly type: "tool.retry"; readonly callId: string; readonly name: string; readonly attempt: number; readonly errorClass: ToolErrorClass })
   | (EventMeta & { readonly type: "message.end"; readonly role: "assistant"; readonly usage: UsageDelta })
   // ── structured output ─────────────────────────────────────────────
   | (EventMeta & { readonly type: "object.delta"; readonly partial: JsonValue })
@@ -75,6 +79,9 @@ export type MithrilEvent =
   // ── accounting / context economics ────────────────────────────────
   | (EventMeta & { readonly type: "usage"; readonly delta: UsageDelta })
   | (EventMeta & { readonly type: "compaction"; readonly removedSeqRange: readonly [number, number]; readonly summarySeq: number; readonly savedTokens: number })
+  // ── guards: a no-progress loop was caught, or a run/step budget was exceeded ─────────────────────
+  | (EventMeta & { readonly type: "loop.detected"; readonly signature: string; readonly count: number; readonly action: "steer" | "halt" })
+  | (EventMeta & { readonly type: "budget.exceeded"; readonly budget: "steps" | "tokens" | "cost" | "time"; readonly limit: number; readonly actual: number })
   // ── control flow ──────────────────────────────────────────────────
   | (EventMeta & { readonly type: "handoff"; readonly callId: string; readonly to: string; readonly input: JsonValue })
   | (EventMeta & { readonly type: "handoff.result"; readonly callId: string; readonly to: string; readonly output: JsonValue })

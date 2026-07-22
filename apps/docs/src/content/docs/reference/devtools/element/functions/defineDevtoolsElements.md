@@ -9,7 +9,7 @@ title: "defineDevtoolsElements"
 function defineDevtoolsElements(options?): void;
 ```
 
-Defined in: [packages/devtools/src/element.ts:133](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/devtools/src/element.ts#L133)
+Defined in: [packages/devtools/src/element.ts:133](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/devtools/src/element.ts#L133)
 
 Register the devtools custom elements. Call once before using the tags.
 

@@ -61,6 +61,22 @@ for await (const run of runEval(agent, cases, { deps })) entries.push({ run, gro
 await Bun.write("report.html", htmlReport(entries, { title: "Nightly evals" }));
 ```
 
+### With a live inspector per case
+
+`inspectorReport` is the same report, but every row hosts a live [`@mithril/devtools`](../devtools) run
+inspector over that case's trajectory — event stream, message/tool transcript, span tree, and cost/context
+meters, with a **time-travel scrubber**. The devtools UI and its client are inlined, so it's still one
+self-contained file; it just renders the whole trajectory, not only the final output. It's `async` and
+**Bun-only** (it bundles the client with `Bun.build`); `htmlReport` stays the runtime-agnostic option.
+
+```ts
+import { runEval, inspectorReport, type EvalReportEntry } from "@mithril/evals";
+
+const entries: EvalReportEntry[] = [];
+for await (const run of runEval(agent, cases, { deps })) entries.push({ run, group: "gpt-4o-mini" });
+await Bun.write("report.html", await inspectorReport(entries, { title: "Nightly evals", contextWindow: 200_000 }));
+```
+
 ## API
 
 - `runEval(agent, cases, opts?)` → async-iterable of `{ case, scores, trajectory, passed }` (`opts` optional
@@ -71,6 +87,8 @@ await Bun.write("report.html", htmlReport(entries, { title: "Nightly evals" }));
   Fixtures are keyed by **case name + input hash**, so changing a case's input misses the stale recording.
 - `describeEval(register, agent, cases, opts?)` — one test per case; fails if any scorer < `threshold` (default 1).
 - `htmlReport(entries, opts?)` → a self-contained HTML string; `EvalReportEntry` = `{ run, group?, durationMs? }`.
+- `inspectorReport(entries, opts?)` → `Promise<string>` — same report with a live `@mithril/devtools` inspector
+  (span tree, transcript, time-travel scrubber) embedded per case. Bun-only (bundles the client via `Bun.build`).
 - `TrajectoryStore` + `memoryTrajectoryStore()` / `fsTrajectoryStore(fs, { dir? })`; `serializeTrajectory` / `loadTrajectory`.
 - `trajectoryToScript(t)` → `ProviderChunk[][]` — replay a recording through `scriptedProvider` so the **real
   loop and tools re-run** (event-log replay runs nothing), to regression-test a tool/loop change offline.

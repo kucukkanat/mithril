@@ -42,5 +42,9 @@ function buildRun() {
 
 export default function DevtoolsDemo() {
   const handle = useMemo(() => buildRun(), []);
-  return <RunInspector source={handle} contextWindow={200_000} />;
+  return (
+    <div data-testid="devtools-demo">
+      <RunInspector source={handle} contextWindow={200_000} />
+    </div>
+  );
 }

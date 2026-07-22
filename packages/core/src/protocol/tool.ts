@@ -29,6 +29,11 @@ export interface Tool<Name extends string, In, Out, Deps> {
   readonly description: string;
   /** Optional version, stamped onto `tool.call` and diffed on durable resume for drift. */
   readonly version?: string;
+  /**
+   * Optional few-shot example inputs, surfaced into the tool's wire description. A handful of concrete
+   * example calls is the single strongest prompt-side lift for small models' tool-call reliability.
+   */
+  readonly examples?: readonly JsonValue[];
   readonly inputSchema: StandardSchemaV1<unknown, In>;
   readonly outputSchema?: StandardSchemaV1<unknown, JsonSafe<Out>>;
   /** Whether the call requires human approval; a predicate can decide per-input. */
@@ -62,6 +67,7 @@ export type AnyTool<Deps> = {
   readonly name: string;
   readonly description: string;
   readonly version?: string;
+  readonly examples?: readonly JsonValue[];
   readonly inputSchema: StandardSchemaV1<unknown, unknown>;
   readonly outputSchema?: StandardSchemaV1<unknown, JsonValue>;
   readonly needsApproval?: boolean | ((input: never, ctx: RunContext<Deps>) => boolean | Promise<boolean>);

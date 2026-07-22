@@ -5,7 +5,7 @@ prev: false
 title: "StandardSchemaV1"
 ---
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:20](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/standard-schema.ts#L20)
+Defined in: [packages/core/src/protocol/standard-schema.ts:20](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/standard-schema.ts#L20)
 
 The Standard Schema v1 contract — a validator-agnostic interface implemented
 by Zod, Valibot, ArkType, and others.
@@ -31,4 +31,4 @@ supplied by the consumer's validator; there is no code to depend on.
 readonly ~standard: Props<Input, Output>;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:21](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/standard-schema.ts#L21)
+Defined in: [packages/core/src/protocol/standard-schema.ts:21](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/standard-schema.ts#L21)

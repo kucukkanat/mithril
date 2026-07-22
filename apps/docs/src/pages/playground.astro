@@ -8,15 +8,15 @@ import Playground from "../components/Playground.tsx";
   description="Run a real Mithril agent loop in your browser — scripted by default, or bring your own key or a local in-browser model."
   fixed={true}
 >
-  <div class="pg-page">
-    <header class="pg-nav">
-      <a href="/" class="brand"><span class="mth-sheen">Mithril</span></a>
+  <div class="pg-page" data-testid="playground-page">
+    <header class="pg-nav" data-testid="playground-page-nav">
+      <a href="/" class="brand" data-testid="playground-page-brand-link"><span class="mth-sheen">Mithril</span></a>
       <div class="pg-nav-meta">
         <span class="pg-nav-tag">live · runs in your browser</span>
-        <a href="/getting-started/introduction/" class="pg-nav-link">Docs</a>
+        <a href="/getting-started/introduction/" class="pg-nav-link" data-testid="playground-page-docs-link">Docs</a>
       </div>
     </header>
-    <div class="pg-mount">
+    <div class="pg-mount" data-testid="playground-page-mount">
       <Playground client:only="react" />
     </div>
   </div>

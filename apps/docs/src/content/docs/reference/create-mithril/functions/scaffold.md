@@ -9,7 +9,7 @@ title: "scaffold"
 function scaffold(template, appName): Readonly<Record<string, string>>;
 ```
 
-Defined in: [index.ts:136](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/create-mithril/src/index.ts#L136)
+Defined in: [index.ts:136](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/create-mithril/src/index.ts#L136)
 
 Generate the files for a Mithril app as an in-memory map — pure, no disk I/O.
 

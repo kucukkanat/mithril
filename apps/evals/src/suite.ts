@@ -15,7 +15,7 @@ import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { agent } from "@mithril/core/agent";
 import { transformers } from "@mithril/providers/transformers";
-import { htmlReport, runSuite, type EvalReportEntry, type SuiteEntry } from "@mithril/evals";
+import { inspectorReport, runSuite, type EvalReportEntry, type SuiteEntry } from "@mithril/evals";
 import { SCENARIOS, TOOLBOX, getWeather } from "./cases.ts";
 
 // The shipped playground catalog (kept in sync with apps/docs providers.ts LOCAL_MODELS). All
@@ -95,7 +95,8 @@ async function main(): Promise<void> {
   }
 
   const out = fileURLToPath(new URL("../report.html", import.meta.url));
-  writeFileSync(out, htmlReport(entries, { title: "Mithril local-model evals" }));
+  // Each row embeds a live @mithril/devtools inspector (span tree, event stream, time-travel) over its trajectory.
+  writeFileSync(out, await inspectorReport(entries, { title: "Mithril local-model evals" }));
   const passed = entries.filter((e) => e.run.passed).length;
   console.log(`\n${passed}/${entries.length} passed · report → ${out}`);
   // Fail the run when it's broken — nothing ran, or nothing passed at all (a signal that the harness or

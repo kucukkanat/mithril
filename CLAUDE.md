@@ -100,6 +100,7 @@ bun run typecheck     # framework — strict tsc across all packages, exit 0
 bun run docs:build    # docs build clean; Pagefind search + llms.txt generated
 bun run docs:check    # docs `astro check` — 0 errors, 0 warnings (the docs quality bar)
 bun run docs:check-symbols  # every generated symbol link resolves to a built page (run after build)
+bun run docs:check-pages    # every content page is reachable from the sidebar (no orphans/dangling entries)
 ```
 
 **Editing docs must never change `packages/*`.** If a docs task seems to need a framework change,
@@ -122,6 +123,12 @@ stop and raise it — that's a framework change with its own review, not a docs 
   and one hand-written `reference.mdx` landing. Frontmatter on hand-written pages: `title`,
   `description`, `sidebar: { order, label? }`. **Never edit files under `reference/<pkg>/`** — they
   are TypeDoc output (regenerated on build).
+- **Adding a page = adding it to the sidebar.** `getting-started/`, `concepts/`, and `design/` are
+  `autogenerate`d, so a new file appears automatically. **`guides/` is a curated list in
+  `astro.config.mjs`** (grouped by intent; frontmatter `order` is *ignored* there) — a new guide is
+  reachable by URL but **invisible in navigation until you add its slug** (e.g. `"guides/foo"`) to
+  the right group. `bun run docs:check-pages` fails on any orphaned page or dangling entry, so run it
+  (it's a verification gate) whenever you add, rename, or delete a page.
 - **MDX**: use Starlight components (`Aside`, `Steps`, `Tabs`, `CardGrid`, `LinkCard`). For a
   runnable scripted example use `<Runnable code={…} />` (`src/components/Runnable.astro`) — it
   deep-links into the playground. Use plain ` ```ts ` fences for non-runnable / real-provider code

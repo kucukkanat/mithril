@@ -146,6 +146,7 @@ export default defineConfig({
                 "guides/streaming",
                 "guides/structured-output",
                 "guides/error-handling",
+                "guides/self-correction",
               ],
             },
             {

@@ -3,7 +3,9 @@
 A runnable eval suite for Mithril's local/in-browser models. It runs each scenario (a chat turn and a
 tool-calling turn) against one or more Transformers.js models **headless in Bun** (CPU / onnxruntime-node),
 scores the trajectories with [`@mithril/evals`](../../packages/evals), and writes a self-contained,
-filterable **HTML report** (`report.html`).
+filterable **HTML report** (`report.html`) whose every row embeds a live
+[`@mithril/devtools`](../../packages/devtools) inspector (span tree, event stream, time-travel) over that
+run's trajectory.
 
 This is the programmatic replacement for clicking through the playground: scriptable, repeatable, and it
 scores tool-calling objectively instead of by eye.
@@ -30,8 +32,8 @@ EVAL_DTYPE=q4f16 bun run eval onnx-community/Qwen3-4B-ONNX  # force a dtype for 
 ```
 
 Weights download once into the HF cache (`~/.cache/huggingface`), so subsequent runs are seconds each.
-Then open `report.html` in a browser — filter by pass/fail or model, and search across case names,
-output, tool calls, and scorers.
+Then open `report.html` in a browser — filter by pass/fail or model, search across case names, output,
+tool calls, and scorers, and expand any row to time-travel through its trajectory in the devtools inspector.
 
 ## Extend
 

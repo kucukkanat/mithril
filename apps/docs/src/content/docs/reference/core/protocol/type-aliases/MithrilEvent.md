@@ -32,7 +32,7 @@ type MithrilEvent =
 }
   | EventMeta & {
   step: number;
-  stop: "tool" | "text" | "output";
+  stop: "tool" | "text" | "output" | "length" | "error";
   type: "step.finish";
   usage: UsageDelta;
 }
@@ -74,6 +74,21 @@ type MithrilEvent =
   type: "tool.error";
 }
   | EventMeta & {
+  after: JsonValue;
+  before: JsonValue;
+  callId: string;
+  mechanism: "parse" | "coerce";
+  name: string;
+  type: "tool.repair";
+}
+  | EventMeta & {
+  attempt: number;
+  callId: string;
+  errorClass: ToolErrorClass;
+  name: string;
+  type: "tool.retry";
+}
+  | EventMeta & {
   role: "assistant";
   type: "message.end";
   usage: UsageDelta;
@@ -100,6 +115,18 @@ type MithrilEvent =
   savedTokens: number;
   summarySeq: number;
   type: "compaction";
+}
+  | EventMeta & {
+  action: "steer" | "halt";
+  count: number;
+  signature: string;
+  type: "loop.detected";
+}
+  | EventMeta & {
+  actual: number;
+  budget: "steps" | "tokens" | "cost" | "time";
+  limit: number;
+  type: "budget.exceeded";
 }
   | EventMeta & {
   callId: string;
@@ -135,7 +162,7 @@ type MithrilEvent =
 };
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:54](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/events.ts#L54)
+Defined in: [packages/core/src/protocol/events.ts:55](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/events.ts#L55)
 
 The discriminated union of every event on the wire — the core product type.
 

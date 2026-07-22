@@ -3,6 +3,7 @@ import {
   type AnyTool,
   type ApprovalDecision,
   type ChatRequest,
+  classifiedError,
   type EventConsumer,
   type EventMeta,
   type FinishReason,
@@ -16,14 +17,18 @@ import {
   type ModelResult,
   type ProviderChunk,
   type ProviderRegistry,
+  repairJson,
   type RunContext,
   type RuntimeAdapter,
+  type SerializedError,
   type SpanRef,
   type StandardSchemaV1,
   type StepInput,
   type StepOutcome,
   type SuspensionDescriptor,
   type SuspensionRequest,
+  type ToolErrorClass,
+  toolErrorClass,
   type ToolInvocation,
   type ToolOutcome,
   type Transport,
@@ -146,6 +151,12 @@ export interface LoopOptions<Deps> {
   readonly resume?: ResumeState;
   readonly output?: StandardSchemaV1<unknown, JsonValue>;
   readonly outputRetries?: number;
+  readonly toolRetries?: number;
+  readonly loopDetection?: boolean;
+  readonly maxTokens?: number;
+  readonly maxCostMicroUsd?: number;
+  readonly repair?: boolean;
+  readonly selfCorrection?: boolean;
   readonly middlewares?: readonly Middleware<Deps>[];
   readonly consumers?: readonly EventConsumer[];
 }
@@ -197,12 +208,100 @@ function isAsyncGen(v: unknown): v is AsyncGenerator<{ readonly payload: JsonVal
   return typeof v === "object" && v !== null && Symbol.asyncIterator in v;
 }
 
-async function validateInput(schema: StandardSchemaV1<unknown, unknown>, input: JsonValue): Promise<JsonValue> {
-  const r = await schema["~standard"].validate(input);
-  if (r.issues !== undefined) {
-    throw new MithrilError("INVALID_TOOL_INPUT", `invalid tool input: ${r.issues.map((i) => i.message).join("; ")}`);
+// Validate tool-call input against its schema, with one bounded, VISIBLE coercion before giving up: a
+// JSON-encoded string of the real arguments (a common small-model slip). A successful coercion fires
+// `onCoerce` (→ a `tool.repair` event); an unrepairable input throws INVALID_TOOL_INPUT with the issues.
+async function resolveInput(
+  schema: StandardSchemaV1<unknown, unknown>,
+  input: JsonValue,
+  repair: boolean,
+  onCoerce: (before: JsonValue, after: JsonValue) => void,
+): Promise<JsonValue> {
+  const first = await schema["~standard"].validate(input);
+  if (first.issues === undefined) return first.value as JsonValue;
+  if (repair) {
+    const coerced = coerceArgs(input);
+    if (coerced !== undefined) {
+      const second = await schema["~standard"].validate(coerced);
+      if (second.issues === undefined) {
+        onCoerce(input, coerced);
+        return second.value as JsonValue;
+      }
+    }
   }
-  return r.value as JsonValue;
+  throw new MithrilError("INVALID_TOOL_INPUT", `invalid tool input: ${first.issues.map((i) => i.message).join("; ")}`);
+}
+
+// The single coercion we attempt: a whole args object emitted as a JSON string. Deterministic and narrow —
+// only a string that repair-parses to an object/array is coerced; anything else is left to fail validation.
+function coerceArgs(input: JsonValue): JsonValue | undefined {
+  if (typeof input !== "string") return undefined;
+  const parsed = repairJson(input);
+  return parsed !== null && typeof parsed === "object" ? parsed : undefined;
+}
+
+// A per-call summary surfaced from runToolCalls so the step can drive the per-tool repair budget.
+interface ToolCallSummary {
+  readonly callId: string;
+  readonly name: string;
+  readonly ok: boolean;
+  readonly error?: SerializedError;
+}
+
+// Surface a tool's `examples` into its wire description (few-shot exemplars are the strongest prompt-side
+// lift for small models). Applied once at the model boundary so every provider benefits. Returns the same
+// array untouched when no tool declares examples.
+function withExamples(tools: readonly AnyTool<unknown>[]): readonly AnyTool<unknown>[] {
+  let changed = false;
+  const out = tools.map((t) => {
+    const ex = t.examples;
+    if (ex === undefined || ex.length === 0) return t;
+    changed = true;
+    const block = ex.map((e) => `- ${JSON.stringify(e)}`).join("\n");
+    return { ...t, description: `${t.description}\n\nExample calls:\n${block}` };
+  });
+  return changed ? out : tools;
+}
+
+// Per-run guard state, threaded through every step so budgets and loop detection persist across steps.
+interface StepGuards {
+  readonly repairCounts: Map<string, number>; // toolName -> consecutive failures (per-tool repair budget)
+  readonly maxToolRetries: number;
+  readonly loopSigs: Map<string, number>; // (tool, canonical-args) signature -> times seen (loop detection)
+  readonly loopDetection: boolean;
+}
+
+// Loop-detection thresholds over identical (tool, canonical-args) signatures: nudge once, then halt.
+const LOOP_STEER_AT = 3;
+const LOOP_HALT_AT = 4;
+
+// Boundary-checked token/cost budgets. Returns the first breached budget, or undefined when under budget.
+function checkBudget(
+  usage: UsageTotals,
+  opts: { readonly maxTokens?: number; readonly maxCostMicroUsd?: number },
+): { readonly budget: "tokens" | "cost"; readonly limit: number; readonly actual: number } | undefined {
+  if (opts.maxTokens !== undefined) {
+    const used = usage.input + usage.output;
+    if (used > opts.maxTokens) return { budget: "tokens", limit: opts.maxTokens, actual: used };
+  }
+  if (opts.maxCostMicroUsd !== undefined && usage.costMicroUsd > opts.maxCostMicroUsd) {
+    return { budget: "cost", limit: opts.maxCostMicroUsd, actual: usage.costMicroUsd };
+  }
+  return undefined;
+}
+
+// Classify a caught tool-execution failure onto the ToolErrorClass taxonomy so `tool.error` carries a
+// machine-readable class (routes repair, targeted re-ask, and evals). A schema-validation MithrilError is
+// `invalid_args` (retryable — the model can produce different args); anything else a handler bug.
+function classifyToolError(err: unknown): SerializedError {
+  if (err instanceof MithrilError) {
+    const cls: ToolErrorClass =
+      err.code === "INVALID_TOOL_INPUT" ? "invalid_args" : err.code === "INVALID_TOOL_OUTPUT" ? "invalid_output" : "handler_error";
+    return classifiedError(err.name, err.message, cls, { code: err.code, ...(cls === "invalid_args" ? { retryable: true } : {}) });
+  }
+  const message = err instanceof Error ? err.message : String(err);
+  const name = err instanceof Error ? err.name : "Error";
+  return classifiedError(name, message, "handler_error");
 }
 
 // Remaining tool calls of the last assistant turn that have not yet produced a tool result. The first is
@@ -274,6 +373,11 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
   // §9.2 — run-scoped consumers plus any process-wide ones (zero-touch devtools attach).
   const consumers = [...(opts.consumers ?? []), ...globalConsumers()];
   const middlewares = opts.middlewares ?? [];
+  // Self-correction toggles. `selfCorrection` is the master (default on); each feature flag overrides it for
+  // its one behavior. Crash-hardening is intentionally NOT gated — a throwing provider/middleware always
+  // degrades to a typed error, never a crash, regardless of these flags.
+  const selfCorrect = opts.selfCorrection ?? true;
+  const repairEnabled = opts.repair ?? selfCorrect;
 
   function stamp(span: SpanRef, body: EventBody): MithrilEvent {
     const e = { v: 1, runId, seq: seq++, ts: rt.now(), span, ...body } as MithrilEvent;
@@ -351,7 +455,8 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
     firstDirective: Directive | undefined,
     chatSpan: SpanRef,
     step: number,
-  ): AsyncGenerator<MithrilEvent, { readonly suspend?: PendingSuspension }> {
+  ): AsyncGenerator<MithrilEvent, { readonly suspend?: PendingSuspension; readonly outcomes: readonly ToolCallSummary[] }> {
+    const outcomes: ToolCallSummary[] = [];
     for (let i = 0; i < calls.length; i++) {
       const call = calls[i];
       if (call === undefined) continue;
@@ -359,8 +464,11 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
       const toolSpan: SpanRef = { id: rt.randomUUID(), parentId: chatSpan.id, traceId, kind: "execute_tool" };
       const tool = opts.tools.find((t) => t.name === call.name);
       if (tool === undefined) {
-        yield stamp(toolSpan, { type: "tool.error", callId: call.callId, error: { name: "UnknownTool", message: `No tool "${call.name}"` } });
-        messages.push({ role: "tool", content: `error: unknown tool ${call.name}`, toolCalls: [] });
+        const known = opts.tools.map((t) => t.name).join(", ");
+        const error = classifiedError("UnknownTool", `No tool "${call.name}". Available tools: ${known}.`, "unknown_tool", { retryable: true });
+        yield stamp(toolSpan, { type: "tool.error", callId: call.callId, error });
+        messages.push({ role: "tool", content: `error: unknown tool ${call.name}. Available tools: ${known}.`, toolCalls: [] });
+        outcomes.push({ callId: call.callId, name: call.name, ok: false, error });
         continue;
       }
       const emitted: MithrilEvent[] = [];
@@ -382,17 +490,19 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
             resolutionSchemaId: APPROVAL_SCHEMA_ID,
           };
           yield stamp(toolSpan, { type: "suspend", descriptor });
-          return { suspend: { kind: "approval", callId: call.callId, descriptor } };
+          return { suspend: { kind: "approval", callId: call.callId, descriptor }, outcomes };
         }
       } else if (directive.kind === "reject") {
         const output: JsonValue = { approved: false, message: directive.message };
         yield stamp(toolSpan, { type: "tool.result", callId: call.callId, output, ms: 0 });
         messages.push({ role: "tool", content: JSON.stringify(output), toolCalls: [] });
+        outcomes.push({ callId: call.callId, name: call.name, ok: true });
         continue;
       } else if (directive.kind === "return") {
         // Tier-1b: the tool already produced a suspend marker; the resolution IS its result. Do not re-run.
         yield stamp(toolSpan, { type: "tool.result", callId: call.callId, output: directive.value, ms: 0 });
         messages.push({ role: "tool", content: JSON.stringify(directive.value), toolCalls: [] });
+        outcomes.push({ callId: call.callId, name: call.name, ok: true });
         continue;
       }
 
@@ -409,15 +519,29 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
       // suspension (Tier-1b marker or Tier-2 ctx.suspend) unwinds as a SuspendSignal caught below.
       const runCore = async (inv: ToolInvocation): Promise<ToolOutcome> => {
         try {
-          const parsed = await validateInput(tool.inputSchema, inv.input);
+          const parsed = await resolveInput(tool.inputSchema, inv.input, repairEnabled, (before, after) => {
+            emitted.push(stamp(toolSpan, { type: "tool.repair", callId: inv.callId, name: inv.name, mechanism: "coerce", before, after }));
+          });
           const raw = await runExecute(tool, parsed, ctx, (payload) => {
             emitted.push(stamp(toolSpan, { type: "tool.progress", callId: inv.callId, payload }));
           });
           if (isSuspend(raw)) throw new SuspendSignal("return", raw.request, {}, []);
-          return { callId: inv.callId, status: "ok", output: raw as JsonValue };
+          const output = raw as JsonValue;
+          // A declared outputSchema is now enforced (previously trusted as-is): a violating tool result is a
+          // classified tool.error the model sees, catching a silent-bug class (and MCP structuredContent drift).
+          if (tool.outputSchema !== undefined) {
+            const checked = await tool.outputSchema["~standard"].validate(output);
+            if (checked.issues !== undefined) {
+              throw new MithrilError(
+                "INVALID_TOOL_OUTPUT",
+                `tool "${inv.name}" returned output that failed its outputSchema: ${checked.issues.map((i) => i.message).join("; ")}`,
+              );
+            }
+          }
+          return { callId: inv.callId, status: "ok", output };
         } catch (err) {
           if (err instanceof SuspendSignal) throw err;
-          return { callId: inv.callId, status: "error", error: toSerializedError(err) };
+          return { callId: inv.callId, status: "error", error: classifyToolError(err) };
         }
       };
       const chain = middlewares.reduceRight<(inv: ToolInvocation) => Promise<ToolOutcome>>((next, mw) => {
@@ -442,20 +566,24 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
             err.kind === "midtool"
               ? { kind: "midtool", callId: call.callId, descriptor, journal: err.journal, resolutions: err.resolutions }
               : { kind: "return", callId: call.callId, descriptor };
-          return { suspend: pending };
+          return { suspend: pending, outcomes };
         }
-        throw err;
+        // A tool-altitude middleware threw (not a suspension). Degrade to a model-visible tool.error
+        // rather than crashing the whole run — a buggy guardrail must not take the run down with it.
+        outcome = { callId: call.callId, status: "error", error: classifyToolError(err) };
       }
       for (const e of emitted) yield e;
       if (outcome.status === "ok") {
         yield stamp(toolSpan, { type: "tool.result", callId: call.callId, output: outcome.output, ms: rt.now() - started });
         messages.push({ role: "tool", content: JSON.stringify(outcome.output), toolCalls: [] });
+        outcomes.push({ callId: call.callId, name: call.name, ok: true });
       } else {
         yield stamp(toolSpan, { type: "tool.error", callId: call.callId, error: outcome.error });
         messages.push({ role: "tool", content: JSON.stringify({ error: outcome.error.message }), toolCalls: [] });
+        outcomes.push({ callId: call.callId, name: call.name, ok: false, error: outcome.error });
       }
     }
-    return {};
+    return { outcomes };
   }
 
   // ── entry: fresh vs resume ────────────────────────────────────────────────────────────────────────
@@ -502,6 +630,7 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
     sink: MithrilEvent[],
     attemptRef: { attempt: number },
     maxRetries: number,
+    guards: StepGuards,
     setNext: (n: StepNext) => void,
   ): Promise<StepOutcome> {
     sink.push(stamp(chatSpan, { type: "step.start", step }));
@@ -515,7 +644,7 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
         model: call.model,
         system: call.system,
         messages: call.messages,
-        tools: call.tools,
+        tools: withExamples(call.tools),
         ...(opts.output !== undefined ? { output: opts.output } : {}),
       };
       let text = "";
@@ -523,25 +652,32 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
       const calls: Call[] = [];
       let stepUsage: UsageDelta = ZERO_DELTA;
       let finishReason: FinishReason = "stop";
-      for await (const chunk of provider.chat(req, rt, transport, signal)) {
-        sink.push(stampChunk(stamp, chatSpan, chunk));
-        if (chunk.type === "text.delta") {
-          text += chunk.delta;
-          if (opts.output !== undefined) {
-            const partial = tryPartialJson(text);
-            if (partial !== undefined) {
-              const key = JSON.stringify(partial);
-              if (key !== lastPartial) {
-                lastPartial = key;
-                sink.push(stamp(chatSpan, { type: "object.delta", partial }));
+      // A provider throwing mid-stream (network drop, unparseable frame) must not crash the run: wrap it as
+      // a retryable PROVIDER_ERROR. A pending abort is rethrown untouched so the loop reports "cancelled".
+      try {
+        for await (const chunk of provider.chat(req, rt, transport, signal)) {
+          sink.push(stampChunk(stamp, chatSpan, chunk));
+          if (chunk.type === "text.delta") {
+            text += chunk.delta;
+            if (opts.output !== undefined) {
+              const partial = tryPartialJson(text);
+              if (partial !== undefined) {
+                const key = JSON.stringify(partial);
+                if (key !== lastPartial) {
+                  lastPartial = key;
+                  sink.push(stamp(chatSpan, { type: "object.delta", partial }));
+                }
               }
             }
+          } else if (chunk.type === "tool.call") calls.push({ callId: chunk.callId, name: chunk.name, input: chunk.input });
+          else if (chunk.type === "message.end") {
+            stepUsage = chunk.usage;
+            finishReason = chunk.finishReason;
           }
-        } else if (chunk.type === "tool.call") calls.push({ callId: chunk.callId, name: chunk.name, input: chunk.input });
-        else if (chunk.type === "message.end") {
-          stepUsage = chunk.usage;
-          finishReason = chunk.finishReason;
         }
+      } catch (err) {
+        if (signal.aborted || err instanceof MithrilError) throw err;
+        throw new MithrilError("PROVIDER_ERROR", `Model provider "${modelId}" failed mid-stream: ${err instanceof Error ? err.message : String(err)}`);
       }
       return { text, finishReason, usage: stepUsage, calls };
     };
@@ -597,7 +733,7 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
 
     // Tools: drain the runToolCalls generator into the sink; a suspension short-circuits the step.
     const toolGen = runToolCalls(calls, undefined, chatSpan, step);
-    let toolResult: { readonly suspend?: PendingSuspension } = {};
+    let toolResult: { readonly suspend?: PendingSuspension; readonly outcomes: readonly ToolCallSummary[] } = { outcomes: [] };
     for (;;) {
       const r = await toolGen.next();
       if (r.done) {
@@ -610,6 +746,64 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
       setNext({ kind: "suspend", pending: toolResult.suspend });
       return { step, stop: "suspend", usage: result.usage };
     }
+    // Per-tool repair budget: a tool that keeps failing is re-asked (each failure emits `tool.retry`) until
+    // it exhausts `maxToolRetries` consecutive failures, at which point the run ends with a clear terminal
+    // error instead of burning to maxSteps. Any success resets that tool's counter.
+    for (const o of toolResult.outcomes) {
+      if (o.ok) {
+        guards.repairCounts.delete(o.name);
+        continue;
+      }
+      const n = (guards.repairCounts.get(o.name) ?? 0) + 1;
+      guards.repairCounts.set(o.name, n);
+      const cls: ToolErrorClass = o.error !== undefined ? (toolErrorClass(o.error) ?? "handler_error") : "handler_error";
+      if (n > guards.maxToolRetries) {
+        const last = o.error?.message ?? "unknown error";
+        const error = classifiedError(
+          "ToolRepairExhausted",
+          `Tool "${o.name}" failed ${n} times in a row without succeeding (last error: ${last}). Raise toolRetries, fix the tool/schema, or add examples.`,
+          cls,
+          { code: "TOOL_REPAIR_EXHAUSTED" },
+        );
+        sink.push(stamp(chatSpan, { type: "step.finish", step, stop: "error", usage: result.usage }));
+        setNext({ kind: "terminal", result: { status: "error", error, usage }, reason: "error" });
+        return { step, stop: "error", usage: result.usage };
+      }
+      // With an unbounded budget (selfCorrection off) there is no attempt count to report — stay quiet and
+      // let the raw loop feed the tool.error back, bounded only by maxSteps.
+      if (Number.isFinite(guards.maxToolRetries)) {
+        sink.push(stamp(chatSpan, { type: "tool.retry", callId: o.callId, name: o.name, attempt: n, errorClass: cls }));
+      }
+    }
+    // Loop / no-progress detection over identical (tool, canonical-args) signatures: nudge the model once,
+    // then halt with a clear terminal error. Repeated FAILING calls are already bounded by the repair budget
+    // above; this catches the residual case of identical calls that don't (or no longer) error.
+    if (guards.loopDetection) {
+      for (const c of calls) {
+        const sig = `${c.name}:${JSON.stringify(c.input)}`;
+        const seen = (guards.loopSigs.get(sig) ?? 0) + 1;
+        guards.loopSigs.set(sig, seen);
+        if (seen >= LOOP_HALT_AT) {
+          sink.push(stamp(chatSpan, { type: "loop.detected", signature: sig, count: seen, action: "halt" }));
+          sink.push(stamp(chatSpan, { type: "step.finish", step, stop: "error", usage: result.usage }));
+          const error: SerializedError = {
+            name: "LoopDetected",
+            message: `Loop detected: "${c.name}" was called with identical arguments ${seen} times without progress. Halting.`,
+            data: { code: "LOOP_DETECTED" },
+          };
+          setNext({ kind: "terminal", result: { status: "error", error, usage }, reason: "error" });
+          return { step, stop: "error", usage: result.usage };
+        }
+        if (seen === LOOP_STEER_AT) {
+          sink.push(stamp(chatSpan, { type: "loop.detected", signature: sig, count: seen, action: "steer" }));
+          messages.push({
+            role: "user",
+            content: `You have called "${c.name}" with identical arguments ${seen} times, which is not making progress. Try different arguments, a different tool, or give your final answer.`,
+            toolCalls: [],
+          });
+        }
+      }
+    }
     sink.push(stamp(chatSpan, { type: "step.finish", step, stop: "tool", usage: result.usage }));
     setNext({ kind: "continue" });
     return { step, stop: "tool", usage: result.usage };
@@ -620,6 +814,12 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
     const maxSteps = opts.maxSteps ?? 16;
     const maxRetries = opts.outputRetries ?? 2;
     const attemptRef = { attempt: 0 };
+    const guards: StepGuards = {
+      repairCounts: new Map<string, number>(),
+      maxToolRetries: opts.toolRetries ?? (selfCorrect ? 2 : Number.POSITIVE_INFINITY),
+      loopSigs: new Map<string, number>(),
+      loopDetection: opts.loopDetection ?? selfCorrect,
+    };
     for (let step = from; step < maxSteps; step++) {
       if (signal.aborted) {
         // Surface a caller-supplied abort reason (handle.cancel(reason) / AbortController.abort(reason));
@@ -627,6 +827,22 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
         const reason = typeof signal.reason === "string" ? signal.reason : "aborted";
         yield stamp(rootSpan, { type: "run.cancel", reason });
         return { status: "cancelled", usage };
+      }
+      // Boundary-checked token/cost budgets: a run that has already spent past its budget stops here with a
+      // clear, typed terminal error rather than starting another step.
+      const over = checkBudget(usage, opts);
+      if (over !== undefined) {
+        yield stamp(rootSpan, { type: "budget.exceeded", budget: over.budget, limit: over.limit, actual: over.actual });
+        yield stamp(rootSpan, { type: "run.finish", reason: "length", usage });
+        return {
+          status: "error",
+          error: {
+            name: "BudgetExceeded",
+            message: `Run exceeded its ${over.budget} budget (${over.actual} > ${over.limit}). Raise the limit or reduce the work.`,
+            data: { code: "BUDGET_EXCEEDED" },
+          },
+          usage,
+        };
       }
       const chatSpan: SpanRef = { id: rt.randomUUID(), parentId: rootSpan.id, traceId, kind: "chat" };
       const sink: MithrilEvent[] = [];
@@ -640,9 +856,23 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
       const stepChain = middlewares.reduceRight<(i: StepInput) => Promise<StepOutcome>>((run, mw) => {
         const wrap = mw.step;
         return wrap === undefined ? run : (i) => wrap(stepCtx, i, run);
-      }, (i) => runStep(i.step, instructions, chatSpan, sink, attemptRef, maxRetries, setNext));
+      }, (i) => runStep(i.step, instructions, chatSpan, sink, attemptRef, maxRetries, guards, setNext));
 
-      await stepChain({ step, messages });
+      try {
+        await stepChain({ step, messages });
+      } catch (err) {
+        for (const e of sink) yield e; // flush whatever the step emitted before it threw
+        if (signal.aborted) {
+          const reason = typeof signal.reason === "string" ? signal.reason : "aborted";
+          yield stamp(rootSpan, { type: "run.cancel", reason });
+          return { status: "cancelled", usage };
+        }
+        // A model/step-altitude middleware or the provider threw and nothing downstream handled it. Surface
+        // a typed run.error on the stream plus a terminal error result, rather than crashing the run.
+        const error = toSerializedError(err);
+        yield stamp(rootSpan, { type: "run.error", error });
+        return { status: "error", error, usage };
+      }
       for (const e of sink) yield e;
 
       const next = holder.next;

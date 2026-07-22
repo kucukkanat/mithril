@@ -14,6 +14,7 @@
     "docs:preview": "bun run --cwd apps/docs preview",
     "docs:check": "bun run --cwd apps/docs check",
     "docs:check-symbols": "bun run apps/docs/scripts/check-symbol-links.ts",
+    "docs:check-pages": "bun run apps/docs/scripts/check-orphan-pages.ts",
     "gen-symbols": "bun run apps/docs/scripts/gen-symbols.ts",
     "evals": "bun run --cwd apps/evals eval"
   },

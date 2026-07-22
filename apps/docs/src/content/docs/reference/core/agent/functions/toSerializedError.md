@@ -9,7 +9,7 @@ title: "toSerializedError"
 function toSerializedError(err): SerializedError;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:206](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L206)
+Defined in: [packages/core/src/agent/agent-types.ts:229](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L229)
 
 Normalize an unknown thrown value into a JSON-safe [SerializedError](/reference/core/protocol/interfaces/serializederror/).
 
@@ -17,10 +17,10 @@ Normalize an unknown thrown value into a JSON-safe [SerializedError](/reference/
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `err` | `unknown` | the caught value; `Error` instances keep their `name`/`message`, anything else is stringified. |
+| `err` | `unknown` | the caught value. A [MithrilError](/reference/core/agent/classes/mithrilerror/) additionally carries its `code` onto `data.code` and sets `retryable` for RETRYABLE\_CODES; other `Error`s keep `name`/`message`; anything else is stringified. |
 
 ## Returns
 
 [`SerializedError`](/reference/core/protocol/interfaces/serializederror/)
 
-a `{ name, message }` pair safe to embed in events and results.
+a `SerializedError` safe to embed in events and results.

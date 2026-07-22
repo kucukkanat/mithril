@@ -194,31 +194,32 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
     effectiveMode === "live" ? `live:${settings.activeProvider}` : effectiveMode === "local" ? `local:${settings.localModel}` : "scripted";
 
   return (
-    <div className={`pg${embedded ? " pg-embedded" : ""}`}>
-      <div className="pg-toolbar">
-        <div className="pg-presets" role="tablist" aria-label="Examples">
+    <div className={`pg${embedded ? " pg-embedded" : ""}`} data-testid="playground">
+      <div className="pg-toolbar" data-testid="playground-toolbar">
+        <div className="pg-presets" role="tablist" aria-label="Examples" data-testid="playground-presets">
           {PRESETS.map((p) => (
             <button
               key={p.id}
               className={`pg-preset${presetId === p.id ? " active" : ""}`}
               onClick={() => pickPreset(p)}
               title={p.blurb}
+              data-testid={`playground-preset-${p.id}`}
             >
               {p.label}
             </button>
           ))}
         </div>
-        <div className="pg-actions">
+        <div className="pg-actions" data-testid="playground-actions">
           {running ? (
-            <button className="pg-btn pg-stop" onClick={runner.reset}>
+            <button className="pg-btn pg-stop" onClick={runner.reset} data-testid="playground-stop-button">
               ■ Stop
             </button>
           ) : (
-            <button className="pg-btn pg-run" onClick={doRun}>
+            <button className="pg-btn pg-run" onClick={doRun} data-testid="playground-run-button">
               ▶ Run <kbd>⌘↵</kbd>
             </button>
           )}
-          <button className="pg-btn" onClick={share}>
+          <button className="pg-btn" onClick={share} data-testid="playground-share-button">
             {copied ? "Copied!" : "Share"}
           </button>
         </div>
@@ -229,7 +230,7 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
       )}
 
       {pendingRun && (
-        <div className="pg-confirm">
+        <div className="pg-confirm" data-testid="playground-live-confirm">
           <div className="pg-confirm-head">
             <span className="pg-approval-badge warn">key safety</span>
             <span>You've edited this code</span>
@@ -245,10 +246,11 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
                 setLiveConfirmed(true);
                 startRun();
               }}
+              data-testid="playground-confirm-run-anyway-button"
             >
               Run anyway
             </button>
-            <button className="pg-btn" onClick={() => setPendingRun(false)}>
+            <button className="pg-btn" onClick={() => setPendingRun(false)} data-testid="playground-confirm-cancel-button">
               Cancel
             </button>
           </div>
@@ -256,14 +258,19 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
       )}
 
       <div className="pg-body">
-        <div className="pg-editor">
+        <div className="pg-editor" data-testid="playground-editor-pane">
           <CodeEditor value={code} onChange={setCode} onRun={doRun} />
         </div>
 
-        <div className="pg-panel">
-          <div className="pg-tabs" role="tablist">
+        <div className="pg-panel" data-testid="playground-panel">
+          <div className="pg-tabs" role="tablist" data-testid="playground-tabs">
             {(["events", "output", "state"] as const).map((t) => (
-              <button key={t} className={`pg-tab${tab === t ? " active" : ""}`} onClick={() => setTab(t)}>
+              <button
+                key={t}
+                className={`pg-tab${tab === t ? " active" : ""}`}
+                onClick={() => setTab(t)}
+                data-testid={`playground-tab-${t}`}
+              >
                 {t === "events" ? `Events${events.length ? ` (${events.length})` : ""}` : t}
               </button>
             ))}
@@ -277,38 +284,43 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
               aria-valuemin={0}
               aria-valuemax={100}
               aria-label="Loading local model"
+              data-testid="playground-run-download-progress"
             >
               <div className="pg-progress-fill" style={{ width: `${Math.round(runner.download.progress * 100)}%` }} />
             </div>
           )}
 
           {approval && (
-            <div className="pg-approval">
+            <div className="pg-approval" data-testid="playground-approval">
               <div className="pg-approval-head">
                 <span className="pg-approval-badge">approval required</span>
                 <code>{approval.name}({JSON.stringify(approval.input)})</code>
               </div>
               <p>The run is suspended <em>before</em> the tool executes. Nothing side-effecting has run.</p>
               <div className="pg-approval-actions">
-                <button className="pg-btn pg-run" onClick={() => runner.resume({ kind: "approve" })}>
+                <button className="pg-btn pg-run" onClick={() => runner.resume({ kind: "approve" })} data-testid="playground-approval-approve-button">
                   Approve
                 </button>
-                <button className="pg-btn" onClick={() => runner.resume({ kind: "reject", message: "Denied in playground" })}>
+                <button
+                  className="pg-btn"
+                  onClick={() => runner.resume({ kind: "reject", message: "Denied in playground" })}
+                  data-testid="playground-approval-reject-button"
+                >
                   Reject
                 </button>
               </div>
             </div>
           )}
 
-          <div className="pg-panel-body">
+          <div className="pg-panel-body" data-testid="playground-panel-body">
             {tab === "events" && (
               <EventList events={events} cursor={cursor} onSelect={scrub} follow={pinned} />
             )}
             {tab === "state" && <StateTree events={events} cursor={cursor} />}
             {tab === "output" && (
-              <div className="pg-output">
+              <div className="pg-output" data-testid="playground-output">
                 {(runner.errorHint || runner.error) && (
-                  <div className="pg-error">
+                  <div className="pg-error" data-testid="playground-output-error">
                     {runner.errorHint ?? runner.error}
                     {runner.errorHint && runner.error && (
                       <details className="pg-error-raw">
@@ -318,12 +330,12 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
                     )}
                   </div>
                 )}
-                {outputText && <p className="out-text">{outputText}</p>}
+                {outputText && <p className="out-text" data-testid="playground-output-text">{outputText}</p>}
                 {objectFinal !== undefined && (
-                  <pre className="out-object">{JSON.stringify(objectFinal, null, 2)}</pre>
+                  <pre className="out-object" data-testid="playground-output-object">{JSON.stringify(objectFinal, null, 2)}</pre>
                 )}
                 {runner.logs.length > 0 && (
-                  <div className="out-logs">
+                  <div className="out-logs" data-testid="playground-output-logs">
                     {runner.logs.map((l, i) => (
                       <div key={i} className={`log-line log-${l.level}`}>
                         {l.text}
@@ -332,14 +344,14 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
                   </div>
                 )}
                 {!runner.error && !runner.errorHint && !outputText && objectFinal === undefined && runner.logs.length === 0 && (
-                  <div className="pg-empty">Output, structured results, and console logs appear here.</div>
+                  <div className="pg-empty" data-testid="playground-output-empty">Output, structured results, and console logs appear here.</div>
                 )}
               </div>
             )}
           </div>
 
           {(tab === "events" || tab === "state") && events.length > 0 && (
-            <div className="pg-scrubber">
+            <div className="pg-scrubber" data-testid="playground-scrubber">
               <input
                 type="range"
                 min={0}
@@ -347,6 +359,7 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
                 value={cursor}
                 onChange={(e) => scrub(Number(e.target.value))}
                 aria-label="Time-travel cursor"
+                data-testid="playground-scrubber-input"
               />
               <span className="pg-scrubber-label">
                 {cursor} / {events.length}
@@ -354,7 +367,7 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
             </div>
           )}
 
-          <div className="pg-status">
+          <div className="pg-status" data-testid="playground-status">
             <span className={`pg-badge s-${displayStatus}`}>{displayStatus}</span>
             {showProviderUI && <span className={`pg-mode-chip mode-${effectiveMode}`}>{modeChip}</span>}
             <span>{finalState.messages.filter((m) => m.role === "assistant").length} steps</span>

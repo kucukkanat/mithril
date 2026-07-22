@@ -1,0 +1,234 @@
+---
+title: Self-correction & reliability
+description: How Mithril makes small models reliable — visible, bounded corrections you can watch on the event stream and switch off with one flag.
+sidebar:
+  order: 20
+  label: Self-correction
+---
+
+import { Aside, Tabs, TabItem, CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+Small models (0.5B–8B, including the in-browser ones) get tool calls and JSON *almost* right. Mithril's
+job is to close that gap **without magic**: every correction is visible as a typed
+[`MithrilEvent`](/reference/core/protocol/type-aliases/mithrilevent/), bounded by a budget, and switchable
+with one flag. Nothing is inferred from the model's name, and nothing rewrites the prompt behind your back.
+
+This page is the complete reference: the principle, every correction and the event it emits, how to read
+them, and how to turn any of them off.
+
+## The one rule
+
+The single most replicated finding in the literature is that a model **cannot reliably judge its own
+answer** — intrinsic "review your work" prompting *degrades* accuracy, and it degrades *most* on small
+models. So Mithril never asks the model to grade itself. Every correction is driven by an **external
+verdict**:
+
+- a Standard-Schema validation failure on a tool call or the final output,
+- a tool that threw or returned the wrong shape,
+- a duplicate-call signature,
+- a token / cost / step budget.
+
+Mithril already owns the two best verdict sources there are — schema validation at every tool boundary, and
+tool results flowing through the event stream — so it can correct **from facts, not from vibes**.
+
+<Aside type="tip" title="The contract">
+Read the mechanism, not the marketing. If the harness repairs, re-asks, steers, or halts, there is an
+event that says exactly why — and one flag that turns it off. Open the [devtools](/guides/devtools/) and you
+can watch the whole correction trajectory unfold.
+</Aside>
+
+## What runs by default
+
+These are on for every agent, cost nothing on the happy path, and each is one flag away from off (see
+[Toggling](#toggling-corrections)).
+
+| Correction | The failure it fixes | What the harness does | Event |
+| --- | --- | --- | --- |
+| **Parse-repair** | Malformed JSON from a local model (code fences, trailing commas, unterminated strings/brackets) | Repairs the text before validation — losslessly for valid JSON | — (wire-level) |
+| **Schema coercion** | Args emitted as a JSON *string* instead of an object | Decodes and re-validates the string, once | `tool.repair` |
+| **Bounded re-ask** | A tool called wrong, repeatedly | Re-asks with the concrete error; after `toolRetries` (default 2) consecutive failures, ends with a clear terminal error instead of looping to `maxSteps` | `tool.retry` |
+| **Output validation** | A tool returning data that breaks its own `outputSchema` | Rejects it and feeds the violation back | `tool.error` (`invalid_output`) |
+| **Loop detection** | The same `(tool, args)` call over and over | Nudges the model once, then halts | `loop.detected` |
+| **Crash-hardening** | A provider or middleware that throws mid-run | Converts it to a typed error — never an uncaught crash | `run.error` |
+
+<Aside type="note">
+Two of these operate at slightly different layers. **Parse-repair** is a wire-parsing concern that lives in
+the local-model provider (like the existing code-fence stripping), so it is always on and not run-toggleable.
+**Schema coercion** is a loop-level, semantic change to the model's output, so it is fully visible
+(`tool.repair`) and gated by the `repair` flag.
+</Aside>
+
+## The correction events
+
+Every correction is a first-class member of the [`MithrilEvent`](/reference/core/protocol/type-aliases/mithrilevent/)
+union, so devtools, OTel, evals, and your own consumers all see them with full static typing.
+
+| Event | Fires when | Key fields |
+| --- | --- | --- |
+| `tool.repair` | A malformed call was deterministically fixed | `mechanism` (`"parse"` \| `"coerce"`), `before`, `after` |
+| `tool.retry` | A failing call is being re-asked under budget | `attempt`, `errorClass` |
+| `tool.error` | A tool call failed (unknown tool, bad args, bad output, handler threw) | `error` (carries a `ToolErrorClass`) |
+| `loop.detected` | An identical-call loop was caught | `signature`, `count`, `action` (`"steer"` \| `"halt"`) |
+| `budget.exceeded` | A token / cost budget was passed | `budget` (`"tokens"` \| `"cost"` \| …), `limit`, `actual` |
+| `run.error` | A provider/middleware threw and was caught | `error` |
+
+### The tool-error taxonomy
+
+Every tool failure carries a machine-readable [`ToolErrorClass`](/reference/core/protocol/type-aliases/toolerrorclass/)
+on its error `data`, so you can route your own handling or bucket eval metrics without parsing message text:
+
+```ts
+import { toolErrorClass } from "mithril";
+
+for await (const event of run.events) {
+  if (event.type === "tool.error") {
+    switch (toolErrorClass(event.error)) {
+      case "unknown_tool":  // model named a tool that doesn't exist
+      case "malformed_json": // arguments couldn't be parsed
+      case "invalid_args":   // parsed, but failed the input schema
+      case "invalid_output": // the tool's result failed its output schema
+      case "handler_error":  // the tool's execute() threw
+      case "timeout":        // the tool exceeded its time budget
+    }
+  }
+}
+```
+
+## Budgets
+
+Every run is bounded. `maxSteps` (default 16) always applies; the token and cost budgets are opt-in (unset ⇒
+unbounded). Exceeding any of them emits [`budget.exceeded`](/reference/core/protocol/type-aliases/mithrilevent/)
+and settles into an `error` result — **bounded and loud, never a silent give-up**.
+
+```ts
+const assistant = agent({
+  model: "openai/gpt-4o-mini",
+  instructions: "Be helpful and brief.",
+  tools: [weather],
+  maxSteps: 16,            // model turns (default)
+  maxTokens: 100_000,      // input+output tokens for the whole run
+  maxCostMicroUsd: 50_000, // cost in integer micro-USD ($0.05)
+});
+```
+
+## Toggling corrections
+
+Corrections come in three levels of control: a **master switch**, **per-feature flags**, and the **budget
+numbers**. All live on [`AgentConfig`](/reference/core/agent/interfaces/agentconfig/) (per-agent) and on
+`RunOptions` (per-run); the per-run value wins.
+
+<Tabs>
+<TabItem label="Master switch">
+
+`selfCorrection: false` gives you the **raw loop** — no schema coercion, no loop detection, and unbounded
+tool retries (a failing tool is fed back and retried only until `maxSteps`). It's the pre-correction
+behavior, in one flag.
+
+```ts
+const raw = agent({
+  model,
+  instructions,
+  tools,
+  selfCorrection: false, // just the loop — no coercion, no loop guard, unbounded retries
+});
+```
+
+<Aside type="caution" title="What stays on">
+`selfCorrection: false` does **not** disable **crash-hardening**. A provider or middleware that throws still
+becomes a typed `run.error` rather than taking the process down — that's a safety guarantee, not a
+correction, so it is never switchable.
+</Aside>
+
+</TabItem>
+<TabItem label="Per-feature flags">
+
+Each flag governs exactly one behavior and **overrides the master** for that behavior. So you can start from
+the raw loop and re-enable just the one guard you want:
+
+```ts
+const a = agent({
+  model,
+  instructions,
+  tools,
+  selfCorrection: false, // raw loop…
+  loopDetection: true,   // …except still halt identical-call loops
+});
+```
+
+| Flag | Governs | Default |
+| --- | --- | --- |
+| `repair` | Schema coercion (the `tool.repair` events) | follows `selfCorrection` |
+| `loopDetection` | Identical-call loop detection | follows `selfCorrection` |
+| `toolRetries` | The per-tool re-ask budget (a number; `Infinity` ⇒ unbounded) | `2` (∞ when `selfCorrection: false`) |
+
+</TabItem>
+<TabItem label="Precedence">
+
+The rule is simple: **an explicit per-feature flag always beats the master.**
+
+```ts
+selfCorrection ?? true         // master (default on)
+repair         ?? selfCorrection   // explicit repair wins, else follow master
+loopDetection  ?? selfCorrection   // explicit loopDetection wins, else follow master
+toolRetries    ?? (selfCorrection ? 2 : Infinity) // explicit number wins
+```
+
+So `{ selfCorrection: false }` turns everything off, `{ selfCorrection: false, loopDetection: true }` is a
+raw loop that still halts loops, and `{ repair: false }` disables only coercion while leaving loop detection
+and the retry budget on.
+
+</TabItem>
+</Tabs>
+
+## Steer small models with examples
+
+The strongest *prompt-side* lift for tiny models is a handful of concrete examples. Attach them to a tool
+and Mithril surfaces them into the wire description for every provider — no per-provider wiring:
+
+```ts
+const weather = tool({
+  name: "get_weather",
+  description: "Look up the current weather for a city.",
+  examples: [{ city: "NYC" }, { city: "Paris" }],
+  inputSchema: z.object({ city: z.string() }),
+  async execute({ city }) {
+    return `It is 22°C in ${city}.`;
+  },
+});
+```
+
+## Spend compute instead of parameters (opt-in)
+
+When you want a small model to *try harder*, add a test-time-compute middleware to `use`. Both are **off
+unless you add them** — a default run never spends N× tokens, and every sample is streamed and visible.
+
+<CardGrid>
+<LinkCard title="selfConsistency" href="/reference/core/agent/functions/selfconsistency/" description="Sample N times, keep the majority answer — voting by canonical equality of the tool calls or text." />
+<LinkCard title="bestOfN" href="/reference/core/agent/functions/bestofn/" description="Draw N candidates, keep the highest-scoring one. Prefer a deterministic scorer over model self-judgement." />
+</CardGrid>
+
+```ts
+import { agent, selfConsistency, bestOfN } from "mithril";
+
+// majority vote across 5 samples, stopping early once 3 agree
+const consistent = agent({ model, instructions, tools, use: [selfConsistency({ n: 5, earlyStopAgreement: 3 })] });
+
+// draw 4 candidates, keep the one that actually called a tool (a deterministic verifier)
+const verified = agent({ model, instructions, use: [bestOfN({ n: 4, score: (r) => (r.calls.length > 0 ? 1 : 0) })] });
+```
+
+<Aside type="note" title="In the browser, and beyond">
+Samples run sequentially on one device in the browser, so keep `n` small (≤5). Asking a *small* model to
+judge itself is weak — prefer a deterministic scorer (does it parse? does a check tool pass?). Hard
+grammar-constrained decoding for local models is on the [roadmap](/roadmap/): Transformers.js has no grammar
+support today, so parse-repair plus the bounded re-ask above is the shipped local guarantee.
+</Aside>
+
+## Choosing settings
+
+<CardGrid>
+<LinkCard title="Tiny / in-browser models" href="/guides/local-inference/" description="Keep every default on, add examples to your tools, and consider selfConsistency({ n: 3 }) for the calls that matter." />
+<LinkCard title="Frontier models" href="/guides/building-agents/" description="Defaults are cheap insurance. You may raise toolRetries or set repair: false if you never see malformed calls." />
+<LinkCard title="Deterministic pipelines" href="/guides/ejecting-the-loop/" description="selfCorrection: false gives you the exact raw loop — every step is the model's, nothing is coerced or steered." />
+<LinkCard title="Cost-capped runs" href="/guides/observability/" description="Set maxTokens / maxCostMicroUsd and watch for budget.exceeded to fail fast with a clear error." />
+</CardGrid>

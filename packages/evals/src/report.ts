@@ -6,6 +6,8 @@
  * @packageDocumentation
  */
 
+/// <reference types="bun-types" />
+import { fileURLToPath, pathToFileURL } from "node:url";
 import type { EvalRun, Score } from "./index.ts";
 import type { MithrilEvent } from "@mithril/core/protocol";
 
@@ -29,6 +31,15 @@ export interface HtmlReportOptions {
   readonly title?: string;
   /** ISO timestamp shown in the header (default: now). Pass one for reproducible output. */
   readonly generatedAt?: string;
+}
+
+/** Options for {@link inspectorReport} — {@link HtmlReportOptions} plus the inspector's context window. */
+export interface InspectorReportOptions extends HtmlReportOptions {
+  /**
+   * The model context window in tokens, used to draw each row inspector's context-fill bar. Omit it and the
+   * meters still show tokens / cost / steps, just without the `% ctx` bar.
+   */
+  readonly contextWindow?: number;
 }
 
 // ── extraction (pure over the trajectory) ────────────────────────────────────────────────────────────────
@@ -98,31 +109,64 @@ function scoreClass(s: Score): string {
   return s.value >= 1 ? "ok" : s.value > 0 ? "partial" : "no";
 }
 
+// Shared row fragments so the static ({@link renderRow}) and inspector ({@link renderInspectorRow}) rows stay
+// in lockstep on their filter metadata, summary, and score list.
+function searchIndex(r: RowData): string {
+  return esc([r.group, r.name, r.status, r.text, ...r.tools.map((t) => `${t.name} ${JSON.stringify(t.input)}`), ...r.scores.map((s) => s.name)].join(" ").toLowerCase());
+}
+function scorePills(r: RowData): string {
+  return r.scores.map((s) => `<span class="pill ${scoreClass(s)}" title="${esc(s.rationale ?? "")}">${esc(s.name)} ${esc(s.value)}</span>`).join("");
+}
+function scoreRows(r: RowData): string {
+  return r.scores.map((s) => `<div class="score ${scoreClass(s)}"><span class="sname">${esc(s.name)}</span><span class="sval">${esc(s.value)}</span>${s.rationale ? `<span class="srat">${esc(s.rationale)}</span>` : ""}</div>`).join("");
+}
+const usageLine = (r: RowData): string => `<div class="usage">status <b>${esc(r.status)}</b> · ${esc(r.events)} events · ${esc(dollars(r.costMicroUsd))}</div>`;
+
+// The `<details>` open tag (carrying the filter/search metadata) + the `<summary>` — identical for both row kinds.
+function rowShell(r: RowData): { readonly open: string; readonly summary: string } {
+  const dur = r.durationMs !== undefined ? `<span class="dur">${esc(Math.round(r.durationMs))} ms</span>` : "";
+  const grp = r.group ? `<span class="grp">${esc(r.group)}</span>` : "";
+  return {
+    open: `<details class="row" data-status="${r.passed ? "pass" : "fail"}" data-group="${esc(r.group)}" data-search="${searchIndex(r)}">`,
+    summary: `<summary>
+    <span class="badge ${r.passed ? "ok" : "no"}">${r.passed ? "PASS" : "FAIL"}</span>
+    ${grp}<span class="name">${esc(r.name)}</span>
+    <span class="pills">${scorePills(r)}</span>
+    ${dur}
+  </summary>`,
+  };
+}
+
 function renderRow(r: RowData): string {
-  const searchable = esc([r.group, r.name, r.status, r.text, ...r.tools.map((t) => `${t.name} ${JSON.stringify(t.input)}`), ...r.scores.map((s) => s.name)].join(" ").toLowerCase());
-  const pills = r.scores
-    .map((s) => `<span class="pill ${scoreClass(s)}" title="${esc(s.rationale ?? "")}">${esc(s.name)} ${esc(s.value)}</span>`)
-    .join("");
-  const scoreRows = r.scores
-    .map((s) => `<div class="score ${scoreClass(s)}"><span class="sname">${esc(s.name)}</span><span class="sval">${esc(s.value)}</span>${s.rationale ? `<span class="srat">${esc(s.rationale)}</span>` : ""}</div>`)
-    .join("");
+  const { open, summary } = rowShell(r);
   const toolsBlock = r.tools.length
     ? `<div class="sec"><h4>Tool calls</h4>${r.tools.map((t) => `<pre class="tool">${esc(t.name)}(${esc(JSON.stringify(t.input))})</pre>`).join("")}</div>`
     : "";
   const outBlock = r.text.trim() ? `<div class="sec"><h4>Output</h4><pre class="out">${esc(r.text)}</pre></div>` : "";
-  const dur = r.durationMs !== undefined ? `<span class="dur">${esc(Math.round(r.durationMs))} ms</span>` : "";
-  const grp = r.group ? `<span class="grp">${esc(r.group)}</span>` : "";
-  return `<details class="row" data-status="${r.passed ? "pass" : "fail"}" data-group="${esc(r.group)}" data-search="${searchable}">
-  <summary>
-    <span class="badge ${r.passed ? "ok" : "no"}">${r.passed ? "PASS" : "FAIL"}</span>
-    ${grp}<span class="name">${esc(r.name)}</span>
-    <span class="pills">${pills}</span>
-    ${dur}
-  </summary>
+  return `${open}
+  ${summary}
   <div class="detail">
-    <div class="scores">${scoreRows}</div>
+    <div class="scores">${scoreRows(r)}</div>
     ${outBlock}${toolsBlock}
-    <div class="usage">status <b>${esc(r.status)}</b> · ${esc(r.events)} events · ${esc(dollars(r.costMicroUsd))}</div>
+    ${usageLine(r)}
+  </div>
+</details>`;
+}
+
+// One row whose detail hosts a live `@mithril/devtools` inspector: the case's full event log is embedded as
+// inert JSON (every `<` escaped to `<`, so model output can never break out of the `<script>`), and the
+// bundled client (inspector-client.ts) lazily mounts the inspector into `.mth-inspect` when the row opens.
+function renderInspectorRow(r: RowData, log: readonly MithrilEvent[], contextWindow: number | undefined): string {
+  const { open, summary } = rowShell(r);
+  const traj = JSON.stringify(log).replace(/</g, "\\u003c");
+  const cwAttr = contextWindow !== undefined ? ` data-context-window="${esc(contextWindow)}"` : "";
+  return `${open}
+  ${summary}
+  <div class="detail">
+    <div class="scores">${scoreRows(r)}</div>
+    <script type="application/json" class="mth-traj">${traj}</script>
+    <div class="mth-inspect"${cwAttr}></div>
+    ${usageLine(r)}
   </div>
 </details>`;
 }
@@ -225,6 +269,13 @@ const SCRIPT = `
  */
 export function htmlReport(entries: readonly EvalReportEntry[], opts?: HtmlReportOptions): string {
   const rows = entries.map(toRow);
+  const body = rows.length > 0 ? rows.map(renderRow).join("\n") : `<div class="empty">No eval cases.</div>`;
+  return assembleReport(rows, body, { title: opts?.title ?? "Mithril eval report", generatedAt: opts?.generatedAt ?? new Date().toISOString() });
+}
+
+// The shared document shell: header stats, filter/search controls, the rows `body`, and optional extra head
+// styles / body scripts — the inspector report injects the devtools CSS + client bundle through those two.
+function assembleReport(rows: readonly RowData[], body: string, opts: { readonly title: string; readonly generatedAt: string; readonly headExtra?: string; readonly bodyScriptExtra?: string }): string {
   const total = rows.length;
   const passed = rows.filter((r) => r.passed).length;
   const failed = total - passed;
@@ -232,29 +283,26 @@ export function htmlReport(entries: readonly EvalReportEntry[], opts?: HtmlRepor
   const groups = [...new Set(rows.map((r) => r.group).filter((g) => g !== ""))].sort();
   const totalMs = rows.reduce((n, r) => n + (r.durationMs ?? 0), 0);
   const totalCost = rows.reduce((n, r) => n + r.costMicroUsd, 0);
-  const title = opts?.title ?? "Mithril eval report";
-  const generatedAt = opts?.generatedAt ?? new Date().toISOString();
 
   const groupSelect = groups.length
     ? `<select id="group" aria-label="Filter by group"><option value="all">All models</option>${groups.map((g) => `<option value="${esc(g)}">${esc(g)}</option>`).join("")}</select>`
     : "";
   const durStat = totalMs > 0 ? `<div class="stat"><b>${(totalMs / 1000).toFixed(1)}s</b> total</div>` : "";
   const costStat = totalCost > 0 ? `<div class="stat"><b>${dollars(totalCost)}</b> cost</div>` : "";
-  const body = total > 0 ? rows.map(renderRow).join("\n") : `<div class="empty">No eval cases.</div>`;
 
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(title)}</title>
-<style>${STYLE}</style>
+<title>${esc(opts.title)}</title>
+<style>${STYLE}</style>${opts.headExtra ?? ""}
 </head>
 <body>
 <div class="wrap">
 <header>
-  <h1>${esc(title)}</h1>
-  <div class="meta">generated ${esc(generatedAt)}</div>
+  <h1>${esc(opts.title)}</h1>
+  <div class="meta">generated ${esc(opts.generatedAt)}</div>
   <div class="stats">
     <div class="stat"><b>${total}</b> cases</div>
     <div class="stat pass"><b>${passed}</b> passed</div>
@@ -278,7 +326,66 @@ export function htmlReport(entries: readonly EvalReportEntry[], opts?: HtmlRepor
 ${body}
 </main>
 </div>
-<script>${SCRIPT}</script>
+<script>${SCRIPT}</script>${opts.bodyScriptExtra ?? ""}
 </body>
 </html>`;
+}
+
+// Bundle the browser inspector client (inspector-client.ts) to a self-contained IIFE and read the devtools
+// stylesheet, so the report can inline both — memoised, since neither changes at runtime.
+let inspectorAssets: Promise<{ readonly js: string; readonly css: string }> | undefined;
+function buildInspectorAssets(): Promise<{ readonly js: string; readonly css: string }> {
+  inspectorAssets ??= (async () => {
+    const from = fileURLToPath(import.meta.url);
+    const entry = fileURLToPath(new URL("./inspector-client.ts", import.meta.url));
+    const built = await Bun.build({ entrypoints: [entry], target: "browser", format: "iife", minify: true });
+    if (!built.success) throw new Error(`inspectorReport: could not bundle the devtools client:\n${built.logs.map((l) => String(l)).join("\n")}`);
+    const out = built.outputs[0];
+    if (out === undefined) throw new Error("inspectorReport: the devtools client bundle produced no output.");
+    const js = await out.text();
+    // `@mithril/devtools/ui.css` isn't resolvable as a module, but it sits beside the resolvable `dom` entry.
+    const domPath = Bun.resolveSync("@mithril/devtools/dom", from);
+    const cssPath = fileURLToPath(new URL("./ui/ui.css", pathToFileURL(domPath)));
+    const css = await Bun.file(cssPath).text();
+    return { js, css };
+  })();
+  return inspectorAssets;
+}
+
+/**
+ * Like {@link htmlReport}, but every case row hosts a live **`@mithril/devtools` run inspector** — the event
+ * stream, message/tool transcript, span tree, and cost/context meters, with a time-travel scrubber — mounted
+ * from the case's recorded trajectory. Still one self-contained file (the devtools UI + client are inlined);
+ * it just renders the whole trajectory, not only the final output.
+ *
+ * @param entries - the rows to show; map each `runEval`/`runEvalCached` result into an {@link EvalReportEntry}.
+ * @param opts - {@link InspectorReportOptions} (title, timestamp, and the model `contextWindow` for the fill bar).
+ * @returns a Promise of a full `<!doctype html>` document with an embedded devtools inspector per case.
+ * @remarks Requires the **Bun** runtime — it bundles the browser client with `Bun.build`. Use
+ * {@link htmlReport} for a runtime-agnostic, static report.
+ * @example
+ * ```ts
+ * import { runEval, inspectorReport, type EvalReportEntry } from "@mithril/evals";
+ *
+ * const entries: EvalReportEntry[] = [];
+ * for await (const run of runEval(agent, cases, { deps })) entries.push({ run, group: "gpt-4o-mini" });
+ * await Bun.write("report.html", await inspectorReport(entries, { title: "Nightly evals", contextWindow: 200_000 }));
+ * ```
+ */
+export async function inspectorReport(entries: readonly EvalReportEntry[], opts?: InspectorReportOptions): Promise<string> {
+  if (typeof Bun === "undefined") throw new Error("inspectorReport requires the Bun runtime (it bundles the devtools client via Bun.build). Use htmlReport for a runtime-agnostic report.");
+  const { js, css } = await buildInspectorAssets();
+  const pairs = entries.map((e) => ({ row: toRow(e), log: e.run.trajectory.log }));
+  const body = pairs.length > 0 ? pairs.map(({ row, log }) => renderInspectorRow(row, log, opts?.contextWindow)).join("\n") : `<div class="empty">No eval cases.</div>`;
+  return assembleReport(
+    pairs.map((p) => p.row),
+    body,
+    {
+      title: opts?.title ?? "Mithril eval report",
+      generatedAt: opts?.generatedAt ?? new Date().toISOString(),
+      headExtra: `\n<style>${css}</style>`,
+      // Neutralise any literal </script> in the bundle so it can't close the inline tag early.
+      bodyScriptExtra: `\n<script>${js.replace(/<\/script>/gi, "<\\/script>")}</script>`,
+    },
+  );
 }

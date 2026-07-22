@@ -42,6 +42,16 @@ function safeJson(s: string): JsonValue {
   }
 }
 
+// Parse one SSE data frame, skipping (not throwing on) a malformed one — a truncated or corrupt frame
+// must not take the whole stream (and thus the run) down.
+function parseFrame<T>(s: string): T | undefined {
+  try {
+    return JSON.parse(s) as T;
+  } catch {
+    return undefined;
+  }
+}
+
 export async function* parseAnthropicStream(body: ReadableStream<Uint8Array>): AsyncGenerator<ProviderChunk> {
   const reader = body.getReader();
   const decoder = new TextDecoder();
@@ -62,7 +72,8 @@ export async function* parseAnthropicStream(body: ReadableStream<Uint8Array>): A
         idx = buf.indexOf("\n\n");
         const dataLine = block.split("\n").find((l) => l.startsWith("data:"));
         if (dataLine === undefined) continue;
-        const e = JSON.parse(dataLine.slice(5).trim()) as AEvent;
+        const e = parseFrame<AEvent>(dataLine.slice(5).trim());
+        if (e === undefined) continue;
         if (e.type === "message_start") {
           inputTokens = e.message?.usage?.input_tokens ?? 0;
         } else if (e.type === "content_block_start" && e.content_block?.type === "tool_use") {

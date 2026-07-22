@@ -5,7 +5,7 @@ prev: false
 title: "EvalReportEntry"
 ---
 
-Defined in: [report.ts:18](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/report.ts#L18)
+Defined in: [report.ts:20](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L20)
 
 One row of an HTML report: an [EvalRun](/reference/evals/interfaces/evalrun/) plus optional presentation metadata.
 
@@ -22,7 +22,7 @@ per row and summed in the header. Map each `runEval` result into one of these.
 readonly optional durationMs?: number;
 ```
 
-Defined in: [report.ts:23](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/report.ts#L23)
+Defined in: [report.ts:25](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L25)
 
 Wall-clock time for the case, in milliseconds (shown per row and summed).
 
@@ -34,7 +34,7 @@ Wall-clock time for the case, in milliseconds (shown per row and summed).
 readonly optional group?: string;
 ```
 
-Defined in: [report.ts:21](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/report.ts#L21)
+Defined in: [report.ts:23](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L23)
 
 A grouping label shown as a column and offered in the group filter — typically the model id.
 
@@ -46,4 +46,4 @@ A grouping label shown as a column and offered in the group filter — typically
 readonly run: EvalRun;
 ```
 
-Defined in: [report.ts:19](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/report.ts#L19)
+Defined in: [report.ts:21](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L21)

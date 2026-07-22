@@ -25,6 +25,15 @@ export class MithrilError extends Error {
 }
 
 /**
+ * {@link MithrilError} codes that denote a transient failure worth retrying — a provider/network hiccup,
+ * not a programming or validation error.
+ *
+ * @remarks Consumed by {@link toSerializedError} to set {@link SerializedError.retryable}, which a
+ * fallback/cascade layer can key off. Deliberately conservative: validation/config errors are excluded.
+ */
+export const RETRYABLE_CODES: ReadonlySet<string> = new Set<string>(["PROVIDER_ERROR"]);
+
+/**
  * Assemble a {@link ProviderRegistry} from one or more providers, keyed by each provider's spec id.
  *
  * @param providers - the providers to register; the `provider` segment of a `provider/model` id selects one.

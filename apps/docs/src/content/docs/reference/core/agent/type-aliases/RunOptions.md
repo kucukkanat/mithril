@@ -9,7 +9,7 @@ title: "RunOptions"
 type RunOptions<Deps> = DepsOption<Deps> & RunOptionsBase;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:61](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L61)
+Defined in: [packages/core/src/agent/agent-types.ts:68](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L68)
 
 Per-run options passed to [Agent.run](/reference/core/agent/interfaces/agent/#run), [Agent.stream](/reference/core/agent/interfaces/agent/#stream), and [Agent.resume](/reference/core/agent/interfaces/agent/#resume).
 

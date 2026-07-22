@@ -47,6 +47,16 @@ function safeJson(s: string): JsonValue {
   }
 }
 
+// Parse one SSE data frame, skipping (not throwing on) a malformed one — a truncated or corrupt frame
+// must not take the whole stream (and thus the run) down.
+function parseFrame<T>(s: string): T | undefined {
+  try {
+    return JSON.parse(s) as T;
+  } catch {
+    return undefined;
+  }
+}
+
 export async function* parseOpenAIStream(body: ReadableStream<Uint8Array>): AsyncGenerator<ProviderChunk> {
   // Read raw bytes + decode manually (pipeThrough(TextDecoderStream) trips the generic-Uint8Array lib types).
   const reader = body.getReader();
@@ -69,7 +79,8 @@ export async function* parseOpenAIStream(body: ReadableStream<Uint8Array>): Asyn
         if (dataLine === undefined) continue;
         const data = dataLine.slice(5).trim();
         if (data === "[DONE]") continue;
-        const json = JSON.parse(data) as OAChunk;
+        const json = parseFrame<OAChunk>(data);
+        if (json === undefined) continue;
         const choice = json.choices?.[0];
         const delta = choice?.delta;
         if (delta?.content !== undefined && delta.content !== "") {

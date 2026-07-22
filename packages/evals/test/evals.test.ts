@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { agent, tool } from "@mithril/core/agent";
 import type { ProviderChunk, StandardSchemaV1, UsageDelta } from "@mithril/core/protocol";
 import { scriptedProvider, testModel } from "@mithril/core/testkit";
-import { calledTool, calledToolWith, completed, describeEval, runEval, type Scorer } from "../src/index.ts";
+import { calledTool, calledToolWith, completed, describeEval, didNotCallTool, runEval, type Scorer, staysBounded } from "../src/index.ts";
 
 function schema<T>(): StandardSchemaV1<unknown, T> {
   return { "~standard": { version: 1, vendor: "test", validate: (v) => ({ value: v as T }) } };
@@ -17,6 +17,17 @@ function makeAgent() {
   ];
   return agent({ model: testModel(scriptedProvider(turns)), instructions: "help", tools: [search] });
 }
+
+test("restraint (didNotCallTool) and boundedness (staysBounded) scorers", async () => {
+  // makeAgent calls `search` then answers, and never trips a guard.
+  const cases = [{ name: "restraint", input: "go", scorers: [didNotCallTool("search"), didNotCallTool("delete"), staysBounded()] }];
+  const runs = [];
+  for await (const r of runEval(makeAgent(), cases, { deps: undefined })) runs.push(r);
+  const scores = runs[0]?.scores ?? [];
+  expect(scores.find((s) => s.name === "abstained:search")?.value).toBe(0); // search WAS called
+  expect(scores.find((s) => s.name === "abstained:delete")?.value).toBe(1); // delete correctly never called
+  expect(scores.find((s) => s.name === "bounded")?.value).toBe(1); // no loop/budget guard fired
+});
 
 test("runEval scores a trajectory (tool selection + completion)", async () => {
   const outputSays: Scorer = (t) => ({

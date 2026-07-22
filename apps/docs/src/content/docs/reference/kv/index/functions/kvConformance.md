@@ -9,7 +9,7 @@ title: "kvConformance"
 function kvConformance(make, t): void;
 ```
 
-Defined in: [index.ts:115](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/kv/src/index.ts#L115)
+Defined in: [index.ts:115](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/kv/src/index.ts#L115)
 
 Shared conformance suite that every [KeyValue](/reference/kv/index/interfaces/keyvalue/) implementation must pass.
 

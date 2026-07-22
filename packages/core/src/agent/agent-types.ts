@@ -16,6 +16,7 @@ import type {
   UsageTotals,
 } from "../protocol/index.ts";
 import type { ResumeValue } from "./loop.ts";
+import { MithrilError, RETRYABLE_CODES } from "./registry.ts";
 
 /**
  * A single conversation turn supplied as run input — either a `user` or `assistant` message.
@@ -46,6 +47,12 @@ export interface RunOptionsBase {
   readonly signal?: AbortSignal; // timeout idiom: AbortSignal.timeout(ms)
   readonly runtime?: RuntimeAdapter;
   readonly maxSteps?: number;
+  readonly toolRetries?: number; // per-tool consecutive-failure repair budget; default 2
+  readonly loopDetection?: boolean; // catch identical-call loops (steer once, then halt); default true
+  readonly maxTokens?: number; // input+output token budget for the whole run; unset ⇒ unbounded
+  readonly maxCostMicroUsd?: number; // cost budget in integer micro-USD; unset ⇒ unbounded
+  readonly repair?: boolean; // deterministic tool-arg coercion (emits tool.repair); default follows selfCorrection
+  readonly selfCorrection?: boolean; // master switch; false ⇒ raw loop (crash-hardening still on); default true
 }
 
 /**
@@ -139,9 +146,17 @@ export interface StepSnapshot {
  * @remarks
  * - `model` is a {@link ModelInput} (a self-wiring {@link ModelHandle} or a `provider/model` id).
  * - `instructions` may be a static string or a function of {@link RunContext} (resolved per run).
- * - `maxSteps` defaults to 16; `outputRetries` defaults to 2.
+ * - `maxSteps` defaults to 16; `outputRetries` defaults to 2; `toolRetries` defaults to 2.
  * - `output` opts into structured output: the final text is parsed and validated against the schema,
  *   retrying up to `outputRetries` times before failing.
+ * - `toolRetries` bounds self-correction of a failing tool: after that many consecutive failures of the
+ *   same tool (no success in between) the run ends with a clear terminal error rather than looping to
+ *   `maxSteps`. Each failed attempt under budget emits a `tool.retry` event.
+ * - `selfCorrection` is the master switch (default `true`): set it `false` for the raw loop — no arg
+ *   coercion, no loop detection, and unbounded tool retries. Crash-hardening (a throwing provider/middleware
+ *   becomes a typed `run.error`) is never disabled. `repair`, `loopDetection`, and `toolRetries` each
+ *   override the master for their one feature, so `{ selfCorrection: false, loopDetection: true }` is a raw
+ *   loop that still halts on identical-call loops.
  * - `use` composes plugins and middleware (§3.8).
  */
 export interface AgentConfig<Tools extends readonly AnyTool<Deps>[], Deps, Out extends JsonValue = string> {
@@ -151,6 +166,12 @@ export interface AgentConfig<Tools extends readonly AnyTool<Deps>[], Deps, Out e
   readonly maxSteps?: number; // default 16
   readonly output?: StandardSchemaV1<unknown, Out>; // structured output: validate → retry
   readonly outputRetries?: number; // default 2
+  readonly toolRetries?: number; // per-tool consecutive-failure repair budget before a clear terminal error; default 2
+  readonly loopDetection?: boolean; // catch identical-call loops (steer once, then halt); default true
+  readonly maxTokens?: number; // input+output token budget for the whole run; unset ⇒ unbounded
+  readonly maxCostMicroUsd?: number; // cost budget in integer micro-USD; unset ⇒ unbounded
+  readonly repair?: boolean; // deterministic tool-arg coercion (emits tool.repair); default follows selfCorrection
+  readonly selfCorrection?: boolean; // master switch; false ⇒ raw loop (crash-hardening still on); default true
   readonly use?: readonly (Plugin<Deps> | Middleware<Deps>)[]; // §3.8 composability
 }
 
@@ -200,10 +221,20 @@ export interface AgentFactory<Deps> {
 /**
  * Normalize an unknown thrown value into a JSON-safe {@link SerializedError}.
  *
- * @param err - the caught value; `Error` instances keep their `name`/`message`, anything else is stringified.
- * @returns a `{ name, message }` pair safe to embed in events and results.
+ * @param err - the caught value. A {@link MithrilError} additionally carries its `code` onto
+ * `data.code` and sets `retryable` for {@link RETRYABLE_CODES}; other `Error`s keep `name`/`message`;
+ * anything else is stringified.
+ * @returns a `SerializedError` safe to embed in events and results.
  */
 export function toSerializedError(err: unknown): SerializedError {
+  if (err instanceof MithrilError) {
+    return {
+      name: err.name,
+      message: err.message,
+      ...(RETRYABLE_CODES.has(err.code) ? { retryable: true } : {}),
+      data: { code: err.code },
+    };
+  }
   if (err instanceof Error) return { name: err.name, message: err.message };
   return { name: "Error", message: String(err) };
 }

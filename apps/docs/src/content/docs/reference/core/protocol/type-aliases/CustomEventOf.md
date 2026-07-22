@@ -12,7 +12,7 @@ type CustomEventOf<Id, P> = EventMeta & {
 };
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:108](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/events.ts#L108)
+Defined in: [packages/core/src/protocol/events.ts:115](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/events.ts#L115)
 
 The shape of a `custom.${Id}` event addressed by a specific custom `Id`.
 

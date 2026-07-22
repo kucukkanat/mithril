@@ -5,7 +5,7 @@ prev: false
 title: "ChatStore"
 ---
 
-Defined in: [index.ts:132](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/react/src/index.ts#L132)
+Defined in: [index.ts:132](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/react/src/index.ts#L132)
 
 A `useSyncExternalStore`-compatible chat store with a `send` action. Created by [createChatStore](/reference/react/index/functions/createchatstore/).
 
@@ -17,7 +17,7 @@ A `useSyncExternalStore`-compatible chat store with a `send` action. Created by 
 getSnapshot(): ChatSnapshot;
 ```
 
-Defined in: [index.ts:134](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/react/src/index.ts#L134)
+Defined in: [index.ts:134](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/react/src/index.ts#L134)
 
 #### Returns
 
@@ -31,7 +31,7 @@ Defined in: [index.ts:134](https://github.com/kucukkanat/mithril/blob/652e28d3d2
 send(input): void;
 ```
 
-Defined in: [index.ts:136](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/react/src/index.ts#L136)
+Defined in: [index.ts:136](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/react/src/index.ts#L136)
 
 Append a user message and stream the assistant's reply, accumulating history. Ignored mid-stream.
 
@@ -53,7 +53,7 @@ Append a user message and stream the assistant's reply, accumulating history. Ig
 subscribe(onChange): () => void;
 ```
 
-Defined in: [index.ts:133](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/react/src/index.ts#L133)
+Defined in: [index.ts:133](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/react/src/index.ts#L133)
 
 #### Parameters
 

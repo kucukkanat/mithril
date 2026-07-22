@@ -5,7 +5,7 @@ prev: false
 title: "RunHandle"
 ---
 
-Defined in: [packages/core/src/agent/agent-types.ts:109](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L109)
+Defined in: [packages/core/src/agent/agent-types.ts:116](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L116)
 
 A live handle over a streaming run, returned by [Agent.stream](/reference/core/agent/interfaces/agent/#stream).
 
@@ -40,7 +40,7 @@ Members:
 readonly events: AsyncIterable<MithrilEvent>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:111](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L111)
+Defined in: [packages/core/src/agent/agent-types.ts:118](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L118)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:111](https://github.com/kucu
 readonly runId: string;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:110](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L110)
+Defined in: [packages/core/src/agent/agent-types.ts:117](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L117)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:110](https://github.com/kucu
 readonly text: AsyncIterable<string>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:112](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L112)
+Defined in: [packages/core/src/agent/agent-types.ts:119](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L119)
 
 ## Methods
 
@@ -90,7 +90,7 @@ AsyncIterable.[asyncIterator]
 cancel(reason?): void;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:115](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L115)
+Defined in: [packages/core/src/agent/agent-types.ts:122](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L122)
 
 #### Parameters
 
@@ -110,7 +110,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:115](https://github.com/kucu
 resolve(resolution): Promise<RunHandle<Out>>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:117](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L117)
+Defined in: [packages/core/src/agent/agent-types.ts:124](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L124)
 
 #### Parameters
 
@@ -130,7 +130,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:117](https://github.com/kucu
 result(): Promise<RunResult<Out>>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:114](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L114)
+Defined in: [packages/core/src/agent/agent-types.ts:121](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L121)
 
 #### Returns
 
@@ -144,7 +144,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:114](https://github.com/kucu
 state(): RunState;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:113](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/agent-types.ts#L113)
+Defined in: [packages/core/src/agent/agent-types.ts:120](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L120)
 
 #### Returns
 

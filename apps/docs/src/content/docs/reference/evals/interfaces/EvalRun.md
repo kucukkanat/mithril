@@ -5,7 +5,7 @@ prev: false
 title: "EvalRun"
 ---
 
-Defined in: [index.ts:63](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L63)
+Defined in: [index.ts:63](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L63)
 
 The outcome of evaluating one [EvalCase](/reference/evals/interfaces/evalcase/): its scores, the captured [Trajectory](/reference/evals/interfaces/trajectory/), and whether
 every score met the threshold.
@@ -26,7 +26,7 @@ every score met the threshold.
 readonly case: string;
 ```
 
-Defined in: [index.ts:64](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L64)
+Defined in: [index.ts:64](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L64)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [index.ts:64](https://github.com/kucukkanat/mithril/blob/652e28d3d2a
 readonly passed: boolean;
 ```
 
-Defined in: [index.ts:67](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L67)
+Defined in: [index.ts:67](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L67)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [index.ts:67](https://github.com/kucukkanat/mithril/blob/652e28d3d2a
 readonly scores: readonly Score[];
 ```
 
-Defined in: [index.ts:65](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L65)
+Defined in: [index.ts:65](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L65)
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: [index.ts:65](https://github.com/kucukkanat/mithril/blob/652e28d3d2a
 readonly trajectory: Trajectory;
 ```
 
-Defined in: [index.ts:66](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L66)
+Defined in: [index.ts:66](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L66)

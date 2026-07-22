@@ -17,7 +17,7 @@ type JsonValue =
 };
 ```
 
-Defined in: [packages/core/src/protocol/primitives.ts:12](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/primitives.ts#L12)
+Defined in: [packages/core/src/protocol/primitives.ts:12](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/primitives.ts#L12)
 
 Any value that is both JSON-safe and structured-clone-safe.
 

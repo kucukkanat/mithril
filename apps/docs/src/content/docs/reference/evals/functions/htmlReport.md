@@ -9,7 +9,7 @@ title: "htmlReport"
 function htmlReport(entries, opts?): string;
 ```
 
-Defined in: [report.ts:226](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/report.ts#L226)
+Defined in: [report.ts:270](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L270)
 
 Render eval results into a complete, self-contained HTML report (returns the document as a string).
 

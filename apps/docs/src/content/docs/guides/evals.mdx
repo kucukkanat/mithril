@@ -135,9 +135,28 @@ console.log("report bytes:", html.length);`} />
 Set `group` to the model id and push entries from several models to compare them side by side. For a
 whole suite with a CI pass-rate gate, use `runSuite(entries, { minPassRate })`.
 
+## A live inspector per case
+
+For a report you can *explore*, `inspectorReport` embeds a live [devtools inspector](/guides/devtools/)
+into every row — the event stream, message/tool transcript, span tree, and cost/context meters, with a
+**time-travel scrubber** — mounted from the case's recorded trajectory. It stays one self-contained file
+(the devtools UI and its client are inlined), so it renders the whole trajectory, not just the final
+output. It is `async` and **Bun-only** (it bundles the client with `Bun.build`); `htmlReport` remains the
+runtime-agnostic option.
+
+```ts
+import { runEval, inspectorReport, type EvalReportEntry } from "@mithril/evals";
+
+const entries: EvalReportEntry[] = [];
+for await (const run of runEval(weatherAgent, cases)) entries.push({ run, group: "scripted" });
+// contextWindow (optional) draws each inspector's context-fill bar:
+await Bun.write("report.html", await inspectorReport(entries, { title: "Weather agent evals", contextWindow: 200_000 }));
+```
+
 <Aside type="tip" title="A real, worked example">
 The repo's `apps/evals` workspace runs exactly this shape against real
-[local models](/guides/local-inference/) via `runSuite`, ending in an `htmlReport`. Run it with
-`bun run evals`. `describeEval(test, agent, cases)` bridges any of this to `bun:test` / Vitest — one
-named test per case, so a failing eval fails the suite. Keep eval and unit runs on separate commands.
+[local models](/guides/local-inference/) via `runSuite`, ending in an `inspectorReport` — so
+`bun run evals` writes a `report.html` whose rows each open the devtools inspector over that run.
+`describeEval(test, agent, cases)` bridges any of this to `bun:test` / Vitest — one named test per case,
+so a failing eval fails the suite. Keep eval and unit runs on separate commands.
 </Aside>

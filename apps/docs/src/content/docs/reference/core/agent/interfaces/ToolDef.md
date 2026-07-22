@@ -5,7 +5,7 @@ prev: false
 title: "ToolDef"
 ---
 
-Defined in: [packages/core/src/agent/factory.ts:43](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/factory.ts#L43)
+Defined in: [packages/core/src/agent/factory.ts:43](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L43)
 
 The definition object passed to [tool](/reference/core/agent/functions/tool/) to declare a single tool.
 
@@ -35,7 +35,19 @@ The definition object passed to [tool](/reference/core/agent/functions/tool/) to
 description: string;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:45](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/factory.ts#L45)
+Defined in: [packages/core/src/agent/factory.ts:45](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L45)
+
+***
+
+### examples?
+
+```ts
+optional examples?: readonly JsonValue[];
+```
+
+Defined in: [packages/core/src/agent/factory.ts:48](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L48)
+
+Optional few-shot example inputs, surfaced into the tool's wire description to steer small models.
 
 ***
 
@@ -51,7 +63,7 @@ execute: (input, ctx) =>
 | Suspend<NoInfer<Out>>, any>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:50](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/factory.ts#L50)
+Defined in: [packages/core/src/agent/factory.ts:52](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L52)
 
 #### Parameters
 
@@ -77,7 +89,7 @@ Defined in: [packages/core/src/agent/factory.ts:50](https://github.com/kucukkana
 inputSchema: SIn;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:47](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/factory.ts#L47)
+Defined in: [packages/core/src/agent/factory.ts:49](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L49)
 
 ***
 
@@ -87,7 +99,7 @@ Defined in: [packages/core/src/agent/factory.ts:47](https://github.com/kucukkana
 name: Name;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:44](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/factory.ts#L44)
+Defined in: [packages/core/src/agent/factory.ts:44](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L44)
 
 ***
 
@@ -97,7 +109,7 @@ Defined in: [packages/core/src/agent/factory.ts:44](https://github.com/kucukkana
 optional needsApproval?: boolean | ((input, ctx) => boolean | Promise<boolean>);
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:49](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/factory.ts#L49)
+Defined in: [packages/core/src/agent/factory.ts:51](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L51)
 
 ***
 
@@ -107,7 +119,7 @@ Defined in: [packages/core/src/agent/factory.ts:49](https://github.com/kucukkana
 optional outputSchema?: StandardSchemaV1<unknown, Out>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:48](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/factory.ts#L48)
+Defined in: [packages/core/src/agent/factory.ts:50](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L50)
 
 ***
 
@@ -117,4 +129,4 @@ Defined in: [packages/core/src/agent/factory.ts:48](https://github.com/kucukkana
 optional version?: string;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:46](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/agent/factory.ts#L46)
+Defined in: [packages/core/src/agent/factory.ts:46](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L46)

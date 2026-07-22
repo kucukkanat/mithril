@@ -39,6 +39,8 @@ export type {
   StepSnapshot,
 } from "./agent-types.ts";
 export { inputToJson, toSerializedError } from "./agent-types.ts";
+export type { BestOfNOptions, SelfConsistencyOptions } from "./test-time.ts";
+export { bestOfN, selfConsistency } from "./test-time.ts";
 export { makeRunHandle } from "./handle.ts";
 export type { Keyring, SealCodec } from "./seal.ts";
 export {

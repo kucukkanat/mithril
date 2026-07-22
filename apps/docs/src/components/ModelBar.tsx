@@ -25,11 +25,17 @@ export function ModelBar({ settings, targetValue, onSelectTarget, onModelChange 
   const pct = Math.round(download.progress * 100);
 
   return (
-    <div className="pg-modelbar">
+    <div className="pg-modelbar" data-testid="model-bar">
       <label className="pg-mb-label" htmlFor="pg-target">
         Run against
       </label>
-      <select id="pg-target" className="pg-mb-select" value={targetValue} onChange={(e) => onSelectTarget(e.target.value)}>
+      <select
+        id="pg-target"
+        className="pg-mb-select"
+        value={targetValue}
+        onChange={(e) => onSelectTarget(e.target.value)}
+        data-testid="model-bar-target-select"
+      >
         <option value="scripted">Scripted · offline</option>
         <optgroup label="Cloud · bring your own key">
           {LIVE_PROVIDERS.map((p) => (
@@ -47,10 +53,14 @@ export function ModelBar({ settings, targetValue, onSelectTarget, onModelChange 
         </optgroup>
       </select>
 
-      {mode === "scripted" && <span className="pg-mb-hint">Deterministic scripted turns — no key, no network.</span>}
+      {mode === "scripted" && (
+        <span className="pg-mb-hint" data-testid="model-bar-scripted-hint">
+          Deterministic scripted turns — no key, no network.
+        </span>
+      )}
 
       {mode === "live" && (
-        <div className="pg-mb-detail">
+        <div className="pg-mb-detail" data-testid="model-bar-live-detail">
           <input
             className="pg-mb-model"
             value={settings.modelFor(settings.activeProvider)}
@@ -58,6 +68,7 @@ export function ModelBar({ settings, targetValue, onSelectTarget, onModelChange 
             spellCheck={false}
             autoComplete="off"
             aria-label="Model id"
+            data-testid="model-bar-model-input"
           />
           <input
             className="pg-mb-key"
@@ -68,8 +79,15 @@ export function ModelBar({ settings, targetValue, onSelectTarget, onModelChange 
             spellCheck={false}
             autoComplete="off"
             aria-label={provider.envVar}
+            data-testid="model-bar-key-input"
           />
-          <a className="pg-link" href={provider.consoleUrl} target="_blank" rel="noreferrer">
+          <a
+            className="pg-link"
+            href={provider.consoleUrl}
+            target="_blank"
+            rel="noreferrer"
+            data-testid="model-bar-get-key-link"
+          >
             Get key ↗
           </a>
           <span className="pg-mb-hint">
@@ -77,7 +95,7 @@ export function ModelBar({ settings, targetValue, onSelectTarget, onModelChange 
             {key && (
               <>
                 {" · "}
-                <button className="pg-mb-clear" onClick={settings.clearKeys}>
+                <button className="pg-mb-clear" onClick={settings.clearKeys} data-testid="model-bar-clear-key-button">
                   clear
                 </button>
               </>
@@ -87,10 +105,18 @@ export function ModelBar({ settings, targetValue, onSelectTarget, onModelChange 
       )}
 
       {mode === "local" && (
-        <div className="pg-mb-detail">
+        <div className="pg-mb-detail" data-testid="model-bar-local-detail">
           {download.status === "loading" && (
             <>
-              <div className="pg-progress pg-mb-progress" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Loading model">
+              <div
+                className="pg-progress pg-mb-progress"
+                role="progressbar"
+                aria-valuenow={pct}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="Loading model"
+                data-testid="model-bar-download-progress"
+              >
                 <div className="pg-progress-fill" style={{ width: `${pct}%` }} />
               </div>
               <span className="pg-mb-hint">Loading model… {pct}%</span>

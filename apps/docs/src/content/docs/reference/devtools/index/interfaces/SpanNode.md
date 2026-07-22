@@ -5,7 +5,7 @@ prev: false
 title: "SpanNode"
 ---
 
-Defined in: [packages/devtools/src/selectors.ts:76](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/devtools/src/selectors.ts#L76)
+Defined in: [packages/devtools/src/selectors.ts:76](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/devtools/src/selectors.ts#L76)
 
 A node in the span tree: one span, the events stamped to it, and its child spans.
 
@@ -17,7 +17,7 @@ A node in the span tree: one span, the events stamped to it, and its child spans
 readonly children: readonly SpanNode[];
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:79](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/devtools/src/selectors.ts#L79)
+Defined in: [packages/devtools/src/selectors.ts:79](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/devtools/src/selectors.ts#L79)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/devtools/src/selectors.ts:79](https://github.com/kucukkana
 readonly events: readonly MithrilEvent[];
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:78](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/devtools/src/selectors.ts#L78)
+Defined in: [packages/devtools/src/selectors.ts:78](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/devtools/src/selectors.ts#L78)
 
 ***
 
@@ -37,4 +37,4 @@ Defined in: [packages/devtools/src/selectors.ts:78](https://github.com/kucukkana
 readonly span: SpanRef;
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:77](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/devtools/src/selectors.ts#L77)
+Defined in: [packages/devtools/src/selectors.ts:77](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/devtools/src/selectors.ts#L77)

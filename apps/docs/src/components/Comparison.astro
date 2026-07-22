@@ -26,7 +26,7 @@ const cols = ["mithril", "langgraph", "aisdk", "mastra"] as const;
 const heads = { mithril: "Mithril", langgraph: "LangGraph", aisdk: "Vercel AI SDK", mastra: "Mastra" };
 ---
 
-<section class="cmp mth-container">
+<section class="cmp mth-container" data-testid="comparison-section">
   <div class="cmp-head">
     <p class="mth-eyebrow">The gaps nobody fills</p>
     <h2>Harness infrastructure under a loop you can read</h2>
@@ -37,7 +37,7 @@ const heads = { mithril: "Mithril", langgraph: "LangGraph", aisdk: "Vercel AI SD
   </div>
 
   <div class="cmp-scroll">
-    <table class="cmp-table">
+    <table class="cmp-table" data-testid="comparison-table">
       <thead>
         <tr>
           <th class="cmp-rowhead"></th>

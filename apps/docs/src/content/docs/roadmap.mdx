@@ -29,6 +29,12 @@ Everything under "Shipped" below is implemented and covered by the test suite. E
   snapshots, and `asTool()` to call one agent as another's tool — with **first-class nested HITL**: a
   suspended sub-agent is resumed through the parent's own token.
 - **Structured output** — validate → retry, streamed `object.delta`.
+- **Self-correction & reliability** — deterministic parse-repair + one visible schema coercion
+  (`tool.repair`), a bounded per-tool re-ask budget (`toolRetries` → `tool.retry`, then a clear terminal
+  error), `outputSchema` enforcement, identical-call **loop detection** (`loop.detected`, steer-then-halt),
+  token/cost **budget guards** (`maxTokens`/`maxCostMicroUsd` → `budget.exceeded`), a `ToolErrorClass`
+  taxonomy on the wire, crash-hardening (provider/middleware throws → typed `run.error`), and opt-in
+  test-time compute (`selfConsistency`, `bestOfN`). See [Self-correction](/guides/self-correction/).
 - **Composability** — **step-, model-, and tool-altitude** middleware, plugins, event consumers.
 - **Memory** — `Checkpointer` (in-memory + Bun SQLite) with a conformance kit.
 - **Providers** — a Standard-Schema → JSON-Schema converter (`toJsonSchema`/`withJsonSchema`) feeds real

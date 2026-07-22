@@ -5,7 +5,7 @@ prev: false
 title: "TrajectoryStore"
 ---
 
-Defined in: [index.ts:183](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L183)
+Defined in: [index.ts:183](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L183)
 
 A key→string store for persisted trajectories, backing the record/replay split.
 
@@ -22,7 +22,7 @@ any Mithril `FileSystem`. Values are the JSON produced by [serializeTrajectory](
 get(key): Promise<string | undefined>;
 ```
 
-Defined in: [index.ts:184](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L184)
+Defined in: [index.ts:184](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L184)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [index.ts:184](https://github.com/kucukkanat/mithril/blob/652e28d3d2
 put(key, value): Promise<void>;
 ```
 
-Defined in: [index.ts:185](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L185)
+Defined in: [index.ts:185](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L185)
 
 #### Parameters
 

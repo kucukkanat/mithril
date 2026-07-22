@@ -5,7 +5,7 @@ prev: false
 title: "EvalCase"
 ---
 
-Defined in: [index.ts:52](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L52)
+Defined in: [index.ts:52](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L52)
 
 One evaluation case: a named input paired with the [Scorer](/reference/evals/type-aliases/scorer/)s to apply to its resulting trajectory.
 
@@ -23,7 +23,7 @@ One evaluation case: a named input paired with the [Scorer](/reference/evals/typ
 readonly input: Input;
 ```
 
-Defined in: [index.ts:54](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L54)
+Defined in: [index.ts:54](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L54)
 
 ***
 
@@ -33,7 +33,7 @@ Defined in: [index.ts:54](https://github.com/kucukkanat/mithril/blob/652e28d3d2a
 readonly name: string;
 ```
 
-Defined in: [index.ts:53](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L53)
+Defined in: [index.ts:53](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L53)
 
 ***
 
@@ -43,4 +43,4 @@ Defined in: [index.ts:53](https://github.com/kucukkanat/mithril/blob/652e28d3d2a
 readonly scorers: readonly Scorer<Ctx>[];
 ```
 
-Defined in: [index.ts:55](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L55)
+Defined in: [index.ts:55](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L55)

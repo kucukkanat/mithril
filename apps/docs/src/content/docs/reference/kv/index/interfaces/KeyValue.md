@@ -5,7 +5,7 @@ prev: false
 title: "KeyValue"
 ---
 
-Defined in: [index.ts:20](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/kv/src/index.ts#L20)
+Defined in: [index.ts:20](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/kv/src/index.ts#L20)
 
 A runtime-agnostic async key-value store (§10.2) for tools — caches, dedup sets, counters, scratch state.
 
@@ -23,7 +23,7 @@ per-runtime subpaths.
 delete(key): Promise<void>;
 ```
 
-Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/kv/src/index.ts#L34)
+Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/kv/src/index.ts#L34)
 
 Removes `key` if present; a no-op otherwise.
 
@@ -45,7 +45,7 @@ Removes `key` if present; a no-op otherwise.
 get<T>(key): Promise<T | undefined>;
 ```
 
-Defined in: [index.ts:25](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/kv/src/index.ts#L25)
+Defined in: [index.ts:25](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/kv/src/index.ts#L25)
 
 Reads the value at `key`, or `undefined` if absent or expired.
 
@@ -73,7 +73,7 @@ Reads the value at `key`, or `undefined` if absent or expired.
 has(key): Promise<boolean>;
 ```
 
-Defined in: [index.ts:36](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/kv/src/index.ts#L36)
+Defined in: [index.ts:36](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/kv/src/index.ts#L36)
 
 Returns `true` if `key` exists and has not expired.
 
@@ -98,7 +98,7 @@ set(
 opts?): Promise<void>;
 ```
 
-Defined in: [index.ts:32](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/kv/src/index.ts#L32)
+Defined in: [index.ts:32](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/kv/src/index.ts#L32)
 
 Writes `value` at `key`, overwriting any existing entry.
 

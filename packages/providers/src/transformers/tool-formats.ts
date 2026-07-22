@@ -1,4 +1,5 @@
 import type { JsonValue } from "@mithril/core/protocol";
+import { repairJson } from "@mithril/core/protocol";
 import type { EngineChunk } from "./core.ts";
 
 // Pure, dependency-free tool-call parsing for local models. Different model families emit tool calls in
@@ -20,20 +21,11 @@ export interface ToolFormat {
   extract(payload: string): { readonly name: string; readonly input: JsonValue }[];
 }
 
-// Repair + parse a loose JSON fragment (code fences, trailing commas); return undefined on failure.
+// Repair + parse a loose JSON fragment (code fences, trailing commas, unterminated strings/brackets);
+// return undefined on failure. Delegates to the shared, deterministic repairJson so local tool-call
+// parsing and structured-output streaming share one lenient parser.
 function safeParse(s: string): JsonValue | undefined {
-  const cleaned = s
-    .trim()
-    .replace(/^```(?:json)?/i, "")
-    .replace(/```$/, "")
-    .replace(/,\s*([}\]])/g, "$1")
-    .trim();
-  if (cleaned === "") return undefined;
-  try {
-    return JSON.parse(cleaned) as JsonValue;
-  } catch {
-    return undefined;
-  }
+  return repairJson(s);
 }
 
 function asCall(v: JsonValue): { readonly name: string; readonly input: JsonValue } | undefined {

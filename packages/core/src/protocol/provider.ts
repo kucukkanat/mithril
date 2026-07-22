@@ -16,6 +16,19 @@ export interface ModelCapabilities {
   readonly vision: boolean;
   /** Whether the model is safe to call directly from a browser (BYOK) context. */
   readonly browserSafe: boolean;
+  /**
+   * Whether the provider can enforce a strict JSON-Schema on tool-call arguments (e.g. OpenAI's
+   * `strict: true` function tools, Anthropic strict tool use). Advisory today — the loop's parse-repair and
+   * bounded re-ask are the shipped guarantee; a provider that populates this lets request-shaping opt into
+   * native constrained decoding where available. Absent ⇒ unknown/unsupported.
+   */
+  readonly strictTools?: boolean;
+  /**
+   * Whether the provider supports native grammar/JSON-Schema constrained decoding of the final output
+   * (as opposed to prompt-and-validate JSON mode). See the roadmap for the in-browser story — Transformers.js
+   * has no grammar support today; WebLLM/XGrammar is the path. Absent ⇒ unknown/unsupported.
+   */
+  readonly constrainedDecoding?: boolean;
 }
 
 /** Per-token pricing for a model, in integer micro-USD, matching {@link UsageDelta}'s cost fields. */

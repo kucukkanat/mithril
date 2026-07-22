@@ -560,6 +560,34 @@ export function outputMatches(pattern: RegExp): Scorer {
 }
 
 /**
+ * A restraint {@link Scorer}: scores `1` when the run did **not** call `name`, else `0`.
+ *
+ * @param name - the tool that should not have been called.
+ * @returns a {@link Scorer} named `abstained:{name}`.
+ * @remarks The dominant small-model failure in the wild is keyword-tripping — calling a tool on any
+ * mention of its topic. Score abstention separately from call accuracy: an agent that correctly does
+ * nothing is a pass here.
+ */
+export function didNotCallTool(name: string): Scorer {
+  return (t) => ({ name: `abstained:${name}`, value: t.log.some((e) => e.type === "tool.call" && e.name === name) ? 0 : 1 });
+}
+
+/**
+ * A {@link Scorer} that scores `1` unless a guard stopped the run — i.e. it hit no loop-detection halt and
+ * no token/cost `budget.exceeded`.
+ *
+ * @returns a {@link Scorer} named `bounded`.
+ * @remarks Catches runaway trajectories: a run that a guard had to terminate is not a healthy run, even if
+ * the guard did its job. Useful as a regression check that a self-correcting agent converges.
+ */
+export function staysBounded(): Scorer {
+  return (t) => {
+    const runaway = t.log.some((e) => (e.type === "loop.detected" && e.action === "halt") || e.type === "budget.exceeded");
+    return { name: "bounded", value: runaway ? 0 : 1, ...(runaway ? { rationale: "run hit a loop-detection or budget guard" } : {}) };
+  };
+}
+
+/**
  * A {@link Scorer} that scores `1` if the trajectory's `tool.call`s include `names` in the given relative
  * order (other calls may appear in between), else `0` — for asserting a tool *sequence*, not just presence.
  *
@@ -676,5 +704,5 @@ export function llmJudge(opts: { readonly model: ModelInput; readonly rubric: st
 
 // ── reporting ────────────────────────────────────────────────────────────────────────────────────────────
 
-export { htmlReport } from "./report.ts";
-export type { EvalReportEntry, HtmlReportOptions } from "./report.ts";
+export { htmlReport, inspectorReport } from "./report.ts";
+export type { EvalReportEntry, HtmlReportOptions, InspectorReportOptions } from "./report.ts";

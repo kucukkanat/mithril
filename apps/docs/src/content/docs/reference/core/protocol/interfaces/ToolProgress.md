@@ -5,7 +5,7 @@ prev: false
 title: "ToolProgress"
 ---
 
-Defined in: [packages/core/src/protocol/tool.ts:9](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/tool.ts#L9)
+Defined in: [packages/core/src/protocol/tool.ts:9](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/tool.ts#L9)
 
 An intermediate value yielded by a streaming tool's `execute` generator, surfaced as `tool.progress`.
 
@@ -17,4 +17,4 @@ An intermediate value yielded by a streaming tool's `execute` generator, surface
 readonly payload: JsonValue;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:10](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/core/src/protocol/tool.ts#L10)
+Defined in: [packages/core/src/protocol/tool.ts:10](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/tool.ts#L10)

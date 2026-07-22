@@ -26,6 +26,9 @@ export type {
   UsageTotals,
 } from "./primitives.ts";
 export { addUsage, ZERO_USAGE } from "./primitives.ts";
+export type { ToolErrorClass } from "./errors.ts";
+export { classifiedError, toolErrorClass } from "./errors.ts";
+export { repairJson } from "./json-repair.ts";
 export type { RunContext, RuntimeAdapter, Transport } from "./context.ts";
 export type {
   ChatRequest,

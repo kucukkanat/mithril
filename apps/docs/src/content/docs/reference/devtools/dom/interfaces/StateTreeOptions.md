@@ -5,7 +5,7 @@ prev: false
 title: "StateTreeOptions"
 ---
 
-Defined in: [packages/devtools/src/dom.ts:187](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/devtools/src/dom.ts#L187)
+Defined in: [packages/devtools/src/dom.ts:187](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/devtools/src/dom.ts#L187)
 
 Options for [mountStateTree](/reference/devtools/dom/functions/mountstatetree/).
 
@@ -17,7 +17,7 @@ Options for [mountStateTree](/reference/devtools/dom/functions/mountstatetree/).
 readonly cursor: number;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:189](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/devtools/src/dom.ts#L189)
+Defined in: [packages/devtools/src/dom.ts:189](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/devtools/src/dom.ts#L189)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [packages/devtools/src/dom.ts:189](https://github.com/kucukkanat/mit
 readonly events: readonly MithrilEvent[];
 ```
 
-Defined in: [packages/devtools/src/dom.ts:188](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/devtools/src/dom.ts#L188)
+Defined in: [packages/devtools/src/dom.ts:188](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/devtools/src/dom.ts#L188)

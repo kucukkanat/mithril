@@ -9,7 +9,7 @@ title: "finalText"
 function finalText(t): string;
 ```
 
-Defined in: [index.ts:533](https://github.com/kucukkanat/mithril/blob/652e28d3d2a93a67b8f3f5cced7a1832f5bf3810/packages/evals/src/index.ts#L533)
+Defined in: [index.ts:533](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L533)
 
 Concatenate every `text.delta` in a trajectory into the assistant's final text output.
 

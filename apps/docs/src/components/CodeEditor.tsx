@@ -109,5 +109,5 @@ export function CodeEditor({ value, onChange, onRun }: Props) {
     }
   }, [value]);
 
-  return <div className="cm-host" ref={host} />;
+  return <div className="cm-host" ref={host} data-testid="code-editor" />;
 }
