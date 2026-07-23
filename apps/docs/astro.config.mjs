@@ -71,7 +71,8 @@ for (const pkg of TD_PACKAGES) {
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://mithril.dev",
+  site: "https://kucukkanat.github.io",
+  base: "/mithril",
   integrations: [
     starlight({
       title: "Mithril",
