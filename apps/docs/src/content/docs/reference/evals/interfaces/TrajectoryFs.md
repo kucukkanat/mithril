@@ -5,7 +5,7 @@ prev: false
 title: "TrajectoryFs"
 ---
 
-Defined in: [index.ts:260](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L260)
+Defined in: [index.ts:296](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L296)
 
 The minimal `FileSystem` surface [fsTrajectoryStore](/reference/evals/functions/fstrajectorystore/) needs — satisfied by any `@mithril/fs` backend.
 
@@ -17,7 +17,7 @@ The minimal `FileSystem` surface [fsTrajectoryStore](/reference/evals/functions/
 exists(path): Promise<boolean>;
 ```
 
-Defined in: [index.ts:263](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L263)
+Defined in: [index.ts:299](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L299)
 
 #### Parameters
 
@@ -37,7 +37,7 @@ Defined in: [index.ts:263](https://github.com/kucukkanat/mithril/blob/b369293fee
 readText(path): Promise<string>;
 ```
 
-Defined in: [index.ts:261](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L261)
+Defined in: [index.ts:297](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L297)
 
 #### Parameters
 
@@ -57,7 +57,7 @@ Defined in: [index.ts:261](https://github.com/kucukkanat/mithril/blob/b369293fee
 writeFile(path, data): Promise<void>;
 ```
 
-Defined in: [index.ts:262](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L262)
+Defined in: [index.ts:298](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L298)
 
 #### Parameters
 

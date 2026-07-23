@@ -9,7 +9,7 @@ title: "SuiteArgs"
 type SuiteArgs<Deps, Ctx> = [Deps] extends [void] ? [SuiteOptions<void, Ctx>] : [SuiteOptions<Deps, Ctx>];
 ```
 
-Defined in: [index.ts:429](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L429)
+Defined in: [index.ts:465](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L465)
 
 The trailing options argument of [runSuite](/reference/evals/functions/runsuite/), made optional when `Deps` is `void`.
 

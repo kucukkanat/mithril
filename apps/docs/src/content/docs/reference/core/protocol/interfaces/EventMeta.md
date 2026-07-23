@@ -5,7 +5,7 @@ prev: false
 title: "EventMeta"
 ---
 
-Defined in: [packages/core/src/protocol/events.ts:27](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/events.ts#L27)
+Defined in: [packages/core/src/protocol/events.ts:27](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/events.ts#L27)
 
 The envelope fields present on every [MithrilEvent](/reference/core/protocol/type-aliases/mithrilevent/).
 
@@ -21,7 +21,7 @@ The loop is the single authority for these fields; providers never assign them.
 readonly runId: string;
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:30](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/events.ts#L30)
+Defined in: [packages/core/src/protocol/events.ts:30](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/events.ts#L30)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [packages/core/src/protocol/events.ts:30](https://github.com/kucukka
 readonly seq: number;
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:35](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/events.ts#L35)
+Defined in: [packages/core/src/protocol/events.ts:35](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/events.ts#L35)
 
 Monotonic, gap-free sequence number per run. Serves as ordering key,
 replay cursor, and the basis for gap detection.
@@ -44,7 +44,7 @@ replay cursor, and the basis for gap detection.
 readonly span: SpanRef;
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:38](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/events.ts#L38)
+Defined in: [packages/core/src/protocol/events.ts:38](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/events.ts#L38)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [packages/core/src/protocol/events.ts:38](https://github.com/kucukka
 readonly ts: number;
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:37](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/events.ts#L37)
+Defined in: [packages/core/src/protocol/events.ts:37](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/events.ts#L37)
 
 Emission time in epoch milliseconds (from `runtime.now()`).
 
@@ -66,6 +66,6 @@ Emission time in epoch milliseconds (from `runtime.now()`).
 readonly v: 1;
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:29](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/events.ts#L29)
+Defined in: [packages/core/src/protocol/events.ts:29](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/events.ts#L29)
 
 Protocol MAJOR version; the [migrate](/reference/core/protocol/functions/migrate/) codec keys off this.

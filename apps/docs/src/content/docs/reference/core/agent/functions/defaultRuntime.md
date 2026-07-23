@@ -9,7 +9,7 @@ title: "defaultRuntime"
 function defaultRuntime(): RuntimeAdapter;
 ```
 
-Defined in: [packages/core/src/agent/runtime.ts:14](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/runtime.ts#L14)
+Defined in: [packages/core/src/agent/runtime.ts:14](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/runtime.ts#L14)
 
 Build the default [RuntimeAdapter](/reference/core/protocol/interfaces/runtimeadapter/) backed by `globalThis` (§3.2).
 

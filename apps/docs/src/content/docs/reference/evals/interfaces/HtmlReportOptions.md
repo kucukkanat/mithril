@@ -5,7 +5,7 @@ prev: false
 title: "HtmlReportOptions"
 ---
 
-Defined in: [report.ts:29](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L29)
+Defined in: [report.ts:30](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/report.ts#L30)
 
 Options for [htmlReport](/reference/evals/functions/htmlreport/).
 
@@ -15,13 +15,27 @@ Options for [htmlReport](/reference/evals/functions/htmlreport/).
 
 ## Properties
 
+### baseline?
+
+```ts
+readonly optional baseline?: RunSnapshot;
+```
+
+Defined in: [report.ts:40](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/report.ts#L40)
+
+A baseline [RunSnapshot](/reference/evals/interfaces/runsnapshot/) to diff against. When present, each row is badged improved / regressed /
+new, regressions sort to the top, and a "changes" filter appears — turning the report into a
+regression view.
+
+***
+
 ### generatedAt?
 
 ```ts
 readonly optional generatedAt?: string;
 ```
 
-Defined in: [report.ts:33](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L33)
+Defined in: [report.ts:34](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/report.ts#L34)
 
 ISO timestamp shown in the header (default: now). Pass one for reproducible output.
 
@@ -33,6 +47,6 @@ ISO timestamp shown in the header (default: now). Pass one for reproducible outp
 readonly optional title?: string;
 ```
 
-Defined in: [report.ts:31](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L31)
+Defined in: [report.ts:32](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/report.ts#L32)
 
 Document title and page heading (default `"Mithril eval report"`).

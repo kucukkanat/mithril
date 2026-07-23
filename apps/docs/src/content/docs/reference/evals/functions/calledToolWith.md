@@ -11,7 +11,7 @@ title: "calledToolWith"
 function calledToolWith<T>(tool, match): Scorer;
 ```
 
-Defined in: [index.ts:506](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L506)
+Defined in: [index.ts:542](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L542)
 
 A [Scorer](/reference/evals/type-aliases/scorer/) that scores `1` if the trajectory has a `tool.call` for `name` whose input satisfies
 `match`, else `0` — for asserting a tool was called with the *right* arguments (not just that it ran).
@@ -54,7 +54,7 @@ calledToolWith("convertCurrency", (i) => (i as { amount?: number }).amount === 1
 function calledToolWith(name, match): Scorer;
 ```
 
-Defined in: [index.ts:507](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L507)
+Defined in: [index.ts:543](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L543)
 
 A [Scorer](/reference/evals/type-aliases/scorer/) that scores `1` if the trajectory has a `tool.call` for `name` whose input satisfies
 `match`, else `0` — for asserting a tool was called with the *right* arguments (not just that it ran).

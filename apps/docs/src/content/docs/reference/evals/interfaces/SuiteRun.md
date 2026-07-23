@@ -5,7 +5,7 @@ prev: false
 title: "SuiteRun"
 ---
 
-Defined in: [index.ts:399](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L399)
+Defined in: [index.ts:435](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L435)
 
 One [EvalRun](/reference/evals/interfaces/evalrun/) within a suite, tagged with its group `label` and wall-clock `durationMs`.
 
@@ -21,7 +21,7 @@ One [EvalRun](/reference/evals/interfaces/evalrun/) within a suite, tagged with 
 readonly case: string;
 ```
 
-Defined in: [index.ts:64](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L64)
+Defined in: [index.ts:64](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L64)
 
 #### Inherited from
 
@@ -35,7 +35,7 @@ Defined in: [index.ts:64](https://github.com/kucukkanat/mithril/blob/b369293fee6
 readonly durationMs: number;
 ```
 
-Defined in: [index.ts:401](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L401)
+Defined in: [index.ts:437](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L437)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [index.ts:401](https://github.com/kucukkanat/mithril/blob/b369293fee
 readonly group: string;
 ```
 
-Defined in: [index.ts:400](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L400)
+Defined in: [index.ts:436](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L436)
 
 ***
 
@@ -55,7 +55,7 @@ Defined in: [index.ts:400](https://github.com/kucukkanat/mithril/blob/b369293fee
 readonly passed: boolean;
 ```
 
-Defined in: [index.ts:67](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L67)
+Defined in: [index.ts:67](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L67)
 
 #### Inherited from
 
@@ -69,7 +69,7 @@ Defined in: [index.ts:67](https://github.com/kucukkanat/mithril/blob/b369293fee6
 readonly scores: readonly Score[];
 ```
 
-Defined in: [index.ts:65](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L65)
+Defined in: [index.ts:65](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L65)
 
 #### Inherited from
 
@@ -83,7 +83,7 @@ Defined in: [index.ts:65](https://github.com/kucukkanat/mithril/blob/b369293fee6
 readonly trajectory: Trajectory;
 ```
 
-Defined in: [index.ts:66](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L66)
+Defined in: [index.ts:66](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L66)
 
 #### Inherited from
 

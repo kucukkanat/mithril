@@ -5,9 +5,9 @@
  * @packageDocumentation
  */
 
-import type { Agent, DepsOption, Input, RunHandle, RunOptions } from "@mithril/core/agent";
+import type { Agent, DepsOption, Input, ResumeValue, RunHandle, RunOptions } from "@mithril/core/agent";
 import { agent as buildAgent } from "@mithril/core/agent";
-import type { AnyTool, JsonValue, MithrilEvent, ModelInput, ProviderChunk, RunState, RuntimeAdapter, ToolInputOf, Transport, UsageDelta } from "@mithril/core/protocol";
+import type { AnyTool, JsonValue, MithrilEvent, ModelInput, ProviderChunk, RunState, RuntimeAdapter, SuspensionDescriptor, ToolInputOf, Transport, UsageDelta } from "@mithril/core/protocol";
 import { replay } from "@mithril/core/protocol";
 
 // Trajectory-native: the recorded event log IS the fixture. Scorers are pure functions over the trajectory.
@@ -83,7 +83,32 @@ export type RunEvalOptions<Deps, Ctx = void> = DepsOption<Deps> & {
   readonly runtime?: RuntimeAdapter;
   readonly makeContext?: (t: Trajectory) => Ctx | Promise<Ctx>;
   readonly threshold?: number; // a score >= threshold passes (default 1)
+  readonly onSuspend?: SuspendPolicy; // how to auto-resolve HITL suspensions during capture (default "reject")
 };
+
+/**
+ * How a run that suspends for human-in-the-loop is resolved during an *unattended* eval capture.
+ *
+ * @remarks Plain {@link runEval} streams the agent but has no human to answer a `needsApproval` tool, so a
+ * suspending run would score as incomplete. This policy auto-answers Tier-1 approval suspensions so scoring
+ * sees the resolved trajectory. `"reject"` (the default) is safest — it never auto-approves a gated tool. A
+ * function receives the {@link SuspensionDescriptor} and returns any {@link ResumeValue} (e.g. an `"edit"`
+ * decision, or a `{ kind: "resolve", value }` for a tool-returned/`ctx.suspend()` resolution). The string
+ * forms apply only to `tool.approval` suspensions; other kinds stop capture and score as-is.
+ */
+export type SuspendPolicy = "reject" | "approve" | ((request: SuspensionDescriptor) => ResumeValue | Promise<ResumeValue>);
+
+/** Cap on auto-resolved suspensions per capture, so a mis-scripted approve→re-suspend loop can't run forever. */
+const MAX_AUTO_RESUMES = 8;
+
+/** Derive a {@link ResumeValue} from a {@link SuspendPolicy}; `undefined` = can't auto-resolve, stop capture. */
+async function resolveSuspension(policy: SuspendPolicy, request: SuspensionDescriptor): Promise<ResumeValue | undefined> {
+  if (typeof policy === "function") return policy(request);
+  // The string policies only make sense for the built-in approval suspension; a resolve-kind pause has no
+  // meaningful blanket answer, so we stop and let scorers observe the (still-suspended) trajectory.
+  if (request.kind !== "tool.approval") return undefined;
+  return policy === "approve" ? { kind: "approve" } : { kind: "reject", message: "eval: auto-rejected suspension" };
+}
 
 /**
  * The trailing options argument of {@link runEval}/{@link describeEval}, made fully optional when `Deps` is
@@ -129,7 +154,9 @@ export async function* runEval<Deps, Ctx = void>(
   }
 }
 
-// Stream the agent to completion and capture its full trajectory (the record side).
+// Stream the agent to completion and capture its full trajectory (the record side). A run that suspends for
+// HITL is auto-resolved per `opts.onSuspend` and streamed onward, so the captured log is the *resolved*
+// trajectory — otherwise an approval-gated tool would silently freeze the run at the suspend event.
 async function captureTrajectory<Deps, Ctx>(
   agent: Agent<readonly AnyTool<Deps>[], Deps, JsonValue>,
   input: Input,
@@ -142,10 +169,19 @@ async function captureTrajectory<Deps, Ctx>(
   } as RunOptions<Deps>;
   // stream()'s conditional RunArgs tuple isn't resolvable for a free Deps here; call via a concrete shape.
   const streamFn = agent.stream as (input: Input, opts: RunOptions<Deps>) => RunHandle<JsonValue>;
-  const handle = streamFn(input, runOpts);
+  let handle = streamFn(input, runOpts);
+  const runId = handle.runId;
+  const policy = opts.onSuspend ?? "reject";
   const log: MithrilEvent[] = [];
-  for await (const e of handle.events) log.push(e);
-  return { runId: handle.runId, log, final: replay(log) };
+  for (let guard = 0; ; guard++) {
+    for await (const e of handle.events) log.push(e);
+    const res = await handle.result();
+    if (res.status !== "suspended" || guard >= MAX_AUTO_RESUMES) break;
+    const decision = await resolveSuspension(policy, res.request);
+    if (decision === undefined) break;
+    handle = await handle.resolve(decision); // continues the SAME run as a fresh handle (no token round-trip)
+  }
+  return { runId, log, final: replay(log) };
 }
 
 // A stable FNV-1a hash of a case's input, so a fixture key changes when the input does (see caseKey). This
@@ -702,7 +738,49 @@ export function llmJudge(opts: { readonly model: ModelInput; readonly rubric: st
   };
 }
 
-// ── reporting ────────────────────────────────────────────────────────────────────────────────────────────
+/**
+ * An LLM-as-judge **A/B comparator**: runs a judge over two runs' final texts and returns a {@link Score}
+ * favouring one — `1` when A wins, `0` when B wins, `0.5` on a tie. The head-to-head counterpart to
+ * {@link llmJudge}, for "which model answered this case better?".
+ *
+ * @param opts - `model` (the judge handle), the `rubric` deciding the winner, an optional `name` (default
+ *   `"pairwise"`), and `transport` for the judge's provider auth.
+ * @returns an async comparator `(a, b) => Promise<Score>`; a judge that errors or returns non-JSON scores `0.5`
+ *   (neutral), never throwing.
+ * @remarks Makes a real model call, so it runs only against a live/local judge model. Unlike a {@link Scorer}
+ *   it takes two {@link Trajectory}s rather than one — feed it two models' recorded runs of the same case.
+ * @example
+ * ```ts
+ * const judge = pairwiseJudge({ model: anthropic("claude-3-5-haiku-latest"), rubric: "Which answer is more accurate and concise?" });
+ * const score = await judge(runA.trajectory, runB.trajectory); // value 1 → A better, 0 → B better, 0.5 → tie
+ * ```
+ */
+export function pairwiseJudge(opts: { readonly model: ModelInput; readonly rubric: string; readonly name?: string; readonly transport?: Transport }): (a: Trajectory, b: Trajectory) => Promise<Score> {
+  const label = opts.name ?? "pairwise";
+  return async (a, b) => {
+    const outA = finalText(a) || "(the run produced no text output)";
+    const outB = finalText(b) || "(the run produced no text output)";
+    const judge = buildAgent({
+      model: opts.model,
+      instructions: `${opts.rubric}\n\nCompare OUTPUT A and OUTPUT B and decide which better satisfies the rubric. Reply with ONLY a JSON object: {"winner": "A" | "B" | "tie", "rationale": "<one sentence>"}.`,
+    });
+    const res = await judge.run(`OUTPUT A:\n${outA}\n\nOUTPUT B:\n${outB}`, opts.transport !== undefined ? { transport: opts.transport } : {});
+    if (res.status !== "completed") return { name: label, value: 0.5, rationale: `judge run ${res.status}` };
+    try {
+      const parsed = JSON.parse(res.output) as { winner?: unknown; rationale?: unknown };
+      const value = parsed.winner === "A" ? 1 : parsed.winner === "B" ? 0 : 0.5;
+      return { name: label, value, ...(typeof parsed.rationale === "string" ? { rationale: parsed.rationale } : {}) };
+    } catch {
+      return { name: label, value: 0.5, rationale: "judge output was not valid JSON" };
+    }
+  };
+}
 
+// ── trajectory matching · baseline diff · reporting ────────────────────────────────────────────────────────
+
+export { matchesTrajectory, referenceFromTrajectory } from "./trajectory.ts";
+export type { MatchOptions, ReferenceStep, ReferenceTrajectory, ToolArgsMatchMode, TrajectoryMatchMode } from "./trajectory.ts";
+export { diffRuns, summaryKey, toSnapshot } from "./diff.ts";
+export type { EvalRunSummary, RunDiff, RunSnapshot } from "./diff.ts";
 export { htmlReport, inspectorReport } from "./report.ts";
 export type { EvalReportEntry, HtmlReportOptions, InspectorReportOptions } from "./report.ts";

@@ -9,7 +9,7 @@ title: "staysBounded"
 function staysBounded(): Scorer;
 ```
 
-Defined in: [index.ts:583](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L583)
+Defined in: [index.ts:619](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L619)
 
 A [Scorer](/reference/evals/type-aliases/scorer/) that scores `1` unless a guard stopped the run — i.e. it hit no loop-detection halt and
 no token/cost `budget.exceeded`.

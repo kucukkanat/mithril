@@ -12,7 +12,7 @@ function resolveModel(model, registry?): {
 };
 ```
 
-Defined in: [packages/core/src/agent/registry.ts:75](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/registry.ts#L75)
+Defined in: [packages/core/src/agent/registry.ts:75](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/registry.ts#L75)
 
 Resolve a [ModelInput](/reference/core/protocol/type-aliases/modelinput/) to its concrete id and serving provider.
 

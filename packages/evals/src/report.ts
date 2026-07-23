@@ -8,6 +8,8 @@
 
 /// <reference types="bun-types" />
 import type { EvalRun, Score } from "./index.ts";
+import { summaryKey } from "./diff.ts";
+import type { RunSnapshot } from "./diff.ts";
 import type { MithrilEvent } from "@mithril/core/protocol";
 
 /**
@@ -30,6 +32,12 @@ export interface HtmlReportOptions {
   readonly title?: string;
   /** ISO timestamp shown in the header (default: now). Pass one for reproducible output. */
   readonly generatedAt?: string;
+  /**
+   * A baseline {@link RunSnapshot} to diff against. When present, each row is badged improved / regressed /
+   * new, regressions sort to the top, and a "changes" filter appears — turning the report into a
+   * regression view.
+   */
+  readonly baseline?: RunSnapshot;
 }
 
 /** Options for {@link inspectorReport} — {@link HtmlReportOptions} plus the inspector's context window. */
@@ -65,6 +73,9 @@ function toolCalls(log: readonly MithrilEvent[]): ToolCall[] {
     });
 }
 
+/** How a row compares to the baseline, when {@link HtmlReportOptions.baseline} is supplied. */
+type DeltaKind = "improved" | "regressed" | "new" | "same";
+
 interface RowData {
   readonly group: string;
   readonly name: string;
@@ -76,6 +87,8 @@ interface RowData {
   readonly costMicroUsd: number;
   readonly events: number;
   readonly durationMs: number | undefined;
+  /** Baseline comparison, set only in diff mode. */
+  readonly delta?: DeltaKind;
 }
 
 function toRow(entry: EvalReportEntry): RowData {
@@ -121,15 +134,20 @@ function scoreRows(r: RowData): string {
 }
 const usageLine = (r: RowData): string => `<div class="usage">status <b>${esc(r.status)}</b> · ${esc(r.events)} events · ${esc(dollars(r.costMicroUsd))}</div>`;
 
+const DELTA_LABELS: Readonly<Record<Exclude<DeltaKind, "same">, string>> = { improved: "▲ IMPROVED", regressed: "▼ REGRESSED", new: "NEW" };
+function deltaBadge(delta: DeltaKind | undefined): string {
+  return delta === undefined || delta === "same" ? "" : `<span class="delta ${delta}">${DELTA_LABELS[delta]}</span>`;
+}
+
 // The `<details>` open tag (carrying the filter/search metadata) + the `<summary>` — identical for both row kinds.
 function rowShell(r: RowData): { readonly open: string; readonly summary: string } {
   const dur = r.durationMs !== undefined ? `<span class="dur">${esc(Math.round(r.durationMs))} ms</span>` : "";
   const grp = r.group ? `<span class="grp">${esc(r.group)}</span>` : "";
   return {
-    open: `<details class="row" data-status="${r.passed ? "pass" : "fail"}" data-group="${esc(r.group)}" data-search="${searchIndex(r)}">`,
+    open: `<details class="row" data-status="${r.passed ? "pass" : "fail"}" data-group="${esc(r.group)}" data-delta="${r.delta ?? ""}" data-search="${searchIndex(r)}">`,
     summary: `<summary>
     <span class="badge ${r.passed ? "ok" : "no"}">${r.passed ? "PASS" : "FAIL"}</span>
-    ${grp}<span class="name">${esc(r.name)}</span>
+    ${deltaBadge(r.delta)}${grp}<span class="name">${esc(r.name)}</span>
     <span class="pills">${scorePills(r)}</span>
     ${dur}
   </summary>`,
@@ -201,6 +219,10 @@ summary:hover{background:var(--panel2)}
 .badge.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 15%,transparent)}
 .badge.no{color:var(--no);background:color-mix(in srgb,var(--no) 15%,transparent)}
 .grp{font-family:var(--mono);font-size:11px;color:var(--acc);background:color-mix(in srgb,var(--acc) 12%,transparent);padding:2px 7px;border-radius:5px;white-space:nowrap}
+.delta{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.05em;padding:2px 6px;border-radius:5px;white-space:nowrap}
+.delta.improved{color:var(--ok);background:color-mix(in srgb,var(--ok) 15%,transparent)}
+.delta.regressed{color:var(--no);background:color-mix(in srgb,var(--no) 15%,transparent)}
+.delta.new{color:var(--acc);background:color-mix(in srgb,var(--acc) 15%,transparent)}
 .name{font-weight:500}
 .pills{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
 .pill{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:20px;border:1px solid var(--bd2);color:var(--mut)}
@@ -226,18 +248,19 @@ pre.tool{border-left:2px solid var(--acc)}
 
 const SCRIPT = `
 (function(){
-  var q=document.getElementById('q'),grp=document.getElementById('group'),count=document.getElementById('count');
+  var q=document.getElementById('q'),grp=document.getElementById('group'),dl=document.getElementById('delta'),count=document.getElementById('count');
   var rows=[].slice.call(document.querySelectorAll('.row')),status='all';
   function apply(){
-    var query=q.value.trim().toLowerCase(),g=grp?grp.value:'all',shown=0;
+    var query=q.value.trim().toLowerCase(),g=grp?grp.value:'all',d=dl?dl.value:'all',shown=0;
     rows.forEach(function(r){
-      var ok=(status==='all'||r.dataset.status===status)&&(g==='all'||r.dataset.group===g)&&(!query||r.dataset.search.indexOf(query)>=0);
+      var ok=(status==='all'||r.dataset.status===status)&&(g==='all'||r.dataset.group===g)&&(d==='all'||r.dataset.delta===d)&&(!query||r.dataset.search.indexOf(query)>=0);
       r.style.display=ok?'':'none'; if(ok)shown++;
     });
     count.textContent=shown+' / '+rows.length+' shown';
   }
   q.addEventListener('input',apply);
   if(grp)grp.addEventListener('change',apply);
+  if(dl)dl.addEventListener('change',apply);
   [].forEach.call(document.querySelectorAll('[data-filter]'),function(b){
     b.addEventListener('click',function(){
       status=b.dataset.filter;
@@ -267,9 +290,25 @@ const SCRIPT = `
  * ```
  */
 export function htmlReport(entries: readonly EvalReportEntry[], opts?: HtmlReportOptions): string {
-  const rows = entries.map(toRow);
-  const body = rows.length > 0 ? rows.map(renderRow).join("\n") : `<div class="empty">No eval cases.</div>`;
-  return assembleReport(rows, body, { title: opts?.title ?? "Mithril eval report", generatedAt: opts?.generatedAt ?? new Date().toISOString() });
+  const baseline = opts?.baseline;
+  const rows = withDelta(entries.map(toRow), baseline);
+  const ordered = baseline !== undefined ? [...rows].sort((a, b) => DELTA_ORDER[a.delta ?? "same"] - DELTA_ORDER[b.delta ?? "same"]) : rows;
+  const body = ordered.length > 0 ? ordered.map(renderRow).join("\n") : `<div class="empty">No eval cases.</div>`;
+  return assembleReport(ordered, body, { title: opts?.title ?? "Mithril eval report", generatedAt: opts?.generatedAt ?? new Date().toISOString() });
+}
+
+// Sort key for diff mode: regressions first (what a reader needs to see), then improvements, new, unchanged.
+const DELTA_ORDER: Readonly<Record<DeltaKind, number>> = { regressed: 0, improved: 1, new: 2, same: 3 };
+
+/** Tag each row with its baseline comparison; a no-op (rows unchanged) when no baseline was supplied. */
+function withDelta(rows: readonly RowData[], baseline: RunSnapshot | undefined): RowData[] {
+  if (baseline === undefined) return [...rows];
+  const base = new Map(baseline.runs.map((s) => [summaryKey(s), s.passed]));
+  return rows.map((r) => {
+    const was = base.get(summaryKey({ case: r.name, group: r.group }));
+    const delta: DeltaKind = was === undefined ? "new" : !was && r.passed ? "improved" : was && !r.passed ? "regressed" : "same";
+    return { ...r, delta };
+  });
 }
 
 // The shared document shell: header stats, filter/search controls, the rows `body`, and optional extra head
@@ -288,6 +327,13 @@ function assembleReport(rows: readonly RowData[], body: string, opts: { readonly
     : "";
   const durStat = totalMs > 0 ? `<div class="stat"><b>${(totalMs / 1000).toFixed(1)}s</b> total</div>` : "";
   const costStat = totalCost > 0 ? `<div class="stat"><b>${dollars(totalCost)}</b> cost</div>` : "";
+  const withDeltas = rows.some((r) => r.delta !== undefined);
+  const deltaStat = withDeltas
+    ? `<div class="stat fail"><b>${rows.filter((r) => r.delta === "regressed").length}</b> regressed</div><div class="stat pass"><b>${rows.filter((r) => r.delta === "improved").length}</b> improved</div>`
+    : "";
+  const deltaSelect = withDeltas
+    ? `<select id="delta" aria-label="Filter by change"><option value="all">All changes</option><option value="regressed">Regressed</option><option value="improved">Improved</option><option value="new">New</option><option value="same">Unchanged</option></select>`
+    : "";
 
   return `<!doctype html>
 <html lang="en">
@@ -308,7 +354,7 @@ function assembleReport(rows: readonly RowData[], body: string, opts: { readonly
     <div class="stat fail"><b>${failed}</b> failed</div>
     <div class="stat"><b>${rate}%</b> pass rate</div>
     ${groups.length ? `<div class="stat"><b>${groups.length}</b> models</div>` : ""}
-    ${durStat}${costStat}
+    ${durStat}${costStat}${deltaStat}
   </div>
   <div class="controls">
     <input id="q" type="search" placeholder="Search cases, output, tools, scorers…" aria-label="Search">
@@ -318,6 +364,7 @@ function assembleReport(rows: readonly RowData[], body: string, opts: { readonly
       <button data-filter="fail">Failed</button>
     </div>
     ${groupSelect}
+    ${deltaSelect}
     <span id="count"></span>
   </div>
 </header>

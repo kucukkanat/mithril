@@ -5,7 +5,7 @@ prev: false
 title: "McpToolDef"
 ---
 
-Defined in: [index.ts:35](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/mcp/src/index.ts#L35)
+Defined in: [index.ts:35](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/mcp/src/index.ts#L35)
 
 An MCP server's description of one tool, as returned by `tools/list`.
 
@@ -17,7 +17,7 @@ An MCP server's description of one tool, as returned by `tools/list`.
 readonly optional description?: string;
 ```
 
-Defined in: [index.ts:39](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/mcp/src/index.ts#L39)
+Defined in: [index.ts:39](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/mcp/src/index.ts#L39)
 
 Human-readable description, if the server provides one.
 
@@ -29,7 +29,7 @@ Human-readable description, if the server provides one.
 readonly optional inputSchema?: JsonValue;
 ```
 
-Defined in: [index.ts:41](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/mcp/src/index.ts#L41)
+Defined in: [index.ts:41](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/mcp/src/index.ts#L41)
 
 The tool's JSON Schema, kept opaque here (not validated against).
 
@@ -41,6 +41,6 @@ The tool's JSON Schema, kept opaque here (not validated against).
 readonly name: string;
 ```
 
-Defined in: [index.ts:37](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/mcp/src/index.ts#L37)
+Defined in: [index.ts:37](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/mcp/src/index.ts#L37)
 
 The tool's unique name, used when calling it.

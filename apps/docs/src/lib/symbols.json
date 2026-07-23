@@ -34,6 +34,11 @@
     "kind": "fn",
     "sig": "function agentLoop<Deps>(opts): AsyncGenerator<MithrilEvent, RunResult<JsonValue>>;"
   },
+  "AgentSpec": {
+    "href": "/reference/spec/index/interfaces/agentspec/",
+    "kind": "type",
+    "sig": "A const <id> = agent({ … }) declaration. Field order mirrors core's AgentConfig."
+  },
   "angleToolCall": {
     "href": "/reference/providers/transformers/variables/angletoolcall/",
     "kind": "const",
@@ -169,6 +174,16 @@
     "kind": "fn",
     "sig": "function classifyEvent(type): EventKind;"
   },
+  "CodegenMode": {
+    "href": "/reference/spec/index/type-aliases/codegenmode/",
+    "kind": "type",
+    "sig": "type CodegenMode = \"studio\" | \"export\";"
+  },
+  "CodeRegion": {
+    "href": "/reference/spec/index/interfaces/coderegion/",
+    "kind": "type",
+    "sig": "Verbatim TypeScript preserved losslessly through spec→code→spec round-trips."
+  },
   "CodeResult": {
     "href": "/reference/sandbox/index/type-aliases/coderesult/",
     "kind": "type",
@@ -224,6 +239,11 @@
     "kind": "fn",
     "sig": "function createInspector(opts?): Inspector;"
   },
+  "createRunnerClient": {
+    "href": "/reference/runner-web/index/functions/createrunnerclient/",
+    "kind": "fn",
+    "sig": "function createRunnerClient(spawn): RunnerClient;"
+  },
   "createRunStore": {
     "href": "/reference/react/index/functions/createrunstore/",
     "kind": "fn",
@@ -233,6 +253,11 @@
     "href": "/reference/core/protocol/type-aliases/customeventof/",
     "kind": "type",
     "sig": "type CustomEventOf<Id, P> = EventMeta & { payload: P; type: `custom.${Id}`; };"
+  },
+  "DEFAULT_LOCAL_MODEL": {
+    "href": "/reference/runner-web/index/variables/default_local_model/",
+    "kind": "const",
+    "sig": "const DEFAULT_LOCAL_MODEL: string;"
   },
   "DEFAULT_MODEL": {
     "href": "/reference/providers/transformers/variables/default_model/",
@@ -264,6 +289,11 @@
     "kind": "fn",
     "sig": "function describeEval<Deps, Ctx>( register, agent, cases, ... args): void;"
   },
+  "describeRunnerError": {
+    "href": "/reference/runner-web/index/functions/describerunnererror/",
+    "kind": "fn",
+    "sig": "function describeRunnerError(raw): string | null;"
+  },
   "DEVTOOLS_CHANNEL": {
     "href": "/reference/devtools/attach/variables/devtools_channel/",
     "kind": "const",
@@ -294,6 +324,16 @@
     "kind": "fn",
     "sig": "function didNotCallTool(name): Scorer;"
   },
+  "diffRuns": {
+    "href": "/reference/evals/functions/diffruns/",
+    "kind": "fn",
+    "sig": "function diffRuns(baseline, current): RunDiff;"
+  },
+  "DownloadReport": {
+    "href": "/reference/runner-web/index/interfaces/downloadreport/",
+    "kind": "type",
+    "sig": "A model-download progress report, mirrored from @mithril/providers/transformers's"
+  },
   "DraftEvent": {
     "href": "/reference/core/protocol/type-aliases/draftevent/",
     "kind": "type",
@@ -314,6 +354,16 @@
     "kind": "type",
     "sig": "The semantic request handed to a TransformersEngine (a flattened ChatRequest)."
   },
+  "EntryMessage": {
+    "href": "/reference/spec/index/interfaces/entrymessage/",
+    "kind": "type",
+    "sig": "A chat message in an entry input."
+  },
+  "EntrySpec": {
+    "href": "/reference/spec/index/interfaces/entryspec/",
+    "kind": "type",
+    "sig": "What the generated file executes: await run(<target>, <input>)."
+  },
   "EvalArgs": {
     "href": "/reference/evals/type-aliases/evalargs/",
     "kind": "type",
@@ -324,6 +374,11 @@
     "kind": "type",
     "sig": "One evaluation case: a named input paired with the Scorers to apply to its resulting trajectory."
   },
+  "EvalCaseSpec": {
+    "href": "/reference/spec/index/interfaces/evalcasespec/",
+    "kind": "type",
+    "sig": "One eval case: an input plus the scorers that judge its trajectory."
+  },
   "EvalReportEntry": {
     "href": "/reference/evals/interfaces/evalreportentry/",
     "kind": "type",
@@ -333,6 +388,16 @@
     "href": "/reference/evals/interfaces/evalrun/",
     "kind": "type",
     "sig": "The outcome of evaluating one EvalCase: its scores, the captured Trajectory, and whether"
+  },
+  "EvalRunSummary": {
+    "href": "/reference/evals/interfaces/evalrunsummary/",
+    "kind": "type",
+    "sig": "A per-case row in a RunSnapshot: enough to detect a pass↔fail flip without the full trajectory."
+  },
+  "EvalSuiteSpec": {
+    "href": "/reference/spec/index/interfaces/evalsuitespec/",
+    "kind": "type",
+    "sig": "A named eval suite over the project's entry agent."
   },
   "EventConsumer": {
     "href": "/reference/core/protocol/interfaces/eventconsumer/",
@@ -434,6 +499,26 @@
     "kind": "fn",
     "sig": "function generateEncryptionKey(rt?): Promise<CryptoKey>;"
   },
+  "GenerateEvalOptions": {
+    "href": "/reference/spec/index/interfaces/generateevaloptions/",
+    "kind": "type",
+    "sig": "Options for generateEvalRun."
+  },
+  "generateEvalRun": {
+    "href": "/reference/spec/index/functions/generateevalrun/",
+    "kind": "fn",
+    "sig": "function generateEvalRun(spec, opts): string;"
+  },
+  "GenerateOptions": {
+    "href": "/reference/spec/index/interfaces/generateoptions/",
+    "kind": "type",
+    "sig": "Options for generateProject."
+  },
+  "generateProject": {
+    "href": "/reference/spec/index/functions/generateproject/",
+    "kind": "fn",
+    "sig": "function generateProject(spec, opts?): string;"
+  },
   "generateStateKey": {
     "href": "/reference/core/agent/functions/generatestatekey/",
     "kind": "fn",
@@ -464,6 +549,11 @@
     "kind": "fn",
     "sig": "function goto<S>(next, state): StepResult<S>;"
   },
+  "GROQ_PROVIDER_DECL": {
+    "href": "/reference/spec/index/variables/groq_provider_decl/",
+    "kind": "const",
+    "sig": "const GROQ_PROVIDER_DECL: string;"
+  },
   "HandoffSuspension": {
     "href": "/reference/core/protocol/type-aliases/handoffsuspension/",
     "kind": "type",
@@ -488,6 +578,11 @@
     "href": "/reference/mcp/http/functions/httptransport/",
     "kind": "fn",
     "sig": "function httpTransport(opts): McpTransport;"
+  },
+  "IDLE_RUNNER_SNAPSHOT": {
+    "href": "/reference/runner-web/index/variables/idle_runner_snapshot/",
+    "kind": "const",
+    "sig": "const IDLE_RUNNER_SNAPSHOT: RunnerSnapshot;"
   },
   "IDLE_SNAPSHOT": {
     "href": "/reference/react/index/variables/idle_snapshot/",
@@ -564,6 +659,16 @@
     "kind": "type",
     "sig": "Options for inspectorReport — HtmlReportOptions plus the inspector's context window."
   },
+  "installRunner": {
+    "href": "/reference/runner-web/worker/functions/installrunner/",
+    "kind": "fn",
+    "sig": "function installRunner(scope, opts?): void;"
+  },
+  "InstallRunnerOptions": {
+    "href": "/reference/runner-web/worker/interfaces/installrunneroptions/",
+    "kind": "type",
+    "sig": "Options for installRunner."
+  },
   "isKnownEvent": {
     "href": "/reference/core/protocol/functions/isknownevent/",
     "kind": "fn",
@@ -624,6 +729,26 @@
     "kind": "type",
     "sig": "Minimal test-runner shim that lets kvConformance register cases against bun:test / vitest without"
   },
+  "LIVE_PROVIDERS": {
+    "href": "/reference/runner-web/index/variables/live_providers/",
+    "kind": "const",
+    "sig": "const LIVE_PROVIDERS: readonly LiveProvider[];"
+  },
+  "liveProvider": {
+    "href": "/reference/runner-web/index/functions/liveprovider/",
+    "kind": "fn",
+    "sig": "function liveProvider(id): LiveProvider;"
+  },
+  "LiveProvider": {
+    "href": "/reference/runner-web/index/interfaces/liveprovider/",
+    "kind": "type",
+    "sig": "A remote provider a browser snippet can call directly with the user's own key."
+  },
+  "LiveProviderId": {
+    "href": "/reference/runner-web/index/type-aliases/liveproviderid/",
+    "kind": "type",
+    "sig": "type LiveProviderId = \"openai\" | \"anthropic\" | \"google\" | \"groq\";"
+  },
   "llmJudge": {
     "href": "/reference/evals/functions/llmjudge/",
     "kind": "fn",
@@ -634,6 +759,31 @@
     "kind": "fn",
     "sig": "function loadTrajectory(json): Trajectory;"
   },
+  "LOCAL_MODELS": {
+    "href": "/reference/runner-web/index/variables/local_models/",
+    "kind": "const",
+    "sig": "const LOCAL_MODELS: readonly LocalModel[];"
+  },
+  "localModel": {
+    "href": "/reference/runner-web/index/functions/localmodel/",
+    "kind": "fn",
+    "sig": "function localModel(id): | LocalModel | undefined;"
+  },
+  "LocalModel": {
+    "href": "/reference/runner-web/index/interfaces/localmodel/",
+    "kind": "type",
+    "sig": "A curated in-browser model — all text-generation ONNX repos. This MUST hold: the transformers"
+  },
+  "LogLevel": {
+    "href": "/reference/runner-web/index/type-aliases/loglevel/",
+    "kind": "type",
+    "sig": "type LogLevel = \"log\" | \"info\" | \"warn\" | \"error\";"
+  },
+  "LogLine": {
+    "href": "/reference/runner-web/index/interfaces/logline/",
+    "kind": "type",
+    "sig": "One forwarded console.* line from the snippet."
+  },
   "LoopOptions": {
     "href": "/reference/core/agent/interfaces/loopoptions/",
     "kind": "type",
@@ -643,6 +793,16 @@
     "href": "/reference/core/agent/functions/makerunhandle/",
     "kind": "fn",
     "sig": "function makeRunHandle<Out>( gen, runId, controls): RunHandle<Out>;"
+  },
+  "matchesTrajectory": {
+    "href": "/reference/evals/functions/matchestrajectory/",
+    "kind": "fn",
+    "sig": "function matchesTrajectory(reference, opts?): Scorer;"
+  },
+  "MatchOptions": {
+    "href": "/reference/evals/interfaces/matchoptions/",
+    "kind": "type",
+    "sig": "Options for matchesTrajectory."
   },
   "mcpClient": {
     "href": "/reference/mcp/index/functions/mcpclient/",
@@ -729,6 +889,11 @@
     "kind": "fn",
     "sig": "function migrate(event): MithrilEvent;"
   },
+  "migrateProject": {
+    "href": "/reference/spec/index/functions/migrateproject/",
+    "kind": "fn",
+    "sig": "function migrateProject(raw): ProjectSpec;"
+  },
   "MithrilDevtoolsPanelElement": {
     "href": "/reference/devtools/element/classes/mithrildevtoolspanelelement/",
     "kind": "class",
@@ -759,6 +924,11 @@
     "kind": "type",
     "sig": "The feature flags a model supports, used for capability-gated routing."
   },
+  "modelExpr": {
+    "href": "/reference/spec/index/functions/modelexpr/",
+    "kind": "fn",
+    "sig": "function modelExpr(model): string;"
+  },
   "ModelHandle": {
     "href": "/reference/core/protocol/interfaces/modelhandle/",
     "kind": "type",
@@ -773,6 +943,11 @@
     "href": "/reference/core/protocol/type-aliases/modelinput/",
     "kind": "type",
     "sig": "type ModelInput = | ModelId | ModelHandle;"
+  },
+  "modelLabel": {
+    "href": "/reference/spec/index/functions/modellabel/",
+    "kind": "fn",
+    "sig": "function modelLabel(m): string;"
   },
   "ModelResult": {
     "href": "/reference/core/protocol/interfaces/modelresult/",
@@ -824,6 +999,11 @@
     "kind": "fn",
     "sig": "function noToolErrors(): Scorer;"
   },
+  "OpaqueDecl": {
+    "href": "/reference/spec/index/interfaces/opaquedecl/",
+    "kind": "type",
+    "sig": "A top-level statement the parser did not recognize as a framework-shaped declaration. Kept"
+  },
   "open": {
     "href": "/reference/core/agent/functions/open/",
     "kind": "fn",
@@ -858,6 +1038,26 @@
     "href": "/reference/evals/functions/outputmatches/",
     "kind": "fn",
     "sig": "function outputMatches(pattern): Scorer;"
+  },
+  "pairwiseJudge": {
+    "href": "/reference/evals/functions/pairwisejudge/",
+    "kind": "fn",
+    "sig": "function pairwiseJudge(opts): (a, b) => Promise<Score>;"
+  },
+  "ParseDiagnostic": {
+    "href": "/reference/spec/parse/interfaces/parsediagnostic/",
+    "kind": "type",
+    "sig": "One parser message, with source offsets a code editor can mark."
+  },
+  "parseProject": {
+    "href": "/reference/spec/parse/functions/parseproject/",
+    "kind": "fn",
+    "sig": "function parseProject( source, ts, prev?): ParseResult;"
+  },
+  "ParseResult": {
+    "href": "/reference/spec/parse/interfaces/parseresult/",
+    "kind": "type",
+    "sig": "The outcome of parseProject."
   },
   "PathSegment": {
     "href": "/reference/core/protocol/namespaces/standardschemav1/interfaces/pathsegment/",
@@ -914,6 +1114,16 @@
     "kind": "type",
     "sig": "A model-download progress report (see EdgeOptions.onProgress)."
   },
+  "ProjectDecl": {
+    "href": "/reference/spec/index/type-aliases/projectdecl/",
+    "kind": "type",
+    "sig": "type ProjectDecl = | ToolSpec | AgentSpec | SubAgentToolSpec | WorkflowSpec | OpaqueDecl;"
+  },
+  "ProjectSpec": {
+    "href": "/reference/spec/index/interfaces/projectspec/",
+    "kind": "type",
+    "sig": "A whole serializable project: an ordered list of declarations plus the entry to run."
+  },
   "Props": {
     "href": "/reference/core/protocol/namespaces/standardschemav1/interfaces/props/",
     "kind": "type",
@@ -933,6 +1143,21 @@
     "href": "/reference/core/protocol/type-aliases/providerchunk/",
     "kind": "type",
     "sig": "type ProviderChunk = | { delta: string; type: \"text.delta\"; } | { delta: string; type: \"reasoning.delta\"; } | { callId: string; name: strin…"
+  },
+  "providerImportEntries": {
+    "href": "/reference/spec/index/functions/providerimportentries/",
+    "kind": "fn",
+    "sig": "function providerImportEntries(providers): Map<string, readonly string[]>;"
+  },
+  "ProviderMode": {
+    "href": "/reference/runner-web/index/type-aliases/providermode/",
+    "kind": "type",
+    "sig": "type ProviderMode = \"scripted\" | \"live\" | \"local\";"
+  },
+  "providerOf": {
+    "href": "/reference/spec/index/functions/providerof/",
+    "kind": "fn",
+    "sig": "function providerOf(model): \"openai\" | \"anthropic\" | \"google\" | \"groq\" | \"transformers\" | undefined;"
   },
   "providerRegistry": {
     "href": "/reference/core/agent/functions/providerregistry/",
@@ -958,6 +1183,21 @@
     "href": "/reference/core/protocol/functions/reduce/",
     "kind": "fn",
     "sig": "function reduce(state, e): RunState;"
+  },
+  "referenceFromTrajectory": {
+    "href": "/reference/evals/functions/referencefromtrajectory/",
+    "kind": "fn",
+    "sig": "function referenceFromTrajectory(t): ReferenceTrajectory;"
+  },
+  "ReferenceStep": {
+    "href": "/reference/evals/interfaces/referencestep/",
+    "kind": "type",
+    "sig": "One expected tool call in a ReferenceTrajectory: a tool name and, optionally, the args to match."
+  },
+  "ReferenceTrajectory": {
+    "href": "/reference/evals/type-aliases/referencetrajectory/",
+    "kind": "type",
+    "sig": "type ReferenceTrajectory = readonly ReferenceStep[];"
   },
   "registerGlobalConsumer": {
     "href": "/reference/core/agent/functions/registerglobalconsumer/",
@@ -999,6 +1239,11 @@
     "kind": "type",
     "sig": "type Result<Output> = | SuccessResult<Output> | FailureResult;"
   },
+  "ResumeDirective": {
+    "href": "/reference/runner-web/index/interfaces/resumedirective/",
+    "kind": "type",
+    "sig": "Resume a previously suspended run from a persisted token instead of starting fresh."
+  },
   "ResumeState": {
     "href": "/reference/core/agent/interfaces/resumestate/",
     "kind": "type",
@@ -1019,6 +1264,11 @@
     "kind": "type",
     "sig": "The typed dependency-injection context threaded into tools and dynamic"
   },
+  "RunDiff": {
+    "href": "/reference/evals/interfaces/rundiff/",
+    "kind": "type",
+    "sig": "The four-way outcome of diffRuns, each a list of case keys."
+  },
   "runEval": {
     "href": "/reference/evals/functions/runeval/",
     "kind": "fn",
@@ -1037,7 +1287,7 @@
   "RunEvalOptions": {
     "href": "/reference/evals/type-aliases/runevaloptions/",
     "kind": "type",
-    "sig": "type RunEvalOptions<Deps, Ctx> = DepsOption<Deps> & { makeContext?: (t) => Ctx | Promise<Ctx>; runtime?: RuntimeAdapter; threshold?: number…"
+    "sig": "type RunEvalOptions<Deps, Ctx> = DepsOption<Deps> & { makeContext?: (t) => Ctx | Promise<Ctx>; onSuspend?: SuspendPolicy; runtime?: Runtime…"
   },
   "RunHandle": {
     "href": "/reference/core/agent/interfaces/runhandle/",
@@ -1048,6 +1298,31 @@
     "href": "/reference/devtools/dom/interfaces/runinspectoroptions/",
     "kind": "type",
     "sig": "Options for mountRunInspector. Provide exactly one of events / source / transport."
+  },
+  "RunnerClient": {
+    "href": "/reference/runner-web/index/interfaces/runnerclient/",
+    "kind": "type",
+    "sig": "Owns the runner worker and exposes the run's accumulated state."
+  },
+  "RunnerMessage": {
+    "href": "/reference/runner-web/index/type-aliases/runnermessage/",
+    "kind": "type",
+    "sig": "type RunnerMessage = | { event: MithrilEvent; type: \"event\"; } | { level: LogLevel; text: string; type: \"log\"; } | { info: SuspendedInfo; t…"
+  },
+  "RunnerRequest": {
+    "href": "/reference/runner-web/index/type-aliases/runnerrequest/",
+    "kind": "type",
+    "sig": "type RunnerRequest = | { code: string; env?: Readonly<Record<string, string>>; resume?: ResumeDirective; type: \"run\"; } | { decision: Resum…"
+  },
+  "RunnerRunOptions": {
+    "href": "/reference/runner-web/index/interfaces/runnerrunoptions/",
+    "kind": "type",
+    "sig": "Options for one RunnerClient.run call."
+  },
+  "RunnerSnapshot": {
+    "href": "/reference/runner-web/index/interfaces/runnersnapshot/",
+    "kind": "type",
+    "sig": "The accumulated state of the current (or last) run."
   },
   "RunOptions": {
     "href": "/reference/core/agent/type-aliases/runoptions/",
@@ -1065,9 +1340,9 @@
     "sig": "type RunResult<Out> = | { output: Out; status: \"completed\"; usage: UsageTotals; } | { request: SuspensionDescriptor; status: \"suspended\"; t…"
   },
   "RunSnapshot": {
-    "href": "/reference/react/index/interfaces/runsnapshot/",
+    "href": "/reference/evals/interfaces/runsnapshot/",
     "kind": "type",
-    "sig": "An immutable view of a run, recomputed on every event."
+    "sig": "A compact, JSON-serializable snapshot of a whole eval run — persist it as a baseline to diff against later."
   },
   "RunSource": {
     "href": "/reference/devtools/dom/interfaces/runsource/",
@@ -1119,6 +1394,11 @@
     "kind": "type",
     "sig": "Resolves a resolutionSchemaId to its Standard Schema for validating a resume resolution."
   },
+  "SchemaSpec": {
+    "href": "/reference/spec/index/interfaces/schemaspec/",
+    "kind": "type",
+    "sig": "A schema stored as zod SOURCE (e.g. z.object({ city: z.string() })), not JSON Schema."
+  },
   "Score": {
     "href": "/reference/evals/interfaces/score/",
     "kind": "type",
@@ -1128,6 +1408,46 @@
     "href": "/reference/evals/type-aliases/scorer/",
     "kind": "type",
     "sig": "type Scorer<Ctx> = (t, ctx) => | Score | Promise<Score>;"
+  },
+  "SCORER_CATALOG": {
+    "href": "/reference/spec/index/variables/scorer_catalog/",
+    "kind": "const",
+    "sig": "const SCORER_CATALOG: readonly ScorerDescriptor[];"
+  },
+  "scorerDescriptor": {
+    "href": "/reference/spec/index/functions/scorerdescriptor/",
+    "kind": "fn",
+    "sig": "function scorerDescriptor(type): | ScorerDescriptor | undefined;"
+  },
+  "ScorerDescriptor": {
+    "href": "/reference/spec/index/interfaces/scorerdescriptor/",
+    "kind": "type",
+    "sig": "A catalog entry: everything needed to render a scorer's form AND emit its @mithril/evals call."
+  },
+  "ScorerEmitContext": {
+    "href": "/reference/spec/index/interfaces/scoreremitcontext/",
+    "kind": "type",
+    "sig": "Context passed to ScorerDescriptor.emit: the emit helpers plus the case's pinned reference (if any)."
+  },
+  "ScorerEmitHelpers": {
+    "href": "/reference/spec/index/interfaces/scoreremithelpers/",
+    "kind": "type",
+    "sig": "The source-emitting helpers injected into a descriptor's ScorerDescriptor.emit."
+  },
+  "ScorerParamField": {
+    "href": "/reference/spec/index/interfaces/scorerparamfield/",
+    "kind": "type",
+    "sig": "One authorable parameter of a scorer."
+  },
+  "ScorerParamType": {
+    "href": "/reference/spec/index/type-aliases/scorerparamtype/",
+    "kind": "type",
+    "sig": "type ScorerParamType = | \"string\" | \"number\" | \"boolean\" | \"regex\" | \"stringList\" | \"model\" | \"trajectoryMatchMode\" | \"toolArgsMatchMode\";"
+  },
+  "ScorerSpec": {
+    "href": "/reference/spec/index/interfaces/scorerspec/",
+    "kind": "type",
+    "sig": "One scorer attached to an eval case — type names a scorer in the @mithril/evals catalog."
   },
   "scriptedProvider": {
     "href": "/reference/core/testkit/functions/scriptedprovider/",
@@ -1188,6 +1508,21 @@
     "href": "/reference/otel/interfaces/spansink/",
     "kind": "type",
     "sig": "Receiver for reconstructed spans — implement this to bridge toGenAiSpans to a real OTel exporter."
+  },
+  "SPEC_VERSION": {
+    "href": "/reference/spec/index/variables/spec_version/",
+    "kind": "const",
+    "sig": "const SPEC_VERSION: 1 = 1;"
+  },
+  "SpecFormatError": {
+    "href": "/reference/spec/index/classes/specformaterror/",
+    "kind": "class",
+    "sig": "new SpecFormatError(message, reason): SpecFormatError;"
+  },
+  "SpecMeta": {
+    "href": "/reference/spec/index/interfaces/specmeta/",
+    "kind": "type",
+    "sig": "Studio-only presentation data — codegen ignores it entirely."
   },
   "splitToolCalls": {
     "href": "/reference/providers/transformers/functions/splittoolcalls/",
@@ -1259,6 +1594,11 @@
     "kind": "type",
     "sig": "A per-step view yielded by Agent.iterate: the step index, the events emitted during it, and a"
   },
+  "SubAgentToolSpec": {
+    "href": "/reference/spec/index/interfaces/subagenttoolspec/",
+    "kind": "type",
+    "sig": "A const <id> = asTool(<agentId>, { … }) declaration — a sub-agent exposed as a parent's tool."
+  },
   "SuccessResult": {
     "href": "/reference/core/protocol/namespaces/standardschemav1/interfaces/successresult/",
     "kind": "type",
@@ -1289,6 +1629,11 @@
     "kind": "type",
     "sig": "One EvalRun within a suite, tagged with its group label and wall-clock durationMs."
   },
+  "summaryKey": {
+    "href": "/reference/evals/functions/summarykey/",
+    "kind": "fn",
+    "sig": "function summaryKey(s): string;"
+  },
   "suspend": {
     "href": "/reference/core/protocol/functions/suspend/",
     "kind": "fn",
@@ -1303,6 +1648,16 @@
     "href": "/reference/core/protocol/variables/suspend/",
     "kind": "const",
     "sig": "const SUSPEND: unique symbol;"
+  },
+  "SuspendedInfo": {
+    "href": "/reference/runner-web/index/interfaces/suspendedinfo/",
+    "kind": "type",
+    "sig": "A pending human-in-the-loop suspension, as posted by the worker: the JSON-safe"
+  },
+  "SuspendPolicy": {
+    "href": "/reference/evals/type-aliases/suspendpolicy/",
+    "kind": "type",
+    "sig": "type SuspendPolicy = | \"reject\" | \"approve\" | ((request) => ResumeValue | Promise<ResumeValue>);"
   },
   "SuspensionDescriptor": {
     "href": "/reference/core/protocol/type-aliases/suspensiondescriptor/",
@@ -1363,6 +1718,11 @@
     "href": "/reference/core/protocol/interfaces/tool/",
     "kind": "type",
     "sig": "A typed tool: Standard Schema in/out plus typed dependency injection."
+  },
+  "ToolArgsMatchMode": {
+    "href": "/reference/evals/type-aliases/toolargsmatchmode/",
+    "kind": "type",
+    "sig": "type ToolArgsMatchMode = \"exact\" | \"ignore\" | \"subset\" | \"superset\";"
   },
   "toolCallCount": {
     "href": "/reference/evals/functions/toolcallcount/",
@@ -1434,10 +1794,20 @@
     "kind": "type",
     "sig": "An intermediate value yielded by a streaming tool's execute generator, surfaced as tool.progress."
   },
+  "ToolSpec": {
+    "href": "/reference/spec/index/interfaces/toolspec/",
+    "kind": "type",
+    "sig": "A const <id> = tool({ … }) declaration."
+  },
   "toSerializedError": {
     "href": "/reference/core/agent/functions/toserializederror/",
     "kind": "fn",
     "sig": "function toSerializedError(err): SerializedError;"
+  },
+  "toSnapshot": {
+    "href": "/reference/evals/functions/tosnapshot/",
+    "kind": "fn",
+    "sig": "function toSnapshot(runs, opts?): RunSnapshot;"
   },
   "Trajectory": {
     "href": "/reference/evals/interfaces/trajectory/",
@@ -1448,6 +1818,11 @@
     "href": "/reference/evals/interfaces/trajectoryfs/",
     "kind": "type",
     "sig": "The minimal FileSystem surface fsTrajectoryStore needs — satisfied by any @mithril/fs backend."
+  },
+  "TrajectoryMatchMode": {
+    "href": "/reference/evals/type-aliases/trajectorymatchmode/",
+    "kind": "type",
+    "sig": "type TrajectoryMatchMode = \"strict\" | \"unordered\" | \"superset\" | \"subset\";"
   },
   "TrajectoryStore": {
     "href": "/reference/evals/interfaces/trajectorystore/",
@@ -1574,10 +1949,25 @@
     "kind": "class",
     "sig": "new WorkflowError(message?): WorkflowError;"
   },
+  "WorkflowRoute": {
+    "href": "/reference/spec/index/type-aliases/workflowroute/",
+    "kind": "type",
+    "sig": "type WorkflowRoute = | { goto: string; } | { done: true; };"
+  },
+  "WorkflowSpec": {
+    "href": "/reference/spec/index/interfaces/workflowspec/",
+    "kind": "type",
+    "sig": "A const <id> = defineWorkflow({ … }, { start }) declaration."
+  },
   "WorkflowStep": {
     "href": "/reference/workflows/type-aliases/workflowstep/",
     "kind": "type",
     "sig": "type WorkflowStep<S> = (state) => | StepResult<S> | Promise<StepResult<S>>;"
+  },
+  "WorkflowStepSpec": {
+    "href": "/reference/spec/index/type-aliases/workflowstepspec/",
+    "kind": "type",
+    "sig": "type WorkflowStepSpec = | { agentId: string; assign: CodeRegion; inputExpr: CodeRegion; kind: \"agentStep\"; name: string; next: WorkflowRout…"
   },
   "ZERO_DELTA": {
     "href": "/reference/core/testkit/variables/zero_delta/",

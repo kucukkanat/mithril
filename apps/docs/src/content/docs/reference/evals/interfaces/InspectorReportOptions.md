@@ -5,7 +5,7 @@ prev: false
 title: "InspectorReportOptions"
 ---
 
-Defined in: [report.ts:37](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L37)
+Defined in: [report.ts:44](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/report.ts#L44)
 
 Options for [inspectorReport](/reference/evals/functions/inspectorreport/) — [HtmlReportOptions](/reference/evals/interfaces/htmlreportoptions/) plus the inspector's context window.
 
@@ -15,13 +15,31 @@ Options for [inspectorReport](/reference/evals/functions/inspectorreport/) — [
 
 ## Properties
 
+### baseline?
+
+```ts
+readonly optional baseline?: RunSnapshot;
+```
+
+Defined in: [report.ts:40](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/report.ts#L40)
+
+A baseline [RunSnapshot](/reference/evals/interfaces/runsnapshot/) to diff against. When present, each row is badged improved / regressed /
+new, regressions sort to the top, and a "changes" filter appears — turning the report into a
+regression view.
+
+#### Inherited from
+
+[`HtmlReportOptions`](/reference/evals/interfaces/htmlreportoptions/).[`baseline`](/reference/evals/interfaces/htmlreportoptions/#baseline)
+
+***
+
 ### contextWindow?
 
 ```ts
 readonly optional contextWindow?: number;
 ```
 
-Defined in: [report.ts:42](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L42)
+Defined in: [report.ts:49](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/report.ts#L49)
 
 The model context window in tokens, used to draw each row inspector's context-fill bar. Omit it and the
 meters still show tokens / cost / steps, just without the `% ctx` bar.
@@ -34,7 +52,7 @@ meters still show tokens / cost / steps, just without the `% ctx` bar.
 readonly optional generatedAt?: string;
 ```
 
-Defined in: [report.ts:33](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L33)
+Defined in: [report.ts:34](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/report.ts#L34)
 
 ISO timestamp shown in the header (default: now). Pass one for reproducible output.
 
@@ -50,7 +68,7 @@ ISO timestamp shown in the header (default: now). Pass one for reproducible outp
 readonly optional title?: string;
 ```
 
-Defined in: [report.ts:31](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L31)
+Defined in: [report.ts:32](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/report.ts#L32)
 
 Document title and page heading (default `"Mithril eval report"`).
 

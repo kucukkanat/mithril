@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { htmlReport, inspectorReport, type EvalReportEntry, type EvalRun } from "../src/index.ts";
+import { htmlReport, inspectorReport, type EvalReportEntry, type EvalRun, toSnapshot } from "../src/index.ts";
 
 // Build an EvalRun without running an agent — the report only reads case/scores/passed + log + final.
 function makeRun(name: string, passed: boolean, opts: { text?: string; tool?: { name: string; input: unknown }; score?: { name: string; value: number } }): EvalRun {
@@ -94,4 +94,36 @@ test("inspectorReport: empty input still renders a self-contained empty state", 
   expect(html).toContain("<b>0</b> cases");
   expect(html).toContain("No eval cases");
   expect(html).toContain("mth-dev"); // devtools assets still inlined
+});
+
+test("htmlReport: baseline diff mode badges changes, sorts regressions first, adds a changes filter", () => {
+  // baseline: alpha passed, beta failed.
+  const baseline = toSnapshot([makeRun("alpha", true, { text: "a" }), makeRun("beta", false, { text: "b" })]);
+  // current: alpha regressed, beta improved, gamma is new.
+  const entries: EvalReportEntry[] = [
+    { run: makeRun("alpha", false, { text: "a" }) },
+    { run: makeRun("beta", true, { text: "b" }) },
+    { run: makeRun("gamma", true, { text: "g" }) },
+  ];
+  const html = htmlReport(entries, { baseline, generatedAt: "t" });
+  // delta badges present
+  expect(html).toContain("▼ REGRESSED");
+  expect(html).toContain("▲ IMPROVED");
+  expect(html).toContain(">NEW<");
+  // per-row filter metadata
+  expect(html).toContain('data-delta="regressed"');
+  expect(html).toContain('data-delta="improved"');
+  expect(html).toContain('data-delta="new"');
+  // regressions sort to the top
+  expect(html.indexOf('data-delta="regressed"')).toBeLessThan(html.indexOf('data-delta="improved"'));
+  // summary stats + the changes filter
+  expect(html).toContain("<b>1</b> regressed");
+  expect(html).toContain("<b>1</b> improved");
+  expect(html).toContain('id="delta"');
+});
+
+test("htmlReport: no baseline means no delta UI", () => {
+  const html = htmlReport([{ run: makeRun("a", true, { text: "x" }) }]);
+  expect(html).not.toContain('id="delta"');
+  expect(html).not.toContain("REGRESSED");
 });

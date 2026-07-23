@@ -12,7 +12,7 @@ function useObject(source): {
 };
 ```
 
-Defined in: [hooks.ts:89](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/react/src/hooks.ts#L89)
+Defined in: [hooks.ts:89](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/react/src/hooks.ts#L89)
 
 ## Parameters
 

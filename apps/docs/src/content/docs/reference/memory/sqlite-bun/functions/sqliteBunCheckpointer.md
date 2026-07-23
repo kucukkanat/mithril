@@ -9,7 +9,7 @@ title: "sqliteBunCheckpointer"
 function sqliteBunCheckpointer(pathOrOpts?): Checkpointer;
 ```
 
-Defined in: [sqlite-bun.ts:44](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/memory/src/sqlite-bun.ts#L44)
+Defined in: [sqlite-bun.ts:44](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/memory/src/sqlite-bun.ts#L44)
 
 Creates a durable Checkpointer backed by `bun:sqlite` (Bun runtime only).
 

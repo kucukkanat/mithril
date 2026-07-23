@@ -9,7 +9,7 @@ title: "anthropicProvider"
 function anthropicProvider(config?): Provider;
 ```
 
-Defined in: [anthropic/index.ts:83](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/providers/src/anthropic/index.ts#L83)
+Defined in: [anthropic/index.ts:83](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/providers/src/anthropic/index.ts#L83)
 
 Creates an Anthropic Provider whose `chat` method streams `/messages` responses.
 

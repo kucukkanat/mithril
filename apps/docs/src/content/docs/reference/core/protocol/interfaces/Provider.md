@@ -5,7 +5,7 @@ prev: false
 title: "Provider"
 ---
 
-Defined in: [packages/core/src/protocol/provider.ts:83](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/provider.ts#L83)
+Defined in: [packages/core/src/protocol/provider.ts:83](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L83)
 
 A model provider: its [ProviderSpec](/reference/core/protocol/interfaces/providerspec/) plus a streaming `chat` entry point.
 
@@ -17,7 +17,7 @@ A model provider: its [ProviderSpec](/reference/core/protocol/interfaces/provide
 readonly spec: ProviderSpec;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:84](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/provider.ts#L84)
+Defined in: [packages/core/src/protocol/provider.ts:84](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L84)
 
 ## Methods
 
@@ -31,7 +31,7 @@ chat(
 signal): AsyncGenerator<ProviderChunk>;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:93](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/provider.ts#L93)
+Defined in: [packages/core/src/protocol/provider.ts:93](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L93)
 
 Stream one model call as [ProviderChunk](/reference/core/protocol/type-aliases/providerchunk/)s.
 

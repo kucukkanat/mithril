@@ -9,7 +9,7 @@ title: "toJsonSchema"
 function toJsonSchema(schema, convert?): JsonValue;
 ```
 
-Defined in: [packages/core/src/protocol/json-schema.ts:62](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/json-schema.ts#L62)
+Defined in: [packages/core/src/protocol/json-schema.ts:62](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/json-schema.ts#L62)
 
 Convert a [StandardSchemaV1](/reference/core/protocol/interfaces/standardschemav1/) to a JSON Schema for provider tool-parameter definitions.
 

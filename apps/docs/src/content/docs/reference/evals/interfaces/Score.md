@@ -5,7 +5,7 @@ prev: false
 title: "Score"
 ---
 
-Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L34)
+Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L34)
 
 A single scoring result produced by a [Scorer](/reference/evals/type-aliases/scorer/).
 
@@ -22,7 +22,7 @@ A single scoring result produced by a [Scorer](/reference/evals/type-aliases/sco
 readonly name: string;
 ```
 
-Defined in: [index.ts:35](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L35)
+Defined in: [index.ts:35](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L35)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [index.ts:35](https://github.com/kucukkanat/mithril/blob/b369293fee6
 readonly optional rationale?: string;
 ```
 
-Defined in: [index.ts:37](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L37)
+Defined in: [index.ts:37](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L37)
 
 ***
 
@@ -42,4 +42,4 @@ Defined in: [index.ts:37](https://github.com/kucukkanat/mithril/blob/b369293fee6
 readonly value: number;
 ```
 
-Defined in: [index.ts:36](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L36)
+Defined in: [index.ts:36](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L36)

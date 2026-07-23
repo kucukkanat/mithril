@@ -8,13 +8,14 @@ title: "RunEvalOptions"
 ```ts
 type RunEvalOptions<Deps, Ctx> = DepsOption<Deps> & {
   makeContext?: (t) => Ctx | Promise<Ctx>;
+  onSuspend?: SuspendPolicy;
   runtime?: RuntimeAdapter;
   threshold?: number;
   transport?: Transport;
 };
 ```
 
-Defined in: [index.ts:81](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L81)
+Defined in: [index.ts:81](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L81)
 
 Options controlling how [runEval](/reference/evals/functions/runeval/) / [describeEval](/reference/evals/functions/describeeval/) execute and score cases.
 
@@ -35,6 +36,12 @@ readonly optional makeContext?: (t) => Ctx | Promise<Ctx>;
 #### Returns
 
 `Ctx` \| `Promise`\<`Ctx`\>
+
+### onSuspend?
+
+```ts
+readonly optional onSuspend?: SuspendPolicy;
+```
 
 ### runtime?
 

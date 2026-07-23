@@ -84,6 +84,44 @@ for await (const r of runEval(agentUnderTest, [{ name: "one call", input: "searc
 An **LLM-judge** is nothing special — read the transcript from `t.log`, ask a model to grade it, return
 the `value`. The built-in `llmJudge({ model, rubric })` does exactly that.
 
+## Assert the whole trajectory
+
+Instead of a fistful of `calledTool` / `calledInOrder` checks, pin a **golden trajectory** and score against
+it in one shot with `matchesTrajectory(reference, { mode })`. `mode` controls how the run's `tool.call`
+sequence is compared: `superset` (the default — the reference is an ordered subsequence, extra calls allowed),
+`strict` (exact 1:1), `unordered` (same multiset, any order), or `subset` (the run stayed within the reference).
+An orthogonal `toolArgs` mode (`exact` / `ignore` / `subset` / `superset`) controls argument comparison.
+`referenceFromTrajectory(t)` turns a known-good run into a golden.
+
+<Runnable title="matches-trajectory.ts" highlight={["10-11"]} code={`import { agent, tool } from "mithril";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { runEval, matchesTrajectory, referenceFromTrajectory } from "@mithril/evals";
+import { z } from "zod";
+
+const book = tool({ name: "book", description: "Book a flight.", inputSchema: z.object({ city: z.string() }), execute: async ({ city }) => ({ ok: true, city }) });
+const model = testModel(scriptedProvider([toolCallTurn("book", { city: "Istanbul" }), textTurn("Booked.")]));
+const travel = agent({ model, instructions: "Book the flight.", tools: [book] });
+
+// The agent must call book({ city: "Istanbul" }) — extra calls allowed (superset), args exact:
+const golden = [{ tool: "book", input: { city: "Istanbul" } }];
+for await (const r of runEval(travel, [{ name: "book istanbul", input: "book me to Istanbul", scorers: [matchesTrajectory(golden, { mode: "superset" })] }])) {
+  console.log(r.case, "→", r.scores[0].value, "(" + r.scores[0].name + ")");
+}`} />
+
+## Compare models — A/B and regressions
+
+`runSuite` runs a matrix (one entry per model) and tags each result with its `group`, so `htmlReport` already
+shows models side by side. Two tools close the loop:
+
+- **`pairwiseJudge({ model, rubric })`** — a head-to-head judge, `(a, b) => Score`: `1` when trajectory A wins,
+  `0` when B wins, `0.5` on a tie. Feed it two models' runs of the same case to answer "which answered better?".
+- **Baseline diff** — `toSnapshot(runs)` compresses a run to a comparable snapshot, and
+  `diffRuns(baseline, current)` classifies every case as `improved` / `regressed` / `added` / `removed`. Pass a
+  `baseline` snapshot to `htmlReport` and each row is badged, with regressions sorted to the top.
+
+The [Studio](/) wires all of this into a visual **evals workbench** — author cases, run a matrix of models,
+compare cells side by side, pin goldens, A/B with a judge, and diff against a saved baseline.
+
 ## Record once, replay from file
 
 `runEval` streams the agent live every time. For **deterministic, network-free** scoring, record each

@@ -9,7 +9,7 @@ title: "didNotCallTool"
 function didNotCallTool(name): Scorer;
 ```
 
-Defined in: [index.ts:571](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L571)
+Defined in: [index.ts:607](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L607)
 
 A restraint [Scorer](/reference/evals/type-aliases/scorer/): scores `1` when the run did **not** call `name`, else `0`.
 

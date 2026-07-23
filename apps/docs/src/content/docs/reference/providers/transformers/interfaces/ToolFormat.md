@@ -5,7 +5,7 @@ prev: false
 title: "ToolFormat"
 ---
 
-Defined in: [transformers/tool-formats.ts:17](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/providers/src/transformers/tool-formats.ts#L17)
+Defined in: [transformers/tool-formats.ts:17](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/providers/src/transformers/tool-formats.ts#L17)
 
 How one model family delimits + encodes tool calls in generated text.
 
@@ -22,7 +22,7 @@ to end-of-stream). `extract` turns the raw payload between them into zero-or-mor
 readonly end: string | null;
 ```
 
-Defined in: [transformers/tool-formats.ts:20](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/providers/src/transformers/tool-formats.ts#L20)
+Defined in: [transformers/tool-formats.ts:20](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/providers/src/transformers/tool-formats.ts#L20)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [transformers/tool-formats.ts:20](https://github.com/kucukkanat/mith
 readonly name: string;
 ```
 
-Defined in: [transformers/tool-formats.ts:18](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/providers/src/transformers/tool-formats.ts#L18)
+Defined in: [transformers/tool-formats.ts:18](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/providers/src/transformers/tool-formats.ts#L18)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [transformers/tool-formats.ts:18](https://github.com/kucukkanat/mith
 readonly start: string;
 ```
 
-Defined in: [transformers/tool-formats.ts:19](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/providers/src/transformers/tool-formats.ts#L19)
+Defined in: [transformers/tool-formats.ts:19](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/providers/src/transformers/tool-formats.ts#L19)
 
 ## Methods
 
@@ -55,7 +55,7 @@ extract(payload): {
 }[];
 ```
 
-Defined in: [transformers/tool-formats.ts:21](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/providers/src/transformers/tool-formats.ts#L21)
+Defined in: [transformers/tool-formats.ts:21](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/providers/src/transformers/tool-formats.ts#L21)
 
 #### Parameters
 

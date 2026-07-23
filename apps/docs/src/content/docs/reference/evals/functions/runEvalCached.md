@@ -12,7 +12,7 @@ function runEvalCached<Deps, Ctx>(
 opts): AsyncGenerator<EvalRun>;
 ```
 
-Defined in: [index.ts:320](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L320)
+Defined in: [index.ts:356](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L356)
 
 Evaluate cases with a record-once / replay-from-file cache, yielding one [EvalRun](/reference/evals/interfaces/evalrun/) per case.
 

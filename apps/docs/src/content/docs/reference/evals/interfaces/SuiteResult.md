@@ -5,7 +5,7 @@ prev: false
 title: "SuiteResult"
 ---
 
-Defined in: [index.ts:409](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L409)
+Defined in: [index.ts:445](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L445)
 
 The aggregate outcome of [runSuite](/reference/evals/functions/runsuite/): every [SuiteRun](/reference/evals/interfaces/suiterun/), the pass counts, and the CI gate verdict.
 
@@ -21,7 +21,7 @@ The aggregate outcome of [runSuite](/reference/evals/functions/runsuite/): every
 readonly ok: boolean;
 ```
 
-Defined in: [index.ts:414](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L414)
+Defined in: [index.ts:450](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L450)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [index.ts:414](https://github.com/kucukkanat/mithril/blob/b369293fee
 readonly passed: number;
 ```
 
-Defined in: [index.ts:411](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L411)
+Defined in: [index.ts:447](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L447)
 
 ***
 
@@ -41,7 +41,7 @@ Defined in: [index.ts:411](https://github.com/kucukkanat/mithril/blob/b369293fee
 readonly passRate: number;
 ```
 
-Defined in: [index.ts:413](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L413)
+Defined in: [index.ts:449](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L449)
 
 ***
 
@@ -51,7 +51,7 @@ Defined in: [index.ts:413](https://github.com/kucukkanat/mithril/blob/b369293fee
 readonly runs: readonly SuiteRun[];
 ```
 
-Defined in: [index.ts:410](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L410)
+Defined in: [index.ts:446](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L446)
 
 ***
 
@@ -61,4 +61,4 @@ Defined in: [index.ts:410](https://github.com/kucukkanat/mithril/blob/b369293fee
 readonly total: number;
 ```
 
-Defined in: [index.ts:412](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/index.ts#L412)
+Defined in: [index.ts:448](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/index.ts#L448)

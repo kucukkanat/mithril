@@ -15,7 +15,7 @@ type ToolErrorClass =
   | "timeout";
 ```
 
-Defined in: packages/core/src/protocol/errors.ts:16
+Defined in: [packages/core/src/protocol/errors.ts:16](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/errors.ts#L16)
 
 The canonical classes of tool-call failure — a ToolScan-style taxonomy.
 

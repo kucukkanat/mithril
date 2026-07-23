@@ -5,7 +5,7 @@ prev: false
 title: "FsError"
 ---
 
-Defined in: [packages/fs/src/index.ts:51](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/fs/src/index.ts#L51)
+Defined in: [packages/fs/src/index.ts:51](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/fs/src/index.ts#L51)
 
 Error thrown by every [FileSystem](/reference/fs/index/interfaces/filesystem/) adapter — e.g. a missing entry or a path that escapes the root.
 

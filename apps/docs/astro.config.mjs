@@ -2,7 +2,7 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import react from "@astrojs/react";
-import { fileURLToPath } from "node:url";
+import { mithrilAliases } from "../../scripts/mithril-aliases.mjs";
 import rehypeSymbolLinks from "./src/lib/rehype-symbol-links.ts";
 import { createStarlightTypeDocPlugin } from "starlight-typedoc";
 import { generateSymbols } from "./scripts/gen-symbols.ts";
@@ -17,12 +17,6 @@ const genSymbolsIntegration = {
   name: "mithril-gen-symbols",
   hooks: { "astro:config:done": () => void generateSymbols() },
 };
-
-/**
- * Resolve a path relative to this config file into an absolute fs path.
- * @param {string} p
- */
-const src = (p) => fileURLToPath(new URL(p, import.meta.url));
 
 /**
  * The reference section is GENERATED from the framework source (TypeDoc + TSDoc), never hand-
@@ -42,6 +36,8 @@ const TD_PACKAGES = [
   { name: "vectors", label: "@mithril/vectors", entryPoints: ["vectors/src/index.ts", "vectors/src/sqlite-bun.ts", "vectors/src/sqlite-node.ts"] },
   { name: "sandbox", label: "@mithril/sandbox", entryPoints: ["sandbox/src/index.ts", "sandbox/src/node.ts"] },
   { name: "react", label: "@mithril/react", entryPoints: ["react/src/index.ts", "react/src/hooks.ts"] },
+  { name: "runner-web", label: "@mithril/runner-web", entryPoints: ["runner-web/src/index.ts", "runner-web/src/worker.ts"] },
+  { name: "spec", label: "@mithril/spec", entryPoints: ["spec/src/index.ts", "spec/src/parse.ts"] },
   { name: "devtools", label: "@mithril/devtools", entryPoints: ["devtools/src/index.ts", "devtools/src/dom.ts", "devtools/src/element.ts", "devtools/src/attach.ts"] },
   { name: "create-mithril", label: "create-mithril", entryPoints: ["create-mithril/src/index.ts"] },
 ];
@@ -71,42 +67,8 @@ for (const pkg of TD_PACKAGES) {
   typeDocSidebar.push(sidebarGroup);
 }
 
-/**
- * The docs site consumes the workspace's @mithril/* packages directly from
- * source (they are source-as-published, zero-build). These aliases mirror and
- * extend tsconfig.base.json's `paths` so both the type-checker and Vite/esbuild
- * resolve the raw .ts. Order matters: more specific ids must come first.
- */
-const mithrilAliases = [
-  { find: "@mithril/core/protocol", replacement: src("../../packages/core/src/protocol/index.ts") },
-  { find: "@mithril/core/agent", replacement: src("../../packages/core/src/agent/index.ts") },
-  { find: "@mithril/core/testkit", replacement: src("../../packages/core/src/testkit/index.ts") },
-  { find: "@mithril/providers/openai", replacement: src("../../packages/providers/src/openai/index.ts") },
-  { find: "@mithril/providers/anthropic", replacement: src("../../packages/providers/src/anthropic/index.ts") },
-  { find: "@mithril/providers/google", replacement: src("../../packages/providers/src/google/index.ts") },
-  { find: "@mithril/providers/transformers", replacement: src("../../packages/providers/src/transformers/index.ts") },
-  { find: "@mithril/evals", replacement: src("../../packages/evals/src/index.ts") },
-  { find: "@mithril/memory", replacement: src("../../packages/memory/src/index.ts") },
-  { find: "@mithril/kv", replacement: src("../../packages/kv/src/index.ts") },
-  { find: "@mithril/fs", replacement: src("../../packages/fs/src/index.ts") },
-  { find: "@mithril/vectors", replacement: src("../../packages/vectors/src/index.ts") },
-  { find: "@mithril/workflows", replacement: src("../../packages/workflows/src/index.ts") },
-  { find: "@mithril/otel", replacement: src("../../packages/otel/src/index.ts") },
-  { find: "@mithril/mcp/server", replacement: src("../../packages/mcp/src/server.ts") },
-  { find: "@mithril/mcp", replacement: src("../../packages/mcp/src/index.ts") },
-  { find: "@mithril/react/hooks", replacement: src("../../packages/react/src/hooks.ts") },
-  { find: "@mithril/react", replacement: src("../../packages/react/src/index.ts") },
-  { find: "@mithril/devtools/ui.css", replacement: src("../../packages/devtools/src/ui/ui.css") },
-  { find: "@mithril/devtools/ui", replacement: src("../../packages/devtools/src/ui/index.tsx") },
-  { find: "@mithril/devtools/dom", replacement: src("../../packages/devtools/src/dom.ts") },
-  { find: "@mithril/devtools/element", replacement: src("../../packages/devtools/src/element.ts") },
-  { find: "@mithril/devtools/attach", replacement: src("../../packages/devtools/src/attach.ts") },
-  { find: "@mithril/devtools", replacement: src("../../packages/devtools/src/index.ts") },
-  { find: "mithril/openai", replacement: src("../../packages/mithril/src/openai.ts") },
-  { find: "mithril/anthropic", replacement: src("../../packages/mithril/src/anthropic.ts") },
-  { find: "mithril/transformers", replacement: src("../../packages/mithril/src/transformers.ts") },
-  { find: "mithril", replacement: src("../../packages/mithril/src/index.ts") },
-];
+// The @mithril/* → source-.ts alias list lives in scripts/mithril-aliases.mjs, shared with
+// apps/studio's vite.config.ts so the two bundler configs can never drift.
 
 // https://astro.build/config
 export default defineConfig({
@@ -175,6 +137,7 @@ export default defineConfig({
                 "guides/streaming-to-a-web-ui",
                 "guides/running-in-the-browser",
                 "guides/local-inference",
+                "guides/studio",
               ],
             },
             {
@@ -209,7 +172,7 @@ export default defineConfig({
     rehypePlugins: [rehypeSymbolLinks],
   },
   vite: {
-    resolve: { alias: mithrilAliases },
+    resolve: { alias: mithrilAliases() },
     optimizeDeps: {
       // `sucrase` + `zod` are imported ONLY by the runner Web Worker, so Vite doesn't discover them in the
       // main entry. Without pre-bundling them here, Vite optimizes them the FIRST time you click Run, and

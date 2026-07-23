@@ -11,7 +11,7 @@ title: "plugin"
 function plugin<Deps>(): <Tools>(p) => Plugin<Deps, Tools>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:140](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L140)
+Defined in: [packages/core/src/agent/factory.ts:140](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/factory.ts#L140)
 
 Define a plugin — a reusable bundle of tools, middleware, and event consumers — or curry over `Deps`.
 
@@ -41,7 +41,7 @@ subscribe to every emitted event.
 function plugin<Tools>(p): Plugin<unknown, Tools>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:141](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L141)
+Defined in: [packages/core/src/agent/factory.ts:141](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/factory.ts#L141)
 
 Define a plugin — a reusable bundle of tools, middleware, and event consumers — or curry over `Deps`.
 

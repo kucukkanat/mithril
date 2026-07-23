@@ -1,0 +1,43 @@
+---
+title: "The Studio"
+description: "Design, run, and iterate on Mithril agents entirely in your browser — structured panels, a two-way code view, and real in-browser execution."
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+The **Mithril Studio** is a client-only app — no server, no account — where you design an agent
+visually, see (and edit) the real TypeScript it compiles to, and run it in your browser tab.
+
+## What it does today
+
+- **Design** — structured panels for agents (model, instructions, tools, structured output, limits,
+  middleware) and tools (zod schema, execute body, human-in-the-loop approval), backed by a
+  serializable project spec (`@mithril/spec`).
+- **Two-way code view** — the spec generates real, portable Mithril code; hand edits parse back
+  through the actual TypeScript compiler (loaded lazily in a worker). Anything the parser doesn't
+  recognize is kept **verbatim and lossless** — your code is never dropped or rewritten.
+- **Run** — the entry agent executes in a Web Worker via `@mithril/runner-web` (the same runner
+  behind the docs [playground](/playground/)), against a **live BYOK provider** (OpenAI, Anthropic,
+  Google, Groq — your key stays in localStorage and goes only to that provider) or an **on-device
+  model** (Transformers.js — no key, no network after the one-time weight download). The run view
+  streams every `MithrilEvent` into the devtools inspector: time-travel scrubber, span tree,
+  cost/context meters, and the suspension card for approving human-in-the-loop tools.
+- **Persist** — projects auto-save to IndexedDB in your browser; create, rename, duplicate, delete.
+
+## Running it
+
+```sh
+bun run studio:dev    # dev server
+bun run studio:build  # static build (apps/studio/dist — deployable to any static host)
+```
+
+## What the generated code is
+
+Every project compiles to a plain Mithril file — `tool({ … })` / `agent({ … })` declarations and an
+`await run(agent, input)` entry. There is no interpreter and no Studio-only runtime: what you run is
+the generated code, importing the same packages that ship to npm.
+
+<Aside type="note">
+The evals workbench (author cases, run suites, pin golden trajectories), the free-form canvas, share
+URLs, and TypeScript-project export are in flight — see the [roadmap](/roadmap/).
+</Aside>

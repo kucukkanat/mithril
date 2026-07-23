@@ -41,7 +41,10 @@ Everything under "Shipped" below is implemented and covered by the test suite. E
   tool-parameter schemas to OpenAI/Anthropic/Google when the input schema self-describes or a converter is
   supplied.
 - **Evals** — trajectory scoring plus a **record-once / replay-from-file** split (`runEvalCached` +
-  `TrajectoryStore`) for deterministic, network-free CI.
+  `TrajectoryStore`) for deterministic, network-free CI; a **reference-trajectory matcher**
+  (`matchesTrajectory` / `referenceFromTrajectory`, four sequence modes × four argument modes), an
+  **A/B `pairwiseJudge`**, and **baseline diffing** (`toSnapshot` / `diffRuns`, plus an `htmlReport`
+  diff view) for model comparison and regression gates.
 - **MCP** — a client, an official Streamable-**HTTP transport** (`@mithril/mcp/http`), and **server
   exposure** (`@mithril/mcp/server`) to serve your own tools over MCP.
 - **Devtools** — a headless inspector **and a framework-agnostic UI** (event stream, span tree, cost +
@@ -52,17 +55,30 @@ Everything under "Shipped" below is implemented and covered by the test suite. E
 - **Batteries** — OTel spans, `fs`/`kv` (in-memory + IndexedDB) adapters, the `vectors` store (in-memory +
   durable Bun SQLite), the `sandbox` code runner (`node:vm` + remote proxy), workflows, React bindings,
   `create-mithril`.
+- **Studio (M1)** — a client-only studio app (`apps/studio`): design agents in structured panels **and** a
+  fully two-way TypeScript code view (`@mithril/spec` — codegen + real-compiler parse with lossless
+  verbatim regions), run them in-browser against live BYOK providers or on-device models via the shared
+  worker runner (`@mithril/runner-web`, also powering the docs playground), with the devtools inspector,
+  chat multi-turn, HITL approvals, and IndexedDB project persistence. See the
+  [Studio guide](/guides/studio/).
+- **Studio (M2 — evals workbench)** — author eval suites and cases against a project's agent
+  (`@mithril/spec`'s `generateEvalRun` + a shared scorer catalog), run them across a **matrix of models**
+  in the worker runner, compare cells side by side with a per-case devtools inspector, **pin golden
+  trajectories**, **A/B** two models with an LLM judge, **diff** against a saved baseline, and export a
+  self-contained `htmlReport` — all client-side, with run history in IndexedDB.
 
 ## Next
 
 | Area | What's coming | Why it's not here yet |
 | --- | --- | --- |
 | Adapters | ANN-indexed `vectors` backends (sqlite-vec / pgvector / Vectorize); a WASM `sandbox` backend | today's `vectors` do an exact brute-force scan; `sandbox` runs via `node:vm` or a remote proxy |
-| Studio | A standalone `bunx mithril dev` studio app | the embeddable devtools UI ships today; a full studio app is v2 |
+| Studio | Free-form multi-agent canvas, share URLs & TS-project export | the Studio ships today as a client-only app (design → run → **evals**, two-way code view); the canvas and sharing land next |
 
 ## Later
 
-- **Studio / playground app** and **realtime / voice** (v2).
+- **Realtime / voice** (v2).
+- **A `bunx mithril dev` CLI wrapper** for the Studio (local-project awareness) — the hosted static
+  Studio is the shipping form; a CLI wrapper is out of scope for now.
 - **Local-inference upgrades** — a WASM/CPU-guaranteed backend (wllama) and native constrained/grammar
   decoding for hard structured-output guarantees on local models.
 

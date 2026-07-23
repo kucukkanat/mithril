@@ -1,0 +1,10 @@
+{
+  "name": "@mithril-internal/design-tokens",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The Mithril design tokens — one CSS file shared by the docs site and the Studio so the identity can never drift.",
+  "type": "module",
+  "exports": {
+    "./tokens.css": "./tokens.css"
+  }
+}

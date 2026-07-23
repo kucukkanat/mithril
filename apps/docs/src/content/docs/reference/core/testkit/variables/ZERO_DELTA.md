@@ -9,6 +9,6 @@ title: "ZERO_DELTA"
 const ZERO_DELTA: UsageDelta;
 ```
 
-Defined in: [packages/core/src/testkit/index.ts:15](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/testkit/index.ts#L15)
+Defined in: [packages/core/src/testkit/index.ts:15](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/testkit/index.ts#L15)
 
 A zero-cost [UsageDelta](/reference/core/protocol/interfaces/usagedelta/) — the usage every scripted turn reports (tests run no real model).

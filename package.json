@@ -8,8 +8,11 @@
   ],
   "scripts": {
     "test": "bun test",
-    "typecheck": "for p in core providers memory evals kv otel fs react mithril workflows mcp vectors sandbox devtools create-mithril; do tsc --noEmit -p packages/$p/tsconfig.json || exit 1; done",
+    "typecheck": "for p in core providers memory evals kv otel fs react mithril workflows mcp vectors sandbox devtools runner-web spec create-mithril; do tsc --noEmit -p packages/$p/tsconfig.json || exit 1; done",
     "check:browser-safe": "bun run scripts/check-browser-safe.ts",
+    "studio:dev": "bun run --cwd apps/studio dev",
+    "studio:build": "bun run --cwd apps/studio build",
+    "studio:check": "bun run --cwd apps/studio check",
     "docs:dev": "bun run --cwd apps/docs dev",
     "docs:build": "bun run --cwd apps/docs build",
     "docs:preview": "bun run --cwd apps/docs preview",

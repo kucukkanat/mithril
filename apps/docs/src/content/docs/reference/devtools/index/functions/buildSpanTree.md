@@ -9,7 +9,7 @@ title: "buildSpanTree"
 function buildSpanTree(events): readonly SpanNode[];
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:96](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/devtools/src/selectors.ts#L96)
+Defined in: [packages/devtools/src/selectors.ts:96](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/selectors.ts#L96)
 
 Group a run's events into a tree of spans by their `span.parentId`.
 

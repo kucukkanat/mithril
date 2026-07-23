@@ -83,7 +83,9 @@ gen-symbols` regenerates just the registry from an existing `reference/`, if you
 
 ### Currently NOT shipped — keep on Roadmap only
 
-The standalone studio app (`bunx mithril dev`) and realtime/voice (v2); ANN-indexed `vectors` backends
+The `bunx mithril dev` CLI wrapper for the Studio (the Studio itself SHIPS as the client-only
+`apps/studio` — design/run with two-way code view; its evals workbench, canvas, and share/export are
+in flight) and realtime/voice (v2); ANN-indexed `vectors` backends
 (sqlite-vec / pgvector / Vectorize) and a WASM `sandbox` backend; local-inference upgrades — a
 WASM/CPU-guaranteed backend (wllama) and native constrained/grammar decoding for hard structured-output
 guarantees on local models; the Chrome Prompt API provider; and durable persistence wired directly into

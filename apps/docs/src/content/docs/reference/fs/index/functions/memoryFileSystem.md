@@ -9,7 +9,7 @@ title: "memoryFileSystem"
 function memoryFileSystem(now?): FileSystem;
 ```
 
-Defined in: [packages/fs/src/index.ts:85](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/fs/src/index.ts#L85)
+Defined in: [packages/fs/src/index.ts:85](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/fs/src/index.ts#L85)
 
 Create an in-memory [FileSystem](/reference/fs/index/interfaces/filesystem/) — works in any runtime, holds nothing on disk.
 

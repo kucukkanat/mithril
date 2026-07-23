@@ -18,7 +18,7 @@ type AnyTool<Deps> = {
 };
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:66](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/tool.ts#L66)
+Defined in: [packages/core/src/protocol/tool.ts:66](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/tool.ts#L66)
 
 The variance-correct upper bound for a heterogeneous tuple of tools.
 
@@ -44,7 +44,7 @@ top types in output positions. Concrete `In`/`Out` survive in a
 readonly description: string;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:68](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/tool.ts#L68)
+Defined in: [packages/core/src/protocol/tool.ts:68](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/tool.ts#L68)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [packages/core/src/protocol/tool.ts:68](https://github.com/kucukkana
 readonly optional examples?: readonly JsonValue[];
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:70](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/tool.ts#L70)
+Defined in: [packages/core/src/protocol/tool.ts:70](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/tool.ts#L70)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [packages/core/src/protocol/tool.ts:70](https://github.com/kucukkana
 readonly inputSchema: StandardSchemaV1<unknown, unknown>;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:71](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/tool.ts#L71)
+Defined in: [packages/core/src/protocol/tool.ts:71](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/tool.ts#L71)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [packages/core/src/protocol/tool.ts:71](https://github.com/kucukkana
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:67](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/tool.ts#L67)
+Defined in: [packages/core/src/protocol/tool.ts:67](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/tool.ts#L67)
 
 ***
 
@@ -84,7 +84,7 @@ Defined in: [packages/core/src/protocol/tool.ts:67](https://github.com/kucukkana
 readonly optional needsApproval?: boolean | ((input, ctx) => boolean | Promise<boolean>);
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:73](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/tool.ts#L73)
+Defined in: [packages/core/src/protocol/tool.ts:73](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/tool.ts#L73)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [packages/core/src/protocol/tool.ts:73](https://github.com/kucukkana
 readonly optional outputSchema?: StandardSchemaV1<unknown, JsonValue>;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:72](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/tool.ts#L72)
+Defined in: [packages/core/src/protocol/tool.ts:72](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/tool.ts#L72)
 
 ***
 
@@ -104,7 +104,7 @@ Defined in: [packages/core/src/protocol/tool.ts:72](https://github.com/kucukkana
 readonly optional version?: string;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:69](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/tool.ts#L69)
+Defined in: [packages/core/src/protocol/tool.ts:69](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/tool.ts#L69)
 
 ## Methods
 
@@ -114,7 +114,7 @@ Defined in: [packages/core/src/protocol/tool.ts:69](https://github.com/kucukkana
 execute(input, ctx): unknown;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:74](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/tool.ts#L74)
+Defined in: [packages/core/src/protocol/tool.ts:74](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/tool.ts#L74)
 
 #### Parameters
 

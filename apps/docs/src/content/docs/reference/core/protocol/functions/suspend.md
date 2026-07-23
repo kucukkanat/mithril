@@ -9,7 +9,7 @@ title: "suspend"
 function suspend<Req>(req): Suspend<ResolutionOf<Req>>;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:109](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/protocol/suspension.ts#L109)
+Defined in: [packages/core/src/protocol/suspension.ts:109](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/suspension.ts#L109)
 
 Build a [Suspend](/reference/core/protocol/interfaces/suspend/) marker from a [SuspensionRequest](/reference/core/protocol/interfaces/suspensionrequest/).
 

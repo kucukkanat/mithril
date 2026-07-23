@@ -9,7 +9,7 @@ title: "registerGlobalConsumer"
 function registerGlobalConsumer(consumer): () => void;
 ```
 
-Defined in: [packages/core/src/agent/global-consumers.ts:28](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/global-consumers.ts#L28)
+Defined in: [packages/core/src/agent/global-consumers.ts:28](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/global-consumers.ts#L28)
 
 Register an [EventConsumer](/reference/core/protocol/interfaces/eventconsumer/) that receives events from **every** run in this process.
 

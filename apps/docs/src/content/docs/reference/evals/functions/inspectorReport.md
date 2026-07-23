@@ -9,7 +9,7 @@ title: "inspectorReport"
 function inspectorReport(entries, opts?): Promise<string>;
 ```
 
-Defined in: [report.ts:375](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/evals/src/report.ts#L375)
+Defined in: [report.ts:425](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/evals/src/report.ts#L425)
 
 Like [htmlReport](/reference/evals/functions/htmlreport/), but every case row hosts a live **`@mithril/devtools` run inspector** — the event
 stream, message/tool transcript, span tree, and cost/context meters, with a time-travel scrubber — mounted

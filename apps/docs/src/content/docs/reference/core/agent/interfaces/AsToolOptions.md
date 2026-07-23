@@ -5,7 +5,7 @@ prev: false
 title: "AsToolOptions"
 ---
 
-Defined in: [packages/core/src/agent/factory.ts:383](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L383)
+Defined in: [packages/core/src/agent/factory.ts:383](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/factory.ts#L383)
 
 Options for [asTool](/reference/core/agent/functions/astool/): how a sub-agent is exposed as a callable tool.
 
@@ -24,7 +24,7 @@ Options for [asTool](/reference/core/agent/functions/astool/): how a sub-agent i
 readonly optional deps?: (ctx) => ChildDeps;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:392](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L392)
+Defined in: [packages/core/src/agent/factory.ts:392](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/factory.ts#L392)
 
 Provide the sub-agent's dependencies from the calling tool's [RunContext](/reference/core/protocol/interfaces/runcontext/).
 
@@ -46,7 +46,7 @@ Provide the sub-agent's dependencies from the calling tool's [RunContext](/refer
 readonly description: string;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:385](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L385)
+Defined in: [packages/core/src/agent/factory.ts:385](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/factory.ts#L385)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [packages/core/src/agent/factory.ts:385](https://github.com/kucukkan
 readonly optional input?: (input) => Input;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:390](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L390)
+Defined in: [packages/core/src/agent/factory.ts:390](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/factory.ts#L390)
 
 Map the validated tool input to the sub-agent's run input; defaults to `input.task` (or the raw string).
 
@@ -78,7 +78,7 @@ Map the validated tool input to the sub-agent's run input; defaults to `input.ta
 readonly optional inputSchema?: StandardSchemaV1<unknown, In>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:388](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L388)
+Defined in: [packages/core/src/agent/factory.ts:388](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/factory.ts#L388)
 
 Input schema; defaults to `{ task: string }`. Supply [AsToolOptions.input](/reference/core/agent/interfaces/astooloptions/#input) when you change it.
 
@@ -90,7 +90,7 @@ Input schema; defaults to `{ task: string }`. Supply [AsToolOptions.input](/refe
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:384](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L384)
+Defined in: [packages/core/src/agent/factory.ts:384](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/factory.ts#L384)
 
 ***
 
@@ -100,7 +100,7 @@ Defined in: [packages/core/src/agent/factory.ts:384](https://github.com/kucukkan
 readonly optional needsApproval?: boolean;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:394](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L394)
+Defined in: [packages/core/src/agent/factory.ts:394](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/factory.ts#L394)
 
 Gate the sub-agent call behind Tier-1 approval.
 
@@ -112,4 +112,4 @@ Gate the sub-agent call behind Tier-1 approval.
 readonly optional version?: string;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:386](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/factory.ts#L386)
+Defined in: [packages/core/src/agent/factory.ts:386](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/factory.ts#L386)

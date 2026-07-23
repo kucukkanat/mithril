@@ -5,7 +5,7 @@ prev: false
 title: "AgentConfig"
 ---
 
-Defined in: [packages/core/src/agent/agent-types.ts:162](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L162)
+Defined in: [packages/core/src/agent/agent-types.ts:162](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L162)
 
 The declarative configuration of an agent, passed to [agent](/reference/core/agent/functions/agent/) (or a harness-bound factory).
 
@@ -42,7 +42,7 @@ The declarative configuration of an agent, passed to [agent](/reference/core/age
 readonly instructions: string | ((ctx) => string | Promise<string>);
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:164](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L164)
+Defined in: [packages/core/src/agent/agent-types.ts:164](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L164)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:164](https://github.com/kucu
 readonly optional loopDetection?: boolean;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:170](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L170)
+Defined in: [packages/core/src/agent/agent-types.ts:170](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L170)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:170](https://github.com/kucu
 readonly optional maxCostMicroUsd?: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:172](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L172)
+Defined in: [packages/core/src/agent/agent-types.ts:172](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L172)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:172](https://github.com/kucu
 readonly optional maxSteps?: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:166](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L166)
+Defined in: [packages/core/src/agent/agent-types.ts:166](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L166)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:166](https://github.com/kucu
 readonly optional maxTokens?: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:171](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L171)
+Defined in: [packages/core/src/agent/agent-types.ts:171](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L171)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:171](https://github.com/kucu
 readonly model: ModelInput;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:163](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L163)
+Defined in: [packages/core/src/agent/agent-types.ts:163](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L163)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:163](https://github.com/kucu
 readonly optional output?: StandardSchemaV1<unknown, Out>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:167](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L167)
+Defined in: [packages/core/src/agent/agent-types.ts:167](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L167)
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:167](https://github.com/kucu
 readonly optional outputRetries?: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:168](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L168)
+Defined in: [packages/core/src/agent/agent-types.ts:168](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L168)
 
 ***
 
@@ -122,7 +122,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:168](https://github.com/kucu
 readonly optional repair?: boolean;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:173](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L173)
+Defined in: [packages/core/src/agent/agent-types.ts:173](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L173)
 
 ***
 
@@ -132,7 +132,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:173](https://github.com/kucu
 readonly optional selfCorrection?: boolean;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:174](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L174)
+Defined in: [packages/core/src/agent/agent-types.ts:174](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L174)
 
 ***
 
@@ -142,7 +142,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:174](https://github.com/kucu
 readonly optional toolRetries?: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:169](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L169)
+Defined in: [packages/core/src/agent/agent-types.ts:169](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L169)
 
 ***
 
@@ -152,7 +152,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:169](https://github.com/kucu
 readonly optional tools?: Tools;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:165](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L165)
+Defined in: [packages/core/src/agent/agent-types.ts:165](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L165)
 
 ***
 
@@ -164,4 +164,4 @@ readonly optional use?: readonly (
   | Middleware<Deps>)[];
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:175](https://github.com/kucukkanat/mithril/blob/b369293fee6fb2b6a3c4741f04afddc58ea11193/packages/core/src/agent/agent-types.ts#L175)
+Defined in: [packages/core/src/agent/agent-types.ts:175](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L175)
