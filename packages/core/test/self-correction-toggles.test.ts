@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import type { JsonValue, MithrilEvent, Provider, StandardSchemaV1, UsageDelta } from "../src/protocol/index.ts";
-import { agentLoop, tool } from "../src/agent/index.ts";
+import { agentLoop, loopGuard, outputRetry, retryBudget, tool } from "../src/agent/index.ts";
 import { scriptedProvider, testModel, textTurn, toolCallTurn, ZERO_DELTA } from "../src/testkit/index.ts";
 
 // Accepts only { city: string } — rejects a bare string, so coercion is observable.
@@ -39,9 +39,9 @@ async function collect<R>(gen: AsyncGenerator<MithrilEvent, R>): Promise<{ reado
   }
 }
 
-// ── repair: false turns off coercion ────────────────────────────────────────────────────────────────
+// ── dropping argRepair turns off coercion ────────────────────────────────────────────────────────────
 
-test("repair: false disables coercion — a JSON-string arg now fails instead of being fixed", async () => {
+test("healing without argRepair disables coercion — a JSON-string arg now fails instead of being fixed", async () => {
   const weather = tool({ name: "weather", description: "", inputSchema: citySchema(), execute: async () => ({ ok: true }) });
   const script = () => [toolCallTurn("weather", '{"city":"NYC"}'), textTurn("done")] as const;
 
@@ -51,16 +51,23 @@ test("repair: false disables coercion — a JSON-string arg now fails instead of
   expect(on.events.some((e) => e.type === "tool.repair")).toBe(true); // default: coerced
 
   const off = await collect(
-    agentLoop({ model: testModel(scriptedProvider(script())), instructions: "h", tools: [weather], input: "go", deps: undefined, repair: false }),
+    agentLoop({
+      model: testModel(scriptedProvider(script())),
+      instructions: "h",
+      tools: [weather],
+      input: "go",
+      deps: undefined,
+      healing: [loopGuard(), retryBudget(), outputRetry()], // every default behavior except argRepair
+    }),
   );
   expect(off.events.some((e) => e.type === "tool.repair")).toBe(false); // no coercion
   expect(off.events.some((e) => e.type === "tool.error")).toBe(true); // it failed validation instead
 });
 
-// ── selfCorrection: false reverts to the raw loop ────────────────────────────────────────────────────
+// ── healing: false reverts to the raw loop ───────────────────────────────────────────────────────────
 
-test("selfCorrection: false gives a raw loop: no coercion, no loop detection, unbounded tool retries", async () => {
-  // A tool that always fails validation, called identically forever. With corrections ON this halts fast
+test("healing: false gives a raw loop: no coercion, no loop detection, unbounded tool retries", async () => {
+  // A tool that always fails validation, called identically forever. With healing ON this halts fast
   // (ToolRepairExhausted / LoopDetected); OFF it should run all the way to the maxSteps budget.
   const bad = tool({ name: "bad", description: "", inputSchema: citySchema(), execute: async () => ({ ok: true }) });
   const { events, result } = await collect(
@@ -70,7 +77,7 @@ test("selfCorrection: false gives a raw loop: no coercion, no loop detection, un
       tools: [bad],
       input: "go",
       deps: undefined,
-      selfCorrection: false,
+      healing: false,
       maxSteps: 5,
     }),
   );
@@ -81,7 +88,7 @@ test("selfCorrection: false gives a raw loop: no coercion, no loop detection, un
   if (result.status === "error") expect(result.error.name).toBe("MaxStepsExceeded"); // ran to the budget, not a guard
 });
 
-test("crash-hardening is NOT disabled by selfCorrection: false", async () => {
+test("crash-hardening is NOT disabled by healing: false", async () => {
   const boom: Provider = {
     spec: { id: "test", models: {} },
     // biome-ignore lint: throws before yielding to simulate a provider failure
@@ -90,15 +97,15 @@ test("crash-hardening is NOT disabled by selfCorrection: false", async () => {
     },
   };
   const { events, result } = await collect(
-    agentLoop({ model: testModel(boom), instructions: "h", tools: [], input: "go", deps: undefined, selfCorrection: false }),
+    agentLoop({ model: testModel(boom), instructions: "h", tools: [], input: "go", deps: undefined, healing: false }),
   );
   expect(result.status).toBe("error"); // still a typed terminal, not an uncaught crash
   expect(events.some((e) => e.type === "run.error")).toBe(true);
 });
 
-// ── per-flag override beats the master ───────────────────────────────────────────────────────────────
+// ── picking a single behavior ────────────────────────────────────────────────────────────────────────
 
-test("a per-feature flag overrides the master: selfCorrection off but loopDetection on still halts loops", async () => {
+test("an explicit healing array picks behaviors: only loopGuard still halts loops", async () => {
   const ping = tool({ name: "ping", description: "", inputSchema: passSchema<Record<string, never>>(), execute: async () => ({ pong: true }) });
   const { events, result } = await collect(
     agentLoop({
@@ -107,8 +114,7 @@ test("a per-feature flag overrides the master: selfCorrection off but loopDetect
       tools: [ping],
       input: "go",
       deps: undefined,
-      selfCorrection: false,
-      loopDetection: true, // override the master for just this feature
+      healing: [loopGuard()], // raw loop except the no-progress guard
       maxSteps: 20,
     }),
   );

@@ -5,7 +5,7 @@ prev: false
 title: "StepOutcome"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:74](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L74)
+Defined in: [packages/core/src/protocol/middleware.ts:119](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L119)
 
 The summary of one completed step seen by a [Middleware.step](/reference/core/protocol/interfaces/middleware/#step) wrapper.
 
@@ -13,7 +13,8 @@ The summary of one completed step seen by a [Middleware.step](/reference/core/pr
 
 `stop` is how the step ended: `"text"`/`"output"` (a terminal answer), `"tool"` (tool calls ran,
 the run continues), `"suspend"` (the step paused for HITL), or `"length"`/`"error"` (terminal). `usage` is
-the step's own token delta.
+the step's own token delta. `toolOutcomes` lists each tool call's result when `stop` is `"tool"` (empty
+otherwise) — the input a retry-budget / loop-detection middleware reads.
 
 ## Properties
 
@@ -23,7 +24,7 @@ the step's own token delta.
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:75](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L75)
+Defined in: [packages/core/src/protocol/middleware.ts:120](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L120)
 
 ***
 
@@ -33,7 +34,17 @@ Defined in: [packages/core/src/protocol/middleware.ts:75](https://github.com/kuc
 readonly stop: "length" | "error" | "output" | "suspend" | "tool" | "text";
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:76](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L76)
+Defined in: [packages/core/src/protocol/middleware.ts:121](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L121)
+
+***
+
+### toolOutcomes?
+
+```ts
+readonly optional toolOutcomes?: readonly ToolStepOutcome[];
+```
+
+Defined in: [packages/core/src/protocol/middleware.ts:123](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L123)
 
 ***
 
@@ -43,4 +54,4 @@ Defined in: [packages/core/src/protocol/middleware.ts:76](https://github.com/kuc
 readonly usage: UsageDelta;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:77](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L77)
+Defined in: [packages/core/src/protocol/middleware.ts:122](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L122)

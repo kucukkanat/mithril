@@ -1,5 +1,6 @@
 import type {
   AnyTool,
+  JsonSchemaConverter,
   JsonValue,
   Middleware,
   MithrilEvent,
@@ -41,18 +42,18 @@ export type Input = string | readonly InputMessage[];
 export type DepsOption<Deps> = [Deps] extends [void] ? { readonly deps?: undefined } : { readonly deps: Deps };
 
 /** The run options common to every agent, independent of whether it has dependencies. */
-export interface RunOptionsBase {
+export interface RunOptionsBase<Deps = unknown> {
   readonly transport?: Transport; // omitted ⇒ byok from env
   readonly providers?: ProviderRegistry; // omitted ⇒ model must be a self-wiring handle
   readonly signal?: AbortSignal; // timeout idiom: AbortSignal.timeout(ms)
   readonly runtime?: RuntimeAdapter;
   readonly maxSteps?: number;
-  readonly toolRetries?: number; // per-tool consecutive-failure repair budget; default 2
-  readonly loopDetection?: boolean; // catch identical-call loops (steer once, then halt); default true
   readonly maxTokens?: number; // input+output token budget for the whole run; unset ⇒ unbounded
   readonly maxCostMicroUsd?: number; // cost budget in integer micro-USD; unset ⇒ unbounded
-  readonly repair?: boolean; // deterministic tool-arg coercion (emits tool.repair); default follows selfCorrection
-  readonly selfCorrection?: boolean; // master switch; false ⇒ raw loop (crash-hardening still on); default true
+  // Self-healing stack. Omitted ⇒ the batteries-included default (arg-repair, loop guard, retry budget,
+  // output retry); `false`/`[]` ⇒ a raw loop; an explicit array ⇒ pick/configure the healing middleware.
+  // Crash-hardening (a throwing provider/middleware/tool becomes a typed run.error) is never disabled.
+  readonly healing?: false | readonly Middleware<Deps>[];
 }
 
 /**
@@ -65,7 +66,7 @@ export interface RunOptionsBase {
  * (`<PROVIDER>_API_KEY`). `providers` omitted requires `model` to be a self-wiring {@link ModelHandle}.
  * Cancellation is driven by `signal` — the timeout idiom is `AbortSignal.timeout(ms)`.
  */
-export type RunOptions<Deps> = DepsOption<Deps> & RunOptionsBase;
+export type RunOptions<Deps> = DepsOption<Deps> & RunOptionsBase<Deps>;
 
 /**
  * The trailing argument tuple of the run methods, made optional when `Deps` is `void`.
@@ -146,17 +147,14 @@ export interface StepSnapshot {
  * @remarks
  * - `model` is a {@link ModelInput} (a self-wiring {@link ModelHandle} or a `provider/model` id).
  * - `instructions` may be a static string or a function of {@link RunContext} (resolved per run).
- * - `maxSteps` defaults to 16; `outputRetries` defaults to 2; `toolRetries` defaults to 2.
- * - `output` opts into structured output: the final text is parsed and validated against the schema,
- *   retrying up to `outputRetries` times before failing.
- * - `toolRetries` bounds self-correction of a failing tool: after that many consecutive failures of the
- *   same tool (no success in between) the run ends with a clear terminal error rather than looping to
- *   `maxSteps`. Each failed attempt under budget emits a `tool.retry` event.
- * - `selfCorrection` is the master switch (default `true`): set it `false` for the raw loop — no arg
- *   coercion, no loop detection, and unbounded tool retries. Crash-hardening (a throwing provider/middleware
- *   becomes a typed `run.error`) is never disabled. `repair`, `loopDetection`, and `toolRetries` each
- *   override the master for their one feature, so `{ selfCorrection: false, loopDetection: true }` is a raw
- *   loop that still halts on identical-call loops.
+ * - `maxSteps` defaults to 16.
+ * - `output` opts into structured output: the final text is parsed and validated against the schema; the
+ *   default {@link healing} stack re-asks the model on a validation failure before giving up.
+ * - `healing` is the pluggable self-healing stack ({@link Middleware}). Omitted ⇒ the batteries-included
+ *   default (arg-repair, loop guard, per-tool retry budget, structured-output retry). Pass `false` (or
+ *   `[]`) for the raw loop — no arg coercion, no loop detection, unbounded tool retries, no output retry;
+ *   or pass an explicit array to pick/configure behaviors, e.g. `healing: [healing.loopGuard({ haltAt: 3 })]`.
+ *   Crash-hardening (a throwing provider/middleware becomes a typed `run.error`) is never disabled.
  * - `use` composes plugins and middleware (§3.8).
  */
 export interface AgentConfig<Tools extends readonly AnyTool<Deps>[], Deps, Out extends JsonValue = string> {
@@ -164,14 +162,16 @@ export interface AgentConfig<Tools extends readonly AnyTool<Deps>[], Deps, Out e
   readonly instructions: string | ((ctx: RunContext<Deps>) => string | Promise<string>);
   readonly tools?: Tools;
   readonly maxSteps?: number; // default 16
-  readonly output?: StandardSchemaV1<unknown, Out>; // structured output: validate → retry
-  readonly outputRetries?: number; // default 2
-  readonly toolRetries?: number; // per-tool consecutive-failure repair budget before a clear terminal error; default 2
-  readonly loopDetection?: boolean; // catch identical-call loops (steer once, then halt); default true
+  readonly output?: StandardSchemaV1<unknown, Out>; // structured output: validate → (default) retry
+  // Optional converter from the `output` Standard Schema to a JSON Schema, injected into the prompt so the
+  // model sees the exact field names/types (a major small-model reliability lift). E.g. Zod v4:
+  // `(s) => z.toJSONSchema(s as z.ZodType)`. Absent ⇒ self-describing schemas still work; else the bare hint.
+  readonly outputSchema?: JsonSchemaConverter;
   readonly maxTokens?: number; // input+output token budget for the whole run; unset ⇒ unbounded
   readonly maxCostMicroUsd?: number; // cost budget in integer micro-USD; unset ⇒ unbounded
-  readonly repair?: boolean; // deterministic tool-arg coercion (emits tool.repair); default follows selfCorrection
-  readonly selfCorrection?: boolean; // master switch; false ⇒ raw loop (crash-hardening still on); default true
+  // Self-healing stack; omitted ⇒ the batteries-included default. `false`/`[]` ⇒ a raw loop; an explicit
+  // array ⇒ pick/configure the healing middleware (see the `healing` namespace). See @remarks above.
+  readonly healing?: false | readonly Middleware<Deps>[];
   readonly use?: readonly (Plugin<Deps> | Middleware<Deps>)[]; // §3.8 composability
 }
 

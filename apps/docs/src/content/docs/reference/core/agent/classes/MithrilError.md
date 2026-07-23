@@ -5,7 +5,7 @@ prev: false
 title: "MithrilError"
 ---
 
-Defined in: [packages/core/src/agent/registry.ts:17](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/registry.ts#L17)
+Defined in: [packages/core/src/agent/registry.ts:17](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/registry.ts#L17)
 
 The library's typed error, carrying a stable machine-readable `code` alongside the message.
 
@@ -27,7 +27,7 @@ Thrown throughout the agent layer — e.g. `NO_PROVIDER` (unresolvable model),
 new MithrilError(code, message): MithrilError;
 ```
 
-Defined in: [packages/core/src/agent/registry.ts:18](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/registry.ts#L18)
+Defined in: [packages/core/src/agent/registry.ts:18](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/registry.ts#L18)
 
 #### Parameters
 
@@ -70,7 +70,7 @@ Error.cause
 readonly code: string;
 ```
 
-Defined in: [packages/core/src/agent/registry.ts:19](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/registry.ts#L19)
+Defined in: [packages/core/src/agent/registry.ts:19](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/registry.ts#L19)
 
 ***
 

@@ -38,7 +38,7 @@ type ProviderChunk =
 };
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:74](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L74)
+Defined in: [packages/core/src/protocol/provider.ts:74](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/provider.ts#L74)
 
 A pre-[EventMeta](/reference/core/protocol/interfaces/eventmeta/) streaming chunk emitted by a [Provider](/reference/core/protocol/interfaces/provider/).
 
@@ -46,4 +46,4 @@ A pre-[EventMeta](/reference/core/protocol/interfaces/eventmeta/) streaming chun
 
 Providers yield chunks, not [MithrilEvent](/reference/core/protocol/type-aliases/mithrilevent/)s: the loop is the single
 `seq` authority and stamps `v`/`runId`/`seq`/`span`/`ts`. This is why
-providers cannot assign `seq`, and why the eval cache stores `ProviderChunk[]`.
+providers cannot assign `seq`, and why the replay cache stores `ProviderChunk[]`.

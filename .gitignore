@@ -7,7 +7,7 @@ dist/
 .astro/
 
 # Generated eval report
-report.html
+_report/
 
 # Secrets / local env (never commit)
 .env

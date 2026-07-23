@@ -1,0 +1,56 @@
+# Tool-calling suite — does the model select the right tool and fill its arguments?
+# Each test passes the user turn as `input`, names a `toolset` (see src/tools.ts) to wire onto the
+# agent, and states the expected calls in `expectToolCalls` (read by src/grading.ts:expectToolCalls).
+- description: "single tool — weather"
+  vars:
+    input: "What's the weather in Paris right now?"
+    toolset: weather
+    expectToolCalls:
+      - name: get_weather
+        args: { city: "Paris" }
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "single tool — arithmetic"
+  vars:
+    input: "Use the calculator to compute 15 * 23."
+    toolset: math
+    expectToolCalls:
+      - name: calculate
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "single tool — search"
+  vars:
+    input: "Search the docs for how to stream events."
+    toolset: search
+    expectToolCalls:
+      - name: search_docs
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "multi tool — weather + math"
+  vars:
+    input: "What's the weather in Tokyo, and what is 12 * 9?"
+    toolset: multi
+    expectToolCalls:
+      - name: get_weather
+        args: { city: "Tokyo" }
+      - name: calculate
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "multi tool — currency conversion"
+  vars:
+    input: "Convert 100 USD to EUR for me."
+    toolset: multi
+    expectToolCalls:
+      - name: convert_currency
+        args: { amount: 100, from: "USD", to: "EUR" }
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls

@@ -15,8 +15,8 @@ the loop — Mithril stays a set of bricks, not a monolith. Compose them by arra
 
 ## Two altitudes
 
-A `Middleware` is `{ name, tool?, model? }`. Each hook is an onion layer: receive the call, do
-work, call `next` — or short-circuit by returning without it. Compose by array order via `use:`
+A `Middleware` is `{ name, tool?, model?, step?, finalize? }`. Each hook is an onion layer: receive the
+call, do work, call `next` — or short-circuit by returning without it. Compose by array order via `use:`
 (highlighted) — run it:
 
 <Runnable title="altitudes.ts" highlight={[16]} code={`import { agent, tool } from "mithril";
@@ -108,15 +108,23 @@ const search = tool({
 
 await run(agent({ model, instructions: "Use search.", tools: [search], use: [audit] }), "Search for mithril.");`} />
 
-## Three altitudes
+## Four altitudes
 
-Middleware wraps at three altitudes, widest to narrowest:
+Middleware wraps at four altitudes, widest to narrowest:
 
-- **`step`** — a whole model↔tools round-trip. Use it for token/step budgets, compaction, or whole-step
-  retry. Short-circuit by returning a `StepOutcome` without calling `next`; end a run by aborting its
-  `signal`.
+- **`step`** — a whole model↔tools round-trip. Use it for token/step budgets, compaction, retry budgets, or
+  loop detection. It receives the step's per-tool outcomes (`out.toolOutcomes`) so it can react to what the
+  tools did. Short-circuit by returning a `StepOutcome` without calling `next`; end a run with `ctx.halt(err)`.
 - **`model`** — one model call. Caching, fallback models, prompt-cache ordering.
-- **`tool`** — one tool call. Guardrails, memoization, drift checks.
+- **`tool`** — one tool call. Guardrails, memoization, drift checks, argument repair.
+- **`finalize`** — structured-output validation. Wrap it to re-ask or repair a final value that failed its
+  `output` schema (this is where `healing.outputRetry` lives).
+
+Beyond `next`, the [`MiddlewareContext`](/reference/core/protocol/interfaces/middlewarecontext/) lets a
+middleware `ctx.steer(message)` (inject a user turn to nudge the model), `ctx.halt(error)` (end the run with
+a typed terminal error), `ctx.scope(key, init)` (per-run scratch state, e.g. a counter), and `ctx.emit(event)`
+(surface a typed event). **The entire built-in self-healing stack is just middleware built on these seams** —
+see [Self-correction](/guides/self-correction/) and the `healing` namespace.
 
 A step-altitude budget ends a runaway run by aborting a shared signal (highlighted) — here a model
 that never stops calling a tool is capped at two steps:
@@ -145,5 +153,5 @@ const looping = { spec: { id: "test", models: {} }, async *chat() {
 const r = await agent({ model: testModel(looping), instructions: "loop", tools: [noop], use: [budget] }).run("go", { signal: controller.signal });
 console.log(r.status); // "cancelled" — the budget aborted the signal`} />
 
-All three act only by reading and emitting events (no private side channel), so every extension stays
+All four act only by reading and emitting events (no private side channel), so every extension stays
 replayable and inspectable.

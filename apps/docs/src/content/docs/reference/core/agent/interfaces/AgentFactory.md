@@ -5,7 +5,7 @@ prev: false
 title: "AgentFactory"
 ---
 
-Defined in: [packages/core/src/agent/agent-types.ts:215](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/agent-types.ts#L215)
+Defined in: [packages/core/src/agent/agent-types.ts:215](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L215)
 
 A `Deps`-bound agent constructor: call it with an [AgentConfig](/reference/core/agent/interfaces/agentconfig/) to get an [Agent](/reference/core/agent/interfaces/agent/).
 
@@ -24,7 +24,7 @@ don't have to restate `<Deps>` at each call site. `Tools` and `Out` are inferred
 AgentFactory<Tools, Out>(config): Agent<Tools, Deps, Out>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:216](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/agent-types.ts#L216)
+Defined in: [packages/core/src/agent/agent-types.ts:216](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L216)
 
 A `Deps`-bound agent constructor: call it with an [AgentConfig](/reference/core/agent/interfaces/agentconfig/) to get an [Agent](/reference/core/agent/interfaces/agent/).
 

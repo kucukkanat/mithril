@@ -5,7 +5,7 @@ prev: false
 title: "Workflow"
 ---
 
-Defined in: [packages/workflows/src/index.ts:25](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/workflows/src/index.ts#L25)
+Defined in: [packages/workflows/src/index.ts:25](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/workflows/src/index.ts#L25)
 
 A compiled workflow. Call [Workflow.run](/reference/workflows/interfaces/workflow/#run) with an initial state to execute it.
 
@@ -26,7 +26,7 @@ run(initial): Promise<{
 }>;
 ```
 
-Defined in: [packages/workflows/src/index.ts:28](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/workflows/src/index.ts#L28)
+Defined in: [packages/workflows/src/index.ts:28](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/workflows/src/index.ts#L28)
 
 Run from the configured `start` step until a step returns `done`. Resolves with the final
 state and the ordered `path` of visited step names.

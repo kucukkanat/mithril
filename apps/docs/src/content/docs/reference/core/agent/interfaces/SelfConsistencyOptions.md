@@ -5,7 +5,7 @@ prev: false
 title: "SelfConsistencyOptions"
 ---
 
-Defined in: [packages/core/src/agent/test-time.ts:17](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/test-time.ts#L17)
+Defined in: [packages/core/src/agent/test-time.ts:17](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/test-time.ts#L17)
 
 Options for [selfConsistency](/reference/core/agent/functions/selfconsistency/).
 
@@ -17,7 +17,7 @@ Options for [selfConsistency](/reference/core/agent/functions/selfconsistency/).
 readonly optional earlyStopAgreement?: number;
 ```
 
-Defined in: [packages/core/src/agent/test-time.ts:21](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/test-time.ts#L21)
+Defined in: [packages/core/src/agent/test-time.ts:21](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/test-time.ts#L21)
 
 Stop early once this many samples agree on the same answer. Omit to always draw all `n`.
 
@@ -29,6 +29,6 @@ Stop early once this many samples agree on the same answer. Omit to always draw 
 readonly n: number;
 ```
 
-Defined in: [packages/core/src/agent/test-time.ts:19](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/test-time.ts#L19)
+Defined in: [packages/core/src/agent/test-time.ts:19](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/test-time.ts#L19)
 
 How many samples to draw (N). Keep small (≤5) in-browser: samples run sequentially on one device.

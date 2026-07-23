@@ -73,13 +73,10 @@ export interface AgentSpec {
   /** Structured output schema. */
   readonly output?: SchemaSpec;
   readonly maxSteps?: number;
-  readonly outputRetries?: number;
-  readonly toolRetries?: number;
-  readonly loopDetection?: boolean;
   readonly maxTokens?: number;
   readonly maxCostMicroUsd?: number;
-  readonly repair?: boolean;
-  readonly selfCorrection?: boolean;
+  /** Self-healing stack: `false` for a raw loop, or middleware expressions (`healing.*`) stored verbatim. */
+  readonly healing?: false | readonly CodeRegion[];
   /** Middleware / plugin expressions (`use: […]`), each stored verbatim. */
   readonly use?: readonly CodeRegion[];
 }

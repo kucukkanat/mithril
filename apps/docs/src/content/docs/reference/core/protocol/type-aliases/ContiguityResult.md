@@ -16,6 +16,6 @@ type ContiguityResult =
 };
 ```
 
-Defined in: [packages/core/src/protocol/transport.ts:52](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/transport.ts#L52)
+Defined in: [packages/core/src/protocol/transport.ts:52](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/transport.ts#L52)
 
 The result of [assertContiguous](/reference/core/protocol/functions/assertcontiguous/): either contiguous, or the first missing `seq`.

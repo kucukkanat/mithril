@@ -1,0 +1,48 @@
+# Instruction-following suite — does the model obey concrete formatting / content constraints?
+# Deterministic assertions only (fully offline). No tools are wired for these tests.
+- description: "exact word answer"
+  vars:
+    input: "Reply with exactly one word: what colour is a clear daytime sky? Answer with only the colour."
+  assert:
+    - type: icontains
+      value: blue
+    - type: javascript
+      # one-word answer: at most a couple of tokens, no sentence punctuation.
+      value: "output.trim().split(/\\s+/).length <= 3"
+
+- description: "uppercase transform"
+  vars:
+    input: "Respond with the word 'hello' in all capital letters and nothing else."
+  assert:
+    - type: contains
+      value: HELLO
+
+- description: "refuse extra content"
+  vars:
+    input: "Answer only YES or NO: is 10 greater than 3? Do not explain."
+  assert:
+    - type: icontains
+      value: "yes"
+    - type: javascript
+      value: "output.trim().length <= 5"
+
+- description: "list length constraint"
+  vars:
+    input: "List exactly three primary colours, one per line, no extra text."
+  assert:
+    - type: icontains
+      value: red
+    - type: icontains
+      value: blue
+    - type: javascript
+      # three non-empty lines (allow a little slack for trailing whitespace).
+      value: "output.trim().split(/\\n+/).filter(Boolean).length <= 4"
+
+- description: "prefix constraint"
+  vars:
+    input: "Start your reply with the word 'ANSWER:' followed by the capital of France."
+  assert:
+    - type: icontains
+      value: paris
+    - type: contains
+      value: "ANSWER:"

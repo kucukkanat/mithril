@@ -5,7 +5,7 @@ prev: false
 title: "SubAgentToolSpec"
 ---
 
-Defined in: [packages/spec/src/types.ts:88](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L88)
+Defined in: [packages/spec/src/types.ts:85](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/spec/src/types.ts#L85)
 
 A `const <id> = asTool(<agentId>, { … })` declaration — a sub-agent exposed as a parent's tool.
 
@@ -17,7 +17,7 @@ A `const <id> = asTool(<agentId>, { … })` declaration — a sub-agent exposed 
 readonly agentId: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:92](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L92)
+Defined in: [packages/spec/src/types.ts:89](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/spec/src/types.ts#L89)
 
 The child AgentSpec's decl id.
 
@@ -29,7 +29,7 @@ The child AgentSpec's decl id.
 readonly description: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:94](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L94)
+Defined in: [packages/spec/src/types.ts:91](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/spec/src/types.ts#L91)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [packages/spec/src/types.ts:94](https://github.com/kucukkanat/mithri
 readonly id: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:90](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L90)
+Defined in: [packages/spec/src/types.ts:87](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/spec/src/types.ts#L87)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [packages/spec/src/types.ts:90](https://github.com/kucukkanat/mithri
 readonly optional input?: SchemaSpec;
 ```
 
-Defined in: [packages/spec/src/types.ts:96](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L96)
+Defined in: [packages/spec/src/types.ts:93](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/spec/src/types.ts#L93)
 
 The `AsToolOptions.inputSchema`, when present.
 
@@ -61,7 +61,7 @@ The `AsToolOptions.inputSchema`, when present.
 readonly kind: "subAgentTool";
 ```
 
-Defined in: [packages/spec/src/types.ts:89](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L89)
+Defined in: [packages/spec/src/types.ts:86](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/spec/src/types.ts#L86)
 
 ***
 
@@ -71,4 +71,4 @@ Defined in: [packages/spec/src/types.ts:89](https://github.com/kucukkanat/mithri
 readonly name: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:93](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L93)
+Defined in: [packages/spec/src/types.ts:90](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/spec/src/types.ts#L90)

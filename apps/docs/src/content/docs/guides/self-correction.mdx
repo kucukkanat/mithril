@@ -39,23 +39,26 @@ can watch the whole correction trajectory unfold.
 
 ## What runs by default
 
-These are on for every agent, cost nothing on the happy path, and each is one flag away from off (see
-[Toggling](#toggling-corrections)).
+These are on for every agent, cost nothing on the happy path, and are all pluggable middleware you can drop
+or reconfigure (see [Toggling](#toggling-corrections)). The whole stack is `healing.defaults()` — one named
+[`Middleware`](/reference/core/protocol/interfaces/middleware/) per behavior — installed automatically unless
+you override the `healing` field.
 
-| Correction | The failure it fixes | What the harness does | Event |
-| --- | --- | --- | --- |
-| **Parse-repair** | Malformed JSON from a local model (code fences, trailing commas, unterminated strings/brackets) | Repairs the text before validation — losslessly for valid JSON | — (wire-level) |
-| **Schema coercion** | Args emitted as a JSON *string* instead of an object | Decodes and re-validates the string, once | `tool.repair` |
-| **Bounded re-ask** | A tool called wrong, repeatedly | Re-asks with the concrete error; after `toolRetries` (default 2) consecutive failures, ends with a clear terminal error instead of looping to `maxSteps` | `tool.retry` |
-| **Output validation** | A tool returning data that breaks its own `outputSchema` | Rejects it and feeds the violation back | `tool.error` (`invalid_output`) |
-| **Loop detection** | The same `(tool, args)` call over and over | Nudges the model once, then halts | `loop.detected` |
-| **Crash-hardening** | A provider or middleware that throws mid-run | Converts it to a typed error — never an uncaught crash | `run.error` |
+| Correction | The failure it fixes | What the harness does | Middleware | Event |
+| --- | --- | --- | --- | --- |
+| **Parse-repair** | Malformed JSON from a local model (code fences, trailing commas, unterminated strings/brackets) | Repairs the text before validation — losslessly for valid JSON | — (provider) | — (wire-level) |
+| **Schema coercion** | Args emitted as a JSON *string* instead of an object | Decodes and re-validates the string, once | `healing.argRepair` | `tool.repair` |
+| **Bounded re-ask** | A tool called wrong, repeatedly | Re-asks with the concrete error; after the retry budget (default 2) consecutive failures, ends with a clear terminal error instead of looping to `maxSteps` | `healing.retryBudget` | `tool.retry` |
+| **Loop detection** | The same `(tool, args)` call over and over | Nudges the model once, then halts | `healing.loopGuard` | `loop.detected` |
+| **Output re-ask** | Final structured output that fails its `output` schema | Re-asks with the validation error (default 2 times), then a typed `OutputInvalid` | `healing.outputRetry` | `object.invalid` |
+| **Output validation** | A tool returning data that breaks its own `outputSchema` | Rejects it and feeds the violation back | — (loop) | `tool.error` (`invalid_output`) |
+| **Crash-hardening** | A provider or middleware that throws mid-run | Converts it to a typed error — never an uncaught crash | — (loop) | `run.error` |
 
 <Aside type="note">
-Two of these operate at slightly different layers. **Parse-repair** is a wire-parsing concern that lives in
-the local-model provider (like the existing code-fence stripping), so it is always on and not run-toggleable.
-**Schema coercion** is a loop-level, semantic change to the model's output, so it is fully visible
-(`tool.repair`) and gated by the `repair` flag.
+Two of these are *not* healing middleware. **Parse-repair** is a wire-parsing concern that lives in the
+local-model provider (like the existing code-fence stripping), so it is always on. **Crash-hardening** is a
+safety invariant wired into the loop — it stays on even with `healing: false`. Everything else is a
+composable [`Middleware`](/reference/core/protocol/interfaces/middleware/) in the `healing` stack.
 </Aside>
 
 ## The correction events
@@ -69,6 +72,7 @@ union, so devtools, OTel, and your own consumers all see them with full static t
 | `tool.retry` | A failing call is being re-asked under budget | `attempt`, `errorClass` |
 | `tool.error` | A tool call failed (unknown tool, bad args, bad output, handler threw) | `error` (carries a `ToolErrorClass`) |
 | `loop.detected` | An identical-call loop was caught | `signature`, `count`, `action` (`"steer"` \| `"halt"`) |
+| `object.invalid` | Structured output failed its schema and is being re-asked | `attempt`, `issues` |
 | `budget.exceeded` | A token / cost budget was passed | `budget` (`"tokens"` \| `"cost"` \| …), `limit`, `actual` |
 | `run.error` | A provider/middleware threw and was caught | `error` |
 
@@ -94,11 +98,95 @@ for await (const event of run.events) {
 }
 ```
 
+## Toggling corrections
+
+The whole self-healing stack is **pluggable middleware**, controlled by a single `healing` field on
+[`AgentConfig`](/reference/core/agent/interfaces/agentconfig/) (per-agent) and on `RunOptions` (per-run; the
+per-run value wins). It takes three shapes:
+
+- **omitted** ⇒ the batteries-included default ([`healing.defaults()`](/reference/core/agent/functions/defaults/) — arg-repair, loop guard, retry budget, output retry),
+- **`false` or `[]`** ⇒ the **raw loop** — no coercion, no loop detection, unbounded tool retries, no output re-ask,
+- **an explicit array** ⇒ exactly those healing middleware, each independently configurable.
+
+<Tabs>
+<TabItem label="Raw loop">
+
+`healing: false` gives you the **raw loop** — the pre-correction behavior, in one flag.
+
+```ts
+const raw = agent({
+  model,
+  instructions,
+  tools,
+  healing: false, // just the loop — no coercion, no loop guard, unbounded retries, no output re-ask
+});
+```
+
+<Aside type="caution" title="What stays on">
+`healing: false` does **not** disable **crash-hardening**. A provider or middleware that throws still
+becomes a typed `run.error` rather than taking the process down — that's a safety invariant wired into the
+loop, not a healing middleware, so it is never switchable.
+</Aside>
+
+</TabItem>
+<TabItem label="Pick & configure">
+
+Pass an array to install exactly the behaviors you want, each with its own options. The `healing` namespace
+exports one factory per behavior:
+
+```ts
+import { agent, healing } from "mithril";
+
+const a = agent({
+  model,
+  instructions,
+  tools,
+  // a raw loop except: coerce string args, and halt identical-call loops sooner
+  healing: [healing.argRepair(), healing.loopGuard({ steerAt: 2, haltAt: 3 })],
+});
+```
+
+| Factory | Governs | Options (defaults) |
+| --- | --- | --- |
+| [`healing.argRepair()`](/reference/core/agent/functions/argrepair/) | Schema coercion (the `tool.repair` events) | — |
+| [`healing.retryBudget()`](/reference/core/agent/functions/retrybudget/) | The per-tool re-ask budget | `max` (2); `max: 0` ⇒ give up on first failure |
+| [`healing.loopGuard()`](/reference/core/agent/functions/loopguard/) | Identical-call loop detection | `steerAt` (3), `haltAt` (4) |
+| [`healing.outputRetry()`](/reference/core/agent/functions/outputretry/) | Structured-output re-ask | `max` (2) |
+
+</TabItem>
+<TabItem label="Extend the defaults">
+
+To *add* to the default stack rather than replace it, spread
+[`healing.defaults()`](/reference/core/agent/functions/defaults/) and append your own middleware — healing is
+just middleware, so your own guardrail composes identically:
+
+```ts
+import { agent, healing } from "mithril";
+
+const a = agent({
+  model,
+  instructions,
+  tools,
+  healing: [...healing.defaults(), myCustomGuard()],
+});
+```
+
+</TabItem>
+</Tabs>
+
+<Aside type="tip" title="Healing is just middleware">
+Every healing behavior acts only through the public middleware seam — reading step/tool/finalize outcomes
+and driving `ctx.steer()` / `ctx.halt()` / `ctx.emit()`. There is no privileged path: your own middleware in
+`healing` (or `use`) can steer and halt exactly the same way. See the [middleware
+guide](/guides/middleware/) for the altitudes and context API.
+</Aside>
+
 ## Budgets
 
 Every run is bounded. `maxSteps` (default 16) always applies; the token and cost budgets are opt-in (unset ⇒
 unbounded). Exceeding any of them emits [`budget.exceeded`](/reference/core/protocol/type-aliases/mithrilevent/)
-and settles into an `error` result — **bounded and loud, never a silent give-up**.
+and settles into an `error` result — **bounded and loud, never a silent give-up**. These are loop-level
+budgets (not healing middleware) and stay on regardless of `healing`.
 
 ```ts
 const assistant = agent({
@@ -110,75 +198,6 @@ const assistant = agent({
   maxCostMicroUsd: 50_000, // cost in integer micro-USD ($0.05)
 });
 ```
-
-## Toggling corrections
-
-Corrections come in three levels of control: a **master switch**, **per-feature flags**, and the **budget
-numbers**. All live on [`AgentConfig`](/reference/core/agent/interfaces/agentconfig/) (per-agent) and on
-`RunOptions` (per-run); the per-run value wins.
-
-<Tabs>
-<TabItem label="Master switch">
-
-`selfCorrection: false` gives you the **raw loop** — no schema coercion, no loop detection, and unbounded
-tool retries (a failing tool is fed back and retried only until `maxSteps`). It's the pre-correction
-behavior, in one flag.
-
-```ts
-const raw = agent({
-  model,
-  instructions,
-  tools,
-  selfCorrection: false, // just the loop — no coercion, no loop guard, unbounded retries
-});
-```
-
-<Aside type="caution" title="What stays on">
-`selfCorrection: false` does **not** disable **crash-hardening**. A provider or middleware that throws still
-becomes a typed `run.error` rather than taking the process down — that's a safety guarantee, not a
-correction, so it is never switchable.
-</Aside>
-
-</TabItem>
-<TabItem label="Per-feature flags">
-
-Each flag governs exactly one behavior and **overrides the master** for that behavior. So you can start from
-the raw loop and re-enable just the one guard you want:
-
-```ts
-const a = agent({
-  model,
-  instructions,
-  tools,
-  selfCorrection: false, // raw loop…
-  loopDetection: true,   // …except still halt identical-call loops
-});
-```
-
-| Flag | Governs | Default |
-| --- | --- | --- |
-| `repair` | Schema coercion (the `tool.repair` events) | follows `selfCorrection` |
-| `loopDetection` | Identical-call loop detection | follows `selfCorrection` |
-| `toolRetries` | The per-tool re-ask budget (a number; `Infinity` ⇒ unbounded) | `2` (∞ when `selfCorrection: false`) |
-
-</TabItem>
-<TabItem label="Precedence">
-
-The rule is simple: **an explicit per-feature flag always beats the master.**
-
-```ts
-selfCorrection ?? true         // master (default on)
-repair         ?? selfCorrection   // explicit repair wins, else follow master
-loopDetection  ?? selfCorrection   // explicit loopDetection wins, else follow master
-toolRetries    ?? (selfCorrection ? 2 : Infinity) // explicit number wins
-```
-
-So `{ selfCorrection: false }` turns everything off, `{ selfCorrection: false, loopDetection: true }` is a
-raw loop that still halts loops, and `{ repair: false }` disables only coercion while leaving loop detection
-and the retry budget on.
-
-</TabItem>
-</Tabs>
 
 ## Steer small models with examples
 
@@ -228,7 +247,7 @@ support today, so parse-repair plus the bounded re-ask above is the shipped loca
 
 <CardGrid>
 <LinkCard title="Tiny / in-browser models" href="/guides/local-inference/" description="Keep every default on, add examples to your tools, and consider selfConsistency({ n: 3 }) for the calls that matter." />
-<LinkCard title="Frontier models" href="/guides/building-agents/" description="Defaults are cheap insurance. You may raise toolRetries or set repair: false if you never see malformed calls." />
-<LinkCard title="Deterministic pipelines" href="/guides/ejecting-the-loop/" description="selfCorrection: false gives you the exact raw loop — every step is the model's, nothing is coerced or steered." />
+<LinkCard title="Frontier models" href="/guides/building-agents/" description="Defaults are cheap insurance. You may raise healing.retryBudget({ max }) or drop healing.argRepair() if you never see malformed calls." />
+<LinkCard title="Deterministic pipelines" href="/guides/ejecting-the-loop/" description="healing: false gives you the exact raw loop — every step is the model's, nothing is coerced or steered." />
 <LinkCard title="Cost-capped runs" href="/guides/observability/" description="Set maxTokens / maxCostMicroUsd and watch for budget.exceeded to fail fast with a clear error." />
 </CardGrid>

@@ -175,51 +175,119 @@ export function formatForModel(modelId: string): ToolFormat {
 }
 
 /**
- * Transform a raw token stream into {@link EngineChunk}s, suppressing tool-call sentinels from visible text.
+ * How a model family delimits a chain-of-thought / reasoning block in its generated text.
+ *
+ * @remarks Provider-local dialect, mirroring {@link ToolFormat}: the harness contract is the generic
+ * `reasoning.delta` channel, and each provider translates its own markers into it. `start`/`end` are the
+ * literal sentinels the {@link splitToolCalls} state machine watches for.
+ */
+export interface ReasoningFormat {
+  readonly start: string;
+  readonly end: string;
+}
+
+/** The de-facto `<think>…</think>` reasoning block used by Qwen3 and most open reasoning models. */
+export const thinkReasoning: ReasoningFormat = { start: "<think>", end: "</think>" };
+
+/**
+ * Pick the {@link ReasoningFormat} for a model repo id.
+ *
+ * @param _modelId - the HF repo id (reserved for future family-specific markers).
+ * @returns {@link thinkReasoning} — the shared `<think>` grammar. It is inert for models that never emit the
+ * sentinel, so applying it universally is safe.
+ */
+export function reasoningForModel(_modelId: string): ReasoningFormat {
+  return thinkReasoning;
+}
+
+/**
+ * Transform a raw token stream into {@link EngineChunk}s, suppressing tool-call and reasoning sentinels from
+ * visible text.
  *
  * @param tokens - the model's decoded token stream (whole-word chunks from `TextStreamer`).
- * @param fmt - the tool grammar; `undefined` passes tokens through as text (no tool detection).
- * @returns an async stream of `text` chunks (sentinels stripped) and fully-parsed `toolCall` chunks.
- * @remarks Holds back up to `start.length - 1` trailing chars while scanning so a sentinel split across two
- * tokens never leaks as visible text. Fail-soft: an unterminated or malformed call yields no crash.
+ * @param fmt - the tool grammar; `undefined` disables tool detection.
+ * @param reasoning - the reasoning grammar; `undefined` disables reasoning detection (so `<think>` content,
+ * if any, stays in the visible text — the exact legacy behavior). When set, a `<think>…</think>` block is
+ * routed to `reasoning` chunks (→ the generic `reasoning.delta` channel) instead of leaking into the answer.
+ * @returns an async stream of `token` chunks (answer text), `reasoning` chunks, and parsed `toolCall` chunks.
+ * @remarks Single pass. Holds back up to the longest active sentinel's `length - 1` trailing chars while
+ * scanning so a sentinel split across two tokens never leaks. Fail-soft: an unterminated or malformed block
+ * yields no crash. Assumes reasoning precedes tool calls within one generation (true for open models).
  */
-export async function* splitToolCalls(tokens: AsyncIterable<string>, fmt: ToolFormat | undefined): AsyncGenerator<EngineChunk> {
-  if (fmt === undefined) {
+export async function* splitToolCalls(
+  tokens: AsyncIterable<string>,
+  fmt: ToolFormat | undefined,
+  reasoning?: ReasoningFormat,
+): AsyncGenerator<EngineChunk> {
+  if (fmt === undefined && reasoning === undefined) {
     for await (const t of tokens) if (t !== "") yield { kind: "token", text: t };
     return;
   }
-  const { start, end } = fmt;
+  // Longest opener we must not leak a partial of while in text mode.
+  const maxOpen = Math.max(fmt !== undefined ? fmt.start.length : 0, reasoning !== undefined ? reasoning.start.length : 0);
   let buf = "";
-  let inCall = false;
+  let mode: "text" | "call" | "reason" = "text";
   for await (const tok of tokens) {
     buf += tok;
     for (;;) {
-      if (!inCall) {
-        const idx = buf.indexOf(start);
-        if (idx === -1) {
-          // Emit everything except a possible partial `start` at the tail.
-          const keep = Math.min(buf.length, start.length - 1);
+      if (mode === "text") {
+        const tIdx = fmt !== undefined ? buf.indexOf(fmt.start) : -1;
+        const rIdx = reasoning !== undefined ? buf.indexOf(reasoning.start) : -1;
+        // Enter whichever block opens first; on a tie, tool-call wins (a `<tool_call>` is never reasoning).
+        let enter: "call" | "reason" | null = null;
+        let idx = -1;
+        if (tIdx !== -1 && (rIdx === -1 || tIdx <= rIdx)) {
+          enter = "call";
+          idx = tIdx;
+        } else if (rIdx !== -1) {
+          enter = "reason";
+          idx = rIdx;
+        }
+        if (enter === null) {
+          const keep = Math.min(buf.length, maxOpen - 1);
           const safe = buf.slice(0, buf.length - keep);
           if (safe !== "") yield { kind: "token", text: safe };
           buf = buf.slice(safe.length);
           break;
         }
         if (idx > 0) yield { kind: "token", text: buf.slice(0, idx) };
-        buf = buf.slice(idx + start.length);
-        inCall = true;
-      } else {
-        if (end === null) break; // runs to EOS — keep buffering
+        if (enter === "call") {
+          buf = buf.slice(idx + (fmt as ToolFormat).start.length);
+          mode = "call";
+        } else {
+          buf = buf.slice(idx + (reasoning as ReasoningFormat).start.length);
+          mode = "reason";
+        }
+      } else if (mode === "reason") {
+        const end = (reasoning as ReasoningFormat).end;
         const idx = buf.indexOf(end);
-        if (idx === -1) break; // wait for the closing sentinel
-        for (const c of fmt.extract(buf.slice(0, idx))) yield { kind: "toolCall", name: c.name, input: c.input };
+        if (idx === -1) {
+          // Stream reasoning live, holding back a possible partial closing sentinel at the tail.
+          const keep = Math.min(buf.length, end.length - 1);
+          const safe = buf.slice(0, buf.length - keep);
+          if (safe !== "") yield { kind: "reasoning", text: safe };
+          buf = buf.slice(safe.length);
+          break;
+        }
+        if (idx > 0) yield { kind: "reasoning", text: buf.slice(0, idx) };
         buf = buf.slice(idx + end.length);
-        inCall = false;
+        mode = "text";
+      } else {
+        // mode === "call"
+        if ((fmt as ToolFormat).end === null) break; // runs to EOS — keep buffering
+        const idx = buf.indexOf((fmt as ToolFormat).end as string);
+        if (idx === -1) break; // wait for the closing sentinel
+        for (const c of (fmt as ToolFormat).extract(buf.slice(0, idx))) yield { kind: "toolCall", name: c.name, input: c.input };
+        buf = buf.slice(idx + ((fmt as ToolFormat).end as string).length);
+        mode = "text";
       }
     }
   }
   // Flush at end of stream.
-  if (inCall) {
-    for (const c of fmt.extract(buf)) yield { kind: "toolCall", name: c.name, input: c.input };
+  if (mode === "call") {
+    for (const c of (fmt as ToolFormat).extract(buf)) yield { kind: "toolCall", name: c.name, input: c.input };
+  } else if (mode === "reason") {
+    if (buf !== "") yield { kind: "reasoning", text: buf };
   } else if (buf !== "") {
     yield { kind: "token", text: buf };
   }

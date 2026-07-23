@@ -9,7 +9,7 @@ title: "memoryVectorStore"
 function memoryVectorStore(): VectorStore;
 ```
 
-Defined in: [index.ts:96](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/vectors/src/index.ts#L96)
+Defined in: [index.ts:96](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/vectors/src/index.ts#L96)
 
 Create an in-memory [VectorStore](/reference/vectors/index/interfaces/vectorstore/) that answers queries with an exact brute-force cosine scan.
 

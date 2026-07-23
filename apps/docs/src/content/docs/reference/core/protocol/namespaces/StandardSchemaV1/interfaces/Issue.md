@@ -5,7 +5,7 @@ prev: false
 title: "Issue"
 ---
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:41](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/standard-schema.ts#L41)
+Defined in: [packages/core/src/protocol/standard-schema.ts:41](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/standard-schema.ts#L41)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:41](https://github.co
 readonly message: string;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:42](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/standard-schema.ts#L42)
+Defined in: [packages/core/src/protocol/standard-schema.ts:42](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/standard-schema.ts#L42)
 
 ***
 
@@ -27,4 +27,4 @@ readonly optional path?: readonly (
   | PathSegment)[];
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:43](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/standard-schema.ts#L43)
+Defined in: [packages/core/src/protocol/standard-schema.ts:43](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/standard-schema.ts#L43)

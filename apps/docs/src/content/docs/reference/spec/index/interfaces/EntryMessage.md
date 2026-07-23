@@ -5,7 +5,7 @@ prev: false
 title: "EntryMessage"
 ---
 
-Defined in: [packages/spec/src/types.ts:135](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L135)
+Defined in: [packages/spec/src/types.ts:132](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/spec/src/types.ts#L132)
 
 A chat message in an entry input.
 
@@ -17,7 +17,7 @@ A chat message in an entry input.
 readonly content: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:137](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L137)
+Defined in: [packages/spec/src/types.ts:134](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/spec/src/types.ts#L134)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [packages/spec/src/types.ts:137](https://github.com/kucukkanat/mithr
 readonly role: "user" | "assistant";
 ```
 
-Defined in: [packages/spec/src/types.ts:136](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L136)
+Defined in: [packages/spec/src/types.ts:133](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/spec/src/types.ts#L133)

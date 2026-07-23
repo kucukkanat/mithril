@@ -6,9 +6,12 @@ import {
   classifiedError,
   type EventConsumer,
   type EventMeta,
+  type FinalizeCall,
+  type FinalizeOutcome,
   type FinishReason,
   isSuspend,
   type JsonValue,
+  type JsonSchemaConverter,
   type Middleware,
   type MiddlewareContext,
   type MithrilEvent,
@@ -17,7 +20,10 @@ import {
   type ModelResult,
   type ProviderChunk,
   type ProviderRegistry,
-  repairJson,
+  PERMISSIVE_OBJECT,
+  extractJson,
+  repairPartialJson,
+  toJsonSchema,
   type RunContext,
   type RuntimeAdapter,
   type SerializedError,
@@ -28,9 +34,9 @@ import {
   type SuspensionDescriptor,
   type SuspensionRequest,
   type ToolErrorClass,
-  toolErrorClass,
   type ToolInvocation,
   type ToolOutcome,
+  type ToolStepOutcome,
   type Transport,
   type UsageDelta,
   type UsageTotals,
@@ -38,6 +44,7 @@ import {
 } from "../protocol/index.ts";
 import { type Input, inputToJson, type RunResult, toSerializedError } from "./agent-types.ts";
 import { globalConsumers } from "./global-consumers.ts";
+import { healing as healingStack } from "./healing.ts";
 import { MithrilError, resolveModel, resolveTransport } from "./registry.ts";
 import { defaultRuntime } from "./runtime.ts";
 
@@ -133,8 +140,8 @@ interface ExecState {
  * @typeParam Deps - the dependency object injected into tool/instruction contexts.
  * @remarks This is the loop's low-level contract: {@link agent} assembles it from config + `RunOptions`.
  * `transport`/`providers`/`runtime` omitted fall back to environment BYOK, the model handle's provider,
- * and {@link defaultRuntime} respectively. `resume` drives the cross-process resume path; `output` +
- * `outputRetries` drive structured output. `maxSteps` defaults to 16, `outputRetries` to 2.
+ * and {@link defaultRuntime} respectively. `resume` drives the cross-process resume path; `output` drives
+ * structured output; `healing` selects the self-correction stack. `maxSteps` defaults to 16.
  */
 export interface LoopOptions<Deps> {
   readonly model: ModelInput;
@@ -150,18 +157,31 @@ export interface LoopOptions<Deps> {
   readonly runId?: string;
   readonly resume?: ResumeState;
   readonly output?: StandardSchemaV1<unknown, JsonValue>;
-  readonly outputRetries?: number;
-  readonly toolRetries?: number;
-  readonly loopDetection?: boolean;
+  readonly outputSchema?: JsonSchemaConverter;
   readonly maxTokens?: number;
   readonly maxCostMicroUsd?: number;
-  readonly repair?: boolean;
-  readonly selfCorrection?: boolean;
+  /**
+   * The self-healing stack. Omitted ⇒ the batteries-included default ({@link healing.defaults}); `false`
+   * or `[]` ⇒ a raw loop (crash-hardening still on); an array ⇒ exactly those healing middleware. Composed
+   * ahead of `middlewares` so healing wraps user middleware.
+   */
+  readonly healing?: false | readonly Middleware<Deps>[];
   readonly middlewares?: readonly Middleware<Deps>[];
   readonly consumers?: readonly EventConsumer[];
 }
 
 const OUTPUT_HINT = "\n\nRespond with ONLY a single JSON object that matches the required schema.";
+
+// Render a compact, prompt-friendly description of the required output shape from the schema's JSON Schema.
+// Small models produce far more valid structured output when the field names/types are IN the prompt (they
+// otherwise guess key names). Provider-agnostic: it shapes the system prompt for every model, and coexists
+// with any native constrained-decoding a provider adds. Falls back to the bare hint when the schema can't be
+// described (no converter + not self-describing ⇒ PERMISSIVE_OBJECT), so it never emits a useless `{}`.
+function buildOutputHint(schema: StandardSchemaV1<unknown, JsonValue>, convert?: JsonSchemaConverter): string {
+  const doc = toJsonSchema(schema, convert);
+  if (doc === PERMISSIVE_OBJECT) return OUTPUT_HINT;
+  return `${OUTPUT_HINT}\n\nThe JSON object must conform to this JSON Schema:\n${JSON.stringify(doc)}`;
+}
 
 function issuesToJson(issues: readonly { readonly message: string }[]): JsonValue {
   return issues.map((i) => ({ message: i.message }));
@@ -177,75 +197,23 @@ function reqToDescriptor(req: SuspensionRequest, callId: string): SuspensionDesc
 }
 
 // Best-effort "partial JSON": close any open strings/objects/arrays so an in-progress structured response
-// parses into a deep-partial object for `object.delta` streaming.
+// parses into a deep-partial object for `object.delta` streaming. Delegates to the shared repairPartialJson
+// so the streaming closer, the terminal extractor, and tool-call parsing share one lenient parser.
 function tryPartialJson(s: string): JsonValue | undefined {
-  const stack: string[] = [];
-  let inStr = false;
-  let esc = false;
-  for (const ch of s) {
-    if (inStr) {
-      if (esc) esc = false;
-      else if (ch === "\\") esc = true;
-      else if (ch === '"') inStr = false;
-      continue;
-    }
-    if (ch === '"') inStr = true;
-    else if (ch === "{") stack.push("}");
-    else if (ch === "[") stack.push("]");
-    else if (ch === "}" || ch === "]") stack.pop();
-  }
-  let out = inStr ? `${s}"` : s;
-  out = out.replace(/,\s*$/, "").replace(/:\s*$/, ": null");
-  for (let i = stack.length - 1; i >= 0; i--) out += stack[i];
-  try {
-    return JSON.parse(out) as JsonValue;
-  } catch {
-    return undefined;
-  }
+  return repairPartialJson(s);
 }
 
 function isAsyncGen(v: unknown): v is AsyncGenerator<{ readonly payload: JsonValue }, unknown> {
   return typeof v === "object" && v !== null && Symbol.asyncIterator in v;
 }
 
-// Validate tool-call input against its schema, with one bounded, VISIBLE coercion before giving up: a
-// JSON-encoded string of the real arguments (a common small-model slip). A successful coercion fires
-// `onCoerce` (→ a `tool.repair` event); an unrepairable input throws INVALID_TOOL_INPUT with the issues.
-async function resolveInput(
-  schema: StandardSchemaV1<unknown, unknown>,
-  input: JsonValue,
-  repair: boolean,
-  onCoerce: (before: JsonValue, after: JsonValue) => void,
-): Promise<JsonValue> {
+// Validate tool-call input against its schema. Strict: an invalid input throws INVALID_TOOL_INPUT with the
+// issues. Deterministic argument coercion (a JSON-string of the args) is no longer done here — it lives in
+// the `healing.argRepair` middleware, which catches the invalid_args failure and re-runs with coerced args.
+async function resolveInput(schema: StandardSchemaV1<unknown, unknown>, input: JsonValue): Promise<JsonValue> {
   const first = await schema["~standard"].validate(input);
   if (first.issues === undefined) return first.value as JsonValue;
-  if (repair) {
-    const coerced = coerceArgs(input);
-    if (coerced !== undefined) {
-      const second = await schema["~standard"].validate(coerced);
-      if (second.issues === undefined) {
-        onCoerce(input, coerced);
-        return second.value as JsonValue;
-      }
-    }
-  }
   throw new MithrilError("INVALID_TOOL_INPUT", `invalid tool input: ${first.issues.map((i) => i.message).join("; ")}`);
-}
-
-// The single coercion we attempt: a whole args object emitted as a JSON string. Deterministic and narrow —
-// only a string that repair-parses to an object/array is coerced; anything else is left to fail validation.
-function coerceArgs(input: JsonValue): JsonValue | undefined {
-  if (typeof input !== "string") return undefined;
-  const parsed = repairJson(input);
-  return parsed !== null && typeof parsed === "object" ? parsed : undefined;
-}
-
-// A per-call summary surfaced from runToolCalls so the step can drive the per-tool repair budget.
-interface ToolCallSummary {
-  readonly callId: string;
-  readonly name: string;
-  readonly ok: boolean;
-  readonly error?: SerializedError;
 }
 
 // Surface a tool's `examples` into its wire description (few-shot exemplars are the strongest prompt-side
@@ -262,18 +230,6 @@ function withExamples(tools: readonly AnyTool<unknown>[]): readonly AnyTool<unkn
   });
   return changed ? out : tools;
 }
-
-// Per-run guard state, threaded through every step so budgets and loop detection persist across steps.
-interface StepGuards {
-  readonly repairCounts: Map<string, number>; // toolName -> consecutive failures (per-tool repair budget)
-  readonly maxToolRetries: number;
-  readonly loopSigs: Map<string, number>; // (tool, canonical-args) signature -> times seen (loop detection)
-  readonly loopDetection: boolean;
-}
-
-// Loop-detection thresholds over identical (tool, canonical-args) signatures: nudge once, then halt.
-const LOOP_STEER_AT = 3;
-const LOOP_HALT_AT = 4;
 
 // Boundary-checked token/cost budgets. Returns the first breached budget, or undefined when under budget.
 function checkBudget(
@@ -372,12 +328,19 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
   const messages: LoopMessage[] = [];
   // §9.2 — run-scoped consumers plus any process-wide ones (zero-touch devtools attach).
   const consumers = [...(opts.consumers ?? []), ...globalConsumers()];
-  const middlewares = opts.middlewares ?? [];
-  // Self-correction toggles. `selfCorrection` is the master (default on); each feature flag overrides it for
-  // its one behavior. Crash-hardening is intentionally NOT gated — a throwing provider/middleware always
-  // degrades to a typed error, never a crash, regardless of these flags.
-  const selfCorrect = opts.selfCorrection ?? true;
-  const repairEnabled = opts.repair ?? selfCorrect;
+  // The self-healing stack is just middleware, composed ahead of any user middleware so healing wraps it.
+  // `healing` omitted ⇒ the batteries-included default; `false`/`[]` ⇒ a raw loop. Crash-hardening is NOT
+  // part of this stack — a throwing provider/middleware/tool always degrades to a typed error, never a crash.
+  const healingStackMw = opts.healing === undefined ? healingStack.defaults<Deps>() : opts.healing === false ? [] : opts.healing;
+  const middlewares = [...healingStackMw, ...(opts.middlewares ?? [])];
+  // Run-scoped middleware control state (see makeMwContext): a per-run store for healing counters, a
+  // one-shot terminal-error latch set by ctx.halt(), and a per-step flag set by ctx.steer().
+  const mwStore = new Map<string, unknown>();
+  let haltError: SerializedError | undefined;
+  let steerPending = false;
+  // Structured-output prompt hint, computed once per run: the bare instruction plus the schema shape when it
+  // can be described (see buildOutputHint). Empty when the run has no output schema.
+  const outputHint = opts.output !== undefined ? buildOutputHint(opts.output, opts.outputSchema) : "";
 
   function stamp(span: SpanRef, body: EventBody): MithrilEvent {
     const e = { v: 1, runId, seq: seq++, ts: rt.now(), span, ...body } as MithrilEvent;
@@ -434,7 +397,21 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
     runtime: rt,
     journal: (_key, fn) => fn(),
     emit: (e) => {
-      emitted.push(stamp(span, { type: e.type, payload: e.payload }));
+      emitted.push(stamp(span, e as EventBody));
+    },
+    steer: (message) => {
+      messages.push({ role: "user", content: message, toolCalls: [] });
+      steerPending = true;
+    },
+    halt: (error) => {
+      if (haltError === undefined) haltError = error;
+    },
+    get halted() {
+      return haltError !== undefined;
+    },
+    scope: <T>(key: string, init: () => T): T => {
+      if (!mwStore.has(key)) mwStore.set(key, init());
+      return mwStore.get(key) as T;
     },
   });
 
@@ -455,8 +432,8 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
     firstDirective: Directive | undefined,
     chatSpan: SpanRef,
     step: number,
-  ): AsyncGenerator<MithrilEvent, { readonly suspend?: PendingSuspension; readonly outcomes: readonly ToolCallSummary[] }> {
-    const outcomes: ToolCallSummary[] = [];
+  ): AsyncGenerator<MithrilEvent, { readonly suspend?: PendingSuspension; readonly outcomes: readonly ToolStepOutcome[] }> {
+    const outcomes: ToolStepOutcome[] = [];
     for (let i = 0; i < calls.length; i++) {
       const call = calls[i];
       if (call === undefined) continue;
@@ -468,7 +445,7 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
         const error = classifiedError("UnknownTool", `No tool "${call.name}". Available tools: ${known}.`, "unknown_tool", { retryable: true });
         yield stamp(toolSpan, { type: "tool.error", callId: call.callId, error });
         messages.push({ role: "tool", content: `error: unknown tool ${call.name}. Available tools: ${known}.`, toolCalls: [] });
-        outcomes.push({ callId: call.callId, name: call.name, ok: false, error });
+        outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: false, error });
         continue;
       }
       const emitted: MithrilEvent[] = [];
@@ -496,13 +473,13 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
         const output: JsonValue = { approved: false, message: directive.message };
         yield stamp(toolSpan, { type: "tool.result", callId: call.callId, output, ms: 0 });
         messages.push({ role: "tool", content: JSON.stringify(output), toolCalls: [] });
-        outcomes.push({ callId: call.callId, name: call.name, ok: true });
+        outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: true });
         continue;
       } else if (directive.kind === "return") {
         // Tier-1b: the tool already produced a suspend marker; the resolution IS its result. Do not re-run.
         yield stamp(toolSpan, { type: "tool.result", callId: call.callId, output: directive.value, ms: 0 });
         messages.push({ role: "tool", content: JSON.stringify(directive.value), toolCalls: [] });
-        outcomes.push({ callId: call.callId, name: call.name, ok: true });
+        outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: true });
         continue;
       }
 
@@ -519,9 +496,7 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
       // suspension (Tier-1b marker or Tier-2 ctx.suspend) unwinds as a SuspendSignal caught below.
       const runCore = async (inv: ToolInvocation): Promise<ToolOutcome> => {
         try {
-          const parsed = await resolveInput(tool.inputSchema, inv.input, repairEnabled, (before, after) => {
-            emitted.push(stamp(toolSpan, { type: "tool.repair", callId: inv.callId, name: inv.name, mechanism: "coerce", before, after }));
-          });
+          const parsed = await resolveInput(tool.inputSchema, inv.input);
           const raw = await runExecute(tool, parsed, ctx, (payload) => {
             emitted.push(stamp(toolSpan, { type: "tool.progress", callId: inv.callId, payload }));
           });
@@ -576,11 +551,11 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
       if (outcome.status === "ok") {
         yield stamp(toolSpan, { type: "tool.result", callId: call.callId, output: outcome.output, ms: rt.now() - started });
         messages.push({ role: "tool", content: JSON.stringify(outcome.output), toolCalls: [] });
-        outcomes.push({ callId: call.callId, name: call.name, ok: true });
+        outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: true });
       } else {
         yield stamp(toolSpan, { type: "tool.error", callId: call.callId, error: outcome.error });
         messages.push({ role: "tool", content: JSON.stringify({ error: outcome.error.message }), toolCalls: [] });
-        outcomes.push({ callId: call.callId, name: call.name, ok: false, error: outcome.error });
+        outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: false, error: outcome.error });
       }
     }
     return { outcomes };
@@ -616,11 +591,13 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
   return yield* stepLoop(instructions, resume.step + 1);
 
   // Run one step (model call + tool execution) fully, buffering its events into `sink` and returning a
-  // structured next-action. The step altitude wraps this whole unit; the model altitude wraps the model call
-  // inside it; the tool altitude wraps each tool. `attempt` (structured-output retries) is threaded by ref.
+  // structured next-action. The step altitude wraps this whole unit; the model altitude wraps the model
+  // call inside it; the tool altitude wraps each tool; the finalize altitude wraps structured-output
+  // validation. Self-correction (repair budgets, loop detection, output retry) lives in healing middleware,
+  // which drive `steer`/`halt` via the middleware context — not in this function.
   type StepNext =
     | { readonly kind: "continue" }
-    | { readonly kind: "retry" }
+    | { readonly kind: "outputInvalid"; readonly issues: JsonValue }
     | { readonly kind: "terminal"; readonly result: RunResult<JsonValue>; readonly reason: FinishReason }
     | { readonly kind: "suspend"; readonly pending: PendingSuspension };
   async function runStep(
@@ -628,13 +605,10 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
     instructions: string,
     chatSpan: SpanRef,
     sink: MithrilEvent[],
-    attemptRef: { attempt: number },
-    maxRetries: number,
-    guards: StepGuards,
     setNext: (n: StepNext) => void,
   ): Promise<StepOutcome> {
     sink.push(stamp(chatSpan, { type: "step.start", step }));
-    const system = opts.output !== undefined ? instructions + OUTPUT_HINT : instructions;
+    const system = opts.output !== undefined ? instructions + outputHint : instructions;
 
     // The model call as a middleware-wrappable unit: streams the provider into the sink + aggregates a
     // ModelResult. Model-altitude middleware can wrap it — retry, cache, or short-circuit.
@@ -692,39 +666,35 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
     messages.push({ role: "assistant", content: result.text, toolCalls: calls });
 
     if (calls.length === 0) {
-      // Structured output: parse the final text as JSON, validate against the schema, retry on failure.
+      // Structured output: the finalize altitude extracts + validates the final text as JSON (peeling
+      // reasoning/prose/fences with the shared lenient extractor). On success we complete; on failure a
+      // `healing.outputRetry` finalize middleware (if installed) emits object.invalid and steers a re-ask or
+      // halts — otherwise an invalid result ends the run immediately.
       if (opts.output !== undefined) {
-        let value: unknown;
-        try {
-          value = JSON.parse(result.text);
-        } catch {
-          value = result.text;
-        }
-        const validated = await opts.output["~standard"].validate(value);
-        if (validated.issues === undefined) {
-          sink.push(stamp(chatSpan, { type: "object.final", value: validated.value }));
+        const outputSchema = opts.output;
+        const finalizeCore = async (fc: FinalizeCall): Promise<FinalizeOutcome> => {
+          const value: unknown = extractJson(fc.text) ?? fc.text;
+          const validated = await outputSchema["~standard"].validate(value);
+          if (validated.issues === undefined) return { status: "ok", value: validated.value as JsonValue };
+          return { status: "invalid", issues: issuesToJson(validated.issues) };
+        };
+        const finalizeChain = middlewares.reduceRight<(c: FinalizeCall) => Promise<FinalizeOutcome>>((next, mw) => {
+          const wrap = mw.finalize;
+          return wrap === undefined ? next : (c) => wrap(mwCtx, c, next);
+        }, finalizeCore);
+        const fo = await finalizeChain({ step, text: result.text, retryHint: outputHint });
+        if (fo.status === "ok") {
+          sink.push(stamp(chatSpan, { type: "object.final", value: fo.value }));
           sink.push(stamp(chatSpan, { type: "step.finish", step, stop: "output", usage: result.usage }));
-          setNext({ kind: "terminal", result: { status: "completed", output: validated.value, usage }, reason: result.finishReason });
+          setNext({ kind: "terminal", result: { status: "completed", output: fo.value, usage }, reason: result.finishReason });
           return { step, stop: "output", usage: result.usage };
         }
-        sink.push(stamp(chatSpan, { type: "object.invalid", attempt: attemptRef.attempt, issues: issuesToJson(validated.issues) }));
-        sink.push(stamp(chatSpan, { type: "step.finish", step, stop: "output", usage: result.usage }));
-        if (attemptRef.attempt >= maxRetries) {
-          setNext({
-            kind: "terminal",
-            result: { status: "error", error: { name: "OutputInvalid", message: `structured output failed validation after ${attemptRef.attempt + 1} attempts` }, usage },
-            reason: "error",
-          });
-          return { step, stop: "error", usage: result.usage };
-        }
-        attemptRef.attempt++;
-        messages.push({
-          role: "user",
-          content: `Your previous response did not match the schema: ${validated.issues.map((i) => i.message).join("; ")}. Reply with ONLY a valid JSON object.`,
-          toolCalls: [],
-        });
-        setNext({ kind: "retry" });
-        return { step, stop: "output", usage: result.usage };
+        // Invalid. A finalize middleware may have steered (→ retry) or halted (→ terminal error); the step
+        // loop resolves which based on steer/halt state. With no output-retry middleware it ends the run.
+        const stop = haltError !== undefined ? "error" : "output";
+        sink.push(stamp(chatSpan, { type: "step.finish", step, stop, usage: result.usage }));
+        setNext({ kind: "outputInvalid", issues: fo.issues });
+        return { step, stop, usage: result.usage };
       }
       sink.push(stamp(chatSpan, { type: "step.finish", step, stop: "text", usage: result.usage }));
       setNext({ kind: "terminal", result: { status: "completed", output: result.text, usage }, reason: result.finishReason });
@@ -733,7 +703,7 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
 
     // Tools: drain the runToolCalls generator into the sink; a suspension short-circuits the step.
     const toolGen = runToolCalls(calls, undefined, chatSpan, step);
-    let toolResult: { readonly suspend?: PendingSuspension; readonly outcomes: readonly ToolCallSummary[] } = { outcomes: [] };
+    let toolResult: { readonly suspend?: PendingSuspension; readonly outcomes: readonly ToolStepOutcome[] } = { outcomes: [] };
     for (;;) {
       const r = await toolGen.next();
       if (r.done) {
@@ -746,81 +716,18 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
       setNext({ kind: "suspend", pending: toolResult.suspend });
       return { step, stop: "suspend", usage: result.usage };
     }
-    // Per-tool repair budget: a tool that keeps failing is re-asked (each failure emits `tool.retry`) until
-    // it exhausts `maxToolRetries` consecutive failures, at which point the run ends with a clear terminal
-    // error instead of burning to maxSteps. Any success resets that tool's counter.
-    for (const o of toolResult.outcomes) {
-      if (o.ok) {
-        guards.repairCounts.delete(o.name);
-        continue;
-      }
-      const n = (guards.repairCounts.get(o.name) ?? 0) + 1;
-      guards.repairCounts.set(o.name, n);
-      const cls: ToolErrorClass = o.error !== undefined ? (toolErrorClass(o.error) ?? "handler_error") : "handler_error";
-      if (n > guards.maxToolRetries) {
-        const last = o.error?.message ?? "unknown error";
-        const error = classifiedError(
-          "ToolRepairExhausted",
-          `Tool "${o.name}" failed ${n} times in a row without succeeding (last error: ${last}). Raise toolRetries, fix the tool/schema, or add examples.`,
-          cls,
-          { code: "TOOL_REPAIR_EXHAUSTED" },
-        );
-        sink.push(stamp(chatSpan, { type: "step.finish", step, stop: "error", usage: result.usage }));
-        setNext({ kind: "terminal", result: { status: "error", error, usage }, reason: "error" });
-        return { step, stop: "error", usage: result.usage };
-      }
-      // With an unbounded budget (selfCorrection off) there is no attempt count to report — stay quiet and
-      // let the raw loop feed the tool.error back, bounded only by maxSteps.
-      if (Number.isFinite(guards.maxToolRetries)) {
-        sink.push(stamp(chatSpan, { type: "tool.retry", callId: o.callId, name: o.name, attempt: n, errorClass: cls }));
-      }
-    }
-    // Loop / no-progress detection over identical (tool, canonical-args) signatures: nudge the model once,
-    // then halt with a clear terminal error. Repeated FAILING calls are already bounded by the repair budget
-    // above; this catches the residual case of identical calls that don't (or no longer) error.
-    if (guards.loopDetection) {
-      for (const c of calls) {
-        const sig = `${c.name}:${JSON.stringify(c.input)}`;
-        const seen = (guards.loopSigs.get(sig) ?? 0) + 1;
-        guards.loopSigs.set(sig, seen);
-        if (seen >= LOOP_HALT_AT) {
-          sink.push(stamp(chatSpan, { type: "loop.detected", signature: sig, count: seen, action: "halt" }));
-          sink.push(stamp(chatSpan, { type: "step.finish", step, stop: "error", usage: result.usage }));
-          const error: SerializedError = {
-            name: "LoopDetected",
-            message: `Loop detected: "${c.name}" was called with identical arguments ${seen} times without progress. Halting.`,
-            data: { code: "LOOP_DETECTED" },
-          };
-          setNext({ kind: "terminal", result: { status: "error", error, usage }, reason: "error" });
-          return { step, stop: "error", usage: result.usage };
-        }
-        if (seen === LOOP_STEER_AT) {
-          sink.push(stamp(chatSpan, { type: "loop.detected", signature: sig, count: seen, action: "steer" }));
-          messages.push({
-            role: "user",
-            content: `You have called "${c.name}" with identical arguments ${seen} times, which is not making progress. Try different arguments, a different tool, or give your final answer.`,
-            toolCalls: [],
-          });
-        }
-      }
-    }
+    // The step is done. Its per-tool outcomes ride on the StepOutcome so step-altitude healing middleware
+    // (retry budgets, loop detection) can inspect them and steer/halt — none of that logic lives here.
     sink.push(stamp(chatSpan, { type: "step.finish", step, stop: "tool", usage: result.usage }));
     setNext({ kind: "continue" });
-    return { step, stop: "tool", usage: result.usage };
+    return { step, stop: "tool", usage: result.usage, toolOutcomes: toolResult.outcomes };
   }
 
   // ── the step loop, shared by fresh + resume ─────────────────────────────────────────────────────────
   async function* stepLoop(instructions: string, from: number): AsyncGenerator<MithrilEvent, RunResult<JsonValue>> {
     const maxSteps = opts.maxSteps ?? 16;
-    const maxRetries = opts.outputRetries ?? 2;
-    const attemptRef = { attempt: 0 };
-    const guards: StepGuards = {
-      repairCounts: new Map<string, number>(),
-      maxToolRetries: opts.toolRetries ?? (selfCorrect ? 2 : Number.POSITIVE_INFINITY),
-      loopSigs: new Map<string, number>(),
-      loopDetection: opts.loopDetection ?? selfCorrect,
-    };
     for (let step = from; step < maxSteps; step++) {
+      steerPending = false; // reset the per-step steer latch; healing middleware may set it during the step
       if (signal.aborted) {
         // Surface a caller-supplied abort reason (handle.cancel(reason) / AbortController.abort(reason));
         // a bare abort leaves signal.reason a DOMException, so fall back to the generic label.
@@ -856,7 +763,7 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
       const stepChain = middlewares.reduceRight<(i: StepInput) => Promise<StepOutcome>>((run, mw) => {
         const wrap = mw.step;
         return wrap === undefined ? run : (i) => wrap(stepCtx, i, run);
-      }, (i) => runStep(i.step, instructions, chatSpan, sink, attemptRef, maxRetries, guards, setNext));
+      }, (i) => runStep(i.step, instructions, chatSpan, sink, setNext));
 
       try {
         await stepChain({ step, messages });
@@ -877,11 +784,23 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
 
       const next = holder.next;
       if (next.kind === "suspend") return suspendedResult(next.pending, step);
+      // A healing middleware's halt() latch wins over everything but a suspension: end the run now.
+      if (haltError !== undefined) {
+        yield stamp(rootSpan, { type: "run.finish", reason: "error", usage });
+        return { status: "error", error: haltError, usage };
+      }
       if (next.kind === "terminal") {
         yield stamp(rootSpan, { type: "run.finish", reason: next.reason, usage });
         return next.result;
       }
-      // "retry" and "continue" both advance to the next step.
+      // Structured output that failed validation with no middleware handling it (nobody steered a re-ask):
+      // there is no way to make progress, so end with a clear typed error rather than looping to maxSteps.
+      if (next.kind === "outputInvalid" && !steerPending) {
+        const error: SerializedError = { name: "OutputInvalid", message: "structured output failed validation" };
+        yield stamp(rootSpan, { type: "run.finish", reason: "error", usage });
+        return { status: "error", error, usage };
+      }
+      // "continue" and a steered "outputInvalid" both advance to the next step.
     }
     // The step budget was exhausted without a terminal step. Returning `completed` here would hand back an
     // empty `output` indistinguishable from a real answer (and type-unsound for a structured-output agent),

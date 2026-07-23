@@ -5,7 +5,7 @@ prev: false
 title: "Types"
 ---
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:48](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/standard-schema.ts#L48)
+Defined in: [packages/core/src/protocol/standard-schema.ts:48](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/standard-schema.ts#L48)
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:48](https://github.co
 readonly input: Input;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:49](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/standard-schema.ts#L49)
+Defined in: [packages/core/src/protocol/standard-schema.ts:49](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/standard-schema.ts#L49)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:49](https://github.co
 readonly output: Output;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:50](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/standard-schema.ts#L50)
+Defined in: [packages/core/src/protocol/standard-schema.ts:50](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/standard-schema.ts#L50)

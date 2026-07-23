@@ -5,7 +5,7 @@ prev: false
 title: "Inspector"
 ---
 
-Defined in: [packages/devtools/src/index.ts:43](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/index.ts#L43)
+Defined in: [packages/devtools/src/index.ts:43](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/devtools/src/index.ts#L43)
 
 A headless run inspector.
 
@@ -22,7 +22,7 @@ records every run. Everything else is derived on read.
 readonly consumer: EventConsumer;
 ```
 
-Defined in: [packages/devtools/src/index.ts:45](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/index.ts#L45)
+Defined in: [packages/devtools/src/index.ts:45](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/devtools/src/index.ts#L45)
 
 The EventConsumer to attach to an agent; records every event it sees.
 
@@ -34,7 +34,7 @@ The EventConsumer to attach to an agent; records every event it sees.
 clear(): void;
 ```
 
-Defined in: [packages/devtools/src/index.ts:53](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/index.ts#L53)
+Defined in: [packages/devtools/src/index.ts:53](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/devtools/src/index.ts#L53)
 
 Drop all retained runs.
 
@@ -52,7 +52,7 @@ get(runId):
   | undefined;
 ```
 
-Defined in: [packages/devtools/src/index.ts:49](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/index.ts#L49)
+Defined in: [packages/devtools/src/index.ts:49](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/devtools/src/index.ts#L49)
 
 The captured run for `runId`, or `undefined` if unknown/evicted.
 
@@ -77,7 +77,7 @@ latest():
   | undefined;
 ```
 
-Defined in: [packages/devtools/src/index.ts:51](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/index.ts#L51)
+Defined in: [packages/devtools/src/index.ts:51](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/devtools/src/index.ts#L51)
 
 The most recently started run, or `undefined` if none.
 
@@ -94,7 +94,7 @@ The most recently started run, or `undefined` if none.
 runIds(): readonly string[];
 ```
 
-Defined in: [packages/devtools/src/index.ts:47](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/index.ts#L47)
+Defined in: [packages/devtools/src/index.ts:47](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/devtools/src/index.ts#L47)
 
 The ids of currently-retained runs, oldest first.
 

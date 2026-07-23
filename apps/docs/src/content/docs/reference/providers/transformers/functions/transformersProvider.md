@@ -9,7 +9,7 @@ title: "transformersProvider"
 function transformersProvider(engine): Provider;
 ```
 
-Defined in: [transformers/core.ts:63](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/providers/src/transformers/core.ts#L63)
+Defined in: [transformers/core.ts:65](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/providers/src/transformers/core.ts#L65)
 
 Build a Provider from an injected [TransformersEngine](/reference/providers/transformers/interfaces/transformersengine/) — the pure, Node-testable core.
 
@@ -23,7 +23,8 @@ Build a Provider from an injected [TransformersEngine](/reference/providers/tran
 
 `Provider`
 
-a `Provider` whose `chat()` streams `text.delta`, buffers tool calls and flushes them before a
+a `Provider` whose `chat()` streams `text.delta` (and `reasoning.delta` for models that think),
+buffers tool calls and flushes them before a
 single terminal `message.end` — the exact ordering of the OpenAI adapter. It ignores `transport`/`rt` and
 never performs I/O.
 

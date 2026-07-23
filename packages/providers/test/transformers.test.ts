@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { agent } from "@mithril/core/agent";
 import type { ChatRequest, ProviderChunk } from "@mithril/core/protocol";
 import { type EngineChunk, type TransformersEngine, transformersProvider } from "../src/transformers/core.ts";
-import { angleToolCall, formatForModel, gemmaToolCall, liquidToolCall, splitToolCalls } from "../src/transformers/tool-formats.ts";
+import { angleToolCall, formatForModel, gemmaToolCall, liquidToolCall, reasoningForModel, splitToolCalls, thinkReasoning } from "../src/transformers/tool-formats.ts";
 
 async function collect<T>(gen: AsyncIterable<T>): Promise<T[]> {
   const out: T[] = [];
@@ -128,4 +128,65 @@ test("multiple Hermes calls in one turn", async () => {
 test("malformed tool JSON fails soft — no crash, no call", async () => {
   const r = await drain(splitToolCalls(toks("<tool_call>{not json</tool_call>"), angleToolCall));
   expect(r.calls).toEqual([]);
+});
+
+// ── reasoning split: <think>…</think> → reasoning chunks, answer stays clean ─────────────────────────────
+function drainReason(out: EngineChunk[]): { text: string; reasoning: string; calls: EngineChunk[] } {
+  const text = out.filter((c): c is Extract<EngineChunk, { kind: "token" }> => c.kind === "token").map((c) => c.text).join("");
+  const reasoning = out.filter((c): c is Extract<EngineChunk, { kind: "reasoning" }> => c.kind === "reasoning").map((c) => c.text).join("");
+  return { text, reasoning, calls: out.filter((c) => c.kind === "toolCall") };
+}
+
+test("reasoning block is routed to reasoning chunks, answer text stays clean", async () => {
+  const out = await collect(splitToolCalls(toks("<think>let me consider the sky</think>", "blue"), undefined, thinkReasoning));
+  const r = drainReason(out);
+  expect(r.reasoning).toBe("let me consider the sky");
+  expect(r.text).toBe("blue");
+});
+
+test("reasoning sentinels split across token boundaries never leak into the answer", async () => {
+  const out = await collect(splitToolCalls(toks("<thin", "k>thinking hard</thi", "nk>the answer"), undefined, thinkReasoning));
+  const r = drainReason(out);
+  expect(r.reasoning).toBe("thinking hard");
+  expect(r.text).toBe("the answer");
+});
+
+test("reasoning then a tool call — both parsed, no leakage", async () => {
+  const out = await collect(
+    splitToolCalls(toks("<think>I should search</think>", '<tool_call>{"name":"search","arguments":{"q":"cats"}}</tool_call>'), angleToolCall, thinkReasoning),
+  );
+  const r = drainReason(out);
+  expect(r.reasoning).toBe("I should search");
+  expect(r.text).toBe("");
+  expect(r.calls).toEqual([{ kind: "toolCall", name: "search", input: { q: "cats" } }]);
+});
+
+test("an unterminated reasoning block flushes as reasoning, never as answer text", async () => {
+  const out = await collect(splitToolCalls(toks("<think>still thinking with no close"), undefined, thinkReasoning));
+  const r = drainReason(out);
+  expect(r.reasoning).toBe("still thinking with no close");
+  expect(r.text).toBe("");
+});
+
+test("no reasoning format ⇒ <think> stays in the visible text (legacy behavior preserved)", async () => {
+  const out = await collect(splitToolCalls(toks("<think>x</think>y"), undefined));
+  const r = drainReason(out);
+  expect(r.reasoning).toBe("");
+  expect(r.text).toBe("<think>x</think>y");
+});
+
+test("the transformers provider surfaces reasoning as reasoning.delta and keeps text.delta clean", async () => {
+  const provider = transformersProvider(engineOf([
+    { kind: "reasoning", text: "deciding" },
+    { kind: "token", text: "final answer" },
+  ]));
+  const chunks = await collect(provider.chat(REQ("onnx-community/Qwen3-0.6B-ONNX"), {} as never, {} as never, SIGNAL));
+  const reasoning = chunks.filter((c): c is Extract<ProviderChunk, { type: "reasoning.delta" }> => c.type === "reasoning.delta").map((c) => c.delta).join("");
+  const text = chunks.filter((c): c is Extract<ProviderChunk, { type: "text.delta" }> => c.type === "text.delta").map((c) => c.delta).join("");
+  expect(reasoning).toBe("deciding");
+  expect(text).toBe("final answer");
+});
+
+test("reasoningForModel returns the shared <think> grammar", () => {
+  expect(reasoningForModel("onnx-community/Qwen3-0.6B-ONNX")).toEqual(thinkReasoning);
 });

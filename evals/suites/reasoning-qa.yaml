@@ -1,0 +1,37 @@
+# Basic reasoning / QA suite — short factual + arithmetic questions with deterministic answers.
+# Fully offline (no grader). For subjective grading, enable the opt-in rubric suite instead
+# (MITHRIL_EVAL_RUBRIC=1 → suites/reasoning-rubric.yaml).
+- description: "simple arithmetic (no tool)"
+  vars:
+    input: "What is 24 divided by 6? Reply with just the number."
+  assert:
+    - type: contains
+      value: "4"
+
+- description: "factual QA — capital"
+  vars:
+    input: "What is the capital of Japan? Answer with only the city name."
+  assert:
+    - type: icontains
+      value: tokyo
+
+- description: "ordering reasoning"
+  vars:
+    input: "Which is larger, 0.9 or 0.11? Answer with just the number."
+  assert:
+    - type: contains
+      value: "0.9"
+
+- description: "word problem"
+  vars:
+    input: "If a train travels 60 km in 2 hours, what is its average speed in km/h? Reply with just the number."
+  assert:
+    - type: contains
+      value: "30"
+
+- description: "counting"
+  vars:
+    input: "How many days are there in a week? Reply with just the number."
+  assert:
+    - type: contains
+      value: "7"

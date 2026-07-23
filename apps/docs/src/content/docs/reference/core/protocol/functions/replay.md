@@ -9,7 +9,7 @@ title: "replay"
 function replay(log, toSeq?): RunState;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:216](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/state.ts#L216)
+Defined in: [packages/core/src/protocol/state.ts:216](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/state.ts#L216)
 
 Fold an event log into a [RunState](/reference/core/protocol/interfaces/runstate/), optionally up to a cursor (time-travel).
 

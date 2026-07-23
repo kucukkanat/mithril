@@ -9,7 +9,7 @@ title: "createRunnerClient"
 function createRunnerClient(spawn): RunnerClient;
 ```
 
-Defined in: [runner-web/src/client.ts:114](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/runner-web/src/client.ts#L114)
+Defined in: [runner-web/src/client.ts:114](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/runner-web/src/client.ts#L114)
 
 Create a [RunnerClient](/reference/runner-web/index/interfaces/runnerclient/) over a worker factory. The factory must return a module worker
 whose entry calls `installRunner` (from `@mithril/runner-web/worker`) — each run spawns a fresh

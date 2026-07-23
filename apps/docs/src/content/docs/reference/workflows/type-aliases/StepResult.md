@@ -17,7 +17,7 @@ type StepResult<S> =
 };
 ```
 
-Defined in: [packages/workflows/src/index.ts:13](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/workflows/src/index.ts#L13)
+Defined in: [packages/workflows/src/index.ts:13](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/workflows/src/index.ts#L13)
 
 What a [WorkflowStep](/reference/workflows/type-aliases/workflowstep/) returns: either route to another step (`goto`) or finish (`done`),
 carrying the (possibly updated) state forward. Build these with [goto](/reference/workflows/functions/goto/) / [done](/reference/workflows/functions/done/).

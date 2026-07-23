@@ -69,6 +69,11 @@
     "kind": "type",
     "sig": "type ApprovalRequest = SuspensionRequest<\"tool.approval\", { input: JsonValue; name: string; }, ApprovalDecision<JsonValue>>;"
   },
+  "argRepair": {
+    "href": "/reference/core/agent/functions/argrepair/",
+    "kind": "fn",
+    "sig": "function argRepair<Deps>(): Middleware<Deps>;"
+  },
   "assertContiguous": {
     "href": "/reference/core/protocol/functions/assertcontiguous/",
     "kind": "fn",
@@ -254,6 +259,11 @@
     "kind": "fn",
     "sig": "function defaultRuntime(): RuntimeAdapter;"
   },
+  "defaults": {
+    "href": "/reference/core/agent/functions/defaults/",
+    "kind": "fn",
+    "sig": "function defaults<Deps>(): readonly Middleware<Deps>[];"
+  },
   "defineDevtoolsElements": {
     "href": "/reference/devtools/element/functions/definedevtoolselements/",
     "kind": "fn",
@@ -307,7 +317,7 @@
   "DraftEvent": {
     "href": "/reference/core/protocol/type-aliases/draftevent/",
     "kind": "type",
-    "sig": "type DraftEvent = { payload: JsonValue; type: `custom.${string}`; };"
+    "sig": "type DraftEvent = | { payload: JsonValue; type: `custom.${string}`; } | Omit<EventOf<\"tool.repair\">, keyof EventMeta> | Omit<EventOf<\"tool.…"
   },
   "EdgeOptions": {
     "href": "/reference/providers/transformers/interfaces/edgeoptions/",
@@ -317,7 +327,7 @@
   "EngineChunk": {
     "href": "/reference/providers/transformers/type-aliases/enginechunk/",
     "kind": "type",
-    "sig": "type EngineChunk = | { kind: \"token\"; text: string; } | { callId?: string; input: JsonValue; kind: \"toolCall\"; name: string; };"
+    "sig": "type EngineChunk = | { kind: \"token\"; text: string; } | { kind: \"reasoning\"; text: string; } | { callId?: string; input: JsonValue; kind: \"…"
   },
   "EngineRequest": {
     "href": "/reference/providers/transformers/interfaces/enginerequest/",
@@ -369,6 +379,11 @@
     "kind": "type",
     "sig": "type EventType = MithrilEvent[\"type\"];"
   },
+  "extractJson": {
+    "href": "/reference/core/protocol/functions/extractjson/",
+    "kind": "fn",
+    "sig": "function extractJson(s): | JsonValue | undefined;"
+  },
   "FailureResult": {
     "href": "/reference/core/protocol/namespaces/standardschemav1/interfaces/failureresult/",
     "kind": "type",
@@ -388,6 +403,16 @@
     "href": "/reference/fs/index/functions/filesystemconformance/",
     "kind": "fn",
     "sig": "function fileSystemConformance(make, t): void;"
+  },
+  "FinalizeCall": {
+    "href": "/reference/core/protocol/interfaces/finalizecall/",
+    "kind": "type",
+    "sig": "The structured-output finalize unit wrapped by a Middleware.finalize handler: the model's final"
+  },
+  "FinalizeOutcome": {
+    "href": "/reference/core/protocol/type-aliases/finalizeoutcome/",
+    "kind": "type",
+    "sig": "type FinalizeOutcome = | { status: \"ok\"; value: JsonValue; } | { issues: JsonValue; status: \"invalid\"; };"
   },
   "FinishReason": {
     "href": "/reference/core/protocol/type-aliases/finishreason/",
@@ -473,6 +498,11 @@
     "href": "/reference/core/protocol/type-aliases/handoffsuspension/",
     "kind": "type",
     "sig": "type HandoffSuspension = SuspensionRequest<\"handoff.suspended\", { child: SuspensionDescriptor; to: string; }, JsonValue>;"
+  },
+  "healing": {
+    "href": "/reference/core/agent/variables/healing/",
+    "kind": "const",
+    "sig": "const healing: { argRepair: <Deps>() => Middleware<Deps>; defaults: <Deps>() => readonly Middleware<Deps>[]; loopGuard: <Deps>(opts) => Mid…"
   },
   "hmacCodec": {
     "href": "/reference/core/agent/functions/hmaccodec/",
@@ -668,6 +698,16 @@
     "href": "/reference/runner-web/index/interfaces/logline/",
     "kind": "type",
     "sig": "One forwarded console.* line from the snippet."
+  },
+  "loopGuard": {
+    "href": "/reference/core/agent/functions/loopguard/",
+    "kind": "fn",
+    "sig": "function loopGuard<Deps>(opts?): Middleware<Deps>;"
+  },
+  "LoopGuardOptions": {
+    "href": "/reference/core/agent/interfaces/loopguardoptions/",
+    "kind": "type",
+    "sig": "Options for loopGuard."
   },
   "LoopOptions": {
     "href": "/reference/core/agent/interfaces/loopoptions/",
@@ -889,6 +929,16 @@
     "kind": "fn",
     "sig": "function otelPlugin(sink, opts?): Plugin;"
   },
+  "outputRetry": {
+    "href": "/reference/core/agent/functions/outputretry/",
+    "kind": "fn",
+    "sig": "function outputRetry<Deps>(opts?): Middleware<Deps>;"
+  },
+  "OutputRetryOptions": {
+    "href": "/reference/core/agent/interfaces/outputretryoptions/",
+    "kind": "type",
+    "sig": "Options for outputRetry."
+  },
   "ParseDiagnostic": {
     "href": "/reference/spec/parse/interfaces/parsediagnostic/",
     "kind": "type",
@@ -1044,6 +1094,11 @@
     "kind": "fn",
     "sig": "function repairJson(s): | JsonValue | undefined;"
   },
+  "repairPartialJson": {
+    "href": "/reference/core/protocol/functions/repairpartialjson/",
+    "kind": "fn",
+    "sig": "function repairPartialJson(s): | JsonValue | undefined;"
+  },
   "replay": {
     "href": "/reference/core/protocol/functions/replay/",
     "kind": "fn",
@@ -1083,6 +1138,16 @@
     "href": "/reference/core/agent/type-aliases/resumevalue/",
     "kind": "type",
     "sig": "type ResumeValue = | ApprovalDecision<JsonValue> | { kind: \"resolve\"; value: JsonValue; };"
+  },
+  "retryBudget": {
+    "href": "/reference/core/agent/functions/retrybudget/",
+    "kind": "fn",
+    "sig": "function retryBudget<Deps>(opts?): Middleware<Deps>;"
+  },
+  "RetryBudgetOptions": {
+    "href": "/reference/core/agent/interfaces/retrybudgetoptions/",
+    "kind": "type",
+    "sig": "Options for retryBudget."
   },
   "RunArgs": {
     "href": "/reference/core/agent/type-aliases/runargs/",
@@ -1132,7 +1197,7 @@
   "RunOptions": {
     "href": "/reference/core/agent/type-aliases/runoptions/",
     "kind": "type",
-    "sig": "type RunOptions<Deps> = DepsOption<Deps> & RunOptionsBase;"
+    "sig": "type RunOptions<Deps> = DepsOption<Deps> & RunOptionsBase<Deps>;"
   },
   "RunOptionsBase": {
     "href": "/reference/core/agent/interfaces/runoptionsbase/",
@@ -1272,7 +1337,7 @@
   "splitToolCalls": {
     "href": "/reference/providers/transformers/functions/splittoolcalls/",
     "kind": "fn",
-    "sig": "function splitToolCalls(tokens, fmt): AsyncGenerator<EngineChunk>;"
+    "sig": "function splitToolCalls( tokens, fmt, reasoning?): AsyncGenerator<EngineChunk>;"
   },
   "sqliteBunCheckpointer": {
     "href": "/reference/memory/sqlite-bun/functions/sqlitebuncheckpointer/",
@@ -1493,6 +1558,11 @@
     "href": "/reference/spec/index/interfaces/toolspec/",
     "kind": "type",
     "sig": "A const <id> = tool({ … }) declaration."
+  },
+  "ToolStepOutcome": {
+    "href": "/reference/core/protocol/interfaces/toolstepoutcome/",
+    "kind": "type",
+    "sig": "A per-tool result summary surfaced on StepOutcome.toolOutcomes, so a step-altitude healing"
   },
   "toSerializedError": {
     "href": "/reference/core/agent/functions/toserializederror/",

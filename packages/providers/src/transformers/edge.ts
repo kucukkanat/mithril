@@ -3,7 +3,7 @@ import { MithrilError } from "@mithril/core/agent";
 import type { AnyTool } from "@mithril/core/protocol";
 import { toJsonSchema } from "@mithril/core/protocol";
 import type { EngineChunk, EngineRequest, TransformersEngine } from "./core.ts";
-import { formatForModel, splitToolCalls } from "./tool-formats.ts";
+import { formatForModel, reasoningForModel, splitToolCalls } from "./tool-formats.ts";
 
 // The heavy BROWSER edge — the sole place `@huggingface/transformers` is imported (dynamically, so this module
 // still loads in Node and type-checks with the peer uninstalled). It builds a `TransformersEngine`: chat
@@ -229,7 +229,7 @@ export function browserEngine(opts?: EdgeOptions): TransformersEngine {
         );
 
       try {
-        yield* splitToolCalls(q.stream(), req.tools.length > 0 ? formatForModel(req.model) : undefined);
+        yield* splitToolCalls(q.stream(), req.tools.length > 0 ? formatForModel(req.model) : undefined, reasoningForModel(req.model));
         await genDone;
       } finally {
         req.signal.removeEventListener("abort", onAbort);

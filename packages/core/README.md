@@ -100,8 +100,12 @@ if (r.status === "suspended") {
 
 ### Compose with middleware & plugins (§3.8)
 
-Middleware wraps the model and tool altitudes; it can transform or short-circuit, and only ever reads/emits
-events — no hidden side channel. A `plugin()` bundles tools + middleware + consumers behind one `use:`.
+Middleware wraps four altitudes — **model**, **tool**, **step**, and **finalize** (structured-output
+validation). It can transform or short-circuit, `steer`/`halt` the run, and only ever reads/emits events —
+no hidden side channel. The built-in **self-healing stack is just middleware** (`healing.argRepair`,
+`healing.loopGuard`, `healing.retryBudget`, `healing.outputRetry`), installed by default and fully
+pluggable via the `healing` field (`false`/`[]` for a raw loop, or an explicit array to pick/configure).
+A `plugin()` bundles tools + middleware + consumers behind one `use:`.
 
 ```ts
 const guardrail: Middleware = {
@@ -110,7 +114,9 @@ const guardrail: Middleware = {
 };
 const cache: Middleware = { name: "cache", model: async (ctx, call, next) => (await hit(call)) ?? next(call) };
 
+// batteries-included healing by default; opt into a raw loop or a custom stack via `healing`:
 const a = agent({ model, instructions: "…", tools: [/* … */], use: [cache, guardrail, ragPlugin()] });
+const raw = agent({ model, instructions: "…", tools: [/* … */], healing: false }); // no self-correction
 ```
 
 The loop is exercised end-to-end in tests with a **scripted provider** (`@mithril/core/testkit`) — no network, fully deterministic:

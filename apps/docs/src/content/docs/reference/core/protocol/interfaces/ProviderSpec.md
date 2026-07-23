@@ -5,7 +5,7 @@ prev: false
 title: "ProviderSpec"
 ---
 
-Defined in: [packages/core/src/protocol/provider.ts:51](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L51)
+Defined in: [packages/core/src/protocol/provider.ts:51](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/provider.ts#L51)
 
 A provider's published spec: its id and the models it offers keyed by name.
 
@@ -17,7 +17,7 @@ A provider's published spec: its id and the models it offers keyed by name.
 readonly id: string;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:52](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L52)
+Defined in: [packages/core/src/protocol/provider.ts:52](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/provider.ts#L52)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [packages/core/src/protocol/provider.ts:52](https://github.com/kucuk
 readonly models: Readonly<Record<string, ModelSpec>>;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:53](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L53)
+Defined in: [packages/core/src/protocol/provider.ts:53](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/provider.ts#L53)

@@ -9,7 +9,7 @@ title: "nodeVmRunner"
 function nodeVmRunner(): CodeRunner;
 ```
 
-Defined in: [node.ts:41](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/sandbox/src/node.ts#L41)
+Defined in: [node.ts:41](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/sandbox/src/node.ts#L41)
 
 Build a [CodeRunner](/reference/sandbox/index/interfaces/coderunner/) that evaluates code in a fresh `node:vm` context (Node/Bun only).
 

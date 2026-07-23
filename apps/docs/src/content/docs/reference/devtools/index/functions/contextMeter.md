@@ -9,7 +9,7 @@ title: "contextMeter"
 function contextMeter(state, opts?): ContextMeter;
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:141](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/selectors.ts#L141)
+Defined in: [packages/devtools/src/selectors.ts:141](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/devtools/src/selectors.ts#L141)
 
 Project a RunState's usage into a [ContextMeter](/reference/devtools/index/interfaces/contextmeter/) for the cost/context display.
 

@@ -1,0 +1,16 @@
+# OPT-IN, LLM-graded reasoning suite. Only included when MITHRIL_EVAL_RUBRIC=1 (see promptfooconfig.ts),
+# and it needs a grader key (default OPENAI_API_KEY; override the grader with MITHRIL_EVAL_GRADER).
+# Keep genuinely subjective checks here so the default run stays fully offline.
+- description: "explanation quality"
+  vars:
+    input: "In two sentences, explain why the sky appears blue."
+  assert:
+    - type: llm-rubric
+      value: "Mentions scattering of sunlight (Rayleigh scattering) and that blue/shorter wavelengths scatter more. Clear and roughly two sentences."
+
+- description: "concise summary"
+  vars:
+    input: "Summarise the water cycle in one sentence for a child."
+  assert:
+    - type: llm-rubric
+      value: "A single, simple sentence a child could understand that covers evaporation and rain/precipitation."

@@ -14,8 +14,9 @@ composable too — so Mithril is a set of lego bricks, not a monolith.
 
 ## Middleware — the onion
 
-Middleware wraps invocations, outermost-first, at the **tool** and **model** altitudes. Compose by
-array order via `use:` (highlighted) — run it and watch the onion log around the call:
+Middleware wraps invocations, outermost-first, at the **step**, **model**, **tool**, and **finalize**
+altitudes — and the built-in self-healing stack is itself just middleware. Compose by array order via `use:`
+(highlighted) — run it and watch the onion log around the call:
 
 <Runnable title="use.ts" highlight={[16]} code={`import { agent, tool } from "mithril";
 import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";

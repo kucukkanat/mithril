@@ -1,0 +1,4 @@
+# Generated eval artifacts
+_report/
+.promptfoo/
+promptfoo-errors.log

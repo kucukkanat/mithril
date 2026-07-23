@@ -18,9 +18,10 @@ export interface EngineRequest {
   readonly signal: AbortSignal;
 }
 
-/** One item a {@link TransformersEngine} yields: a visible text token, or a fully-parsed tool call. */
+/** One item a {@link TransformersEngine} yields: a visible text token, a reasoning token, or a fully-parsed tool call. */
 export type EngineChunk =
   | { readonly kind: "token"; readonly text: string }
+  | { readonly kind: "reasoning"; readonly text: string }
   | { readonly kind: "toolCall"; readonly name: string; readonly input: JsonValue; readonly callId?: string };
 
 /**
@@ -49,7 +50,8 @@ function stripPrefix(id: string): string {
  * Build a {@link Provider} from an injected {@link TransformersEngine} — the pure, Node-testable core.
  *
  * @param engine - the inference engine (a browser engine for real use, a fake for tests).
- * @returns a `Provider` whose `chat()` streams `text.delta`, buffers tool calls and flushes them before a
+ * @returns a `Provider` whose `chat()` streams `text.delta` (and `reasoning.delta` for models that think),
+ * buffers tool calls and flushes them before a
  * single terminal `message.end` — the exact ordering of the OpenAI adapter. It ignores `transport`/`rt` and
  * never performs I/O.
  * @example
@@ -75,6 +77,8 @@ export function transformersProvider(engine: TransformersEngine): Provider {
       })) {
         if (c.kind === "token") {
           if (c.text !== "") yield { type: "text.delta", delta: c.text };
+        } else if (c.kind === "reasoning") {
+          if (c.text !== "") yield { type: "reasoning.delta", delta: c.text };
         } else {
           calls.push({ callId: c.callId ?? `call_${n++}`, name: c.name, input: c.input });
         }

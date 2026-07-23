@@ -14,6 +14,6 @@ type ResumeValue =
 };
 ```
 
-Defined in: [core/src/agent/loop.ts:80](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/loop.ts#L80)
+Defined in: [core/src/agent/loop.ts:87](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/loop.ts#L87)
 
 The value supplied to resume a suspended run: an approval decision, or an arbitrary resolution value.

@@ -1,0 +1,26 @@
+{
+  "name": "@mithril/evals",
+  "private": true,
+  "type": "module",
+  "description": "promptfoo evaluation suites for Mithril's on-device local models (run through the real agent harness).",
+  "scripts": {
+    "eval": "bunx promptfoo eval -c promptfooconfig.ts",
+    "eval:html": "mkdir -p _report && bunx promptfoo eval -c promptfooconfig.ts --output _report/report.json --output _report/report.html; code=$?; bun run report:overview; [ \"$code\" = \"100\" ] && code=0; exit $code",
+    "eval:subset": "mkdir -p _report && bunx promptfoo eval -c promptfooconfig.ts --output _report/report.json --output _report/report.html; code=$?; bun run report:overview; [ \"$code\" = \"100\" ] && code=0; exit $code",
+    "report": "mkdir -p _report && bunx promptfoo eval -c promptfooconfig.ts --output _report/report.json --output _report/report.html; code=$?; bun run report:overview; [ \"$code\" = \"100\" ] && code=0; exit $code",
+    "report:overview": "bun run src/report.ts _report/report.json _report/report.html",
+    "models": "bun run src/list-models.ts",
+    "view": "bunx promptfoo view"
+  },
+  "dependencies": {
+    "@mithril/core": "workspace:*",
+    "@mithril/providers": "workspace:*",
+    "@mithril/runner-web": "workspace:*"
+  },
+  "devDependencies": {
+    "@huggingface/transformers": ">=4.2",
+    "promptfoo": ">=0.100.0",
+    "yaml": "^2.9.0",
+    "zod": "^3.25.0"
+  }
+}

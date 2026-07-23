@@ -5,7 +5,7 @@ prev: false
 title: "ChatAgent"
 ---
 
-Defined in: [index.ts:127](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/react/src/index.ts#L127)
+Defined in: [index.ts:127](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/react/src/index.ts#L127)
 
 The minimal agent shape [createChatStore](/reference/react/index/functions/createchatstore/) needs: `stream(history)` yielding a run's events.
 
@@ -19,7 +19,7 @@ stream(input): {
 };
 ```
 
-Defined in: [index.ts:128](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/react/src/index.ts#L128)
+Defined in: [index.ts:128](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/react/src/index.ts#L128)
 
 #### Parameters
 

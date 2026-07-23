@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import type { AnyTool, MithrilEvent, Provider, StandardSchemaV1 } from "../src/protocol/index.ts";
-import { repairJson } from "../src/protocol/index.ts";
-import { agent, agentLoop, tool } from "../src/agent/index.ts";
+import { extractJson, repairJson, repairPartialJson } from "../src/protocol/index.ts";
+import { agent, agentLoop, retryBudget, tool } from "../src/agent/index.ts";
 import { scriptedProvider, testModel, textTurn, toolCallTurn, ZERO_DELTA } from "../src/testkit/index.ts";
 
 // ── helpers ──────────────────────────────────────────────────────────────────────────────────────
@@ -48,6 +48,43 @@ test("repairJson fixes the common small-model JSON slips, losslessly for valid J
   expect(repairJson("")).toBeUndefined();
 });
 
+test("extractJson recovers the JSON object from real small-model structured-output packaging", () => {
+  // Baseline: already-valid JSON is lossless (fast path).
+  expect(extractJson('{"a":1}')).toEqual({ a: 1 });
+  // LFM2.5-style code fence (repairJson already handles, verified end-to-end here).
+  expect(extractJson('```json\n{"sentiment":"positive"}\n```')).toEqual({ sentiment: "positive" });
+  // Qwen3-style reasoning preamble before the answer — stripped for parsing only.
+  expect(extractJson('<think>\nlet me extract the fields\n</think>\n{"name":"Ada","age":36}')).toEqual({ name: "Ada", age: 36 });
+  // <thinking> variant + surrounding prose after the object (trailing text dropped).
+  expect(extractJson('<thinking>ok</thinking> Here is the result: {"ok":true}. Hope that helps!')).toEqual({ ok: true });
+  // Reasoning then a fenced object.
+  expect(extractJson('<think>reasoning</think>\n```json\n{"x":[1,2,3]}\n```')).toEqual({ x: [1, 2, 3] });
+  // Multiple reasoning blocks all removed; still finds the trailing object.
+  expect(extractJson("<think>a</think>noise<think>b</think>{\"n\":1}")).toEqual({ n: 1 });
+  // Top-level array answer, with prose around it.
+  expect(extractJson('The list is [ {"id":1}, {"id":2} ] done')).toEqual([{ id: 1 }, { id: 2 }]);
+  // Unterminated object after reasoning is closed by the shared repairer.
+  expect(extractJson('<think>x</think>{"a":1')).toEqual({ a: 1 });
+  // A string value containing braces is not mistaken for the container boundary.
+  expect(extractJson('prefix {"note":"a } brace inside"} suffix')).toEqual({ note: "a } brace inside" });
+  // No JSON at all ⇒ undefined (caller falls back to raw text).
+  expect(extractJson("<think>no json here</think> just words")).toBeUndefined();
+  expect(extractJson("")).toBeUndefined();
+});
+
+test("repairPartialJson streams a deep-partial object but holds back while reasoning is unclosed", () => {
+  // Reasoning still open ⇒ nothing emitted yet (the `{` inside the thought is not the answer).
+  expect(repairPartialJson('<think>I will output {"city"')).toBeUndefined();
+  // Reasoning closed, object forming ⇒ deep-partial with the completed keys (dangling `key:` filled null).
+  expect(repairPartialJson('<think>done</think>{"city":"NY","temp":')).toEqual({ city: "NY", temp: null });
+  // No reasoning, ordinary partial.
+  expect(repairPartialJson('{"city":"N')).toEqual({ city: "N" });
+  // Preamble prose before the object is skipped.
+  expect(repairPartialJson('Here: {"a":1,"b":')).toEqual({ a: 1, b: null });
+  // Nothing parseable yet.
+  expect(repairPartialJson("<think>thinking")).toBeUndefined();
+});
+
 // ── visible schema coercion → tool.repair ──────────────────────────────────────────────────────────
 
 test("a JSON-string of the args is coerced to the object and emits a visible tool.repair", async () => {
@@ -84,7 +121,7 @@ test("a JSON-string of the args is coerced to the object and emits a visible too
 
 // ── bounded per-tool repair budget ───────────────────────────────────────────────────────────────
 
-test("a tool that keeps failing ends with a clear terminal error after toolRetries, not at maxSteps", async () => {
+test("a tool that keeps failing ends with a clear terminal error after the retry budget, not at maxSteps", async () => {
   // A provider that calls the failing tool every single turn.
   let n = 0;
   const spinning: Provider = {
@@ -97,7 +134,7 @@ test("a tool that keeps failing ends with a clear terminal error after toolRetri
   };
   const bad = tool({ name: "bad", description: "", inputSchema: alwaysRejects<{ x: number }>(), execute: async () => ({ ok: true }) });
   const { events, result } = await collect(
-    agentLoop({ model: testModel(spinning), instructions: "hi", tools: [bad], input: "go", deps: undefined, toolRetries: 2 }),
+    agentLoop({ model: testModel(spinning), instructions: "hi", tools: [bad], input: "go", deps: undefined, healing: [retryBudget({ max: 2 })] }),
   );
   expect(result.status).toBe("error");
   if (result.status === "error") {
@@ -109,7 +146,7 @@ test("a tool that keeps failing ends with a clear terminal error after toolRetri
   expect(n).toBe(3); // exactly 3 model turns, far under the 16-step default
 });
 
-test("toolRetries: 0 gives up on the first failure", async () => {
+test("retryBudget({ max: 0 }) gives up on the first failure", async () => {
   let n = 0;
   const spinning: Provider = {
     spec: { id: "test", models: {} },
@@ -121,7 +158,7 @@ test("toolRetries: 0 gives up on the first failure", async () => {
   };
   const bad = tool({ name: "bad", description: "", inputSchema: alwaysRejects<Record<string, never>>(), execute: async () => ({ ok: true }) });
   const { result } = await collect(
-    agentLoop({ model: testModel(spinning), instructions: "hi", tools: [bad], input: "go", deps: undefined, toolRetries: 0 }),
+    agentLoop({ model: testModel(spinning), instructions: "hi", tools: [bad], input: "go", deps: undefined, healing: [retryBudget({ max: 0 })] }),
   );
   expect(result.status).toBe("error");
   expect(n).toBe(1);

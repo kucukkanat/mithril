@@ -224,8 +224,7 @@ function parseTool(ctx: Ctx, id: string, obj: TS.ObjectLiteralExpression): ToolS
   };
 }
 
-const AGENT_NUMERIC = ["maxSteps", "outputRetries", "toolRetries", "maxTokens", "maxCostMicroUsd"] as const;
-const AGENT_BOOLEAN = ["loopDetection", "repair", "selfCorrection"] as const;
+const AGENT_NUMERIC = ["maxSteps", "maxTokens", "maxCostMicroUsd"] as const;
 
 function parseAgent(ctx: Ctx, id: string, obj: TS.ObjectLiteralExpression): AgentSpec | undefined {
   const { ts } = ctx;
@@ -234,11 +233,11 @@ function parseAgent(ctx: Ctx, id: string, obj: TS.ObjectLiteralExpression): Agen
   const modelExpr = props.get("model");
   if (modelExpr === undefined) return undefined;
   const numeric: Record<string, number> = {};
-  const boolean: Record<string, boolean> = {};
   let instructions: string | { code: string } | undefined;
   let tools: readonly string[] = [];
   let output: string | undefined;
   let use: readonly { code: string }[] | undefined;
+  let healing: false | readonly { code: string }[] | undefined;
   for (const [key, value] of props) {
     if (key === "model") continue;
     if (key === "instructions") {
@@ -265,16 +264,19 @@ function parseAgent(ctx: Ctx, id: string, obj: TS.ObjectLiteralExpression): Agen
       use = value.elements.map((el) => ({ code: text(ctx, el) }));
       continue;
     }
+    if (key === "healing") {
+      if (value.kind === ts.SyntaxKind.FalseKeyword) {
+        healing = false;
+        continue;
+      }
+      if (!ts.isArrayLiteralExpression(value)) return undefined;
+      healing = value.elements.map((el) => ({ code: text(ctx, el) }));
+      continue;
+    }
     if ((AGENT_NUMERIC as readonly string[]).includes(key)) {
       const n = numLit(ctx, value);
       if (n === undefined) return undefined;
       numeric[key] = n;
-      continue;
-    }
-    if ((AGENT_BOOLEAN as readonly string[]).includes(key)) {
-      const b = boolLit(ctx, value);
-      if (b === undefined) return undefined;
-      boolean[key] = b;
       continue;
     }
     return undefined; // unrecognized property → whole statement stays opaque
@@ -288,13 +290,9 @@ function parseAgent(ctx: Ctx, id: string, obj: TS.ObjectLiteralExpression): Agen
     tools,
     ...(output === undefined ? {} : { output: { zod: output } }),
     ...(numeric["maxSteps"] === undefined ? {} : { maxSteps: numeric["maxSteps"] }),
-    ...(numeric["outputRetries"] === undefined ? {} : { outputRetries: numeric["outputRetries"] }),
-    ...(numeric["toolRetries"] === undefined ? {} : { toolRetries: numeric["toolRetries"] }),
-    ...(boolean["loopDetection"] === undefined ? {} : { loopDetection: boolean["loopDetection"] }),
     ...(numeric["maxTokens"] === undefined ? {} : { maxTokens: numeric["maxTokens"] }),
     ...(numeric["maxCostMicroUsd"] === undefined ? {} : { maxCostMicroUsd: numeric["maxCostMicroUsd"] }),
-    ...(boolean["repair"] === undefined ? {} : { repair: boolean["repair"] }),
-    ...(boolean["selfCorrection"] === undefined ? {} : { selfCorrection: boolean["selfCorrection"] }),
+    ...(healing === undefined ? {} : { healing }),
     ...(use === undefined ? {} : { use }),
   };
 }

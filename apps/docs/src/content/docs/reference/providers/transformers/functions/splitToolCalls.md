@@ -6,27 +6,33 @@ title: "splitToolCalls"
 ---
 
 ```ts
-function splitToolCalls(tokens, fmt): AsyncGenerator<EngineChunk>;
+function splitToolCalls(
+   tokens, 
+   fmt, 
+reasoning?): AsyncGenerator<EngineChunk>;
 ```
 
-Defined in: [transformers/tool-formats.ts:186](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/providers/src/transformers/tool-formats.ts#L186)
+Defined in: [transformers/tool-formats.ts:217](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/providers/src/transformers/tool-formats.ts#L217)
 
-Transform a raw token stream into [EngineChunk](/reference/providers/transformers/type-aliases/enginechunk/)s, suppressing tool-call sentinels from visible text.
+Transform a raw token stream into [EngineChunk](/reference/providers/transformers/type-aliases/enginechunk/)s, suppressing tool-call and reasoning sentinels from
+visible text.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `tokens` | `AsyncIterable`\<`string`\> | the model's decoded token stream (whole-word chunks from `TextStreamer`). |
-| `fmt` | \| [`ToolFormat`](/reference/providers/transformers/interfaces/toolformat/) \| `undefined` | the tool grammar; `undefined` passes tokens through as text (no tool detection). |
+| `fmt` | \| [`ToolFormat`](/reference/providers/transformers/interfaces/toolformat/) \| `undefined` | the tool grammar; `undefined` disables tool detection. |
+| `reasoning?` | `ReasoningFormat` | the reasoning grammar; `undefined` disables reasoning detection (so `<think>` content, if any, stays in the visible text — the exact legacy behavior). When set, a `<think>…</think>` block is routed to `reasoning` chunks (→ the generic `reasoning.delta` channel) instead of leaking into the answer. |
 
 ## Returns
 
 `AsyncGenerator`\<[`EngineChunk`](/reference/providers/transformers/type-aliases/enginechunk/)\>
 
-an async stream of `text` chunks (sentinels stripped) and fully-parsed `toolCall` chunks.
+an async stream of `token` chunks (answer text), `reasoning` chunks, and parsed `toolCall` chunks.
 
 ## Remarks
 
-Holds back up to `start.length - 1` trailing chars while scanning so a sentinel split across two
-tokens never leaks as visible text. Fail-soft: an unterminated or malformed call yields no crash.
+Single pass. Holds back up to the longest active sentinel's `length - 1` trailing chars while
+scanning so a sentinel split across two tokens never leaks. Fail-soft: an unterminated or malformed block
+yields no crash. Assumes reasoning precedes tool calls within one generation (true for open models).

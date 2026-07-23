@@ -45,7 +45,7 @@ test("identical successful calls are steered once, then halted with a typed Loop
   if (result.status === "error") expect(result.error.name).toBe("LoopDetected");
 });
 
-test("loopDetection: false lets the run proceed to the maxSteps budget instead", async () => {
+test("an empty healing stack lets the run proceed to the maxSteps budget instead", async () => {
   const ping = tool({ name: "ping", description: "", inputSchema: passSchema<Record<string, never>>(), execute: async () => ({ pong: true }) });
   const { events, result } = await collect(
     agentLoop({
@@ -54,7 +54,7 @@ test("loopDetection: false lets the run proceed to the maxSteps budget instead",
       tools: [ping],
       input: "go",
       deps: undefined,
-      loopDetection: false,
+      healing: [],
       maxSteps: 5,
     }),
   );

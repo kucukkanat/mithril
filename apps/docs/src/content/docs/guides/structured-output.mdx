@@ -51,11 +51,11 @@ if (result.status === "completed") console.log("typed output:", result.output); 
 
 ## Validate, then retry
 
-If the model returns JSON that fails the schema, the loop emits `object.invalid` and re-asks the
-model with the validation error — up to `outputRetries` times (highlighted; default 2). Here the
-first scripted turn is missing `tempC`, so the loop retries and the second turn validates:
+If the model returns JSON that fails the schema, the default `healing.outputRetry` middleware emits
+`object.invalid` and re-asks the model with the validation error — up to its `max` (highlighted; default 2).
+Here the first scripted turn is missing `tempC`, so the loop retries and the second turn validates:
 
-<Runnable title="retry.ts" highlight={[16]} code={`import { agent } from "mithril";
+<Runnable title="retry.ts" highlight={[20]} code={`import { agent, healing } from "mithril";
 import { scriptedProvider, testModel } from "@mithril/core/testkit";
 import { z } from "zod";
 
@@ -74,7 +74,7 @@ const extractor = agent({
   model,
   instructions: "Extract the weather as JSON.",
   output: z.object({ city: z.string(), tempC: z.number() }),
-  outputRetries: 3,
+  healing: [healing.outputRetry({ max: 3 })],
 });
 
 const result = await run(extractor, "It's 21°C in Istanbul.");

@@ -120,13 +120,9 @@ export function agentProps(a: AgentSpec, modelExprOverride?: string): string[] {
   if (a.tools.length > 0) props.push(`tools: [${a.tools.join(", ")}],`);
   if (a.output !== undefined) props.push(`output: ${a.output.zod},`);
   if (a.maxSteps !== undefined) props.push(`maxSteps: ${a.maxSteps},`);
-  if (a.outputRetries !== undefined) props.push(`outputRetries: ${a.outputRetries},`);
-  if (a.toolRetries !== undefined) props.push(`toolRetries: ${a.toolRetries},`);
-  if (a.loopDetection !== undefined) props.push(`loopDetection: ${a.loopDetection},`);
   if (a.maxTokens !== undefined) props.push(`maxTokens: ${a.maxTokens},`);
   if (a.maxCostMicroUsd !== undefined) props.push(`maxCostMicroUsd: ${a.maxCostMicroUsd},`);
-  if (a.repair !== undefined) props.push(`repair: ${a.repair},`);
-  if (a.selfCorrection !== undefined) props.push(`selfCorrection: ${a.selfCorrection},`);
+  if (a.healing !== undefined) props.push(`healing: ${a.healing === false ? "false" : `[${a.healing.map(region).join(", ")}]`},`);
   if (a.use !== undefined && a.use.length > 0) props.push(`use: [${a.use.map(region).join(", ")}],`);
   return props;
 }

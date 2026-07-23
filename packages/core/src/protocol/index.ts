@@ -28,7 +28,7 @@ export type {
 export { addUsage, ZERO_USAGE } from "./primitives.ts";
 export type { ToolErrorClass } from "./errors.ts";
 export { classifiedError, toolErrorClass } from "./errors.ts";
-export { repairJson } from "./json-repair.ts";
+export { extractJson, repairJson, repairPartialJson } from "./json-repair.ts";
 export type { RunContext, RuntimeAdapter, Transport } from "./context.ts";
 export type {
   ChatRequest,
@@ -68,6 +68,8 @@ export type { Checkpointer, CheckpointRecord, SerializedRunState, TestAdapter } 
 export type {
   DraftEvent,
   EventConsumer,
+  FinalizeCall,
+  FinalizeOutcome,
   InferPluginTools,
   Middleware,
   MiddlewareContext,
@@ -79,4 +81,5 @@ export type {
   StepOutcome,
   ToolInvocation,
   ToolOutcome,
+  ToolStepOutcome,
 } from "./middleware.ts";

@@ -9,7 +9,7 @@ title: "preload"
 function preload(modelId, opts?): Promise<void>;
 ```
 
-Defined in: [transformers/edge.ts:124](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/providers/src/transformers/edge.ts#L124)
+Defined in: [transformers/edge.ts:124](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/providers/src/transformers/edge.ts#L124)
 
 Warm the weight cache for a model (and drive `onProgress`) so the first `run()` doesn't stall.
 

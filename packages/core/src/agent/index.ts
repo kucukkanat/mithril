@@ -21,6 +21,8 @@ export type { AsToolOptions, ToolDef, ToolFactory } from "./factory.ts";
 export { agent, asTool, createHarness, plugin, tool } from "./factory.ts";
 export type { LoopOptions, PendingKind, PendingSuspension, ResumeState, ResumeValue, RunTokenV2 } from "./loop.ts";
 export { agentLoop } from "./loop.ts";
+export type { LoopGuardOptions, OutputRetryOptions, RetryBudgetOptions } from "./healing.ts";
+export { argRepair, defaults, healing, loopGuard, outputRetry, retryBudget } from "./healing.ts";
 export { defaultRuntime } from "./runtime.ts";
 export { globalConsumers, registerGlobalConsumer } from "./global-consumers.ts";
 export { MithrilError, providerRegistry, resolveModel, resolveTransport } from "./registry.ts";

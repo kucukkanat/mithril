@@ -1,0 +1,24 @@
+# Structured-output suite — can the model produce output that parses + validates against a schema?
+# `outputSchema` (see src/schemas.ts) opts the agent into structured output; the harness parses and
+# validates the final text, and reachedCompletion asserts it succeeded within the retry budget.
+- description: "person object"
+  vars:
+    input: "Extract the person as JSON: 'Ada Lovelace is 36 years old, email ada@example.com'."
+    outputSchema: person
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:reachedCompletion
+    - type: is-json
+    - type: icontains
+      value: ada
+
+- description: "sentiment classification"
+  vars:
+    input: "Classify the sentiment of: 'I absolutely loved this, best purchase ever!'"
+    outputSchema: sentiment
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:reachedCompletion
+    - type: is-json
+    - type: icontains
+      value: positive

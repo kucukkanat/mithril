@@ -9,7 +9,7 @@ title: "generateProject"
 function generateProject(spec, opts?): string;
 ```
 
-Defined in: [packages/spec/src/codegen.ts:244](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/codegen.ts#L244)
+Defined in: [packages/spec/src/codegen.ts:240](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/spec/src/codegen.ts#L240)
 
 Generate the complete TypeScript source for a project. Deterministic: the same spec always
 yields byte-identical output, and [parseProject](https://mithril.dev) recognizes exactly

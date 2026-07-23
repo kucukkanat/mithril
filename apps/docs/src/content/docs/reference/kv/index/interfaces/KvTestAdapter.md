@@ -5,7 +5,7 @@ prev: false
 title: "KvTestAdapter"
 ---
 
-Defined in: [index.ts:93](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/kv/src/index.ts#L93)
+Defined in: [index.ts:93](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/kv/src/index.ts#L93)
 
 Minimal test-runner shim that lets [kvConformance](/reference/kv/index/functions/kvconformance/) register cases against bun:test / vitest without
 a hard dependency on either.
@@ -18,7 +18,7 @@ a hard dependency on either.
 assertEqual(actual, expected): void;
 ```
 
-Defined in: [index.ts:97](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/kv/src/index.ts#L97)
+Defined in: [index.ts:97](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/kv/src/index.ts#L97)
 
 Asserts deep equality of `actual` and `expected`.
 
@@ -41,7 +41,7 @@ Asserts deep equality of `actual` and `expected`.
 test(name, fn): void;
 ```
 
-Defined in: [index.ts:95](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/kv/src/index.ts#L95)
+Defined in: [index.ts:95](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/kv/src/index.ts#L95)
 
 Registers a named test, mirroring bun:test / vitest's `test(name, fn)`.
 

@@ -15,7 +15,7 @@ type SuspensionDescriptor = {
 };
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:70](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/suspension.ts#L70)
+Defined in: [packages/core/src/protocol/suspension.ts:70](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/suspension.ts#L70)
 
 A serializable, UI-facing view of what a run is waiting on, carried on the
 `suspend` event and [RunState.pending](/reference/core/protocol/interfaces/runstate/#pending).
@@ -34,7 +34,7 @@ embeds it as a payload.
 readonly optional callId?: string;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:72](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/suspension.ts#L72)
+Defined in: [packages/core/src/protocol/suspension.ts:72](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/suspension.ts#L72)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [packages/core/src/protocol/suspension.ts:72](https://github.com/kuc
 readonly kind: string;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:71](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/suspension.ts#L71)
+Defined in: [packages/core/src/protocol/suspension.ts:71](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/suspension.ts#L71)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [packages/core/src/protocol/suspension.ts:71](https://github.com/kuc
 readonly payload: JsonValue;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:73](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/suspension.ts#L73)
+Defined in: [packages/core/src/protocol/suspension.ts:73](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/suspension.ts#L73)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [packages/core/src/protocol/suspension.ts:73](https://github.com/kuc
 readonly optional resolutionSchemaId?: string;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:74](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/suspension.ts#L74)
+Defined in: [packages/core/src/protocol/suspension.ts:74](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/suspension.ts#L74)
 
 ***
 
@@ -74,6 +74,6 @@ Defined in: [packages/core/src/protocol/suspension.ts:74](https://github.com/kuc
 readonly optional toolVersion?: string;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:76](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/suspension.ts#L76)
+Defined in: [packages/core/src/protocol/suspension.ts:76](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/suspension.ts#L76)
 
 The pending tool's stamped version, checked on resume for drift.

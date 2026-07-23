@@ -70,7 +70,8 @@ for (;;) { const s = await gen.next(); if (s.done) break; }
 console.log("consumer saw", seen.length, "events");`} />
 
 `LoopOptions` also accepts `transport`, `providers`, `runtime`, `signal`, `maxSteps`, `output`,
-`outputRetries`, and — for continuing a suspended run — `runId` and `resume`.
+`healing` (the pluggable self-healing stack — `false`/`[]` for a raw loop, or an array of healing
+middleware), and — for continuing a suspended run — `runId` and `resume`.
 
 <Aside type="tip" title="Eject last, not first">
 Reach for `agentLoop` only when `run`/`stream` genuinely aren't enough. The point of the eject

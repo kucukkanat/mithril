@@ -5,7 +5,7 @@ prev: false
 title: "StepInput"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:62](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L62)
+Defined in: [packages/core/src/protocol/middleware.ts:94](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L94)
 
 The input to one step (model call + tool execution), observed by a [Middleware.step](/reference/core/protocol/interfaces/middleware/#step) wrapper.
 
@@ -17,7 +17,7 @@ The input to one step (model call + tool execution), observed by a [Middleware.s
 readonly messages: readonly Message[];
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:64](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L64)
+Defined in: [packages/core/src/protocol/middleware.ts:96](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L96)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [packages/core/src/protocol/middleware.ts:64](https://github.com/kuc
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:63](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L63)
+Defined in: [packages/core/src/protocol/middleware.ts:95](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L95)

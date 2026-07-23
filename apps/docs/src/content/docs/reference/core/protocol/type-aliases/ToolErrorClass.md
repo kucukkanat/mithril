@@ -15,7 +15,7 @@ type ToolErrorClass =
   | "timeout";
 ```
 
-Defined in: [packages/core/src/protocol/errors.ts:16](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/errors.ts#L16)
+Defined in: [packages/core/src/protocol/errors.ts:16](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/errors.ts#L16)
 
 The canonical classes of tool-call failure — a ToolScan-style taxonomy.
 
@@ -23,5 +23,5 @@ The canonical classes of tool-call failure — a ToolScan-style taxonomy.
 
 Attached to a tool-related [SerializedError](/reference/core/protocol/interfaces/serializederror/) via its `data` field (see [classifiedError](/reference/core/protocol/functions/classifiederror/))
 so self-correction can route by class: `malformed_json`/`invalid_args` are deterministically
-repairable and worth re-asking; `handler_error` usually is not. Also the bucketing key for eval
+repairable and worth re-asking; `handler_error` usually is not. Also a stable bucketing key for
 metrics (repair-success-rate per class).

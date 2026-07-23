@@ -5,7 +5,7 @@ prev: false
 title: "PluginHost"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:126](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L126)
+Defined in: [packages/core/src/protocol/middleware.ts:202](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L202)
 
 The registration surface passed to a [Plugin.setup](/reference/core/protocol/interfaces/plugin/#setup), for contributing plugin fragments.
 
@@ -17,7 +17,7 @@ The registration surface passed to a [Plugin.setup](/reference/core/protocol/int
 register<Deps>(fragment): void;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:127](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L127)
+Defined in: [packages/core/src/protocol/middleware.ts:203](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L203)
 
 #### Type Parameters
 
