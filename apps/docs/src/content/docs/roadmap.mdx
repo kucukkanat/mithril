@@ -40,11 +40,6 @@ Everything under "Shipped" below is implemented and covered by the test suite. E
 - **Providers** — a Standard-Schema → JSON-Schema converter (`toJsonSchema`/`withJsonSchema`) feeds real
   tool-parameter schemas to OpenAI/Anthropic/Google when the input schema self-describes or a converter is
   supplied.
-- **Evals** — trajectory scoring plus a **record-once / replay-from-file** split (`runEvalCached` +
-  `TrajectoryStore`) for deterministic, network-free CI; a **reference-trajectory matcher**
-  (`matchesTrajectory` / `referenceFromTrajectory`, four sequence modes × four argument modes), an
-  **A/B `pairwiseJudge`**, and **baseline diffing** (`toSnapshot` / `diffRuns`, plus an `htmlReport`
-  diff view) for model comparison and regression gates.
 - **MCP** — a client, an official Streamable-**HTTP transport** (`@mithril/mcp/http`), and **server
   exposure** (`@mithril/mcp/server`) to serve your own tools over MCP.
 - **Devtools** — a headless inspector **and a framework-agnostic UI** (event stream, span tree, cost +
@@ -61,18 +56,13 @@ Everything under "Shipped" below is implemented and covered by the test suite. E
   worker runner (`@mithril/runner-web`, also powering the docs playground), with the devtools inspector,
   chat multi-turn, HITL approvals, and IndexedDB project persistence. See the
   [Studio guide](/guides/studio/).
-- **Studio (M2 — evals workbench)** — author eval suites and cases against a project's agent
-  (`@mithril/spec`'s `generateEvalRun` + a shared scorer catalog), run them across a **matrix of models**
-  in the worker runner, compare cells side by side with a per-case devtools inspector, **pin golden
-  trajectories**, **A/B** two models with an LLM judge, **diff** against a saved baseline, and export a
-  self-contained `htmlReport` — all client-side, with run history in IndexedDB.
 
 ## Next
 
 | Area | What's coming | Why it's not here yet |
 | --- | --- | --- |
 | Adapters | ANN-indexed `vectors` backends (sqlite-vec / pgvector / Vectorize); a WASM `sandbox` backend | today's `vectors` do an exact brute-force scan; `sandbox` runs via `node:vm` or a remote proxy |
-| Studio | Free-form multi-agent canvas, share URLs & TS-project export | the Studio ships today as a client-only app (design → run → **evals**, two-way code view); the canvas and sharing land next |
+| Studio | Free-form multi-agent canvas, share URLs & TS-project export | the Studio ships today as a client-only app (design → run, two-way code view); the canvas and sharing land next |
 
 ## Later
 

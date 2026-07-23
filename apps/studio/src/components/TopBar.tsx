@@ -14,7 +14,7 @@ export function TopBar() {
 
   // Fall back to the store's open project so the nav stays put on /settings (no dead-end).
   const projectId = id ?? store.projectId ?? undefined;
-  const section = pathname === "/settings" ? "settings" : pathname.endsWith("/run") ? "run" : pathname.endsWith("/evals") ? "evals" : "design";
+  const section = pathname === "/settings" ? "settings" : pathname.endsWith("/run") ? "run" : "design";
 
   return (
     <header className="topbar" data-testid="topbar">
@@ -36,7 +36,6 @@ export function TopBar() {
           <nav className="topbar-nav" data-testid="topbar-nav">
             <Link className={section === "design" ? "on" : ""} to={`/p/${projectId}`} data-testid="topbar-nav-design">Design</Link>
             <Link className={section === "run" ? "on" : ""} to={`/p/${projectId}/run`} data-testid="topbar-nav-run">Run</Link>
-            <Link className={section === "evals" ? "on" : ""} to={`/p/${projectId}/evals`} data-testid="topbar-nav-evals">Evals</Link>
           </nav>
         </>
       )}

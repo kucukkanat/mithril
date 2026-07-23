@@ -69,7 +69,7 @@ export interface ChatRequest {
  * @remarks
  * Providers yield chunks, not {@link MithrilEvent}s: the loop is the single
  * `seq` authority and stamps `v`/`runId`/`seq`/`span`/`ts`. This is why
- * providers cannot assign `seq`, and why the eval cache stores `ProviderChunk[]`.
+ * providers cannot assign `seq`, and why the replay cache stores `ProviderChunk[]`.
  */
 export type ProviderChunk =
   | { readonly type: "text.delta"; readonly delta: string }

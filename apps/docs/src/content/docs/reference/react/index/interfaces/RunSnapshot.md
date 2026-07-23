@@ -5,7 +5,7 @@ prev: false
 title: "RunSnapshot"
 ---
 
-Defined in: [index.ts:24](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/react/src/index.ts#L24)
+Defined in: [index.ts:24](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/react/src/index.ts#L24)
 
 An immutable view of a run, recomputed on every event.
 
@@ -21,7 +21,7 @@ Shape: `{ state, text, status, events, costUsd }`.
 readonly costUsd: number;
 ```
 
-Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/react/src/index.ts#L34)
+Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/react/src/index.ts#L34)
 
 Accumulated cost in US dollars (derived from `state.usage.costMicroUsd`).
 
@@ -33,7 +33,7 @@ Accumulated cost in US dollars (derived from `state.usage.costMicroUsd`).
 readonly events: readonly MithrilEvent[];
 ```
 
-Defined in: [index.ts:32](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/react/src/index.ts#L32)
+Defined in: [index.ts:32](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/react/src/index.ts#L32)
 
 Every event received so far, in order.
 
@@ -45,7 +45,7 @@ Every event received so far, in order.
 readonly state: RunState;
 ```
 
-Defined in: [index.ts:26](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/react/src/index.ts#L26)
+Defined in: [index.ts:26](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/react/src/index.ts#L26)
 
 The full replayed RunState for the events seen so far.
 
@@ -57,7 +57,7 @@ The full replayed RunState for the events seen so far.
 readonly status: RunStatus | "streaming";
 ```
 
-Defined in: [index.ts:30](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/react/src/index.ts#L30)
+Defined in: [index.ts:30](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/react/src/index.ts#L30)
 
 `"streaming"` while events are still arriving; otherwise the terminal RunState.status.
 
@@ -69,6 +69,6 @@ Defined in: [index.ts:30](https://github.com/kucukkanat/mithril/blob/74200bb9af7
 readonly text: string;
 ```
 
-Defined in: [index.ts:28](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/react/src/index.ts#L28)
+Defined in: [index.ts:28](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/react/src/index.ts#L28)
 
 All `text.delta` chunks concatenated into the running output string.

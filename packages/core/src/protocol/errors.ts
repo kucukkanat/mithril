@@ -1,7 +1,7 @@
 import type { JsonValue, SerializedError } from "./primitives.ts";
 
 // §3.1b — the tool-failure taxonomy. A ToolScan-style set of canonical classes, carried on
-// SerializedError.data so the loop can route repair, targeted re-ask prompts, and eval buckets off a
+// SerializedError.data so the loop can route repair and targeted re-ask prompts off a
 // stable machine-readable class rather than parsing message text. Pure: types + total functions only.
 
 /**
@@ -10,7 +10,7 @@ import type { JsonValue, SerializedError } from "./primitives.ts";
  * @remarks
  * Attached to a tool-related {@link SerializedError} via its `data` field (see {@link classifiedError})
  * so self-correction can route by class: `malformed_json`/`invalid_args` are deterministically
- * repairable and worth re-asking; `handler_error` usually is not. Also the bucketing key for eval
+ * repairable and worth re-asking; `handler_error` usually is not. Also a stable bucketing key for
  * metrics (repair-success-rate per class).
  */
 export type ToolErrorClass =

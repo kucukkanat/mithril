@@ -5,7 +5,7 @@ prev: false
 title: "TestAdapter"
 ---
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:45](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/checkpointer.ts#L45)
+Defined in: [packages/core/src/protocol/checkpointer.ts:45](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/checkpointer.ts#L45)
 
 A tiny test-runner bridge so the conformance kit runs under `bun:test` or
 `vitest` without depending on either.
@@ -21,7 +21,7 @@ assertEqual(
    message?): void;
 ```
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:47](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/checkpointer.ts#L47)
+Defined in: [packages/core/src/protocol/checkpointer.ts:47](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/checkpointer.ts#L47)
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: [packages/core/src/protocol/checkpointer.ts:47](https://github.com/k
 test(name, fn): void;
 ```
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:46](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/checkpointer.ts#L46)
+Defined in: [packages/core/src/protocol/checkpointer.ts:46](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/checkpointer.ts#L46)
 
 #### Parameters
 

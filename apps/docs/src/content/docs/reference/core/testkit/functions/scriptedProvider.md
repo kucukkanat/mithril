@@ -9,7 +9,7 @@ title: "scriptedProvider"
 function scriptedProvider(turns): Provider;
 ```
 
-Defined in: [packages/core/src/testkit/index.ts:103](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/testkit/index.ts#L103)
+Defined in: [packages/core/src/testkit/index.ts:103](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/testkit/index.ts#L103)
 
 Build a deterministic [Provider](/reference/core/protocol/interfaces/provider/) that replays a fixed script of provider chunks.
 

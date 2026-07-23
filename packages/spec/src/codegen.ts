@@ -38,7 +38,7 @@ const GROQ_BASE_URL = "https://api.groq.com/openai/v1";
 /** The exact provider-const statement emitted (and re-absorbed) when a groq model is present. */
 export const GROQ_PROVIDER_DECL = `const groq = openaiProvider({ baseUrl: ${JSON.stringify(GROQ_BASE_URL)} });`;
 
-/** Emit a string as a canonical double-quoted source literal. Shared with {@link generateEvalRun}. */
+/** Emit a string as a canonical double-quoted source literal. */
 export const str = (s: string): string => JSON.stringify(s);
 
 /** The provider-import token a model needs (for import planning), or `undefined` for a verbatim `code` model. */
@@ -60,7 +60,7 @@ export function providerImportEntries(providers: ReadonlySet<string>): Map<strin
   return out;
 }
 
-/** Emit an agent's `model` expression from its {@link ModelSpec}. Shared with {@link generateEvalRun}. */
+/** Emit an agent's `model` expression from its {@link ModelSpec}. */
 export function modelExpr(model: ModelSpec): string {
   switch (model.kind) {
     case "live":
@@ -110,8 +110,7 @@ function toolDecl(t: ToolSpec): string {
 
 /**
  * The property lines of an `agent({ … })` literal, in canonical order. When `modelExprOverride` is given it
- * replaces the `model:` line — the seam {@link generateEvalRun} uses to build one agent per matrix model from
- * a single spec.
+ * replaces the `model:` line — the seam used to build one agent per model from a single spec.
  */
 export function agentProps(a: AgentSpec, modelExprOverride?: string): string[] {
   const props: string[] = [
@@ -169,14 +168,14 @@ function workflowDecl(w: WorkflowSpec): string {
   return `${prefix}const ${w.id} = defineWorkflow({\n${steps.join("\n")}\n}, ${opts});`;
 }
 
-/** Emit an entry/case input (a string or a message list) as source. Shared with {@link generateEvalRun}. */
+/** Emit an entry/case input (a string or a message list) as source. */
 export function inputExpr(input: EntrySpec["input"]): string {
   if (typeof input === "string") return str(input);
   const msgs = input.map((m: EntryMessage) => `  { role: ${str(m.role)}, content: ${str(m.content)} },`);
   return `[\n${msgs.join("\n")}\n]`;
 }
 
-/** Emit a single top-level declaration's source. Shared with {@link generateEvalRun} to re-emit project decls. */
+/** Emit a single top-level declaration's source. */
 export function declSource(d: ProjectSpec["decls"][number]): string {
   switch (d.kind) {
     case "tool":

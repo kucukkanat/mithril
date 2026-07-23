@@ -9,6 +9,6 @@ title: "SPEC_VERSION"
 const SPEC_VERSION: 1 = 1;
 ```
 
-Defined in: packages/spec/src/types.ts:183
+Defined in: [packages/spec/src/types.ts:159](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L159)
 
 The current spec format version — bump with a migration step in `migrateProject`.

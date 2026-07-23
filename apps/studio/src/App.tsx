@@ -3,7 +3,6 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import { ProjectListPage } from "./pages/ProjectListPage.tsx";
 import { DesignerPage } from "./pages/DesignerPage.tsx";
 import { RunPage } from "./pages/RunPage.tsx";
-import { EvalsPage } from "./pages/EvalsPage.tsx";
 import { SettingsPage } from "./pages/SettingsPage.tsx";
 import { CommandPalette } from "./components/CommandPalette.tsx";
 import { ShortcutCheatsheet } from "./components/ShortcutCheatsheet.tsx";
@@ -15,7 +14,6 @@ const router = createHashRouter([
   { path: "/", element: <ProjectListPage /> },
   { path: "/p/:id", element: <DesignerPage /> },
   { path: "/p/:id/run", element: <RunPage /> },
-  { path: "/p/:id/evals", element: <EvalsPage /> },
   { path: "/settings", element: <SettingsPage /> },
 ]);
 

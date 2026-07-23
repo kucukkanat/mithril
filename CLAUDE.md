@@ -10,7 +10,7 @@ from the code.**
 
 - **Mithril** — a batteries-included, provider-agnostic TypeScript AI-agent harness. Public
   contract is one typed event stream (`MithrilEvent`); runs on Node, Bun, and browsers.
-- **`packages/*`** — the framework (`@mithril/core`, `providers`, `memory`, `evals`, `kv`, `fs`,
+- **`packages/*`** — the framework (`@mithril/core`, `providers`, `memory`, `kv`, `fs`,
   `otel`, `workflows`, `mcp`, `react`, the `mithril` meta-package, `create-mithril`). Source-as-
   published ESM, strict `exports` maps, zero runtime deps in core.
 - **`apps/docs`** — the documentation website (Astro + Starlight + React). A private, unpublished
@@ -84,7 +84,7 @@ gen-symbols` regenerates just the registry from an existing `reference/`, if you
 ### Currently NOT shipped — keep on Roadmap only
 
 The `bunx mithril dev` CLI wrapper for the Studio (the Studio itself SHIPS as the client-only
-`apps/studio` — design/run with two-way code view; its evals workbench, canvas, and share/export are
+`apps/studio` — design/run with two-way code view; its canvas and share/export are
 in flight) and realtime/voice (v2); ANN-indexed `vectors` backends
 (sqlite-vec / pgvector / Vectorize) and a WASM `sandbox` backend; local-inference upgrades — a
 WASM/CPU-guaranteed backend (wllama) and native constrained/grammar decoding for hard structured-output
@@ -158,7 +158,7 @@ enforces this over every browser-declared entrypoint.
   one — verify against the **raw HF API** that `pipeline_tag` is `text-generation` (a vision /
   `image-text-to-text` repo loads but emits garbage), confirm its chat template emits a tool grammar
   the parser knows (`<tool_call>` / `<|tool_call_start|>` / gemma tokens), and **run it through the
-  eval suite** (`apps/evals`) before shipping — a family name is not a guarantee (several look-alikes
+  tool-use test harness** before shipping — a family name is not a guarantee (several look-alikes
   scored 0/4). Pin a `dtype` for fp16-fragile archs (Mamba/hybrid, e.g. Granite → `q4`) or
   single-dtype repos (e.g. Qwen3-4B ships q4f16 only → pin `q4f16`).
 - **Symbol links + tooltips**: `src/lib/symbols.json` is **generated** during the build (by

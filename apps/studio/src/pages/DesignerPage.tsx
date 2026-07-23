@@ -36,7 +36,7 @@ export function DesignerPage() {
   const [view, setView] = useState<View>("design");
   const [projects, setProjects] = useState<readonly ProjectListEntry[]>([]);
 
-  // The project store is shared by the Design/Run/Evals views — never close it on unmount
+  // The project store is shared by the Design/Run views — never close it on unmount
   // (a route transition would race the next page's open and strand it on "Loading").
   useEffect(() => {
     if (id !== undefined && store.projectId !== id) void store.open(id);

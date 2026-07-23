@@ -43,10 +43,6 @@
         "typedoc-plugin-markdown": "^4.12.0",
       },
     },
-    "apps/evals": {
-      "name": "@mithril/evals-suite",
-      "version": "0.0.0",
-    },
     "apps/studio": {
       "name": "@mithril/studio",
       "version": "0.0.0",
@@ -97,10 +93,6 @@
       "optionalPeers": [
         "react",
       ],
-    },
-    "packages/evals": {
-      "name": "@mithril/evals",
-      "version": "0.0.0",
     },
     "packages/fs": {
       "name": "@mithril/fs",
@@ -471,10 +463,6 @@
     "@mithril/devtools": ["@mithril/devtools@workspace:packages/devtools"],
 
     "@mithril/docs": ["@mithril/docs@workspace:apps/docs"],
-
-    "@mithril/evals": ["@mithril/evals@workspace:packages/evals"],
-
-    "@mithril/evals-suite": ["@mithril/evals-suite@workspace:apps/evals"],
 
     "@mithril/fs": ["@mithril/fs@workspace:packages/fs"],
 

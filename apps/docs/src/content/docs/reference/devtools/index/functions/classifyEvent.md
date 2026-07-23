@@ -9,7 +9,7 @@ title: "classifyEvent"
 function classifyEvent(type): EventKind;
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:18](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/selectors.ts#L18)
+Defined in: [packages/devtools/src/selectors.ts:18](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/selectors.ts#L18)
 
 Classify an event `type` into a colour-coded [EventKind](/reference/devtools/index/type-aliases/eventkind/) family for the inspector.
 

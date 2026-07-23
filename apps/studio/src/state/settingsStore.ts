@@ -6,7 +6,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LIVE_PROVIDERS, liveProvider, type LiveProviderId } from "@mithril/runner-web";
-import type { ModelSpec, ProjectSpec } from "@mithril/spec";
+import type { ProjectSpec } from "@mithril/spec";
 
 interface SettingsState {
   readonly keys: Partial<Record<LiveProviderId, string>>;
@@ -66,19 +66,6 @@ export function envForSpec(
   keys: Partial<Record<LiveProviderId, string>>,
 ): { readonly env: Record<string, string>; readonly missing: readonly LiveProviderId[] } {
   return envForProviders(liveProvidersIn(spec), keys);
-}
-
-/**
- * Like {@link envForSpec}, but over an explicit set of models (an eval matrix + its judge models) rather
- * than a spec's agents — every live provider among them needs its `<PROVIDER>_API_KEY` in the run env.
- */
-export function envForModels(
-  models: readonly ModelSpec[],
-  keys: Partial<Record<LiveProviderId, string>>,
-): { readonly env: Record<string, string>; readonly missing: readonly LiveProviderId[] } {
-  const providers = new Set<LiveProviderId>();
-  for (const m of models) if (m.kind === "live") providers.add(m.provider);
-  return envForProviders([...providers], keys);
 }
 
 function envForProviders(

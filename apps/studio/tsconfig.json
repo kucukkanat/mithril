@@ -11,7 +11,6 @@
       "@mithril/core/protocol": ["../../packages/core/src/protocol/index.ts"],
       "@mithril/core/agent": ["../../packages/core/src/agent/index.ts"],
       "@mithril/core/testkit": ["../../packages/core/src/testkit/index.ts"],
-      "@mithril/evals": ["../../packages/evals/src/index.ts"],
       "@mithril/memory": ["../../packages/memory/src/index.ts"],
       "@mithril/kv/indexeddb": ["../../packages/kv/src/indexeddb.ts"],
       "@mithril/kv": ["../../packages/kv/src/index.ts"],

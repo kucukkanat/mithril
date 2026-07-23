@@ -260,44 +260,6 @@ const assistant = agent({
 await run(assistant, "Deploy to production.");`,
 };
 
-const evalsExample: ExampleParts = {
-  bodyImports: `import { agent, tool } from "mithril";
-import { runEval, calledTool, completed, outputIncludes } from "@mithril/evals";
-import { z } from "zod";`,
-  scriptedTurns: `[
-  [
-    { type: "tool.call", callId: "c1", name: "weather", input: { city: "Istanbul" } },
-    { type: "message.end", finishReason: "tool_calls", usage },
-  ],
-  [
-    { type: "text.delta", delta: "It's 21°C and clear in Istanbul." },
-    { type: "message.end", finishReason: "stop", usage },
-  ],
-]`,
-  body: `const weather = tool({
-  name: "weather",
-  description: "Current weather for a city.",
-  inputSchema: z.object({ city: z.string() }),
-  execute: async ({ city }) => ({ city, tempC: 21 }),
-});
-
-const assistant = agent({
-  model,
-  instructions: "You are a concise weather assistant.",
-  tools: [weather],
-});
-
-// Scorers are pure functions over the recorded event log — no mocking.
-for await (const r of runEval(assistant, [{
-  name: "reports Istanbul weather",
-  input: "What's the weather in Istanbul?",
-  scorers: [calledTool("weather"), completed(), outputIncludes("Istanbul")],
-}])) {
-  console.log(\`\${r.case}: \${r.passed ? "PASS ✓" : "FAIL ✗"}\`);
-  for (const s of r.scores) console.log(\`  \${s.name} = \${s.value}\`);
-}`,
-};
-
 const multiAgent: ExampleParts = {
   bodyImports: `import { agent, asTool } from "mithril";`,
   // Parent and child share this one scripted provider, so the turns advance globally: parent calls the
@@ -339,7 +301,6 @@ export const PRESETS: readonly Preset[] = [
   { id: "structured", label: "Structured output", blurb: "Typed JSON via an output schema.", parts: structured },
   { id: "middleware", label: "Middleware", blurb: "Emit a custom event around a tool.", parts: middleware },
   { id: "hitl", label: "Human-in-the-loop", blurb: "Approve before a tool runs.", parts: hitl },
-  { id: "evals", label: "Evals", blurb: "Score an agent's trajectory with scorers.", parts: evalsExample },
 ];
 
 export const DEFAULT_PRESET = PRESETS[0]!;

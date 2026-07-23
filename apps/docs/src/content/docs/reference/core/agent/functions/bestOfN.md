@@ -9,7 +9,7 @@ title: "bestOfN"
 function bestOfN(opts): Middleware;
 ```
 
-Defined in: [packages/core/src/agent/test-time.ts:91](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/test-time.ts#L91)
+Defined in: [packages/core/src/agent/test-time.ts:91](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/test-time.ts#L91)
 
 Best-of-N: draw `n` candidates and keep the highest-scoring one (the T1 pattern — pair a small generator
 with a deterministic verifier).

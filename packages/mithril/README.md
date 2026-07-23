@@ -33,7 +33,7 @@ const { agent, tool } = createHarness<AppDeps>(); // ctx.deps is typed everywher
 
 Typed tools, streaming, real model calls, human-in-the-loop approval, structured output, middleware &
 plugins, sealed run tokens — all from `mithril`. Reach for the individual `@mithril/*` packages
-(`/memory`, `/evals`, `/fs`, `/kv`, `/otel`, `/react`, `/workflows`, `/mcp`) when you need them.
+(`/memory`, `/fs`, `/kv`, `/otel`, `/react`, `/workflows`, `/mcp`) when you need them.
 
 ## Entrypoints
 

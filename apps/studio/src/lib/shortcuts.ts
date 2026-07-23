@@ -46,9 +46,9 @@ export function installShortcuts(router: Router): () => void {
       if (!router.state.location.pathname.endsWith("/run")) nav(`/p/${pid}/run`);
       return;
     }
-    if (mod && pid !== null && (e.key === "1" || e.key === "2" || e.key === "3")) {
+    if (mod && pid !== null && (e.key === "1" || e.key === "2")) {
       e.preventDefault();
-      nav(e.key === "1" ? `/p/${pid}` : e.key === "2" ? `/p/${pid}/run` : `/p/${pid}/evals`);
+      nav(e.key === "1" ? `/p/${pid}` : `/p/${pid}/run`);
       return;
     }
     if (e.key === "?") {
@@ -56,14 +56,14 @@ export function installShortcuts(router: Router): () => void {
       ui.setCheatsheet(!ui.cheatsheetOpen);
       return;
     }
-    // Linear-style `g d` / `g r` / `g e` chords.
+    // Linear-style `g d` / `g r` chords.
     if (e.key === "g") {
       lastG = e.timeStamp;
       return;
     }
-    if (pid !== null && e.timeStamp - lastG < 700 && (e.key === "d" || e.key === "r" || e.key === "e")) {
+    if (pid !== null && e.timeStamp - lastG < 700 && (e.key === "d" || e.key === "r")) {
       lastG = 0;
-      nav(e.key === "d" ? `/p/${pid}` : e.key === "r" ? `/p/${pid}/run` : `/p/${pid}/evals`);
+      nav(e.key === "d" ? `/p/${pid}` : `/p/${pid}/run`);
     }
   };
   window.addEventListener("keydown", onKey);

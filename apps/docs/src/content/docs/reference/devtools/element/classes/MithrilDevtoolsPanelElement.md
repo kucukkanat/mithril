@@ -5,7 +5,7 @@ prev: false
 title: "MithrilDevtoolsPanelElement"
 ---
 
-Defined in: [packages/devtools/src/element.ts:89](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/element.ts#L89)
+Defined in: [packages/devtools/src/element.ts:89](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/element.ts#L89)
 
 `<mithril-devtools-panel>` — a multi-run panel that live-tails the attach `BroadcastChannel`.
 
@@ -4707,7 +4707,7 @@ HTMLElement.textContent
 get static observedAttributes(): readonly string[];
 ```
 
-Defined in: [packages/devtools/src/element.ts:92](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/element.ts#L92)
+Defined in: [packages/devtools/src/element.ts:92](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/element.ts#L92)
 
 ##### Returns
 
@@ -4972,7 +4972,7 @@ HTMLElement.attachShadow
 attributeChangedCallback(): void;
 ```
 
-Defined in: [packages/devtools/src/element.ts:103](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/element.ts#L103)
+Defined in: [packages/devtools/src/element.ts:103](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/element.ts#L103)
 
 #### Returns
 
@@ -5306,7 +5306,7 @@ HTMLElement.computedStyleMap
 connectedCallback(): void;
 ```
 
-Defined in: [packages/devtools/src/element.ts:96](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/element.ts#L96)
+Defined in: [packages/devtools/src/element.ts:96](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/element.ts#L96)
 
 #### Returns
 
@@ -5350,7 +5350,7 @@ HTMLElement.contains
 disconnectedCallback(): void;
 ```
 
-Defined in: [packages/devtools/src/element.ts:99](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/element.ts#L99)
+Defined in: [packages/devtools/src/element.ts:99](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/element.ts#L99)
 
 #### Returns
 

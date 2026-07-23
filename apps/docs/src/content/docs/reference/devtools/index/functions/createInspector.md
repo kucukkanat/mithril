@@ -9,7 +9,7 @@ title: "createInspector"
 function createInspector(opts?): Inspector;
 ```
 
-Defined in: [packages/devtools/src/index.ts:70](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/index.ts#L70)
+Defined in: [packages/devtools/src/index.ts:70](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/index.ts#L70)
 
 Create a headless [Inspector](/reference/devtools/index/interfaces/inspector/) that captures runs from the event stream.
 

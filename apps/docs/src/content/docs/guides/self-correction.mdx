@@ -61,7 +61,7 @@ the local-model provider (like the existing code-fence stripping), so it is alwa
 ## The correction events
 
 Every correction is a first-class member of the [`MithrilEvent`](/reference/core/protocol/type-aliases/mithrilevent/)
-union, so devtools, OTel, evals, and your own consumers all see them with full static typing.
+union, so devtools, OTel, and your own consumers all see them with full static typing.
 
 | Event | Fires when | Key fields |
 | --- | --- | --- |
@@ -75,7 +75,7 @@ union, so devtools, OTel, evals, and your own consumers all see them with full s
 ### The tool-error taxonomy
 
 Every tool failure carries a machine-readable [`ToolErrorClass`](/reference/core/protocol/type-aliases/toolerrorclass/)
-on its error `data`, so you can route your own handling or bucket eval metrics without parsing message text:
+on its error `data`, so you can route your own handling or bucket metrics without parsing message text:
 
 ```ts
 import { toolErrorClass } from "mithril";

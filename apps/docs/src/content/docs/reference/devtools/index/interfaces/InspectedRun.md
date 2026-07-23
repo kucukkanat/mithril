@@ -5,7 +5,7 @@ prev: false
 title: "InspectedRun"
 ---
 
-Defined in: [packages/devtools/src/index.ts:30](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/index.ts#L30)
+Defined in: [packages/devtools/src/index.ts:30](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/index.ts#L30)
 
 A captured run: its id, ordered event log, replayed RunState, and [TimelineEntry](/reference/devtools/index/interfaces/timelineentry/) projection.
 
@@ -17,7 +17,7 @@ A captured run: its id, ordered event log, replayed RunState, and [TimelineEntry
 readonly events: readonly MithrilEvent[];
 ```
 
-Defined in: [packages/devtools/src/index.ts:32](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/index.ts#L32)
+Defined in: [packages/devtools/src/index.ts:32](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/index.ts#L32)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/devtools/src/index.ts:32](https://github.com/kucukkanat/mi
 readonly runId: string;
 ```
 
-Defined in: [packages/devtools/src/index.ts:31](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/index.ts#L31)
+Defined in: [packages/devtools/src/index.ts:31](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/index.ts#L31)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/devtools/src/index.ts:31](https://github.com/kucukkanat/mi
 readonly state: RunState;
 ```
 
-Defined in: [packages/devtools/src/index.ts:33](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/index.ts#L33)
+Defined in: [packages/devtools/src/index.ts:33](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/index.ts#L33)
 
 ***
 
@@ -47,4 +47,4 @@ Defined in: [packages/devtools/src/index.ts:33](https://github.com/kucukkanat/mi
 readonly timeline: readonly TimelineEntry[];
 ```
 
-Defined in: [packages/devtools/src/index.ts:34](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/index.ts#L34)
+Defined in: [packages/devtools/src/index.ts:34](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/index.ts#L34)

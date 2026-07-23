@@ -5,13 +5,13 @@
 
 **Revision note (post red-team).** This revision closes all blockers surfaced by three adversarial passes (consumer-code, type-design, runtime-portability). The load-bearing changes: (1) provider resolution and a suspension-schema registry are now first-class run inputs — a `ModelId` and a custom suspension are reachable from the public surface; (2) `Deps` and `Susp` each acquire exactly one honest binding site (curried factory + `suspends` field), so typed DI and typed resume stop degrading silently to `unknown`/`ApprovalRequest`; (3) `narrow()` becomes a type predicate; (4) durability is a discriminated `persistence` input so the signing key is structurally required exactly when it is needed; (5) the seal envelope signs the transmitted bytes so verify-before-parse actually holds; (6) `subtle` is optional and demanded only at seal/open, unbreaking insecure-context browsers; (7) the portability gate executes inside workerd and an insecure-context browser instead of statically scanning imports; (8) `MithrilEvent` gets a declared, non-exhaustive evolution contract; (9) streaming gets an explicit two-class backpressure policy. See §13 for deliberate rejections.
 
-The through-line: **the typed, versioned event stream is the product.** The loop is the one producer of it; devtools, React, OTel, and evals are pure consumers. State is never separately stored — it is always `replay(log, cursor)`.
+The through-line: **the typed, versioned event stream is the product.** The loop is the one producer of it; devtools, React, and OTel are pure consumers. State is never separately stored — it is always `replay(log, cursor)`.
 
 ---
 
 ## 1. Principles (non-negotiable, enforced)
 
-1. **The protocol is the product.** `MithrilEvent` is the only public wire format. Every surface (devtools, `@mithril/react`, `@mithril/otel`, `@mithril/evals`) consumes this exact union and may not import the loop. Enforced by the `exports` map, not convention. The union evolves under a **declared non-exhaustive contract** (§4.2) so additive members are minor, not major.
+1. **The protocol is the product.** `MithrilEvent` is the only public wire format. Every surface (devtools, `@mithril/react`, `@mithril/otel`) consumes this exact union and may not import the loop. Enforced by the `exports` map, not convention. The union evolves under a **declared non-exhaustive contract** (§4.2) so additive members are minor, not major.
 2. **State = `replay(log, cursor)`.** A pure, total fold. Never a separately-stored mutable checkpoint that can desync. Time-travel is free and always correct by construction. Append-only logs also structurally dodge the abort/suspend half-written-checkpoint corruption race.
 3. **Monomorphic wire, opt-in local typing.** Wire events carry `input`/`output` as `JsonValue`. The global union never indexes over a tool record — this is the deliberate defense against the tRPC/Hono type-instantiation collapse. Per-tool types are recovered *locally and on demand* via `narrow()` (a type predicate) / `ToolCallFor<Tools>`, so tsc pays instantiation cost only where a call-site asks for it.
 4. **Three nouns, progressive disclosure by argument.** `tool`, `agent`, `run`. Every escalation is one *argument* (`output`, `onStep`, `deps`), never one import. Typed DI is bound with one *curried call* (`agent<Deps>()(config)`) — the only exception to "one argument," accepted because there is no config field from which `Deps` can otherwise be inferred (§3.4, §13). The escape hatch (`agentLoop`) is always exactly one layer down, emitting the byte-identical event stream — ejection is a copy, not a rewrite.
@@ -22,9 +22,9 @@ The through-line: **the typed, versioned event stream is the product.** The loop
 9. **Two-altitude runner.** `await` for the 90%; `iterate()` (step-level pause/mutate/inject) for the 10%. Same events underneath.
 10. **Typed DI, no globals.** `RunContext<Deps>` threads dependencies into tools and dynamic instructions. `deps` are re-injected on every run/resume (via `RunOptions`, never deserialized). `Deps` has exactly one binding site — the curried `agent<Deps>()` factory — so it flows to tools and context without positional type args and without killing `const Tools` capture.
 11. **OTel `gen_ai.*` native.** Span linkage (`id`/`parentId`/`traceId`/`kind`) rides on every event; metadata on by default, content opt-in.
-12. **Determinism is injectable.** `now()`, `randomUUID()`, `getRandomValues()`, `fetch`, and (optionally) `subtle` come from a `RuntimeAdapter`, so eval/replay reproduces a trajectory byte-for-byte and workerd stays happy. `defaultRuntime()` keeps the common path zero-config and binds Web APIs to `globalThis` to avoid detached-`this` illegal-invocation.
+12. **Determinism is injectable.** `now()`, `randomUUID()`, `getRandomValues()`, `fetch`, and (optionally) `subtle` come from a `RuntimeAdapter`, so replay reproduces a trajectory byte-for-byte and workerd stays happy. `defaultRuntime()` keeps the common path zero-config and binds Web APIs to `globalThis` to avoid detached-`this` illegal-invocation.
 
-**Anti-patterns explicitly avoided:** tool-name-indexed generics in the global union; rename-heavy majors; `experimental_` treadmill; hard-to-eject monolith; multiple state-schema generations; eval runner built on another runner's internals; nominal runtime support that fails on contact; typed features (DI, typed resume) that lack an inference site and silently degrade to defaults.
+**Anti-patterns explicitly avoided:** tool-name-indexed generics in the global union; rename-heavy majors; `experimental_` treadmill; hard-to-eject monolith; multiple state-schema generations; nominal runtime support that fails on contact; typed features (DI, typed resume) that lack an inference site and silently degrade to defaults.
 
 ---
 
@@ -72,8 +72,6 @@ Boundaries are enforced by **entrypoints**, not discipline. ESM-only, strict `ex
                           a run happening in a worker/server it isn't hosting).
 @mithril/workflows        deterministic code-first routing composing agents. routing =
                           handoff / custom.route events. sits ABOVE core; never touches loop internals.
-@mithril/evals            trajectory-native record/replay. own minimal runner; bun:test/vitest
-                          are ADAPTERS, never internals. log IS the fixture.
 @mithril/devtools         bunx mithril dev. single-process, SQLite, offline. Node/Bun only —
                           honestly OUTSIDE the client path.
 mithril                   meta-package: re-exports + LAZILY (dynamic import, per-runtime) wires a
@@ -89,7 +87,6 @@ create-mithril            scaffolder.
 | `@mithril/core/protocol` | `MithrilEvent` & event types, `EventMeta`, `SpanRef`, `RunState`, `reduce`, `replay`, `INITIAL`, `narrow`, `ToolCallFor`, `DeepPartial`, `EventTransport` + transport factories, `assertContiguous`, `assertKnownEvent`, `migrate`, `Trajectory`, `JsonValue`/`JsonSafe`, `ModelId`/`ModelHandle`/`ModelInput`, `Usage*`, `SuspensionRequest`/`SuspensionDescriptor`/`ResolutionOf`/`suspend`/`ApprovalRequest`/`HandoffSuspension`, `SchemaRegistry`/`schemaRegistry`, `SealCodec`/`hmacCodec`/`aesGcmCodec`, `StateMigration`, `ChatRequest`/`ProviderChunk`/`ProviderSpec`/`Provider*`, `ContextPolicy`/`ContextBudget`, `Middleware`/`Plugin`/`MiddlewareContext`/`ModelCall`/`ModelResult`/`ToolInvocation`/`ToolOutcome`/`StepOutcome`/`DraftEvent`/`EventConsumer`/`InferPluginTools`, `InferUITools`/`InferSuspension`, `MithrilError` |
 | `@mithril/core/agent` | `tool`, `agent`, `createHarness`, `agentLoop`, `plugin`, `DEFAULT_PROMPTS`, `RuntimeAdapter`, `defaultRuntime`, `Transport`, `Persistence`, `generateStateKey`, `Keyring`/`singleKeyring`, `seal`/`sealLocal`, `open`, `schemaRegistryFor`, `Checkpointer`/`CheckpointRecord`/`checkpointerConformance` |
 | `@mithril/core/testkit` | conformance corpus, `seededRuntime` |
-| `@mithril/evals` | `runEval`, `describeEval`, `fileModelCache`, `ModelCache`, `EvalCase`/`Scorer`/`RecordReplayOptions` |
 | `@mithril/react` | `useRun`, `useObject`, `useApproval`, `useToolCalls` |
 | `@mithril/fs` | `FileSystem`, `fileSystemConformance` + subpaths `/node`,`/bun`,`/opfs`,`/memory` (`nodeFileSystem`/`opfsFileSystem`/…) |
 | `@mithril/kv` | `KeyValue`, `kvConformance` + subpaths `/memory`,`/indexeddb`,`/sqlite-node`,`/sqlite-bun`,`/kv` |
@@ -198,7 +195,7 @@ export interface SerializedError {
 
 ```ts
 /** The only ambient-capability seam. Built from globalThis by default; injectable for
- *  deterministic eval/replay and workerd safety. `subtle` is OPTIONAL: getRandomValues is
+ *  deterministic replay and workerd safety. `subtle` is OPTIONAL: getRandomValues is
  *  available in insecure browser contexts, subtle is not — so runId/ULID derive from
  *  getRandomValues and subtle is demanded only inside seal()/open(). */
 export interface RuntimeAdapter {
@@ -575,7 +572,7 @@ export type InferSuspension<A> = A extends Agent<any, any, any, infer S> ? S : n
 
 The protocol already makes *consumers* composable (anything can read `MithrilEvent`s without importing the loop). This section adds the missing *producer-side* composability so Mithril is a set of lego bricks, not a monolith. Two concepts, both in v1.
 
-**Design law that keeps it composable:** middleware has **no private side channel**. It observes and transforms only by reading and emitting `MithrilEvent`s through the same single-`seq` ordering authority (§ OQ-3 decision). There is no second, hidden control plane — so everything middleware does stays replayable, inspectable in devtools, and scoreable in evals. A middleware that "does something" but emits nothing is, by construction, invisible and therefore illegal-by-review.
+**Design law that keeps it composable:** middleware has **no private side channel**. It observes and transforms only by reading and emitting `MithrilEvent`s through the same single-`seq` ordering authority (§ OQ-3 decision). There is no second, hidden control plane — so everything middleware does stays replayable, inspectable in devtools. A middleware that "does something" but emits nothing is, by construction, invisible and therefore illegal-by-review.
 
 ```ts
 // The payload types the middleware altitudes carry (all in /protocol, all JSON-safe on the wire slots).
@@ -1070,7 +1067,7 @@ export interface ChatRequest {
 
 /** A provider yields pre-EventMeta CHUNKS, NOT MithrilEvents (P2). The loop — the single `seq` authority
  *  (OQ-3) — stamps v/runId/seq/span/ts onto each chunk. This is why providers can't (and must not) assign
- *  `seq`, and why the eval modelCache stores ProviderChunk[]: re-stamping on replay is deterministic. */
+ *  `seq`, and why the model cache stores ProviderChunk[]: re-stamping on replay is deterministic. */
 export type ProviderChunk =
   | { readonly type: 'text.delta';       readonly delta: string }
   | { readonly type: 'reasoning.delta';  readonly delta: string }
@@ -1128,7 +1125,7 @@ export interface CompactionPolicy {
   /** OPTIONAL model call to produce the summary. It runs ONCE, at compaction time, and the result is
    *  written into the log (the `compaction` event's summary). REPLAY NEVER RE-INVOKES `summarize` — it
    *  reads the recorded summary from the log — so "replay reconstructs the compacted window exactly"
-   *  holds off the eval path too, not only under the eval modelCache. */
+   *  holds off the replay path too, not only under the model cache. */
   readonly summarize?: (removed: readonly MithrilEvent[], ctx: { model: ModelId }) => Promise<string>;
 }
 
@@ -1143,66 +1140,6 @@ export interface TokenEstimator { estimate(messages: RunState['messages']): numb
 ```
 
 Compaction is emitted as `compaction { removedSeqRange, summarySeq, savedTokens }`, and the summary text is itself an event in the log — replay reconstructs the compacted window exactly from the recorded summary, and devtools renders a context meter with no side channel.
-
----
-
-## 8. Evals design
-
-Trajectory-native. Owning the loop is the unfair advantage: **the event log IS the fixture.**
-
-**Replay semantics (decided).** Replay **re-emits the recorded event log wholesale** — the loop does NOT re-run, tools do NOT execute, no network is touched. A replayed run cannot diverge because nothing executes; the fixture is authoritative. This is what makes CI deterministic and zero-network for *any* agent, impure tools included (closes C-D1/D2). `record` runs the real loop against a provider and writes the log; `modelCache` is a **watch-mode re-record** optimization used only while regenerating a fixture (so tweaking a prompt re-hits only changed model calls), never the CI path.
-
-```ts
-export interface Trajectory {
-  readonly runId: string;
-  readonly log: readonly MithrilEvent[]; // the recorded protocol stream = the fixture
-  readonly final: RunState;              // = replay(log)
-}
-
-export type Scorer<Ctx = void> = (t: Trajectory, ctx: Ctx) => Score | Promise<Score>;
-export interface Score { readonly name: string; readonly value: number; readonly rationale?: string }
-
-// Correlate Susp from the agent so resolveSuspension is TYPED to the raised resolution, not raw JsonValue.
-type SuspOf<A> = A extends Agent<any, any, any, infer S> ? S : never;
-
-export interface EvalCase<A extends Agent<any, any, any, any>, Ctx = void> {
-  readonly name: string;
-  readonly input: Input;
-  readonly deps: A extends Agent<any, infer Deps, any, any> ? Deps : never;
-  /** Answer any suspension the case hits (record mode), so HITL agents don't dead-end. Typed to the
-   *  agent's resolution; validated against the pending schema exactly like a real resume (fixes C-D5). */
-  readonly resolveSuspension?: (d: SuspensionDescriptor) => ResolutionOf<SuspOf<A>> | Promise<ResolutionOf<SuspOf<A>>>;
-  readonly scorers: readonly Scorer<Ctx>[];
-}
-
-// Discriminated on mode (fixes C-D6): replay needs no transport/providers and drags no provider code
-// into the CI bundle. `schemas` carries custom-suspension validators (defaults to schemaRegistryFor(agent)).
-export type RecordReplayOptions<A extends Agent<any, any, any, any>, Ctx = void> =
-  ( { readonly mode: 'record'; readonly transport: Transport; readonly providers: ProviderRegistry; readonly modelCache?: ModelCache }
-  | { readonly mode: 'replay'; readonly log: (c: EvalCase<A, Ctx>) => Promise<readonly MithrilEvent[]> } )
-  & { readonly runtime?: RuntimeAdapter          // record: pins now()/ids so the fixture is reproducible
-    ; readonly schemas?: SchemaRegistry }        // defaults to schemaRegistryFor(agent)
-  & MakeContext<A, Ctx>;                          // INTERSECTED (not nested): contributes the makeContext field itself
-
-// Contributes `makeContext` REQUIRED when Ctx is non-void, and OMITTABLE when Ctx is void — so a non-void
-// Ctx can never silently arrive `undefined` at a scorer (fixes C-D11), and the void path stays zero-config.
-type MakeContext<A, Ctx> =
-  [Ctx] extends [void] ? { readonly makeContext?: (t: Trajectory) => void }
-  : { readonly makeContext: (t: Trajectory, deps: A extends Agent<any, infer D, any, any> ? D : never) => Ctx | Promise<Ctx> };
-
-// Watch-mode re-record cache only. Stores pre-EventMeta ProviderChunk[] (§6) so re-stamping on
-// re-record is deterministic — never MithrilEvent[] with baked seq/ts (fixes C-D3).
-export interface ModelCache {
-  get(key: string): Promise<readonly ProviderChunk[] | undefined>;
-  put(key: string, chunks: readonly ProviderChunk[]): Promise<void>;
-}
-
-export function runEval<A extends Agent<any, any, any, any>, Ctx = void>(
-  agent: A, cases: readonly EvalCase<A, Ctx>[], opts: RecordReplayOptions<A, Ctx>,
-): AsyncGenerator<{ case: string; scores: readonly Score[]; trajectory: Trajectory }>;
-```
-
-**Shipped so nothing is hand-rolled** (`@mithril/core/testkit` + `@mithril/evals`): `seededRuntime(seed)` — a deterministic `RuntimeAdapter` for `record` (fixes C-D7); `fileModelCache(dir)` + a documented on-disk fixture format (C-D9); `describeEval(agent, cases, opts)` — the `bun:test`/`vitest` adapter, so `runEval` (an `AsyncGenerator`) is never hand-wired to `test`/`expect` (C-D14). Scorers are pure functions over `Trajectory` and can assert on any event (tool-call ordering via `narrow()`, cost ceilings, compaction, suspension handling); a record/replay diff is a diff over the event array.
 
 ---
 
@@ -1280,7 +1217,7 @@ export function toGenAiSpans(events: AsyncIterable<MithrilEvent>, opts?: { reado
 | `UNSUPPORTED_CAPABILITY` | model asked for a feature it lacks | `Model "x" has capabilities.tools=false. Pick a tool-capable model or drop the tools.` |
 | `STATE_INTEGRITY` | seal verify failed / stripped envelope | `Refusing a token that failed HMAC verification (possible tampering). trust:'sealed' requires a 3-part envelope.` |
 
-**`create-mithril`** scaffolds a *running* streaming chat in under ten lines from the `mithril` meta-package — the strongest DX statement the project makes is its first-run experience. Templates: `node-cli`, `bun-server`, `browser-byok`, `react-chat`. Each ships the devtools attach line one comment away and a passing `bun test` with one recorded eval fixture, so record/replay is demonstrated from minute one.
+**`create-mithril`** scaffolds a *running* streaming chat in under ten lines from the `mithril` meta-package — the strongest DX statement the project makes is its first-run experience. Templates: `node-cli`, `bun-server`, `browser-byok`, `react-chat`. Each ships the devtools attach line one comment away and a passing `bun test` with one recorded fixture, so record/replay is demonstrated from minute one.
 
 ---
 
@@ -1503,14 +1440,12 @@ Deliberate rejections where an obvious "fix" would compromise a core principle, 
 - **Unioning plugin-contributed tool types into the agent's global tool type (§3.8).** Rejected: it would inflate every consumer's tsc instantiation depth per installed plugin, reintroducing the collapse the monomorphic wire prevents. Plugin tools are runtime-callable but their static types are recovered locally via `InferPluginTools`; a 20-plugin CI fixture holds the budget.
 - **Type-enforcing "all effects go through `ctx.journal`" (Tier-2).** Rejected as impossible in the type system. Tier-2 stays the documented sharp edge, guarded by an ESLint rule + runtime nondeterminism detector; Tiers 1/1b are structurally replay-free and cover the majority (Principle #7).
 - **Hard `Out extends JsonValue` constraint everywhere.** Softened to a `JsonSafe<T>` assertion applied at the factory boundaries that actually produce wire values (tool output, structured output, suspension payload). A blanket constraint would spuriously reject legitimate Standard Schema output types; the boundary assertion still fails a non-serializable value at *definition* rather than at `structuredClone`.
-- **Dropping the `Ctx` type parameter from `Scorer`.** Rejected in favor of threading it: `RecordReplayOptions.makeContext` supplies `Ctx`, so it is inhabitable rather than dead. Removing it would have lost a real extension point for scorers.
 - **A single `/sqlite` subpath with runtime detection.** Rejected: a static `node:sqlite`/`bun:sqlite` import cannot load on the other runtime, and dynamic-import branching contradicts "never conditional-export magic." Split into explicit `/sqlite-node` and `/sqlite-bun`.
 - **The static `node:`-import CI scan as the portability contract.** Rejected as the contract (kept as a pre-filter): it cannot catch secure-context unavailability, workerd global-scope crypto bans, or coarse `Date.now()`. Replaced by an *executing* workerd-isolate + insecure-context-browser matrix (Principle #6) — the only thing that catches "fails on contact."
 
 ### Added in the validation-hardening pass (2026-07-20)
 
 - **Leaking a sub-agent's `Susp` union into the parent's generics (via `asTool`).** Rejected: it forces the orchestrator to statically know every child's suspension types and re-declare them, and it fights `const Tools` capture. Adopted the built-in `HandoffSuspension` re-frame — a child suspension surfaces to the parent as one known kind carrying the child descriptor; resolving it forwards down and is validated by the *child's* schema. The parent stays closed regardless of child suspensions.
-- **Providers yielding fully-stamped `MithrilEvent`s.** Rejected: the provider cannot own `seq`/`span`/`runId` (the loop is the single ordering authority, OQ-3), so it would either invent colliding seqs or bake record-time metadata that replay can't reproduce. Providers yield pre-`EventMeta` `ProviderChunk`s and the loop stamps — one fix that also lets the eval cache store `ProviderChunk[]` and re-stamp deterministically.
-- **Replaying evals by re-running the loop with a tool-effect cache.** Rejected in favor of re-emitting the recorded log wholesale: a tool cache means tools "execute" on replay (more machinery, more canonicalization, more desync surface) for no determinism gain. The log is authoritative; nothing runs on replay, so no impure tool can touch the network in CI. `modelCache` survives only as a watch-mode re-record optimization.
+- **Providers yielding fully-stamped `MithrilEvent`s.** Rejected: the provider cannot own `seq`/`span`/`runId` (the loop is the single ordering authority, OQ-3), so it would either invent colliding seqs or bake record-time metadata that replay can't reproduce. Providers yield pre-`EventMeta` `ProviderChunk`s and the loop stamps — one fix that also lets the model cache store `ProviderChunk[]` and re-stamp deterministically.
 - **A single durable persistence mode requiring `subtle`.** Rejected: it makes durable resume impossible on insecure LAN origins (phone testing), a hard contradiction with the browser-runtime goal. Split into `durable-local` (same-origin, unsigned — the hostile-transport threat is absent there) and `durable` (cross-store, sealed). Honesty over a nominal guarantee.
 - **`FileSystem` on `RuntimeAdapter`, or an `autoFileSystem()` that detects the runtime.** Rejected both (§10.1). Filesystem isn't a universal capability (workerd has none), so putting it on the universal `RuntimeAdapter` seam would bloat it and force every runtime to supply one — it's an opt-in dependency instead. And runtime auto-detection is the conditional-export magic the portability recipe rejects; explicit per-runtime subpaths (`@mithril/fs/node` | `/opfs` | …) are the honest form. The interface promises the cross-runtime intersection (async, rooted, POSIX-lite), not Node's superset, so a tool written against it genuinely runs on OPFS.

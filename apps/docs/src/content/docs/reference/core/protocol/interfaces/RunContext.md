@@ -5,7 +5,7 @@ prev: false
 title: "RunContext"
 ---
 
-Defined in: [packages/core/src/protocol/context.ts:55](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/context.ts#L55)
+Defined in: [packages/core/src/protocol/context.ts:55](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/context.ts#L55)
 
 The typed dependency-injection context threaded into tools and dynamic
 instructions.
@@ -28,7 +28,7 @@ No globals: `deps` are re-injected every run/resume and are never serialized.
 readonly deps: Deps;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:56](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/context.ts#L56)
+Defined in: [packages/core/src/protocol/context.ts:56](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/context.ts#L56)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/core/src/protocol/context.ts:56](https://github.com/kucukk
 readonly runId: string;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:57](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/context.ts#L57)
+Defined in: [packages/core/src/protocol/context.ts:57](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/context.ts#L57)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [packages/core/src/protocol/context.ts:57](https://github.com/kucukk
 readonly runtime: RuntimeAdapter;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:61](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/context.ts#L61)
+Defined in: [packages/core/src/protocol/context.ts:61](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/context.ts#L61)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [packages/core/src/protocol/context.ts:61](https://github.com/kucukk
 readonly signal: AbortSignal;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:59](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/context.ts#L59)
+Defined in: [packages/core/src/protocol/context.ts:59](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/context.ts#L59)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [packages/core/src/protocol/context.ts:59](https://github.com/kucukk
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:58](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/context.ts#L58)
+Defined in: [packages/core/src/protocol/context.ts:58](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/context.ts#L58)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [packages/core/src/protocol/context.ts:58](https://github.com/kucukk
 readonly usage: Readonly<UsageTotals>;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:60](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/context.ts#L60)
+Defined in: [packages/core/src/protocol/context.ts:60](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/context.ts#L60)
 
 ## Methods
 
@@ -88,7 +88,7 @@ Defined in: [packages/core/src/protocol/context.ts:60](https://github.com/kucukk
 emit(payload, type?): void;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:63](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/context.ts#L63)
+Defined in: [packages/core/src/protocol/context.ts:63](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/context.ts#L63)
 
 Push a first-class `custom.*` event into the stream.
 
@@ -114,7 +114,7 @@ journal<T>(
 schema?): Promise<T>;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:74](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/context.ts#L74)
+Defined in: [packages/core/src/protocol/context.ts:74](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/context.ts#L74)
 
 Journaled, exactly-once effect. Memoized into the log; skipped on Tier-2 replay.
 
@@ -144,7 +144,7 @@ Journaled, exactly-once effect. Memoized into the log; skipped on Tier-2 replay.
 suspend<Req>(req): Promise<ResolutionOf<Req>>;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:72](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/context.ts#L72)
+Defined in: [packages/core/src/protocol/context.ts:72](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/context.ts#L72)
 
 Tier-2 HITL: suspend mid-tool execution and resume with the resolution as the return value.
 

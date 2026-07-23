@@ -9,7 +9,7 @@ title: "textTurn"
 function textTurn(text, finishReason?): readonly ProviderChunk[];
 ```
 
-Defined in: [packages/core/src/testkit/index.ts:29](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/testkit/index.ts#L29)
+Defined in: [packages/core/src/testkit/index.ts:29](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/testkit/index.ts#L29)
 
 Build a single model turn that streams `text` and ends — the common "the model just answers" turn, so a
 test doesn't hand-write the `text.delta` + `message.end` pair.

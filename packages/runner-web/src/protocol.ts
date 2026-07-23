@@ -69,7 +69,7 @@ export type RunnerMessage =
   // top-level code rarely `return`s it, so we can't rely on the module result).
   | { readonly type: "result"; readonly result: unknown }
   // Generic structured side-channel, produced by the injected `emit(payload)` global —
-  // e.g. an evals harness streaming each EvalRun as it completes.
+  // e.g. a harness streaming each result as it completes.
   | { readonly type: "data"; readonly payload: unknown }
   | { readonly type: "done" }
   | { readonly type: "error"; readonly message: string };

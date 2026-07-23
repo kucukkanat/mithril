@@ -13,7 +13,6 @@
       "@mithril/providers/anthropic": ["packages/providers/src/anthropic/index.ts"],
       "@mithril/providers/google": ["packages/providers/src/google/index.ts"],
       "@mithril/providers/transformers": ["packages/providers/src/transformers/index.ts"],
-      "@mithril/evals": ["packages/evals/src/index.ts"],
       "@mithril/memory": ["packages/memory/src/index.ts"],
       "@mithril/kv/indexeddb": ["packages/kv/src/indexeddb.ts"],
       "@mithril/kv": ["packages/kv/src/index.ts"],

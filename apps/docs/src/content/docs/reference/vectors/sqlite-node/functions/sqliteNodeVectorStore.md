@@ -9,7 +9,7 @@ title: "sqliteNodeVectorStore"
 function sqliteNodeVectorStore(pathOrOpts?): VectorStore;
 ```
 
-Defined in: [sqlite-node.ts:36](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/vectors/src/sqlite-node.ts#L36)
+Defined in: [sqlite-node.ts:36](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/vectors/src/sqlite-node.ts#L36)
 
 Create a durable [VectorStore](/reference/vectors/index/interfaces/vectorstore/) backed by `node:sqlite` (Node >= 22.5, no native dependency).
 

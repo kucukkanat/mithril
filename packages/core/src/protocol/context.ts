@@ -3,11 +3,11 @@ import type { StandardSchemaV1 } from "./standard-schema.ts";
 import type { ResolutionOf, SuspensionRequest } from "./suspension.ts";
 
 // §3.2 — the only ambient-capability seam. Built from globalThis by default; injectable for deterministic
-// eval/replay and workerd safety. `subtle` is OPTIONAL: getRandomValues is available in insecure browser
+// replay and workerd safety. `subtle` is OPTIONAL: getRandomValues is available in insecure browser
 // contexts, subtle is not — so ids derive from getRandomValues and subtle is demanded only by seal()/open().
 /**
  * The single ambient-capability seam: every non-deterministic or platform
- * primitive an agent needs, injectable for deterministic eval/replay.
+ * primitive an agent needs, injectable for deterministic replay.
  *
  * @remarks
  * Built from `globalThis` by default. `subtle` is optional because

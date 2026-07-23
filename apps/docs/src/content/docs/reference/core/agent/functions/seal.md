@@ -13,7 +13,7 @@ function seal(
 codec?): Promise<string>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:182](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/seal.ts#L182)
+Defined in: [packages/core/src/agent/seal.ts:182](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/seal.ts#L182)
 
 Seal a string into a signed, tamper-evident `header.payload.digest` envelope.
 

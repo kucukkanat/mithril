@@ -5,7 +5,7 @@ prev: false
 title: "ModelCapabilities"
 ---
 
-Defined in: [packages/core/src/protocol/provider.ts:11](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L11)
+Defined in: [packages/core/src/protocol/provider.ts:11](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L11)
 
 The feature flags a model supports, used for capability-gated routing.
 
@@ -17,7 +17,7 @@ The feature flags a model supports, used for capability-gated routing.
 readonly browserSafe: boolean;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:18](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L18)
+Defined in: [packages/core/src/protocol/provider.ts:18](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L18)
 
 Whether the model is safe to call directly from a browser (BYOK) context.
 
@@ -29,7 +29,7 @@ Whether the model is safe to call directly from a browser (BYOK) context.
 readonly optional constrainedDecoding?: boolean;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:31](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L31)
+Defined in: [packages/core/src/protocol/provider.ts:31](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L31)
 
 Whether the provider supports native grammar/JSON-Schema constrained decoding of the final output
 (as opposed to prompt-and-validate JSON mode). See the roadmap for the in-browser story — Transformers.js
@@ -43,7 +43,7 @@ has no grammar support today; WebLLM/XGrammar is the path. Absent ⇒ unknown/un
 readonly promptCaching: boolean;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:15](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L15)
+Defined in: [packages/core/src/protocol/provider.ts:15](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L15)
 
 ***
 
@@ -53,7 +53,7 @@ Defined in: [packages/core/src/protocol/provider.ts:15](https://github.com/kucuk
 readonly reasoning: boolean;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:14](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L14)
+Defined in: [packages/core/src/protocol/provider.ts:14](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L14)
 
 ***
 
@@ -63,7 +63,7 @@ Defined in: [packages/core/src/protocol/provider.ts:14](https://github.com/kucuk
 readonly optional strictTools?: boolean;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:25](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L25)
+Defined in: [packages/core/src/protocol/provider.ts:25](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L25)
 
 Whether the provider can enforce a strict JSON-Schema on tool-call arguments (e.g. OpenAI's
 `strict: true` function tools, Anthropic strict tool use). Advisory today — the loop's parse-repair and
@@ -78,7 +78,7 @@ native constrained decoding where available. Absent ⇒ unknown/unsupported.
 readonly structuredOutput: boolean;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:13](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L13)
+Defined in: [packages/core/src/protocol/provider.ts:13](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L13)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [packages/core/src/protocol/provider.ts:13](https://github.com/kucuk
 readonly tools: boolean;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:12](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L12)
+Defined in: [packages/core/src/protocol/provider.ts:12](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L12)
 
 ***
 
@@ -98,4 +98,4 @@ Defined in: [packages/core/src/protocol/provider.ts:12](https://github.com/kucuk
 readonly vision: boolean;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:16](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L16)
+Defined in: [packages/core/src/protocol/provider.ts:16](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L16)

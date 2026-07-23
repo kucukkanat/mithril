@@ -5,7 +5,7 @@ prev: false
 title: "WorkflowSpec"
 ---
 
-Defined in: packages/spec/src/types.ts:124
+Defined in: [packages/spec/src/types.ts:124](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L124)
 
 A `const <id> = defineWorkflow({ … }, { start })` declaration.
 
@@ -17,7 +17,7 @@ A `const <id> = defineWorkflow({ … }, { start })` declaration.
 readonly id: string;
 ```
 
-Defined in: packages/spec/src/types.ts:126
+Defined in: [packages/spec/src/types.ts:126](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L126)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: packages/spec/src/types.ts:126
 readonly kind: "workflow";
 ```
 
-Defined in: packages/spec/src/types.ts:125
+Defined in: [packages/spec/src/types.ts:125](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L125)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: packages/spec/src/types.ts:125
 readonly optional maxSteps?: number;
 ```
 
-Defined in: packages/spec/src/types.ts:131
+Defined in: [packages/spec/src/types.ts:131](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L131)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: packages/spec/src/types.ts:131
 readonly start: string;
 ```
 
-Defined in: packages/spec/src/types.ts:130
+Defined in: [packages/spec/src/types.ts:130](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L130)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: packages/spec/src/types.ts:130
 readonly optional stateType?: CodeRegion;
 ```
 
-Defined in: packages/spec/src/types.ts:128
+Defined in: [packages/spec/src/types.ts:128](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L128)
 
 An adjacent `interface`/`type` declaration for the state shape, stored verbatim.
 
@@ -69,4 +69,4 @@ An adjacent `interface`/`type` declaration for the state shape, stored verbatim.
 readonly steps: readonly WorkflowStepSpec[];
 ```
 
-Defined in: packages/spec/src/types.ts:129
+Defined in: [packages/spec/src/types.ts:129](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L129)

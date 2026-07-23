@@ -5,7 +5,7 @@ prev: false
 title: "RunnerSnapshot"
 ---
 
-Defined in: runner-web/src/client.ts:21
+Defined in: [runner-web/src/client.ts:21](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/runner-web/src/client.ts#L21)
 
 The accumulated state of the current (or last) run.
 
@@ -17,7 +17,7 @@ The accumulated state of the current (or last) run.
 readonly data: readonly unknown[];
 ```
 
-Defined in: runner-web/src/client.ts:34
+Defined in: [runner-web/src/client.ts:34](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/runner-web/src/client.ts#L34)
 
 Payloads received on the `emit()` side-channel, in arrival order.
 
@@ -31,7 +31,7 @@ readonly download:
   | null;
 ```
 
-Defined in: runner-web/src/client.ts:32
+Defined in: [runner-web/src/client.ts:32](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/runner-web/src/client.ts#L32)
 
 Local-model weight download/load progress, when a local run is fetching weights.
 
@@ -43,7 +43,7 @@ Local-model weight download/load progress, when a local run is fetching weights.
 readonly error: string | null;
 ```
 
-Defined in: runner-web/src/client.ts:27
+Defined in: [runner-web/src/client.ts:27](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/runner-web/src/client.ts#L27)
 
 ***
 
@@ -53,7 +53,7 @@ Defined in: runner-web/src/client.ts:27
 readonly errorHint: string | null;
 ```
 
-Defined in: runner-web/src/client.ts:29
+Defined in: [runner-web/src/client.ts:29](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/runner-web/src/client.ts#L29)
 
 A friendly explanation for common failures (invalid key, CORS, rate limit); raw stays in `error`.
 
@@ -65,7 +65,7 @@ A friendly explanation for common failures (invalid key, CORS, rate limit); raw 
 readonly events: readonly MithrilEvent[];
 ```
 
-Defined in: runner-web/src/client.ts:23
+Defined in: [runner-web/src/client.ts:23](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/runner-web/src/client.ts#L23)
 
 ***
 
@@ -75,7 +75,7 @@ Defined in: runner-web/src/client.ts:23
 readonly logs: readonly LogLine[];
 ```
 
-Defined in: runner-web/src/client.ts:24
+Defined in: [runner-web/src/client.ts:24](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/runner-web/src/client.ts#L24)
 
 ***
 
@@ -85,7 +85,7 @@ Defined in: runner-web/src/client.ts:24
 readonly result: unknown;
 ```
 
-Defined in: runner-web/src/client.ts:26
+Defined in: [runner-web/src/client.ts:26](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/runner-web/src/client.ts#L26)
 
 The authoritative final RunResult posted by the injected `run()` (JSON-safe), or `null`.
 
@@ -97,7 +97,7 @@ The authoritative final RunResult posted by the injected `run()` (JSON-safe), or
 readonly status: RunStatus;
 ```
 
-Defined in: runner-web/src/client.ts:22
+Defined in: [runner-web/src/client.ts:22](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/runner-web/src/client.ts#L22)
 
 ***
 
@@ -109,4 +109,4 @@ readonly suspended:
   | null;
 ```
 
-Defined in: runner-web/src/client.ts:30
+Defined in: [runner-web/src/client.ts:30](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/runner-web/src/client.ts#L30)

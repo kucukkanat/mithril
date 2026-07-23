@@ -29,7 +29,6 @@ if (result.status === "completed") console.log(result.output);
 | `@mithril/core` (`/protocol`, `/agent`, `/testkit`) | Event protocol + total reducers, the agent loop, tools, streaming, HITL, structured output, §3.8 middleware/plugins, sealed tokens | ✅ implemented + tested |
 | `@mithril/providers` (`/openai`, `/anthropic`, `/google`, `/transformers`) | Real streaming provider adapters (SSE) + on-device transformers, self-wiring model handles | ✅ implemented + tested |
 | `@mithril/memory` (`.`, `/sqlite-bun`) | `Checkpointer` interface + in-memory + **real SQLite** impls + conformance kit | ✅ implemented + tested |
-| `@mithril/evals` | Trajectory-native evals: `runEval`, `describeEval`, scorers | ✅ implemented + tested |
 | `@mithril/kv` (`.`, `/indexeddb`) | Runtime-agnostic `KeyValue` (in-memory + IndexedDB + conformance) | ✅ implemented + tested |
 | `@mithril/fs` (`.`, `/node`, `/opfs`) | Runtime-agnostic `FileSystem` (in-memory + **real Node/Bun fs** + browser OPFS, conformance) | ✅ implemented + tested |
 | `@mithril/vectors` (`.`, `/sqlite-bun`) | Runtime-agnostic vector store (in-memory + **real SQLite**, cosine search, conformance) | ✅ implemented + tested |
@@ -47,7 +46,7 @@ Anthropic, Google) plus on-device inference via transformers.js, all three human
 (approval, tool-returned `suspend`, mid-execute `ctx.suspend`) with first-class nested `asTool` resume and
 resumable tokens (unsigned by default; opt-in HMAC/AES-GCM sealing), typed structured output with
 validate→retry and streamed `object.delta`, step/tool/model-altitude middleware + plugin bundling + event
-consumers, a portable Checkpointer (in-memory + SQLite), trajectory evals, OTel spans, runtime-agnostic
+consumers, a portable Checkpointer (in-memory + SQLite), OTel spans, runtime-agnostic
 KV/FS/vector adapters (in-memory + real Node/Bun + browser IndexedDB/OPFS), deterministic workflows, an MCP
 client + server, React bindings, a devtools inspector, and a scaffolder.
 

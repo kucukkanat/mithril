@@ -43,8 +43,8 @@ something" but emits nothing is, by construction, invisible — and therefore il
 </Aside>
 
 That's what keeps everything replayable: because effects flow through the event stream (and
-journaled effects through `ctx.journal`), whatever a middleware does stays inspectable in devtools
-and scoreable in evals. It's the deliberate rejection of the hidden-prompt, magic-framework class
+journaled effects through `ctx.journal`), whatever a middleware does stays inspectable in devtools.
+It's the deliberate rejection of the hidden-prompt, magic-framework class
 of bug.
 
 See it in the stream — this middleware emits a `custom.audit` event around each tool call, and it

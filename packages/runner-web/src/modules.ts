@@ -7,7 +7,6 @@
 import * as coreAgent from "@mithril/core/agent";
 import * as coreProtocol from "@mithril/core/protocol";
 import * as testkit from "@mithril/core/testkit";
-import * as evals from "@mithril/evals";
 import * as memory from "@mithril/memory";
 import * as kv from "@mithril/kv";
 import * as kvIndexedDb from "@mithril/kv/indexeddb";
@@ -55,7 +54,6 @@ export function defaultModules(opts?: DefaultModulesOptions): Record<string, unk
     "@mithril/core/agent": coreAgent,
     "@mithril/core/protocol": coreProtocol,
     "@mithril/core/testkit": testkit,
-    "@mithril/evals": evals,
     "@mithril/memory": memory,
     "@mithril/kv": kv,
     "@mithril/kv/indexeddb": kvIndexedDb,

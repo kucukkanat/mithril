@@ -120,10 +120,3 @@ export function uniqueName(base: string, existing: ReadonlySet<string>): string 
   while (existing.has(`${base} ${n}`)) n++;
   return `${base} ${n}`;
 }
-
-/** The smallest free `case N` name — collision-proof even after a middle case is deleted. */
-export function nextCaseName(existing: ReadonlySet<string>): string {
-  let n = 1;
-  while (existing.has(`case ${n}`)) n++;
-  return `case ${n}`;
-}

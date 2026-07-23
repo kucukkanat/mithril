@@ -27,7 +27,6 @@ const TD_PACKAGES = [
   { name: "core", label: "@mithril/core", entryPoints: ["core/src/protocol/index.ts", "core/src/agent/index.ts", "core/src/testkit/index.ts"] },
   { name: "providers", label: "@mithril/providers", entryPoints: ["providers/src/openai/index.ts", "providers/src/anthropic/index.ts", "providers/src/google/index.ts", "providers/src/transformers/index.ts"] },
   { name: "memory", label: "@mithril/memory", entryPoints: ["memory/src/index.ts", "memory/src/sqlite-bun.ts", "memory/src/sqlite-node.ts"] },
-  { name: "evals", label: "@mithril/evals", entryPoints: ["evals/src/index.ts"] },
   { name: "kv", label: "@mithril/kv", entryPoints: ["kv/src/index.ts", "kv/src/indexeddb.ts", "kv/src/sqlite-node.ts"] },
   { name: "fs", label: "@mithril/fs", entryPoints: ["fs/src/index.ts", "fs/src/node.ts", "fs/src/opfs.ts"] },
   { name: "otel", label: "@mithril/otel", entryPoints: ["otel/src/index.ts"] },
@@ -144,7 +143,6 @@ export default defineConfig({
               label: "Quality & ops",
               items: [
                 "guides/testing-your-agent",
-                "guides/evals",
                 "guides/observability",
               ],
             },

@@ -9,7 +9,7 @@ title: "useRun"
 function useRun(source): RunSnapshot;
 ```
 
-Defined in: [hooks.ts:44](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/react/src/hooks.ts#L44)
+Defined in: [hooks.ts:44](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/react/src/hooks.ts#L44)
 
 Subscribe a component to a streaming run and re-render as events arrive.
 

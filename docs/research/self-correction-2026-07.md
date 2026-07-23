@@ -42,7 +42,7 @@ to do this better than any incumbent.
 ## The layered architecture (defense in depth)
 
 The methods organize into five layers. Lower layers are cheaper and should ship on by default;
-higher layers are opt-in compute. Each layer is independently testable against `apps/evals`.
+higher layers are opt-in compute. Each layer is independently testable against focused harness fixtures.
 
 ### Layer 0 — Prompt: make the call succeed the first time
 
@@ -89,7 +89,7 @@ schema-aware coercion and candidate ranking on top of zod is the part a harness 
 Two corroborating field findings (Local Agent Bench, Feb 2026, indie but instructive): **the
 harness's parser changes the measured quality of a model** (LFM2.5 "improved" 0.640→0.880 purely
 from adding a bracket-notation parser), and parser leniency can *mask* restraint failures — so the
-parser must be a first-class, per-model-family, eval-tested surface.
+parser must be a first-class, per-model-family, fixture-tested surface.
 
 ### Layer 3 — Loop: typed feedback, bounded retries, guards (the harness's home turf)
 
@@ -164,15 +164,15 @@ show *why* something was retried, steered, or halted (the "clear errors" pillar)
   token cost, serialized wall-clock, needs environment checkpointing. Power-user opt-in at most;
   not viable in-browser.
 
-### Cross-cutting — Evals and observability close the loop
+### Cross-cutting — Observability closes the loop
 
 - MAST (NeurIPS 2025 spotlight, 1,600+ traces): most agent failures are **system-design failures**
   (~42% spec/design, ~37% coordination, ~21% weak verification) — fixable at the harness layer
   without better models. And frontier LLMs localize errors in traces at only ~11% accuracy (TRAIL) —
   **deterministic detectors beat LLM-as-debugger**; put the intelligence in typed events, not in a
   "debugging agent."
-- Eval-suite additions the literature directly motivates: **repair-success rate per error class per
-  round** (nobody has measured this for 0.5B–4B — Mithril's evals can be first), **restraint /
+- Metrics the literature directly motivates: **repair-success rate per error class per
+  round** (nobody has measured this for 0.5B–4B), **restraint /
   abstention scoring** (the dominant small-model failure in the wild is keyword-tripping — calling
   `get_weather` on any mention of weather), **wrong-tool avoidance**, and **parser robustness per
   model family**. BFCL v4 itself reweighted toward multi-step/multi-turn — the leaderboard now
@@ -196,7 +196,7 @@ show *why* something was retried, steered, or halted (the "clear errors" pillar)
 6. **LLM-as-trace-debugger as the failure detector** — ~11% localization accuracy; use
    deterministic detectors and typed events.
 7. **Trusting the parser to be neutral** — leniency changes measured model quality and can mask
-   restraint failures; eval the parser itself.
+   restraint failures; test the parser itself.
 
 ## Proposed defaults (for discussion)
 
@@ -204,7 +204,7 @@ show *why* something was retried, steered, or halted (the "clear errors" pillar)
 |---|---|---|
 | SAP-style lenient parse (zod-aligned) | ON | Zero cost, biggest measured lift |
 | Validation-error re-ask | ON, budget 2, compact-diff prompt | Universal production pattern; 2 rounds = 76–95% of gains |
-| Error-class routing + typed ToolScan codes | ON | Free; enables targeted prompts, evals, clear DX errors |
+| Error-class routing + typed ToolScan codes | ON | Free; enables targeted prompts and clear DX errors |
 | Error-as-observation (never throw) + designed empty output | ON | SWE-agent ablated (+3 pts) |
 | Loop detector (hash (tool,args), 3× identical → steer once → halt) | ON | Convergent across OpenHands/Gemini CLI/smolagents; free |
 | Budget guards + forced final synthesis | ON (turns ≈ 20–25) | Converged industry defaults; graceful degradation UX |

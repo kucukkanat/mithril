@@ -176,10 +176,10 @@ const CORPUS: readonly (readonly [string, ProjectSpec])[] = [
     },
   ],
   [
-    "evals + meta carried through prev",
+    "meta carried through prev",
     {
       specVersion: SPEC_VERSION,
-      name: "with-evals",
+      name: "with-meta",
       decls: [
         WEATHER_TOOL,
         {
@@ -191,20 +191,6 @@ const CORPUS: readonly (readonly [string, ProjectSpec])[] = [
         },
       ],
       entry: { target: "assistant", input: "Weather in Paris?" },
-      evals: [
-        {
-          id: "suite1",
-          name: "smoke",
-          threshold: 0.5,
-          cases: [
-            {
-              name: "calls the tool",
-              input: "Weather in Paris?",
-              scorers: [{ type: "calledTool", params: { name: "weather" } }],
-            },
-          ],
-        },
-      ],
       meta: { layout: { assistant: { x: 100, y: 40 }, weather: { x: 320, y: 40 } } },
     },
   ],

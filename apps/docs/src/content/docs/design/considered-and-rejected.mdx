@@ -52,8 +52,4 @@ trajectories in a workerd isolate and an insecure-context browser.
 
 ### Providers that yield fully-stamped events
 **Rejected** — only the loop may assign `seq`. Providers yield pre-`EventMeta` `ProviderChunk`s; the
-loop stamps them. This is also what keeps eval replay deterministic.
-
-### Replaying evals by re-running the loop
-**Rejected** — replay re-emits the recorded log wholesale; nothing executes, so it's deterministic and
-network-free.
+loop stamps them. This is also what keeps replay deterministic.

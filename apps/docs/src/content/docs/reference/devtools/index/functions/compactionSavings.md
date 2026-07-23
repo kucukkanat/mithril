@@ -9,7 +9,7 @@ title: "compactionSavings"
 function compactionSavings(events): number;
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:159](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/devtools/src/selectors.ts#L159)
+Defined in: [packages/devtools/src/selectors.ts:159](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/devtools/src/selectors.ts#L159)
 
 Sum the tokens reclaimed by `compaction` events in a log.
 

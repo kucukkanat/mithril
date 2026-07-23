@@ -9,7 +9,7 @@ title: "splitToolCalls"
 function splitToolCalls(tokens, fmt): AsyncGenerator<EngineChunk>;
 ```
 
-Defined in: [transformers/tool-formats.ts:186](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/providers/src/transformers/tool-formats.ts#L186)
+Defined in: [transformers/tool-formats.ts:186](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/providers/src/transformers/tool-formats.ts#L186)
 
 Transform a raw token stream into [EngineChunk](/reference/providers/transformers/type-aliases/enginechunk/)s, suppressing tool-call sentinels from visible text.
 

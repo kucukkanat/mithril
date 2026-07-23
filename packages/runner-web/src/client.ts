@@ -2,7 +2,7 @@
  * The main-thread half of the runner: a framework-free state machine that owns the worker
  * lifecycle. A fresh worker is spawned per run so state is clean and a runaway loop can be
  * terminated; an idle watchdog (reset by every worker message) replaces a wall-clock timeout so
- * long-but-alive runs — big eval suites, slow local generation — are never killed while streaming.
+ * long-but-alive runs — long agent runs, slow local generation — are never killed while streaming.
  *
  * `subscribe`/`getSnapshot` match `useSyncExternalStore`'s contract, so a React host wraps a
  * client in one line; non-React hosts poll or subscribe directly.

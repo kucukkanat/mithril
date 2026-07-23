@@ -9,7 +9,7 @@ title: "checkpointerConformance"
 function checkpointerConformance(make, t): void;
 ```
 
-Defined in: [index.ts:85](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/memory/src/index.ts#L85)
+Defined in: [index.ts:85](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/memory/src/index.ts#L85)
 
 Shared conformance suite (§10) that every Checkpointer implementation must pass.
 

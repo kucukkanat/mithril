@@ -9,7 +9,7 @@ title: "browserEngine"
 function browserEngine(opts?): TransformersEngine;
 ```
 
-Defined in: [transformers/edge.ts:198](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/providers/src/transformers/edge.ts#L198)
+Defined in: [transformers/edge.ts:198](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/providers/src/transformers/edge.ts#L198)
 
 Build the browser [TransformersEngine](/reference/providers/transformers/interfaces/transformersengine/) backing a [transformers](/reference/providers/transformers/functions/transformers/) handle.
 

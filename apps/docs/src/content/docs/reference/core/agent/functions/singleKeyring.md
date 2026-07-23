@@ -9,7 +9,7 @@ title: "singleKeyring"
 function singleKeyring(key, kid?): Keyring;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:127](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/seal.ts#L127)
+Defined in: [packages/core/src/agent/seal.ts:127](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/seal.ts#L127)
 
 The common single-key [Keyring](/reference/core/agent/interfaces/keyring/): signs and verifies with one key under a fixed `kid`.
 

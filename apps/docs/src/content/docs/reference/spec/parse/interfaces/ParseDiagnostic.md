@@ -5,7 +5,7 @@ prev: false
 title: "ParseDiagnostic"
 ---
 
-Defined in: packages/spec/src/parse.ts:31
+Defined in: [packages/spec/src/parse.ts:31](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/parse.ts#L31)
 
 One parser message, with source offsets a code editor can mark.
 
@@ -17,7 +17,7 @@ One parser message, with source offsets a code editor can mark.
 readonly length: number;
 ```
 
-Defined in: packages/spec/src/parse.ts:35
+Defined in: [packages/spec/src/parse.ts:35](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/parse.ts#L35)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: packages/spec/src/parse.ts:35
 readonly message: string;
 ```
 
-Defined in: packages/spec/src/parse.ts:33
+Defined in: [packages/spec/src/parse.ts:33](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/parse.ts#L33)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: packages/spec/src/parse.ts:33
 readonly severity: "error" | "warning";
 ```
 
-Defined in: packages/spec/src/parse.ts:32
+Defined in: [packages/spec/src/parse.ts:32](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/parse.ts#L32)
 
 ***
 
@@ -47,4 +47,4 @@ Defined in: packages/spec/src/parse.ts:32
 readonly start: number;
 ```
 
-Defined in: packages/spec/src/parse.ts:34
+Defined in: [packages/spec/src/parse.ts:34](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/parse.ts#L34)

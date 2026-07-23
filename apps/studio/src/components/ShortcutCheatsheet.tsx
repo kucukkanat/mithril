@@ -3,7 +3,7 @@ import { useUiStore } from "../state/uiStore.ts";
 /** The "?" shortcut cheat-sheet — the discovery half of the keyboard system. */
 const GROUPS: readonly { readonly title: string; readonly items: readonly (readonly [string, string])[] }[] = [
   { title: "Global", items: [["⌘K", "Command palette"], ["?", "This cheat sheet"], ["Esc", "Close overlays"]] },
-  { title: "Navigate", items: [["⌘1  ·  g d", "Design"], ["⌘2  ·  g r", "Run"], ["⌘3  ·  g e", "Evals"]] },
+  { title: "Navigate", items: [["⌘1  ·  g d", "Design"], ["⌘2  ·  g r", "Run"]] },
   { title: "Act", items: [["⌘↵", "Run the agent"], ["⌘E", "Toggle split code view (Design)"], ["⌘⏎", "Send message (in the composer)"]] },
 ];
 

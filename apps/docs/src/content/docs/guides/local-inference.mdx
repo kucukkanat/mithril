@@ -55,7 +55,7 @@ contract is untouched — the run stream is exactly the same as a cloud provider
 ## Curated models
 
 Seven models ship in the [playground](/playground/) picker: two long-standing defaults (Qwen3-0.6B, LFM2.5) plus
-five additions that were **researched and scored on the multi-tool eval suite** before shipping — the full
+five additions that were **researched and scored on a multi-tool test harness** before shipping — the full
 methodology and results are in [How we chose these models](#how-we-chose-these-models). Each is a
 **text-generation** model, verified (2026-07-21) against the live Hugging Face file tree + raw chat template.
 The provider loads every model with `AutoModelForCausalLM` (a text-only path), so a multimodal
@@ -68,7 +68,7 @@ knows still runs via `transformers("<repo>")`: the `<tool_call>` grammar (Qwen/G
 | --- | --- | --- | --- |
 | `onnx-community/Qwen3-0.6B-ONNX` | ~0.55 GB | Qwen3 | **default** — smallest reliable tool-caller; "thinks" first |
 | `onnx-community/Qwen2.5-0.5B-Instruct` | ~0.5 GB | Qwen2.5 | tiniest; direct (no thinking), fastest decode |
-| `LiquidAI/LFM2.5-1.2B-Instruct-ONNX` | ~0.8 GB | Liquid | agent-tuned; top eval score (4/4); LFM Open license |
+| `LiquidAI/LFM2.5-1.2B-Instruct-ONNX` | ~0.8 GB | Liquid | agent-tuned; top tool score (4/4); LFM Open license |
 | `onnx-community/Qwen2.5-1.5B-Instruct` | ~1.2 GB | Qwen2.5 | stronger mid-tier, direct |
 | `onnx-community/Qwen3-1.7B-ONNX` | ~1.4 GB | Qwen3 | more capable; thinks |
 | `onnx-community/granite-4.0-1b-ONNX-web` | ~1.8 GB | IBM Granite | Mamba2 hybrid — auto-pinned to `q4` (q4f16 NaNs on WebGPU) |
@@ -77,7 +77,7 @@ knows still runs via `transformers("<repo>")`: the `<tool_call>` grammar (Qwen/G
 Device is feature-detected: `webgpu` when available, else **`cpu`** on Node/Bun (onnxruntime-node) or `wasm`
 in the browser — Node/Bun runs warn once on the CPU fallback. Override with `transformers(model, { device, dtype })`
 (`device` is `"webgpu" | "wasm" | "cpu"`). So the same handle runs headless in Node/Bun too: the
-[evals suite](/guides/evals/) scores these models on CPU with no browser.
+the same harness scores these models headless on CPU with no browser.
 
 `dtype` defaults to **`q4f16`** on WebGPU (4-bit weights, fp16 activations) and **`q4`** on CPU/WASM. Two models
 need a pin (the playground catalog applies both automatically): (1) **fp16-fragile architectures** — Granite 4.0
@@ -99,7 +99,7 @@ candidates were **cut by the data**. The bar, in order:
    emit `<tool_call>` (Hermes JSON / Qwen nested-XML), `<|tool_call_start|>` (LFM2), or Gemma's native token.
    Models that emit bare JSON or `<|python_tag|>` (Llama 3.2), or ship no tools template at all (SmolLM2,
    gemma-3-1b), would leak tool calls as visible text — rejected before we spent a GPU-second on them.
-3. **It actually calls tools.** Every survivor was scored on the [eval suite](/guides/evals/)'s five scenarios
+3. **It actually calls tools.** Every survivor was scored on five scenarios
    (a chat baseline + four tool tasks: single call, right-tool-among-six, two-calls-in-one-turn, and
    right-arguments), on CPU, with a 512-token budget so "thinking" models aren't cut off mid-reasoning.
 
@@ -142,7 +142,7 @@ call), which is exactly why we score every candidate instead of trusting the fam
 - **Vendor diversity where it's reliable.** Three vendors plus two Qwen generations across the set (Qwen2.5,
   Qwen3, Liquid, IBM Granite) — different tokenizers and templates, no single-vendor lock-in, and the parser is
   exercised across three distinct tool grammars.
-- **WebGPU-first, CPU-honest.** They run on WebGPU (fast) and fall back to WASM/CPU; the evals prove they work
+- **WebGPU-first, CPU-honest.** They run on WebGPU (fast) and fall back to WASM/CPU; the scores prove they work
   headless on CPU too. Two carry an automatic dtype pin (Granite → `q4`, Qwen3-4B → `q4f16`) so they don't break
   on a given backend.
 

@@ -146,30 +146,6 @@ export interface EntrySpec {
   readonly initialState?: CodeRegion;
 }
 
-/** One scorer attached to an eval case — `type` names a scorer in the `@mithril/evals` catalog. */
-export interface ScorerSpec {
-  readonly type: string;
-  readonly params: Readonly<Record<string, unknown>>;
-}
-
-/** One eval case: an input plus the scorers that judge its trajectory. */
-export interface EvalCaseSpec {
-  readonly name: string;
-  readonly input: string | readonly EntryMessage[];
-  readonly scorers: readonly ScorerSpec[];
-  /** A pinned golden reference trajectory (`{ tool, input? }[]`) for `matchesTrajectory`. */
-  readonly reference?: readonly { readonly tool: string; readonly input?: unknown }[];
-}
-
-/** A named eval suite over the project's entry agent. */
-export interface EvalSuiteSpec {
-  readonly id: string;
-  readonly name: string;
-  /** Per-score pass threshold (default 1). */
-  readonly threshold?: number;
-  readonly cases: readonly EvalCaseSpec[];
-}
-
 /** Studio-only presentation data — codegen ignores it entirely. */
 export interface SpecMeta {
   /** Canvas node positions, keyed by decl id. */
@@ -192,6 +168,5 @@ export interface ProjectSpec {
   readonly name: string;
   readonly decls: readonly ProjectDecl[];
   readonly entry: EntrySpec;
-  readonly evals?: readonly EvalSuiteSpec[];
   readonly meta?: SpecMeta;
 }

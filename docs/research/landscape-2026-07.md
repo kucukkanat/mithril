@@ -8,7 +8,7 @@ The TS agent space has stratified into three layers, and the money/mindshare sit
 
 1. **Model abstraction** — won. Vercel AI SDK (~17.7M weekly downloads) is the assumed base layer, the way React once was. Mastra and VoltAgent build *on* it. You will not displace it; you must compose with it (or match its provider spec shape).
 2. **Agent orchestration** — contested. Mastra leads on DX and adoption (~1.23M weekly), LangGraph leads on durability depth, OpenAI Agents leads on minimalism, Claude Agent SDK leads on out-of-box capability. Every one of them has a structural weakness a newcomer can attack.
-3. **The harness layer above** — open. Durable loops without platform lock-in, context engineering, trajectory evals, local-first observability, and runtime portability are all acknowledged gaps that teams currently build themselves. Multiple production teams report building sandboxing, persistence, replay, and approval UIs by hand on top of AI SDK or Claude Agent SDK.
+3. **The harness layer above** — open. Durable loops without platform lock-in, context engineering, trajectory replay, local-first observability, and runtime portability are all acknowledged gaps that teams currently build themselves. Multiple production teams report building sandboxing, persistence, replay, and approval UIs by hand on top of AI SDK or Claude Agent SDK.
 
 The prevailing developer mood matters as much as the feature matrix: the winning meme is *"an agent is a while loop with an LLM call"* (fly.io, 12-factor agents at 23.5k stars), Anthropic's own guidance says use APIs directly, and LangChain is the canonical cautionary tale. Devs don't want another framework that owns their control flow. They want harness infrastructure — durable state, HITL, context management, tracing — under a loop they can read.
 
@@ -44,7 +44,7 @@ The prevailing developer mood matters as much as the feature matrix: the winning
 
 **3. Durability without a landlord.** Every durability story ships with an operational string attached: LangGraph's production server is Elastic-licensed, AgentKit's checkpointing requires running an Inngest server (open-source and self-hostable, to be fair — but an orchestrator you operate, not a library interface), Temporal/DBOS are platforms. Nobody ships a `Checkpointer` interface with memory/SQLite/Postgres/IndexedDB adapters *and a conformance test suite* (LangGraph users couldn't write custom savers for lack of a spec — langgraphjs#545). LangChain's own report ties >60% of production incidents to state management. Also: treat persisted state as hostile — LangGraph's savers shipped a SQL-injection→RCE chain (CVE-2025-67644/CVE-2026-28277).
 
-**4. Trajectory-level evals.** Every eval tool scores final outputs; per-step scoring (tool selection, arguments, retries, multi-turn) is where "90% of failure modes" hide. A harness that owns the loop can emit structured trajectories natively — incumbents reverse-engineer traces from outside. This is the one place where owning the runtime is an unfair advantage.
+**4. Trajectory-level replay and observability.** Final-output checks miss the per-step behavior — tool selection, arguments, retries, and multi-turn state — where most failure modes hide. A harness that owns the loop can emit structured trajectories natively instead of reverse-engineering traces from outside.
 
 **5. The laptop dev loop for observability.** Langfuse self-host is a six-component cluster; LangSmith is cloud-only with resented per-trace pricing; Braintrust wants 150k-IOPS NVMe. A single-process SQLite trace viewer launched by `bunx mithril dev`, graduating to OTLP export, serves a need every incumbent skips.
 
@@ -52,14 +52,14 @@ The prevailing developer mood matters as much as the feature matrix: the winning
 
 ## Winning DX patterns to steal
 
-- **Inference over codegen** (tRPC/Hono/Drizzle): define agents/tools once in TS; export a type the client, eval runner, and UI consume with zero build steps.
+- **Inference over codegen** (tRPC/Hono/Drizzle): define agents/tools once in TS; export a type the client and UI consume with zero build steps.
 - **Layered ramp** (AI SDK): the loop primitive *is* the agent class config.
 - **Typed DI context** (Pydantic AI's RunContext, AI SDK v7's contextSchema): kills globals, makes agents testable.
 - **Handoff-as-synthetic-tool** (Swarm lineage): delegation rides existing tool-calling; survived three product generations unchanged.
 - **Command + Send** (LangGraph): two concepts cover routing, handoffs, fan-out.
 - **Deterministic code router over typed state** (AgentKit): the most-praised primitive in the emerging cohort.
 - **Local studio bound to the dev server** (Mastra): its actual moat.
-- **Model-call caching in watch mode** (Evalite): "a game changer."
+- **Model-call caching in watch mode**: "a game changer."
 - **Two-altitude runner** (Anthropic toolRunner): `await runner` for 90%, iterate/mutate/inject for 10%.
 - **Web-standards core + explicit runtime subpaths** (Hono): the proven portability recipe.
 - **Performance receipts** (Zod 4, Vite 8): benchmark tables, not adjectives.
@@ -77,12 +77,11 @@ The prevailing developer mood matters as much as the feature matrix: the winning
 - **Persona templates and YAML split-brain** (CrewAI): measured at ~$1,088 vs $390 in test spend against Pydantic AI.
 - **Visual authoring as a second source of truth**: Agent Builder lived eight months.
 - **Nominal runtime support that fails on contact**: worse than honest non-support.
-- **Building the eval runner on Vitest internals** (Evalite): native-binding breakage and version coupling; Vitest wasn't designed for scored, expensive, flaky-by-nature cases.
 - **Trusting persisted state**: the LangGraph checkpointer CVE chain; also giant package counts as supply-chain surface (Mastra's 144-package npm compromise, June 2026).
 
 ## Positioning thesis
 
-The defensible wedge is not a better framework — it's the harness the community keeps saying it wants and keeps building by hand: a ~100-line readable loop you could copy out, over a tiny web-standards core that runs identically on Node, Bun, and browsers, with durable typed suspension, trajectory-native evals, context engineering, and a free local studio as peer packages. Message against the rewrite cliff, not against DIY. Sign a stability contract in the README and enforce tsc-latency budgets in CI (the tRPC/Hono failure mode is type-instantiation collapse at scale). MIT everything; monetize hosted durability/collaboration later, never correctness or debugging.
+The defensible wedge is not a better framework — it's the harness the community keeps saying it wants and keeps building by hand: a ~100-line readable loop you could copy out, over a tiny web-standards core that runs identically on Node, Bun, and browsers, with durable typed suspension, trajectory replay, context engineering, and a free local studio as peer packages. Message against the rewrite cliff, not against DIY. Sign a stability contract in the README and enforce tsc-latency budgets in CI (the tRPC/Hono failure mode is type-instantiation collapse at scale). MIT everything; monetize hosted durability/collaboration later, never correctness or debugging.
 
 ## What the research did not cover
 

@@ -70,9 +70,6 @@ for await (const e of handle.events) {
 }
 console.log(toolCalls); // expect(toolCalls).toEqual(["weather"])`} />
 
-For a whole suite of behavioral checks — tool order, cost budgets, output matching — reach for
-[`@mithril/evals`](/guides/evals/), whose scorers are pure functions over this same trajectory.
-
 ## Testing suspensions (HITL)
 
 A scripted tool-call turn plus a tool that needs approval lets you test the suspend/resume seam with
@@ -98,7 +95,6 @@ if (result.status === "suspended") {
 1. **Script the model** — `scriptedProvider([...turns])` with `textTurn` / `toolCallTurn`.
 2. **Run the real agent** — `agent({ model: testModel(...), tools })` executes your actual tools.
 3. **Assert** — on `result.status`/`output`, or fold `handle.events` for tool calls and ordering.
-4. **Scale up** — move recurring behavioral checks into `@mithril/evals` scorers.
 
 </Steps>
 

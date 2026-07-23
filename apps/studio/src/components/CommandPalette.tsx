@@ -63,7 +63,6 @@ export function CommandPalette({ router }: { readonly router: Router }) {
       { id: "run", label: "Run the agent", hint: "⌘↵", run: () => { requestRun(); nav(`/p/${pid}/run`); } },
       { id: "design", label: "Go to Design", hint: "⌘1", run: () => nav(`/p/${pid}`) },
       { id: "runview", label: "Go to Run", hint: "⌘2", run: () => nav(`/p/${pid}/run`) },
-      { id: "evals", label: "Go to Evals", hint: "⌘3", run: () => nav(`/p/${pid}/evals`) },
     ];
     return [
       ...inProject,

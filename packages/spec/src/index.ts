@@ -20,14 +20,11 @@ export {
   type CodeRegion,
   type EntryMessage,
   type EntrySpec,
-  type EvalCaseSpec,
-  type EvalSuiteSpec,
   type ModelSpec,
   type OpaqueDecl,
   type ProjectDecl,
   type ProjectSpec,
   type SchemaSpec,
-  type ScorerSpec,
   type SpecMeta,
   type SubAgentToolSpec,
   type ToolSpec,
@@ -36,14 +33,4 @@ export {
   type WorkflowStepSpec,
 } from "./types.ts";
 export { generateProject, GROQ_PROVIDER_DECL, modelExpr, providerImportEntries, providerOf, type CodegenMode, type GenerateOptions } from "./codegen.ts";
-export { generateEvalRun, modelLabel, type GenerateEvalOptions } from "./evalgen.ts";
-export {
-  SCORER_CATALOG,
-  scorerDescriptor,
-  type ScorerDescriptor,
-  type ScorerEmitContext,
-  type ScorerEmitHelpers,
-  type ScorerParamField,
-  type ScorerParamType,
-} from "./scorers.ts";
 export { migrateProject, SpecFormatError } from "./migrate.ts";

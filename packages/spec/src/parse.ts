@@ -352,7 +352,7 @@ function namedImport(
 
 /**
  * Parse a whole source file into a {@link ProjectSpec}. `prev` carries what code cannot express —
- * the project `name`, `evals`, and canvas `meta` — forward across reparses.
+ * the project `name` and canvas `meta` — forward across reparses.
  *
  * The round-trip invariant: for any spec `s`, `parseProject(generateProject(s), ts, s).spec`
  * deep-equals `s` (M1: for tool/agent/entry/opaque decls).
@@ -482,7 +482,6 @@ export function parseProject(source: string, ts: typeof TS, prev?: ProjectSpec):
     name: prev?.name ?? "untitled",
     decls: finalDecls,
     entry,
-    ...(prev?.evals === undefined ? {} : { evals: prev.evals }),
     ...(prev?.meta === undefined ? {} : { meta: prev.meta }),
   };
   return { spec, diagnostics, opaqueCount };

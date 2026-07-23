@@ -23,7 +23,6 @@ export function mithrilAliases() {
     { find: "@mithril/providers/anthropic", replacement: pkg("providers/src/anthropic/index.ts") },
     { find: "@mithril/providers/google", replacement: pkg("providers/src/google/index.ts") },
     { find: "@mithril/providers/transformers", replacement: pkg("providers/src/transformers/index.ts") },
-    { find: "@mithril/evals", replacement: pkg("evals/src/index.ts") },
     { find: "@mithril/memory/indexeddb", replacement: pkg("memory/src/indexeddb.ts") },
     { find: "@mithril/memory", replacement: pkg("memory/src/index.ts") },
     { find: "@mithril/kv/indexeddb", replacement: pkg("kv/src/indexeddb.ts") },

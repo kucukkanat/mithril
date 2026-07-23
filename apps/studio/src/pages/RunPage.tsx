@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { createRunnerClient, liveProvider, localModel } from "@mithril/runner-web";
 import type { MithrilEvent } from "@mithril/core/protocol";
-import { generateProject, type EntryMessage, type EvalCaseSpec, type ScorerSpec } from "@mithril/spec";
+import { generateProject, type EntryMessage } from "@mithril/spec";
 import { RunInspector } from "@mithril/devtools/ui";
 import { useProjectStore } from "../state/projectStore.ts";
 import { envForSpec, liveProvidersIn, usesLocalModel, useSettingsStore } from "../state/settingsStore.ts";
 import { useUiStore } from "../state/uiStore.ts";
-import { nextCaseName } from "../lib/defaults.ts";
 import { TopBar } from "../components/TopBar.tsx";
 
 /*
@@ -22,7 +21,6 @@ const textOf = (events: readonly MithrilEvent[]): string =>
 
 export function RunPage() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const store = useProjectStore();
   const settings = useSettingsStore();
   const [draft, setDraft] = useState("");
@@ -126,22 +124,6 @@ export function RunPage() {
       return nextSpec;
     });
     start(nextSpec);
-  };
-
-  // Turn the run you just watched into a first eval case — the "a run becomes a case" bridge. Seeds
-  // input from the user turn(s), a `completed` scorer, and (when the run used tools) a golden
-  // trajectory + `matchesTrajectory`. Creates a "First suite" if the project has none.
-  const saveAsEvalCase = (): void => {
-    const toolCalls = run.events.flatMap((e) => (e.type === "tool.call" ? [{ tool: e.name, input: e.input }] : []));
-    const userInput = typeof spec.entry.input === "string" ? spec.entry.input : spec.entry.input.filter((m) => m.role === "user");
-    const scorers: ScorerSpec[] = [{ type: "completed", params: {} }, ...(toolCalls.length > 0 ? [{ type: "matchesTrajectory", params: { mode: "superset" } } as ScorerSpec] : [])];
-    const caseFor = (cases: readonly EvalCaseSpec[]): EvalCaseSpec => ({ name: nextCaseName(new Set(cases.map((c) => c.name))), input: userInput, scorers, ...(toolCalls.length > 0 ? { reference: toolCalls } : {}) });
-    store.updateSpec((s) => {
-      const suites = s.evals ?? [];
-      if (suites.length === 0) return { ...s, evals: [{ id: "suite1", name: "First suite", threshold: 1, cases: [caseFor([])] }] };
-      return { ...s, evals: suites.map((su, i) => (i === 0 ? { ...su, cases: [...su.cases, caseFor(su.cases)] } : su)) };
-    });
-    navigate(`/p/${id}/evals`);
   };
 
   // The single obvious action: primary when the composer is empty (first-run seeded prompt), and
@@ -268,11 +250,6 @@ export function RunPage() {
             >
               Clear chat
             </button>
-            {run.status === "done" && (
-              <button className="ghost" data-testid="run-save-eval" onClick={saveAsEvalCase} title="Turn this run into an eval test case">
-                ＋ Save as eval case
-              </button>
-            )}
             <span className={`status status-${run.status}`} data-testid="run-status">{run.status}</span>
           </div>
         </section>

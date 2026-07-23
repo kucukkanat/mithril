@@ -9,7 +9,7 @@ title: "memoryCheckpointer"
 function memoryCheckpointer(): Checkpointer;
 ```
 
-Defined in: [index.ts:33](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/memory/src/index.ts#L33)
+Defined in: [index.ts:33](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/memory/src/index.ts#L33)
 
 Creates an in-memory Checkpointer — records are held in a `Map` keyed by run id and lost on
 process exit.

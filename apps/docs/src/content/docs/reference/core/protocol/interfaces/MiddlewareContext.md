@@ -5,7 +5,7 @@ prev: false
 title: "MiddlewareContext"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:34](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/middleware.ts#L34)
+Defined in: [packages/core/src/protocol/middleware.ts:34](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L34)
 
 The context handed to a [Middleware](/reference/core/protocol/interfaces/middleware/) — a subset of [RunContext](/reference/core/protocol/interfaces/runcontext/)
 without the tool-facing `deps.suspend` seam.
@@ -24,7 +24,7 @@ without the tool-facing `deps.suspend` seam.
 readonly deps: Deps;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:35](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/middleware.ts#L35)
+Defined in: [packages/core/src/protocol/middleware.ts:35](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L35)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:35](https://github.com/kuc
 readonly runId: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:36](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/middleware.ts#L36)
+Defined in: [packages/core/src/protocol/middleware.ts:36](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L36)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:36](https://github.com/kuc
 readonly runtime: RuntimeAdapter;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:39](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/middleware.ts#L39)
+Defined in: [packages/core/src/protocol/middleware.ts:39](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L39)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:39](https://github.com/kuc
 readonly signal: AbortSignal;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:38](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/middleware.ts#L38)
+Defined in: [packages/core/src/protocol/middleware.ts:38](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L38)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:38](https://github.com/kuc
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:37](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/middleware.ts#L37)
+Defined in: [packages/core/src/protocol/middleware.ts:37](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L37)
 
 ## Methods
 
@@ -74,7 +74,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:37](https://github.com/kuc
 emit(event): void;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:42](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/middleware.ts#L42)
+Defined in: [packages/core/src/protocol/middleware.ts:42](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L42)
 
 #### Parameters
 
@@ -94,7 +94,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:42](https://github.com/kuc
 journal<T>(key, fn): Promise<T>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:41](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/middleware.ts#L41)
+Defined in: [packages/core/src/protocol/middleware.ts:41](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/middleware.ts#L41)
 
 Journaled effect — the sanctioned store for a caching middleware (replayable, not a hidden closure).
 

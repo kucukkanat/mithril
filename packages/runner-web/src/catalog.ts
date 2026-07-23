@@ -65,8 +65,8 @@ export interface LocalModel {
 }
 
 // The shipped catalog: the two anchors (Qwen3-0.6B, LFM2.5) + five researched, multi-tool-evaluated
-// additions. Every entry is text-generation, emits a tool-call grammar the parser handles, and passed
-// the eval suite (apps/evals). Ordered smallest-first after the default.
+// additions. Every entry is text-generation, emits a tool-call grammar the parser handles, and was
+// verified against the multi-tool scenarios. Ordered smallest-first after the default.
 export const LOCAL_MODELS: readonly LocalModel[] = [
   { id: "onnx-community/Qwen3-0.6B-ONNX", label: "Qwen3 0.6B", size: "~0.55 GB", tools: true },
   { id: "onnx-community/Qwen2.5-0.5B-Instruct", label: "Qwen2.5 0.5B", size: "~0.5 GB", tools: true },

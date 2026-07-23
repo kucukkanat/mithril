@@ -5,7 +5,7 @@ prev: false
 title: "ProjectSpec"
 ---
 
-Defined in: packages/spec/src/types.ts:190
+Defined in: [packages/spec/src/types.ts:166](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L166)
 
 A whole serializable project: an ordered list of declarations plus the entry to run.
 Statement order in the generated file equals `decls` order, which is what makes
@@ -19,7 +19,7 @@ spec→code→spec round-trips lossless.
 readonly decls: readonly ProjectDecl[];
 ```
 
-Defined in: packages/spec/src/types.ts:193
+Defined in: [packages/spec/src/types.ts:169](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L169)
 
 ***
 
@@ -29,17 +29,7 @@ Defined in: packages/spec/src/types.ts:193
 readonly entry: EntrySpec;
 ```
 
-Defined in: packages/spec/src/types.ts:194
-
-***
-
-### evals?
-
-```ts
-readonly optional evals?: readonly EvalSuiteSpec[];
-```
-
-Defined in: packages/spec/src/types.ts:195
+Defined in: [packages/spec/src/types.ts:170](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L170)
 
 ***
 
@@ -49,7 +39,7 @@ Defined in: packages/spec/src/types.ts:195
 readonly optional meta?: SpecMeta;
 ```
 
-Defined in: packages/spec/src/types.ts:196
+Defined in: [packages/spec/src/types.ts:171](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L171)
 
 ***
 
@@ -59,7 +49,7 @@ Defined in: packages/spec/src/types.ts:196
 readonly name: string;
 ```
 
-Defined in: packages/spec/src/types.ts:192
+Defined in: [packages/spec/src/types.ts:168](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L168)
 
 ***
 
@@ -69,4 +59,4 @@ Defined in: packages/spec/src/types.ts:192
 readonly specVersion: 1;
 ```
 
-Defined in: packages/spec/src/types.ts:191
+Defined in: [packages/spec/src/types.ts:167](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L167)

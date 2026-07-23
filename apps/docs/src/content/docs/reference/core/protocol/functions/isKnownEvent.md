@@ -9,7 +9,7 @@ title: "isKnownEvent"
 function isKnownEvent(e): boolean;
 ```
 
-Defined in: [packages/core/src/protocol/migrate.ts:47](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/migrate.ts#L47)
+Defined in: [packages/core/src/protocol/migrate.ts:47](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/migrate.ts#L47)
 
 Tolerant guard: `true` for any known event member or any `custom.*` type.
 

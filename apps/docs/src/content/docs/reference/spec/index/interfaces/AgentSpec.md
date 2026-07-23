@@ -5,7 +5,7 @@ prev: false
 title: "AgentSpec"
 ---
 
-Defined in: packages/spec/src/types.ts:65
+Defined in: [packages/spec/src/types.ts:65](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L65)
 
 A `const <id> = agent({ … })` declaration. Field order mirrors core's `AgentConfig`.
 
@@ -17,7 +17,7 @@ A `const <id> = agent({ … })` declaration. Field order mirrors core's `AgentCo
 readonly id: string;
 ```
 
-Defined in: packages/spec/src/types.ts:67
+Defined in: [packages/spec/src/types.ts:67](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L67)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: packages/spec/src/types.ts:67
 readonly instructions: string | CodeRegion;
 ```
 
-Defined in: packages/spec/src/types.ts:70
+Defined in: [packages/spec/src/types.ts:70](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L70)
 
 A static string, or an instructions function of `ctx` stored verbatim.
 
@@ -39,7 +39,7 @@ A static string, or an instructions function of `ctx` stored verbatim.
 readonly kind: "agent";
 ```
 
-Defined in: packages/spec/src/types.ts:66
+Defined in: [packages/spec/src/types.ts:66](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L66)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: packages/spec/src/types.ts:66
 readonly optional loopDetection?: boolean;
 ```
 
-Defined in: packages/spec/src/types.ts:78
+Defined in: [packages/spec/src/types.ts:78](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L78)
 
 ***
 
@@ -59,7 +59,7 @@ Defined in: packages/spec/src/types.ts:78
 readonly optional maxCostMicroUsd?: number;
 ```
 
-Defined in: packages/spec/src/types.ts:80
+Defined in: [packages/spec/src/types.ts:80](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L80)
 
 ***
 
@@ -69,7 +69,7 @@ Defined in: packages/spec/src/types.ts:80
 readonly optional maxSteps?: number;
 ```
 
-Defined in: packages/spec/src/types.ts:75
+Defined in: [packages/spec/src/types.ts:75](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L75)
 
 ***
 
@@ -79,7 +79,7 @@ Defined in: packages/spec/src/types.ts:75
 readonly optional maxTokens?: number;
 ```
 
-Defined in: packages/spec/src/types.ts:79
+Defined in: [packages/spec/src/types.ts:79](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L79)
 
 ***
 
@@ -89,7 +89,7 @@ Defined in: packages/spec/src/types.ts:79
 readonly model: ModelSpec;
 ```
 
-Defined in: packages/spec/src/types.ts:68
+Defined in: [packages/spec/src/types.ts:68](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L68)
 
 ***
 
@@ -99,7 +99,7 @@ Defined in: packages/spec/src/types.ts:68
 readonly optional output?: SchemaSpec;
 ```
 
-Defined in: packages/spec/src/types.ts:74
+Defined in: [packages/spec/src/types.ts:74](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L74)
 
 Structured output schema.
 
@@ -111,7 +111,7 @@ Structured output schema.
 readonly optional outputRetries?: number;
 ```
 
-Defined in: packages/spec/src/types.ts:76
+Defined in: [packages/spec/src/types.ts:76](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L76)
 
 ***
 
@@ -121,7 +121,7 @@ Defined in: packages/spec/src/types.ts:76
 readonly optional repair?: boolean;
 ```
 
-Defined in: packages/spec/src/types.ts:81
+Defined in: [packages/spec/src/types.ts:81](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L81)
 
 ***
 
@@ -131,7 +131,7 @@ Defined in: packages/spec/src/types.ts:81
 readonly optional selfCorrection?: boolean;
 ```
 
-Defined in: packages/spec/src/types.ts:82
+Defined in: [packages/spec/src/types.ts:82](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L82)
 
 ***
 
@@ -141,7 +141,7 @@ Defined in: packages/spec/src/types.ts:82
 readonly optional toolRetries?: number;
 ```
 
-Defined in: packages/spec/src/types.ts:77
+Defined in: [packages/spec/src/types.ts:77](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L77)
 
 ***
 
@@ -151,7 +151,7 @@ Defined in: packages/spec/src/types.ts:77
 readonly tools: readonly string[];
 ```
 
-Defined in: packages/spec/src/types.ts:72
+Defined in: [packages/spec/src/types.ts:72](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L72)
 
 Ids of ToolSpec / SubAgentToolSpec decls, in attachment order.
 
@@ -163,6 +163,6 @@ Ids of ToolSpec / SubAgentToolSpec decls, in attachment order.
 readonly optional use?: readonly CodeRegion[];
 ```
 
-Defined in: packages/spec/src/types.ts:84
+Defined in: [packages/spec/src/types.ts:84](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/types.ts#L84)
 
 Middleware / plugin expressions (`use: […]`), each stored verbatim.

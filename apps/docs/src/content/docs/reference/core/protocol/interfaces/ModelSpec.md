@@ -5,7 +5,7 @@ prev: false
 title: "ModelSpec"
 ---
 
-Defined in: [packages/core/src/protocol/provider.ts:44](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L44)
+Defined in: [packages/core/src/protocol/provider.ts:44](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L44)
 
 The published spec for one model: its capabilities, pricing, and context size.
 
@@ -17,7 +17,7 @@ The published spec for one model: its capabilities, pricing, and context size.
 readonly capabilities: ModelCapabilities;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:45](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L45)
+Defined in: [packages/core/src/protocol/provider.ts:45](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L45)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/protocol/provider.ts:45](https://github.com/kucuk
 readonly contextWindow: number;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:47](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L47)
+Defined in: [packages/core/src/protocol/provider.ts:47](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L47)
 
 ***
 
@@ -37,4 +37,4 @@ Defined in: [packages/core/src/protocol/provider.ts:47](https://github.com/kucuk
 readonly pricing: Pricing;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:46](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/provider.ts#L46)
+Defined in: [packages/core/src/protocol/provider.ts:46](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/provider.ts#L46)

@@ -291,7 +291,7 @@ function checkBudget(
 }
 
 // Classify a caught tool-execution failure onto the ToolErrorClass taxonomy so `tool.error` carries a
-// machine-readable class (routes repair, targeted re-ask, and evals). A schema-validation MithrilError is
+// machine-readable class (routes repair and targeted re-ask). A schema-validation MithrilError is
 // `invalid_args` (retryable — the model can produce different args); anything else a handler bug.
 function classifyToolError(err: unknown): SerializedError {
   if (err instanceof MithrilError) {

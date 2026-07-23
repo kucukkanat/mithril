@@ -9,9 +9,9 @@ title: "modelExpr"
 function modelExpr(model): string;
 ```
 
-Defined in: packages/spec/src/codegen.ts:64
+Defined in: [packages/spec/src/codegen.ts:64](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/codegen.ts#L64)
 
-Emit an agent's `model` expression from its [ModelSpec](/reference/spec/index/type-aliases/modelspec/). Shared with [generateEvalRun](/reference/spec/index/functions/generateevalrun/).
+Emit an agent's `model` expression from its [ModelSpec](/reference/spec/index/type-aliases/modelspec/).
 
 ## Parameters
 

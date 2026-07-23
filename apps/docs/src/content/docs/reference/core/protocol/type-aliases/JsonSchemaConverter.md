@@ -11,7 +11,7 @@ type JsonSchemaConverter = (schema) =>
   | undefined;
 ```
 
-Defined in: [packages/core/src/protocol/json-schema.ts:25](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/protocol/json-schema.ts#L25)
+Defined in: [packages/core/src/protocol/json-schema.ts:25](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/protocol/json-schema.ts#L25)
 
 A caller-supplied converter from a [StandardSchemaV1](/reference/core/protocol/interfaces/standardschemav1/) to a [JsonSchema](/reference/core/protocol/type-aliases/jsonschema/).
 

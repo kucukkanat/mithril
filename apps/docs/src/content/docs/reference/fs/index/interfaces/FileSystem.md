@@ -5,7 +5,7 @@ prev: false
 title: "FileSystem"
 ---
 
-Defined in: [packages/fs/src/index.ts:31](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/fs/src/index.ts#L31)
+Defined in: [packages/fs/src/index.ts:31](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/fs/src/index.ts#L31)
 
 The rooted, async filesystem contract shared by every `@mithril/fs` adapter.
 
@@ -22,7 +22,7 @@ Missing entries also throw [FsError](/reference/fs/index/classes/fserror/) (with
 exists(path): Promise<boolean>;
 ```
 
-Defined in: [packages/fs/src/index.ts:43](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/fs/src/index.ts#L43)
+Defined in: [packages/fs/src/index.ts:43](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/fs/src/index.ts#L43)
 
 Resolve `true` if a file or directory exists at `path`, `false` otherwise.
 
@@ -47,7 +47,7 @@ list(dir): AsyncIterable<{
 }>;
 ```
 
-Defined in: [packages/fs/src/index.ts:39](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/fs/src/index.ts#L39)
+Defined in: [packages/fs/src/index.ts:39](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/fs/src/index.ts#L39)
 
 Asynchronously yield the immediate children of `dir` (not recursive), each with its [FileKind](/reference/fs/index/type-aliases/filekind/).
 
@@ -72,7 +72,7 @@ Asynchronously yield the immediate children of `dir` (not recursive), each with 
 mkdir(path): Promise<void>;
 ```
 
-Defined in: [packages/fs/src/index.ts:45](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/fs/src/index.ts#L45)
+Defined in: [packages/fs/src/index.ts:45](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/fs/src/index.ts#L45)
 
 Create the directory at `path` (recursive). No-op for the in-memory adapter, where directories are implicit.
 
@@ -94,7 +94,7 @@ Create the directory at `path` (recursive). No-op for the in-memory adapter, whe
 readFile(path): Promise<Uint8Array<ArrayBufferLike>>;
 ```
 
-Defined in: [packages/fs/src/index.ts:35](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/fs/src/index.ts#L35)
+Defined in: [packages/fs/src/index.ts:35](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/fs/src/index.ts#L35)
 
 Read a file's raw bytes.
 
@@ -120,7 +120,7 @@ Read a file's raw bytes.
 readText(path): Promise<string>;
 ```
 
-Defined in: [packages/fs/src/index.ts:33](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/fs/src/index.ts#L33)
+Defined in: [packages/fs/src/index.ts:33](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/fs/src/index.ts#L33)
 
 Read a file's contents as a UTF-8 decoded string.
 
@@ -146,7 +146,7 @@ Read a file's contents as a UTF-8 decoded string.
 remove(path): Promise<void>;
 ```
 
-Defined in: [packages/fs/src/index.ts:47](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/fs/src/index.ts#L47)
+Defined in: [packages/fs/src/index.ts:47](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/fs/src/index.ts#L47)
 
 Remove `path` recursively; removing a missing path is not an error.
 
@@ -172,7 +172,7 @@ stat(path): Promise<{
 }>;
 ```
 
-Defined in: [packages/fs/src/index.ts:41](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/fs/src/index.ts#L41)
+Defined in: [packages/fs/src/index.ts:41](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/fs/src/index.ts#L41)
 
 Return `size` (bytes), `lastModified` (epoch ms), and [FileKind](/reference/fs/index/type-aliases/filekind/) for `path`.
 
@@ -202,7 +202,7 @@ Return `size` (bytes), `lastModified` (epoch ms), and [FileKind](/reference/fs/i
 writeFile(path, data): Promise<void>;
 ```
 
-Defined in: [packages/fs/src/index.ts:37](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/fs/src/index.ts#L37)
+Defined in: [packages/fs/src/index.ts:37](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/fs/src/index.ts#L37)
 
 Write bytes or a string to `path`, creating parent directories as needed. Strings are UTF-8 encoded.
 

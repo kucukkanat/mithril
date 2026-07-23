@@ -9,6 +9,6 @@ title: "GROQ_PROVIDER_DECL"
 const GROQ_PROVIDER_DECL: string;
 ```
 
-Defined in: packages/spec/src/codegen.ts:39
+Defined in: [packages/spec/src/codegen.ts:39](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/spec/src/codegen.ts#L39)
 
 The exact provider-const statement emitted (and re-absorbed) when a groq model is present.

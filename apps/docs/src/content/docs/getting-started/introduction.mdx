@@ -15,7 +15,7 @@ The whole design follows from one sentence:
 
 > **The typed, versioned event stream is the product.**
 
-The agent loop is its _only_ producer. Devtools, React, OpenTelemetry, and evals are pure
+The agent loop is its _only_ producer. Devtools, React, and OpenTelemetry are pure
 consumers of that one event union — and they literally cannot import the loop. So every
 capability the harness offers is just a different way of reading, transforming, or replaying
 the same stream.
@@ -24,7 +24,7 @@ the same stream.
 
 The winning meme of 2026 is _"an agent is a while loop with an LLM call."_ Developers don't
 want another framework that owns their control flow — they want **harness infrastructure**
-(durable state, human-in-the-loop, context management, tracing, evals) _under_ a loop they can
+(durable state, human-in-the-loop, context management, tracing) _under_ a loop they can
 read and, if they need to, copy out.
 
 That's the gap Mithril fills. Model abstraction is a commodity; the durable, portable,
@@ -68,7 +68,7 @@ Everything below is implemented and tested against the source — not aspiration
 - **Structured output** with validate → retry and streamed `object.delta`.
 - **Middleware & plugins** — composable building blocks with no hidden side channel.
 - A portable **Checkpointer** (in-memory + SQLite) with a conformance kit.
-- **Trajectory-native evals**, **OTel** spans, runtime-agnostic **fs/kv** adapters, an **MCP**
+- **OTel** spans, runtime-agnostic **fs/kv** adapters, an **MCP**
   client, deterministic **workflows**, and headless **React** bindings.
 
 <Aside type="note">

@@ -9,7 +9,7 @@ title: "toSerializedError"
 function toSerializedError(err): SerializedError;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:229](https://github.com/kucukkanat/mithril/blob/74200bb9af74483d4d32917edef3a9be94414b04/packages/core/src/agent/agent-types.ts#L229)
+Defined in: [packages/core/src/agent/agent-types.ts:229](https://github.com/kucukkanat/mithril/blob/2d58065e6ea701b1045fc39d23ec8c58b315c0f7/packages/core/src/agent/agent-types.ts#L229)
 
 Normalize an unknown thrown value into a JSON-safe [SerializedError](/reference/core/protocol/interfaces/serializederror/).
 
