@@ -1,4 +1,5 @@
 import type { JsonValue, UsageTotals } from "./primitives.ts";
+import type { ProviderRegistry } from "./provider.ts";
 import type { StandardSchemaV1 } from "./standard-schema.ts";
 import type { ResolutionOf, SuspensionRequest } from "./suspension.ts";
 
@@ -59,6 +60,16 @@ export interface RunContext<Deps> {
   readonly signal: AbortSignal;
   readonly usage: Readonly<UsageTotals>;
   readonly runtime: RuntimeAdapter;
+  /**
+   * The run's resolved {@link Transport} (after the env-BYOK default is applied). Present so a sub-agent
+   * launched from a tool (see {@link asTool}) automatically inherits the parent's credentials/endpoint.
+   */
+  readonly transport?: Transport;
+  /**
+   * The run's {@link ProviderRegistry}, if one was supplied. Present so a sub-agent launched from a tool
+   * automatically inherits it and can resolve bare-string model ids.
+   */
+  readonly providers?: ProviderRegistry;
   /** Push a first-class `custom.*` event into the stream. */
   emit(payload: JsonValue, type?: `custom.${string}`): void;
   /**

@@ -11,7 +11,7 @@ function extractJson(s):
   | undefined;
 ```
 
-Defined in: [packages/core/src/protocol/json-repair.ts:132](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/json-repair.ts#L132)
+Defined in: [packages/core/src/protocol/json-repair.ts:132](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/json-repair.ts#L132)
 
 Extract and parse the JSON value from a model's FINAL structured-output text.
 

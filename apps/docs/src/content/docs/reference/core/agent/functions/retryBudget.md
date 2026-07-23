@@ -9,7 +9,7 @@ title: "retryBudget"
 function retryBudget<Deps>(opts?): Middleware<Deps>;
 ```
 
-Defined in: packages/core/src/agent/healing.ts:78
+Defined in: [packages/core/src/agent/healing.ts:192](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/healing.ts#L192)
 
 Step-altitude repair budget: a tool that keeps failing is re-asked (each failure emits `tool.retry`)
 until it exhausts `max` consecutive failures with no success in between, at which point the run halts

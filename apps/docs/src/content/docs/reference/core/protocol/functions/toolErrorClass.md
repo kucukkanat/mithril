@@ -11,7 +11,7 @@ function toolErrorClass(err):
   | undefined;
 ```
 
-Defined in: [packages/core/src/protocol/errors.ts:30](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/errors.ts#L30)
+Defined in: [packages/core/src/protocol/errors.ts:30](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/errors.ts#L30)
 
 Read the [ToolErrorClass](/reference/core/protocol/type-aliases/toolerrorclass/) attached to a [SerializedError](/reference/core/protocol/interfaces/serializederror/), if any.
 

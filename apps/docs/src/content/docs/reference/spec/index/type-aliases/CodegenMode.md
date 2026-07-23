@@ -9,7 +9,7 @@ title: "CodegenMode"
 type CodegenMode = "studio" | "export";
 ```
 
-Defined in: [packages/spec/src/codegen.ts:29](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/spec/src/codegen.ts#L29)
+Defined in: [packages/spec/src/codegen.ts:29](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/codegen.ts#L29)
 
 `"studio"` emits `await run(entry, input)` — the injected runner global of
 `@mithril/runner-web`. `"export"` emits a standalone `main()` that calls `agent.run()` directly,

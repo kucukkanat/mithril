@@ -5,7 +5,7 @@ prev: false
 title: "Agent"
 ---
 
-Defined in: [packages/core/src/agent/agent-types.ts:197](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L197)
+Defined in: [packages/core/src/agent/agent-types.ts:197](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L197)
 
 A configured, runnable agent produced by [agent](/reference/core/agent/functions/agent/).
 
@@ -40,7 +40,7 @@ Methods:
 readonly optional __tools?: Tools;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:205](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L205)
+Defined in: [packages/core/src/agent/agent-types.ts:205](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L205)
 
 ## Methods
 
@@ -50,7 +50,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:205](https://github.com/kucu
 iterate(input, ...opts): AsyncGenerator<StepSnapshot, RunResult<Out>>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:200](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L200)
+Defined in: [packages/core/src/agent/agent-types.ts:200](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L200)
 
 #### Parameters
 
@@ -74,7 +74,7 @@ resume(
 opts): Promise<RunResult<Out>>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:203](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L203)
+Defined in: [packages/core/src/agent/agent-types.ts:203](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L203)
 
 #### Parameters
 
@@ -99,7 +99,7 @@ resumeStream(
 opts): RunHandle<Out>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:204](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L204)
+Defined in: [packages/core/src/agent/agent-types.ts:204](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L204)
 
 #### Parameters
 
@@ -121,7 +121,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:204](https://github.com/kucu
 run(input, ...opts): Promise<RunResult<Out>>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:198](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L198)
+Defined in: [packages/core/src/agent/agent-types.ts:198](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L198)
 
 #### Parameters
 
@@ -142,7 +142,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:198](https://github.com/kucu
 stream(input, ...opts): RunHandle<Out>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:199](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L199)
+Defined in: [packages/core/src/agent/agent-types.ts:199](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L199)
 
 #### Parameters
 

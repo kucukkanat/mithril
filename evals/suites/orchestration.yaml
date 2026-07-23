@@ -1,0 +1,68 @@
+# Orchestration suite — a multi-agent, multi-tool routing test ported from the complex harness in
+# `scripts/test-openrouter-complex.ts`. Every test wires the `orchestrator` toolset (see
+# src/orchestrator.ts): a `lead` agent with two own tools (get_current_time, save_note) that delegates
+# to two REAL sub-agents via asTool — `research` (weather / timezone / facts) and `analyze` (currency /
+# averages / arithmetic). We grade the TOP-LEVEL routing decisions the lead makes (the calls that
+# surface as `tool.call` events), via src/grading.ts:expectToolCalls. The default instructions come
+# from ORCHESTRATOR_INSTRUCTIONS, so tests only supply `input` + `expectToolCalls`.
+
+- description: "route facts to research (weather + timezone + population)"
+  vars:
+    input: "For my Tokyo trip: what's the weather there, its timezone, and roughly Tokyo's population?"
+    toolset: orchestrator
+    expectToolCalls:
+      - name: research
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "route the clock question to get_current_time"
+  vars:
+    input: "What's the current UTC time right now?"
+    toolset: orchestrator
+    expectToolCalls:
+      - name: get_current_time
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "mixed turn — time question routes to the clock AND facts to research"
+  vars:
+    input: "What's the current UTC time right now? Also, what's the weather in Tokyo and its timezone?"
+    toolset: orchestrator
+    expectToolCalls:
+      - name: get_current_time
+      - name: research
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "route currency conversion to analyze (never research)"
+  vars:
+    input: "My budget is 2000 USD. How many JPY is that?"
+    toolset: orchestrator
+    expectToolCalls:
+      - name: analyze
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "route a multi-part numeric turn to analyze"
+  vars:
+    input: "How many JPY is 2000 USD, what's the average of daily spends 150, 220, and 305, and what is 314400 divided by 30?"
+    toolset: orchestrator
+    expectToolCalls:
+      - name: analyze
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "route a save/summarize request to save_note"
+  vars:
+    input: "Save a short note titled 'Tokyo Trip' summarizing that Tokyo is rainy, is on UTC+9, and 2000 USD is about 314400 JPY."
+    toolset: orchestrator
+    expectToolCalls:
+      - name: save_note
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls

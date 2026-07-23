@@ -5,7 +5,7 @@ prev: false
 title: "StateIntegrityError"
 ---
 
-Defined in: [packages/core/src/agent/seal.ts:23](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/seal.ts#L23)
+Defined in: [packages/core/src/agent/seal.ts:23](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/seal.ts#L23)
 
 Thrown when a sealed token fails to open — bad envelope, unknown `kid`, codec mismatch, size overflow,
 an unavailable `crypto.subtle`, or a failed HMAC verification (possible tampering).
@@ -22,7 +22,7 @@ an unavailable `crypto.subtle`, or a failed HMAC verification (possible tamperin
 new StateIntegrityError(message): StateIntegrityError;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:24](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/seal.ts#L24)
+Defined in: [packages/core/src/agent/seal.ts:24](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/seal.ts#L24)
 
 #### Parameters
 

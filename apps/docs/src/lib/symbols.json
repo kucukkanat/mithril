@@ -499,10 +499,15 @@
     "kind": "type",
     "sig": "type HandoffSuspension = SuspensionRequest<\"handoff.suspended\", { child: SuspensionDescriptor; to: string; }, JsonValue>;"
   },
+  "harmonyRepair": {
+    "href": "/reference/core/agent/functions/harmonyrepair/",
+    "kind": "fn",
+    "sig": "function harmonyRepair<Deps>(): Middleware<Deps>;"
+  },
   "healing": {
     "href": "/reference/core/agent/variables/healing/",
     "kind": "const",
-    "sig": "const healing: { argRepair: <Deps>() => Middleware<Deps>; defaults: <Deps>() => readonly Middleware<Deps>[]; loopGuard: <Deps>(opts) => Mid…"
+    "sig": "const healing: { argRepair: <Deps>() => Middleware<Deps>; defaults: <Deps>() => readonly Middleware<Deps>[]; harmonyRepair: <Deps>() => Mid…"
   },
   "hmacCodec": {
     "href": "/reference/core/agent/functions/hmaccodec/",

@@ -5,7 +5,7 @@ prev: false
 title: "Middleware"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:157](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L157)
+Defined in: [packages/core/src/protocol/middleware.ts:157](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L157)
 
 Producer-side composability: observe or transform a run purely by wrapping
 model and tool invocations.
@@ -35,7 +35,7 @@ middleware per altitude.
 optional finalize?: (ctx, call, next) => Promise<FinalizeOutcome>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:188](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L188)
+Defined in: [packages/core/src/protocol/middleware.ts:188](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L188)
 
 Wrap the structured-output finalize step (only runs when the agent has an `output` schema and the model
 answered with no tool calls). On an `invalid` [FinalizeOutcome](/reference/core/protocol/type-aliases/finalizeoutcome/), re-ask by calling
@@ -62,7 +62,7 @@ yourself so the retry stays visible.
 optional model?: (ctx, call, next) => Promise<ModelResult>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:171](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L171)
+Defined in: [packages/core/src/protocol/middleware.ts:171](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L171)
 
 Wrap a single model invocation (retries, caching, prompt-cache ordering, fallback models).
 
@@ -86,7 +86,7 @@ Wrap a single model invocation (retries, caching, prompt-cache ordering, fallbac
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:158](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L158)
+Defined in: [packages/core/src/protocol/middleware.ts:158](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L158)
 
 ***
 
@@ -96,7 +96,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:158](https://github.com/ku
 optional step?: (ctx, input, next) => Promise<StepOutcome>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:165](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L165)
+Defined in: [packages/core/src/protocol/middleware.ts:165](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L165)
 
 Wrap a whole step (its model call plus any tool execution). Runs outside `model`/`tool`. Short-circuit
 by returning a [StepOutcome](/reference/core/protocol/interfaces/stepoutcome/) without calling `next` (skip the step); enforce a token/step budget by
@@ -123,7 +123,7 @@ to drive a retry budget or loop detection, steering/halting via [MiddlewareConte
 optional tool?: (ctx, call, next) => Promise<ToolOutcome>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:177](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L177)
+Defined in: [packages/core/src/protocol/middleware.ts:177](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L177)
 
 Wrap a single tool invocation. Short-circuit by returning without calling `next` (cache hit / block).
 

@@ -5,7 +5,7 @@ prev: false
 title: "TransformersEngine"
 ---
 
-Defined in: [transformers/core.ts:34](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/providers/src/transformers/core.ts#L34)
+Defined in: [transformers/core.ts:34](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/transformers/core.ts#L34)
 
 The injected inference engine — the seam that keeps the provider testable without WebGPU/ONNX.
 
@@ -23,7 +23,7 @@ engine (see `./tool-formats.ts`), so it yields already-parsed tool calls.
 generate(req): AsyncIterable<EngineChunk>;
 ```
 
-Defined in: [transformers/core.ts:35](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/providers/src/transformers/core.ts#L35)
+Defined in: [transformers/core.ts:35](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/transformers/core.ts#L35)
 
 #### Parameters
 
@@ -48,7 +48,7 @@ optional usage():
   | undefined;
 ```
 
-Defined in: [transformers/core.ts:37](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/providers/src/transformers/core.ts#L37)
+Defined in: [transformers/core.ts:37](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/transformers/core.ts#L37)
 
 Real token counts for the last generation, when the engine can supply them (from tensor dims).
 

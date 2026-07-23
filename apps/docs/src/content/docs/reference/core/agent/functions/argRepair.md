@@ -9,7 +9,7 @@ title: "argRepair"
 function argRepair<Deps>(): Middleware<Deps>;
 ```
 
-Defined in: packages/core/src/agent/healing.ts:49
+Defined in: [packages/core/src/agent/healing.ts:134](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/healing.ts#L134)
 
 Tool-altitude repair: when a tool call fails schema validation because the model emitted the whole
 arguments object as a JSON string (a common small-model slip), coerce it to the object, emit a visible

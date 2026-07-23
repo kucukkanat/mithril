@@ -5,7 +5,7 @@ prev: false
 title: "VectorMatch"
 ---
 
-Defined in: [index.ts:20](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/vectors/src/index.ts#L20)
+Defined in: [index.ts:20](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L20)
 
 A single nearest-neighbour hit returned by [VectorStore.query](/reference/vectors/index/interfaces/vectorstore/#query), ordered by descending `score`.
 
@@ -17,7 +17,7 @@ A single nearest-neighbour hit returned by [VectorStore.query](/reference/vector
 readonly id: string;
 ```
 
-Defined in: [index.ts:21](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/vectors/src/index.ts#L21)
+Defined in: [index.ts:21](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L21)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [index.ts:21](https://github.com/kucukkanat/mithril/blob/d1861b6ac41
 readonly optional metadata?: Readonly<Record<string, unknown>>;
 ```
 
-Defined in: [index.ts:24](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/vectors/src/index.ts#L24)
+Defined in: [index.ts:24](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L24)
 
 ***
 
@@ -37,6 +37,6 @@ Defined in: [index.ts:24](https://github.com/kucukkanat/mithril/blob/d1861b6ac41
 readonly score: number;
 ```
 
-Defined in: [index.ts:23](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/vectors/src/index.ts#L23)
+Defined in: [index.ts:23](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L23)
 
 Cosine similarity in `[-1, 1]`; higher is more similar.

@@ -5,7 +5,7 @@ prev: false
 title: "AgentConfig"
 ---
 
-Defined in: [packages/core/src/agent/agent-types.ts:160](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L160)
+Defined in: [packages/core/src/agent/agent-types.ts:160](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L160)
 
 The declarative configuration of an agent, passed to [agent](/reference/core/agent/functions/agent/) (or a harness-bound factory).
 
@@ -41,7 +41,7 @@ readonly optional healing?:
   | readonly Middleware<Deps>[];
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:174](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L174)
+Defined in: [packages/core/src/agent/agent-types.ts:174](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L174)
 
 ***
 
@@ -51,7 +51,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:174](https://github.com/kucu
 readonly instructions: string | ((ctx) => string | Promise<string>);
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:162](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L162)
+Defined in: [packages/core/src/agent/agent-types.ts:162](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L162)
 
 ***
 
@@ -61,7 +61,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:162](https://github.com/kucu
 readonly optional maxCostMicroUsd?: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:171](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L171)
+Defined in: [packages/core/src/agent/agent-types.ts:171](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L171)
 
 ***
 
@@ -71,7 +71,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:171](https://github.com/kucu
 readonly optional maxSteps?: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:164](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L164)
+Defined in: [packages/core/src/agent/agent-types.ts:164](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L164)
 
 ***
 
@@ -81,7 +81,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:164](https://github.com/kucu
 readonly optional maxTokens?: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:170](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L170)
+Defined in: [packages/core/src/agent/agent-types.ts:170](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L170)
 
 ***
 
@@ -91,7 +91,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:170](https://github.com/kucu
 readonly model: ModelInput;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:161](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L161)
+Defined in: [packages/core/src/agent/agent-types.ts:161](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L161)
 
 ***
 
@@ -101,7 +101,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:161](https://github.com/kucu
 readonly optional output?: StandardSchemaV1<unknown, Out>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:165](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L165)
+Defined in: [packages/core/src/agent/agent-types.ts:165](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L165)
 
 ***
 
@@ -111,7 +111,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:165](https://github.com/kucu
 readonly optional outputSchema?: JsonSchemaConverter;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:169](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L169)
+Defined in: [packages/core/src/agent/agent-types.ts:169](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L169)
 
 ***
 
@@ -121,7 +121,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:169](https://github.com/kucu
 readonly optional tools?: Tools;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:163](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L163)
+Defined in: [packages/core/src/agent/agent-types.ts:163](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L163)
 
 ***
 
@@ -133,4 +133,4 @@ readonly optional use?: readonly (
   | Plugin<Deps, readonly AnyTool<Deps>[]>)[];
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:175](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L175)
+Defined in: [packages/core/src/agent/agent-types.ts:175](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L175)

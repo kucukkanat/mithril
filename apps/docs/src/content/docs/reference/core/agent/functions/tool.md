@@ -11,7 +11,7 @@ title: "tool"
 function tool<Deps>(): ToolFactory<Deps>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:98](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/factory.ts#L98)
+Defined in: [packages/core/src/agent/factory.ts:98](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L98)
 
 Define a tool, or curry over `Deps` first.
 
@@ -58,7 +58,7 @@ const getWeather = tool({
 function tool<Name, SIn, Out>(def): Tool<Name, Infer<SIn>, Out, unknown>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:99](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/factory.ts#L99)
+Defined in: [packages/core/src/agent/factory.ts:99](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L99)
 
 Define a tool, or curry over `Deps` first.
 

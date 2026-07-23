@@ -17,7 +17,7 @@ type InputMessage =
 };
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:27](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/agent-types.ts#L27)
+Defined in: [packages/core/src/agent/agent-types.ts:27](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L27)
 
 A single conversation turn supplied as run input — either a `user` or `assistant` message.
 

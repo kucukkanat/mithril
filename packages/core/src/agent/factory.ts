@@ -400,7 +400,12 @@ export interface AsToolOptions<In, ChildDeps> {
  * @param child - the sub-agent to expose.
  * @param opts - naming, schema, input mapping, and dependency wiring ({@link AsToolOptions}).
  * @returns a {@link Tool} whose `execute` runs the sub-agent to completion and returns its output.
- * @remarks **Nested HITL is first-class.** If the sub-agent suspends (its own approval or `ctx.suspend`),
+ * @remarks **Inherited run context.** The sub-agent run automatically inherits the parent run's
+ * `transport`, `providers`, and `runtime` (read from the calling {@link RunContext}), so a nested agent
+ * authenticates, resolves bare-string model ids, and uses the same runtime with no extra wiring. Supply the
+ * child's own `deps` via {@link AsToolOptions.deps}.
+ *
+ * **Nested HITL is first-class.** If the sub-agent suspends (its own approval or `ctx.suspend`),
  * this tool suspends the *parent* via Tier-2 with a `handoff.suspended` request whose payload carries the
  * child's pending `child` descriptor. Resume the parent run with `{ kind: "resolve", value: <the child's
  * ResumeValue> }` (an `ApprovalDecision`, or `{ kind: "resolve", value }`): the tool resumes the child with
@@ -449,7 +454,14 @@ export function asTool<In, ChildDeps, COut extends JsonValue>(
     ...(opts.needsApproval !== undefined ? { needsApproval: opts.needsApproval } : {}),
     async execute(input: In, ctx: RunContext<unknown>): Promise<COut> {
       // Cast to RunOptions<ChildDeps>: DepsOption's conditional can't resolve against a free `ChildDeps`.
-      const runOpts = { deps: (opts.deps?.(ctx) ?? undefined) as ChildDeps } as RunOptions<ChildDeps>;
+      // The child automatically inherits the parent run's transport/providers/runtime so a sub-agent
+      // authenticates and resolves models without the caller re-threading them through asTool.
+      const runOpts = {
+        deps: (opts.deps?.(ctx) ?? undefined) as ChildDeps,
+        runtime: ctx.runtime,
+        ...(ctx.transport !== undefined ? { transport: ctx.transport } : {}),
+        ...(ctx.providers !== undefined ? { providers: ctx.providers } : {}),
+      } as RunOptions<ChildDeps>;
       // Journaled so a Tier-2 replay of THIS execute never re-runs the child (exactly-once).
       let res = await ctx.journal<RunResult<COut>>("child.run", () => runChild(toInput(input), runOpts));
       let hop = 0;

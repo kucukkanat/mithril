@@ -5,7 +5,7 @@ prev: false
 title: "PendingSuspension"
 ---
 
-Defined in: [packages/core/src/agent/loop.ts:76](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/loop.ts#L76)
+Defined in: [packages/core/src/agent/loop.ts:76](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/loop.ts#L76)
 
 The serialized description of what a suspended run is waiting on — enough to resume it in another
 process. `approval` (Tier-1) resumes with an [ApprovalDecision](/reference/core/protocol/type-aliases/approvaldecision/); `return` (Tier-1b, a tool
@@ -19,7 +19,7 @@ returned `suspend(...)`) and `midtool` (Tier-2, `ctx.suspend()`) resume with a r
 readonly callId: string;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:78](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/loop.ts#L78)
+Defined in: [packages/core/src/agent/loop.ts:78](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/loop.ts#L78)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [packages/core/src/agent/loop.ts:78](https://github.com/kucukkanat/m
 readonly descriptor: SuspensionDescriptor;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:79](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/loop.ts#L79)
+Defined in: [packages/core/src/agent/loop.ts:79](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/loop.ts#L79)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [packages/core/src/agent/loop.ts:79](https://github.com/kucukkanat/m
 readonly optional journal?: Readonly<Record<string, JsonValue>>;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:81](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/loop.ts#L81)
+Defined in: [packages/core/src/agent/loop.ts:81](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/loop.ts#L81)
 
 Tier-2 only: journaled effect values recorded before the pause, replayed on resume.
 
@@ -51,7 +51,7 @@ Tier-2 only: journaled effect values recorded before the pause, replayed on resu
 readonly kind: PendingKind;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:77](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/loop.ts#L77)
+Defined in: [packages/core/src/agent/loop.ts:77](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/loop.ts#L77)
 
 ***
 
@@ -61,6 +61,6 @@ Defined in: [packages/core/src/agent/loop.ts:77](https://github.com/kucukkanat/m
 readonly optional resolutions?: readonly JsonValue[];
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:83](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/loop.ts#L83)
+Defined in: [packages/core/src/agent/loop.ts:83](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/loop.ts#L83)
 
 Tier-2 only: resolutions consumed by prior `ctx.suspend()` calls, replayed in order on resume.

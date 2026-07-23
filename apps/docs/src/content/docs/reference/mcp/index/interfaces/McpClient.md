@@ -5,7 +5,7 @@ prev: false
 title: "McpClient"
 ---
 
-Defined in: [index.ts:45](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/mcp/src/index.ts#L45)
+Defined in: [index.ts:45](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/mcp/src/index.ts#L45)
 
 A connected MCP client over an [McpTransport](/reference/mcp/index/interfaces/mcptransport/). Create one with [mcpClient](/reference/mcp/index/functions/mcpclient/).
 
@@ -17,7 +17,7 @@ A connected MCP client over an [McpTransport](/reference/mcp/index/interfaces/mc
 callTool(name, args): Promise<JsonValue>;
 ```
 
-Defined in: [index.ts:49](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/mcp/src/index.ts#L49)
+Defined in: [index.ts:49](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/mcp/src/index.ts#L49)
 
 Invoke a tool by name; text content is flattened and JSON-parsed when possible, else returned raw.
 
@@ -40,7 +40,7 @@ Invoke a tool by name; text content is flattened and JSON-parsed when possible, 
 close(): Promise<void>;
 ```
 
-Defined in: [index.ts:51](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/mcp/src/index.ts#L51)
+Defined in: [index.ts:51](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/mcp/src/index.ts#L51)
 
 Close the underlying transport (if it defines [McpTransport.close](/reference/mcp/index/interfaces/mcptransport/#close)).
 
@@ -56,7 +56,7 @@ Close the underlying transport (if it defines [McpTransport.close](/reference/mc
 listTools(): Promise<readonly McpToolDef[]>;
 ```
 
-Defined in: [index.ts:47](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/mcp/src/index.ts#L47)
+Defined in: [index.ts:47](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/mcp/src/index.ts#L47)
 
 List the server's advertised tools.
 

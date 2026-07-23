@@ -30,6 +30,91 @@ function coerceArgs(input: JsonValue): JsonValue | undefined {
   return parsed !== null && typeof parsed === "object" ? parsed : undefined;
 }
 
+// ── harmony / leaked-tool-call salvage (used by harmonyRepair) ────────────────────────────────────
+// Some gateways surface a model's tool call as ordinary assistant TEXT (the model's native tool grammar
+// leaks through the OpenAI-compat `content` channel instead of being parsed into `tool_calls`). These
+// helpers recover such a call from the text so the loop can still execute it.
+
+// The literal sentinels that mark a leaked tool call. Presence of any is the trigger to attempt salvage.
+const TOOL_MARKERS = ["<|channel|>", "to=functions.", "to=", "<tool_call>", "<|tool_call|>", "<|tool_call_start|>"] as const;
+
+// Extract the first balanced {...} JSON object at/after `from`, respecting strings/escapes. Undefined if none.
+function balancedObject(s: string, from: number): string | undefined {
+  const start = s.indexOf("{", from);
+  if (start === -1) return undefined;
+  let depth = 0;
+  let inStr = false;
+  let esc = false;
+  for (let i = start; i < s.length; i++) {
+    const c = s[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (c === "\\") esc = true;
+      else if (c === '"') inStr = false;
+    } else if (c === '"') inStr = true;
+    else if (c === "{") depth++;
+    else if (c === "}" && --depth === 0) return s.slice(start, i + 1);
+  }
+  return undefined;
+}
+
+// A repaired object payload, or {} when nothing usable parses (fail-soft: an argless call still fires).
+function objectOrEmpty(json: string | undefined): JsonValue {
+  if (json === undefined) return {};
+  const parsed = repairJson(json);
+  return parsed !== null && typeof parsed === "object" ? parsed : {};
+}
+
+interface SalvagedCall {
+  readonly name: string;
+  readonly input: JsonValue;
+}
+
+/**
+ * Recover tool calls that leaked into assistant text. Only names present in `known` are accepted, so a
+ * plain-prose answer that merely mentions a tool name is never mis-salvaged. Handles the OpenAI "harmony"
+ * channel grammar (`… to=functions.NAME … <|message|>{json}`) and explicit `<tool_call>{…}</tool_call>`
+ * blocks (Hermes/Qwen) that arrived as content.
+ */
+function salvageToolCalls(text: string, known: ReadonlySet<string>): SalvagedCall[] {
+  const out: SalvagedCall[] = [];
+  // 1. Harmony: a routing marker `to=[functions.]NAME` followed by the args after the next `<|message|>`.
+  const routeRe = /to=(?:functions\.)?([A-Za-z_]\w*)/g;
+  for (let m = routeRe.exec(text); m !== null; m = routeRe.exec(text)) {
+    const name = m[1];
+    if (name === undefined || !known.has(name)) continue;
+    const msgIdx = text.indexOf("<|message|>", m.index);
+    const from = msgIdx !== -1 ? msgIdx + "<|message|>".length : routeRe.lastIndex;
+    out.push({ name, input: objectOrEmpty(balancedObject(text, from)) });
+  }
+  if (out.length > 0) return out;
+  // 2. Explicit <tool_call>…</tool_call> JSON blocks ({ "name", "arguments" }) that leaked as content.
+  if (text.includes("<tool_call>")) {
+    const blockRe = /<tool_call>\s*([\s\S]*?)\s*<\/tool_call>/g;
+    for (let m = blockRe.exec(text); m !== null; m = blockRe.exec(text)) {
+      const parsed = repairJson(m[1] ?? "");
+      if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) continue;
+      const obj = parsed as { readonly [k: string]: JsonValue };
+      const name = obj["name"];
+      if (typeof name !== "string" || !known.has(name)) continue;
+      out.push({ name, input: obj["arguments"] ?? obj["parameters"] ?? {} });
+    }
+  }
+  return out;
+}
+
+// Strip leaked tool-call markup from the assistant text so the transcript's assistant turn stays clean:
+// keep only any prose before the earliest sentinel.
+function stripToolMarkup(text: string): string {
+  let cut = text.length;
+  for (const marker of TOOL_MARKERS) {
+    const i = text.indexOf(marker);
+    if (i !== -1 && i < cut) cut = i;
+  }
+  return text.slice(0, cut).trim();
+}
+
+
 // Render a schema-issue list (as carried on a FinalizeOutcome) back into a "; "-joined message string.
 function issueText(issues: JsonValue): string {
   if (!Array.isArray(issues)) return String(issues);
@@ -57,6 +142,35 @@ export function argRepair<Deps = unknown>(): Middleware<Deps> {
       if (coerced === undefined) return out;
       ctx.emit({ type: "tool.repair", callId: call.callId, name: call.name, mechanism: "coerce", before: call.input, after: coerced });
       return next({ ...call, input: coerced });
+    },
+  };
+}
+
+/**
+ * Model-altitude salvage: when the provider parsed NO tool calls but the model's text contains a leaked
+ * tool call (its native tool grammar surfaced through the OpenAI-compat `content` channel instead of
+ * `tool_calls` — e.g. gpt-oss "harmony" markers, or a stray `<tool_call>…</tool_call>` block), recover the
+ * call, emit a visible `tool.repair` (`mechanism: "parse"`), and hand it back so the loop executes it. Only
+ * names the agent actually exposes are salvaged, so a prose answer that merely mentions a tool is untouched.
+ *
+ * @typeParam Deps - the agent's dependency bag (inferred; healing middleware are dependency-agnostic).
+ */
+export function harmonyRepair<Deps = unknown>(): Middleware<Deps> {
+  return {
+    name: "healing.harmonyRepair",
+    async model(ctx, call, next) {
+      const result = await next(call);
+      // Nothing to do when the provider already parsed calls, there are no tools, or no marker is present.
+      if (result.calls.length > 0 || call.tools.length === 0) return result;
+      if (!TOOL_MARKERS.some((m) => result.text.includes(m))) return result;
+      const known = new Set(call.tools.map((t) => t.name));
+      const salvaged = salvageToolCalls(result.text, known);
+      if (salvaged.length === 0) return result;
+      const calls = salvaged.map((s) => ({ callId: ctx.runtime.randomUUID(), name: s.name, input: s.input }));
+      for (const c of calls) {
+        ctx.emit({ type: "tool.repair", callId: c.callId, name: c.name, mechanism: "parse", before: result.text, after: c.input });
+      }
+      return { ...result, text: stripToolMarkup(result.text), finishReason: "tool_calls", calls };
     },
   };
 }
@@ -203,7 +317,7 @@ export function outputRetry<Deps = unknown>(opts: OutputRetryOptions = {}): Midd
  * @typeParam Deps - the agent's dependency bag (inferred).
  */
 export function defaults<Deps = unknown>(): readonly Middleware<Deps>[] {
-  return [argRepair<Deps>(), loopGuard<Deps>(), retryBudget<Deps>(), outputRetry<Deps>()];
+  return [harmonyRepair<Deps>(), argRepair<Deps>(), loopGuard<Deps>(), retryBudget<Deps>(), outputRetry<Deps>()];
 }
 
 /**
@@ -218,4 +332,4 @@ export function defaults<Deps = unknown>(): readonly Middleware<Deps>[] {
  * agent({ model, instructions, tools, healing: [healing.loopGuard({ haltAt: 3 })] });
  * ```
  */
-export const healing = { argRepair, retryBudget, loopGuard, outputRetry, defaults } as const;
+export const healing = { argRepair, harmonyRepair, retryBudget, loopGuard, outputRetry, defaults } as const;

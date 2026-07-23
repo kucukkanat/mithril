@@ -5,7 +5,7 @@ prev: false
 title: "RunSource"
 ---
 
-Defined in: [hooks.ts:24](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/react/src/hooks.ts#L24)
+Defined in: [hooks.ts:24](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/react/src/hooks.ts#L24)
 
 Anything carrying a run event stream — notably a `RunHandle`, which satisfies this shape.
 
@@ -21,6 +21,6 @@ Accepted by [useRun](/reference/react/hooks/functions/userun/) and [useObject](/
 readonly events: AsyncIterable<MithrilEvent>;
 ```
 
-Defined in: [hooks.ts:26](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/react/src/hooks.ts#L26)
+Defined in: [hooks.ts:26](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/react/src/hooks.ts#L26)
 
 The run's event stream.

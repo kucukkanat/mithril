@@ -9,7 +9,7 @@ title: "testModel"
 function testModel(provider, id?): ModelHandle;
 ```
 
-Defined in: [packages/core/src/testkit/index.ts:122](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/testkit/index.ts#L122)
+Defined in: [packages/core/src/testkit/index.ts:122](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/testkit/index.ts#L122)
 
 Wrap a test [Provider](/reference/core/protocol/interfaces/provider/) in a self-wiring [ModelHandle](/reference/core/protocol/interfaces/modelhandle/) for direct use as an agent's `model`.
 

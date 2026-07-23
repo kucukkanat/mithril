@@ -8,6 +8,7 @@
 import { agent } from "@mithril/core/agent";
 import { transformers } from "@mithril/providers/transformers";
 import { resolveHealing } from "./healing.ts";
+import { ORCHESTRATOR_INSTRUCTIONS, orchestratorTools } from "./orchestrator.ts";
 import { outputSchema, outputSchemaConverter } from "./schemas.ts";
 import { toolset } from "./tools.ts";
 
@@ -55,8 +56,12 @@ export default class MithrilLocalProvider {
     const { repoId, dtype } = this.config;
 
     const model = transformers(repoId, { device: "cpu", ...(dtype !== undefined ? { dtype } : {}) });
-    const tools = toolset(vars["toolset"]);
-    const instructions = typeof vars["instructions"] === "string" ? vars["instructions"] : DEFAULT_INSTRUCTIONS;
+    // The `orchestrator` toolset builds the multi-agent lead (research/analyze sub-agents) around this
+    // model; every other name resolves to a flat tool array via `toolset`.
+    const isOrchestrator = vars["toolset"] === "orchestrator";
+    const tools = isOrchestrator ? orchestratorTools(model) : toolset(vars["toolset"]);
+    const defaultInstructions = isOrchestrator ? ORCHESTRATOR_INSTRUCTIONS : DEFAULT_INSTRUCTIONS;
+    const instructions = typeof vars["instructions"] === "string" ? vars["instructions"] : defaultInstructions;
     const output = outputSchema(vars["outputSchema"]);
 
     const a = agent({

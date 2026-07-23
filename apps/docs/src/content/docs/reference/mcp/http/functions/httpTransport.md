@@ -9,7 +9,7 @@ title: "httpTransport"
 function httpTransport(opts): McpTransport;
 ```
 
-Defined in: [http.ts:42](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/mcp/src/http.ts#L42)
+Defined in: [http.ts:42](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/mcp/src/http.ts#L42)
 
 Create an [McpTransport](/reference/mcp/index/interfaces/mcptransport/) that speaks MCP over Streamable HTTP.
 

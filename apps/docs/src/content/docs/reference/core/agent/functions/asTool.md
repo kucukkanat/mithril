@@ -9,7 +9,7 @@ title: "asTool"
 function asTool<In, ChildDeps, COut>(child, opts): Tool<string, In, COut, unknown>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:422](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/agent/factory.ts#L422)
+Defined in: [packages/core/src/agent/factory.ts:427](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L427)
 
 Wrap an [Agent](/reference/core/agent/interfaces/agent/) as a [Tool](/reference/core/protocol/interfaces/tool/), so one agent can call another as a sub-agent.
 
@@ -35,6 +35,11 @@ Wrap an [Agent](/reference/core/agent/interfaces/agent/) as a [Tool](/reference/
 a [Tool](/reference/core/protocol/interfaces/tool/) whose `execute` runs the sub-agent to completion and returns its output.
 
 ## Remarks
+
+**Inherited run context.** The sub-agent run automatically inherits the parent run's
+`transport`, `providers`, and `runtime` (read from the calling [RunContext](/reference/core/protocol/interfaces/runcontext/)), so a nested agent
+authenticates, resolves bare-string model ids, and uses the same runtime with no extra wiring. Supply the
+child's own `deps` via [AsToolOptions.deps](/reference/core/agent/interfaces/astooloptions/#deps).
 
 **Nested HITL is first-class.** If the sub-agent suspends (its own approval or `ctx.suspend`),
 this tool suspends the *parent* via Tier-2 with a `handoff.suspended` request whose payload carries the

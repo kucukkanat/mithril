@@ -5,7 +5,7 @@ prev: false
 title: "RunStore"
 ---
 
-Defined in: [index.ts:38](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/react/src/index.ts#L38)
+Defined in: [index.ts:38](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/react/src/index.ts#L38)
 
 A `useSyncExternalStore`-compatible store over a run's events. Created by [createRunStore](/reference/react/index/functions/createrunstore/).
 
@@ -17,7 +17,7 @@ A `useSyncExternalStore`-compatible store over a run's events. Created by [creat
 getSnapshot(): RunSnapshot;
 ```
 
-Defined in: [index.ts:42](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/react/src/index.ts#L42)
+Defined in: [index.ts:42](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/react/src/index.ts#L42)
 
 Return the current [RunSnapshot](/reference/react/index/interfaces/runsnapshot/) (a stable reference between changes).
 
@@ -33,7 +33,7 @@ Return the current [RunSnapshot](/reference/react/index/interfaces/runsnapshot/)
 subscribe(onChange): () => void;
 ```
 
-Defined in: [index.ts:40](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/react/src/index.ts#L40)
+Defined in: [index.ts:40](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/react/src/index.ts#L40)
 
 Register a change listener; returns an unsubscribe function.
 

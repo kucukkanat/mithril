@@ -356,6 +356,8 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
     signal,
     usage,
     runtime: rt,
+    transport,
+    ...(opts.providers !== undefined ? { providers: opts.providers } : {}),
     emit(payload, type) {
       emitted.push(stamp(span, { type: type ?? "custom.emit", payload }));
     },
@@ -374,6 +376,8 @@ export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<
     signal,
     usage,
     runtime: rt,
+    transport,
+    ...(opts.providers !== undefined ? { providers: opts.providers } : {}),
     emit(payload, type) {
       emitted.push(stamp(span, { type: type ?? "custom.emit", payload }));
     },

@@ -5,7 +5,7 @@ prev: false
 title: "Plugin"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:217](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L217)
+Defined in: [packages/core/src/protocol/middleware.ts:217](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L217)
 
 A bundle of tools, middleware, and event consumers registered as a unit.
 
@@ -30,7 +30,7 @@ call signature, not here — it is invalid on an interface type parameter.
 readonly optional __tools?: Tools;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:224](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L224)
+Defined in: [packages/core/src/protocol/middleware.ts:224](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L224)
 
 Phantom carrier for `Tools` inference; erased at build.
 
@@ -42,7 +42,7 @@ Phantom carrier for `Tools` inference; erased at build.
 readonly optional consumers?: readonly EventConsumer[];
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:221](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L221)
+Defined in: [packages/core/src/protocol/middleware.ts:221](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L221)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:221](https://github.com/ku
 readonly optional middleware?: readonly Middleware<Deps>[];
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:220](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L220)
+Defined in: [packages/core/src/protocol/middleware.ts:220](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L220)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:220](https://github.com/ku
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:218](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L218)
+Defined in: [packages/core/src/protocol/middleware.ts:218](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L218)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:218](https://github.com/ku
 readonly optional setup?: (host) => void | Promise<void>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:222](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L222)
+Defined in: [packages/core/src/protocol/middleware.ts:222](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L222)
 
 #### Parameters
 
@@ -92,4 +92,4 @@ Defined in: [packages/core/src/protocol/middleware.ts:222](https://github.com/ku
 readonly optional tools?: Tools;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:219](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/core/src/protocol/middleware.ts#L219)
+Defined in: [packages/core/src/protocol/middleware.ts:219](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L219)

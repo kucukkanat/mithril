@@ -9,7 +9,7 @@ title: "openaiProvider"
 function openaiProvider(config?): Provider;
 ```
 
-Defined in: [openai/index.ts:62](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/providers/src/openai/index.ts#L62)
+Defined in: [openai/index.ts:62](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/openai/index.ts#L62)
 
 Creates an OpenAI Provider whose `chat` method streams `/chat/completions` responses.
 

@@ -5,7 +5,7 @@ prev: false
 title: "SuspendedInfo"
 ---
 
-Defined in: [runner-web/src/protocol.ts:18](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/runner-web/src/protocol.ts#L18)
+Defined in: [runner-web/src/protocol.ts:18](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/protocol.ts#L18)
 
 A pending human-in-the-loop suspension, as posted by the worker: the JSON-safe
 [SuspensionDescriptor](https://mithril.dev/reference/core/)-shaped `request`, the
@@ -19,7 +19,7 @@ durable-local resume `token`, and the `runId` it belongs to (when the event stre
 readonly request: unknown;
 ```
 
-Defined in: [runner-web/src/protocol.ts:19](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/runner-web/src/protocol.ts#L19)
+Defined in: [runner-web/src/protocol.ts:19](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/protocol.ts#L19)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [runner-web/src/protocol.ts:19](https://github.com/kucukkanat/mithri
 readonly optional runId?: string;
 ```
 
-Defined in: [runner-web/src/protocol.ts:21](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/runner-web/src/protocol.ts#L21)
+Defined in: [runner-web/src/protocol.ts:21](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/protocol.ts#L21)
 
 ***
 
@@ -39,4 +39,4 @@ Defined in: [runner-web/src/protocol.ts:21](https://github.com/kucukkanat/mithri
 readonly token: string;
 ```
 
-Defined in: [runner-web/src/protocol.ts:20](https://github.com/kucukkanat/mithril/blob/d1861b6ac415e85aae11c46fc6fdce8be5dded6a/packages/runner-web/src/protocol.ts#L20)
+Defined in: [runner-web/src/protocol.ts:20](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/protocol.ts#L20)
