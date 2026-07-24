@@ -17,15 +17,22 @@
 // middleware/plugins, iterate()/resume()/resumeStream()/asTool(), and sealed-token helpers. Durable
 // persistence wiring into run() is not yet shipped — see the roadmap.
 
-export type { AsToolOptions, ToolDef, ToolFactory } from "./factory.ts";
-export { agent, asTool, createHarness, plugin, tool } from "./factory.ts";
-export type { LoopOptions, PendingKind, PendingSuspension, ResumeState, ResumeValue, RunTokenV2 } from "./loop.ts";
+// ── Tool & Agent Factories ─────────────────────────────────────────────────────────────────────
+export type { ToolDef, ToolFactory, AsToolOptions } from "./factory.ts";
+export { tool, plugin, agent, createHarness, asTool } from "./factory.ts";
+
+// ── Loop & Streaming ───────────────────────────────────────────────────────────────────────────
+export type {
+  LoopOptions,
+  PendingKind,
+  PendingSuspension,
+  ResumeState,
+  ResumeValue,
+  RunTokenV2,
+} from "./loop.ts";
 export { agentLoop } from "./loop.ts";
-export type { LoopGuardOptions, OutputRetryOptions, RetryBudgetOptions } from "./healing.ts";
-export { argRepair, defaults, harmonyRepair, healing, loopGuard, outputRetry, retryBudget } from "./healing.ts";
-export { defaultRuntime } from "./runtime.ts";
-export { globalConsumers, registerGlobalConsumer } from "./global-consumers.ts";
-export { MithrilError, providerRegistry, resolveModel, resolveTransport } from "./registry.ts";
+
+// ── Agent Types & Config ───────────────────────────────────────────────────────────────────────
 export type {
   Agent,
   AgentConfig,
@@ -41,17 +48,34 @@ export type {
   StepSnapshot,
 } from "./agent-types.ts";
 export { inputToJson, toSerializedError } from "./agent-types.ts";
-export type { BestOfNOptions, SelfConsistencyOptions } from "./test-time.ts";
-export { bestOfN, selfConsistency } from "./test-time.ts";
-export { makeRunHandle } from "./handle.ts";
+
+// ── Self-Healing Middleware ────────────────────────────────────────────────────────────────────
+export type { LoopGuardOptions, OutputRetryOptions, RetryBudgetOptions } from "./healing.ts";
+export { argRepair, harmonyRepair, retryBudget, loopGuard, outputRetry, defaults, healing } from "./healing.ts";
+
+// ── Suspension & HITL Resume ───────────────────────────────────────────────────────────────────
 export type { Keyring, SealCodec } from "./seal.ts";
 export {
+  seal,
+  open,
   aesGcmCodec,
+  hmacCodec,
+  singleKeyring,
   generateEncryptionKey,
   generateStateKey,
-  hmacCodec,
-  open,
-  seal,
-  singleKeyring,
   StateIntegrityError,
 } from "./seal.ts";
+
+// ── Test-Time Sampling & Consistency ───────────────────────────────────────────────────────────
+export type { BestOfNOptions, SelfConsistencyOptions } from "./test-time.ts";
+export { bestOfN, selfConsistency } from "./test-time.ts";
+
+// ── Run Handle & Control ───────────────────────────────────────────────────────────────────────
+export { makeRunHandle } from "./handle.ts";
+
+// ── Registry & Resolution ──────────────────────────────────────────────────────────────────────
+export { MithrilError, providerRegistry, resolveModel, resolveTransport } from "./registry.ts";
+
+// ── Runtime & Global Observability ────────────────────────────────────────────────────────────
+export { defaultRuntime } from "./runtime.ts";
+export { registerGlobalConsumer, globalConsumers } from "./global-consumers.ts";

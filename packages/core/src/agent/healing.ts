@@ -22,6 +22,26 @@ import {
   toolErrorClass,
 } from "../protocol/index.ts";
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// HEALING MIDDLEWARE INDEX
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Each middleware is a composable behavior that reads outcomes and emits replayable events.
+// Use individually or via defaults() for the standard stack.
+//
+// Exported factories:
+//   • argRepair() — coerce leaked tool calls from text
+//   • harmonyRepair() — salvage tool calls surfaced as text (gateway workaround)
+//   • retryBudget() — enforce max retry attempts per tool call
+//   • loopGuard() — break infinite loops (max tool uses per step)
+//   • outputRetry() — repair invalid structured output via self-correction
+//   • defaults() — the batteries-included stack (all five in order)
+//
+// Internal helpers:
+//   • coerceArgs() — parse JSON string into args object
+//   • balancedObject() — extract first {...} from text (for leaked calls)
+//   • validateLeak() — classify leaked call markers
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 // The single coercion argRepair attempts: a whole args object emitted by the model as a JSON string.
 // Deterministic and narrow — only a string that repair-parses to an object/array is coerced.
 function coerceArgs(input: JsonValue): JsonValue | undefined {

@@ -48,6 +48,39 @@ import { healing as healingStack } from "./healing.ts";
 import { MithrilError, resolveModel, resolveTransport } from "./registry.ts";
 import { defaultRuntime } from "./runtime.ts";
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// INTERNAL FUNCTION INDEX
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// § Output formatting
+//   • buildOutputHint() — format JSON schema as compact prompt hint
+//   • tryPartialJson() — parse in-progress structured output
+//   • issuesToJson() — convert validation issues to JSON
+//
+// § Suspension & HITL routing
+//   • reqToDescriptor() — serialize a suspension request
+//   • resumeDirective() — determine resume action type (approve/reject/return/midtool)
+//
+// § Tool execution & streaming
+//   • runExecute() — invoke tool with journal replay and stream handling
+//   • withExamples() — attach few-shot examples to tool descriptions
+//   • classifyToolError() — categorize tool errors for self-correction
+//   • isAsyncGen() — check if tool result is an async generator
+//
+// § Budget & state management
+//   • checkBudget() — validate token/cost limits
+//   • pendingCalls() — extract unfinalized tool calls from message history
+//   • resolveInput() — validate input against schema
+//
+// § Entry point
+//   • agentLoop() — the main async generator (line 317)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//
+// TYPE CONVENTIONS & INTERNAL TYPES
+// • Deps — the dependency injection object threaded through tool/instruction contexts
+// • Directive — union of suspension resume paths (approval, tool return, mid-execution replay)
+// • ExecState — mutable per-execution state tracking journal + prior resolutions
+// • SuspendSignal — internal unwinding signal (never escapes the loop)
+
 const ZERO_DELTA: UsageDelta = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, costMicroUsd: 0 };
 const APPROVAL_SCHEMA_ID = "mithril.approval";
 
@@ -106,13 +139,23 @@ export interface RunTokenV2 {
   readonly pending: PendingSuspension;
 }
 
-// The internal directive applied to the first pending tool call on resume. `approve`/`reject`/`edit` are the
-// Tier-1 approval arms; `return` feeds a Tier-1b resolution as the tool result; `midtool` re-runs the tool's
-// execute with the recorded journal + resolutions (Tier-2 replay).
-type Directive =
-  | ApprovalDecision<JsonValue>
-  | { readonly kind: "return"; readonly value: JsonValue }
-  | { readonly kind: "midtool"; readonly journal: Readonly<Record<string, JsonValue>>; readonly resolutions: readonly JsonValue[]; readonly value: JsonValue };
+// Tier-1 HITL resumption: approval/rejection/edit decision from human (ApprovalDecision is from protocol).
+type ApprovalDirective = ApprovalDecision<JsonValue>;
+
+// Tier-1b resumption: tool returned suspend(...), continue with this value as tool result.
+type ToolReturnDirective = { readonly kind: "return"; readonly value: JsonValue };
+
+// Tier-2 resumption: ctx.suspend() paused mid-execution; replay journal + resolutions, then resume with value.
+type MidtoolDirective = {
+  readonly kind: "midtool";
+  readonly journal: Readonly<Record<string, JsonValue>>;
+  readonly resolutions: readonly JsonValue[];
+  readonly value: JsonValue;
+};
+
+// The internal directive applied to the first pending tool call on resume.
+// Combines Tier-1 (approval), Tier-1b (tool return), and Tier-2 (mid-execution) resumption paths.
+type Directive = ApprovalDirective | ToolReturnDirective | MidtoolDirective;
 
 // Internal unwinding signal for ctx.suspend() (Tier-2) and a tool-returned suspend marker (Tier-1b). Never
 // escapes the loop: runToolCalls catches it and turns it into a serializable PendingSuspension. A unique

@@ -52,6 +52,17 @@ function parseFrame<T>(s: string): T | undefined {
   }
 }
 
+/**
+ * Parse an Anthropic messages SSE stream into {@link ProviderChunk}s.
+ *
+ * @param body - ReadableStream from a fetch response (application/x-ndjson).
+ * @returns AsyncGenerator yielding text, tool uses, and usage chunks as they stream.
+ * @remarks
+ * - Handles malformed frames gracefully (skips without crashing).
+ * - Accumulates streamed tool input fragments per index and emits a single `tool.call` once the stream ends.
+ * - The loop stamps {@link EventMeta}; this translates wire format only.
+ * - Anthropic's native `stop_reason` is mapped to the generic {@link FinishReason} for provider interop.
+ */
 export async function* parseAnthropicStream(body: ReadableStream<Uint8Array>): AsyncGenerator<ProviderChunk> {
   const reader = body.getReader();
   const decoder = new TextDecoder();

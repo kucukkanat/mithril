@@ -57,6 +57,17 @@ function parseFrame<T>(s: string): T | undefined {
   }
 }
 
+/**
+ * Parse an OpenAI (or OpenAI-compatible) chat-completions SSE stream into {@link ProviderChunk}s.
+ *
+ * @param body - ReadableStream from a fetch response (application/x-ndjson).
+ * @returns AsyncGenerator yielding text, tool calls, and usage chunks as they stream.
+ * @remarks
+ * - Handles malformed frames gracefully (skips without crashing).
+ * - Accumulates streamed tool-call argument fragments per index and emits a single `tool.call` once the stream ends.
+ * - The loop stamps {@link EventMeta}; this translates wire format only.
+ * - Provider-agnostic: works with OpenAI, compatible gateways, and local SSE sources.
+ */
 export async function* parseOpenAIStream(body: ReadableStream<Uint8Array>): AsyncGenerator<ProviderChunk> {
   // Read raw bytes + decode manually (pipeThrough(TextDecoderStream) trips the generic-Uint8Array lib types).
   const reader = body.getReader();

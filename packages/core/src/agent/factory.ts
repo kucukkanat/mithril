@@ -19,6 +19,27 @@ import { agentLoop, type ResumeState, type ResumeValue, type RunTokenV2 } from "
 import { MithrilError } from "./registry.ts";
 import { defaultRuntime } from "./runtime.ts";
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// INTERNAL FUNCTION INDEX & GENERIC TYPE CONVENTIONS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Generic type parameters used throughout this file:
+//   • Name — literal tool/agent name string (kept `const` for model code generation)
+//   • SIn / InputSchema — input Standard Schema (inferred to execute's input type)
+//   • Out / OutputValue — tool's JSON-safe return type
+//   • Deps — dependency injection object
+//   • Tools — readonly array of tools
+//
+// Internal helpers:
+//   • isPlugin() — discriminate Plugin from Middleware
+//   • flattenUse() — merge nested plugin arrays into flat middleware/consumers/tools
+//   • linkSignals() — wire user AbortSignal to internal controller
+//
+// Factories (exported):
+//   • tool() — define a single tool (line ~98)
+//   • plugin() — define a plugin bundle (line ~140)
+//   • agent() / createHarness() — main agent factories (line ~180+)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 // ── tool() ────────────────────────────────────────────────────────────────────────────────────────────
 // `In` is recovered from the schema's output, `Out` from execute's NAKED value position (so a non-string
 // tool doesn't collapse to `string`); the suspend arm is NoInfer so a pure-suspend Tier-1b tool doesn't
@@ -48,11 +69,17 @@ export interface ToolDef<Name extends string, SIn extends StandardSchemaV1, Deps
   examples?: readonly JsonValue[];
   inputSchema: SIn;
   outputSchema?: StandardSchemaV1<unknown, Out>;
-  needsApproval?: boolean | ((input: Infer<SIn>, ctx: RunContext<Deps>) => boolean | Promise<boolean>);
+  needsApproval?:
+    | boolean
+    | ((
+        input: Infer<SIn>,
+        ctx: RunContext<Deps>,
+      ) => boolean | Promise<boolean>);
   execute: (
     input: Infer<SIn>,
     ctx: RunContext<Deps>,
-  ) => Promise<Out | Suspend<NoInfer<Out>>> | AsyncGenerator<ToolProgress, Out | Suspend<NoInfer<Out>>>;
+  ) => Promise<Out | Suspend<NoInfer<Out>>>
+    | AsyncGenerator<ToolProgress, Out | Suspend<NoInfer<Out>>>;
 }
 
 /**
