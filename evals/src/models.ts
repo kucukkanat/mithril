@@ -10,7 +10,7 @@
  * ("qwn3", "granit"). A term that matches nothing is warned about (so typos surface). Unset (or empty)
  * ⇒ every model in the catalog.
  */
-import { LOCAL_MODELS, type LocalModel } from "@mithril/runner-web";
+import { LOCAL_MODELS, requiresWebGPU, type Backend, type LocalModel } from "@mithril/runner-web";
 
 /** One model the suite runs against: its HF repo id, a display label, and an optional pinned dtype. */
 export interface EvalModel {
@@ -18,6 +18,14 @@ export interface EvalModel {
   readonly label: string;
   /** Quantization dtype pinned by the catalog (e.g. Granite → `q4`, Qwen3-4B → `q4f16`); omitted otherwise. */
   readonly dtype?: string;
+  /** Backends the model may run on (from the catalog). Passed to the provider so a forced WebGPU-only run fails clearly. */
+  readonly backends?: readonly Backend[];
+}
+
+/** True when `MITHRIL_EVAL_INCLUDE_WEBGPU` opts into attempting WebGPU-only models on CPU (they can't run — a debug escape hatch). */
+export function includeWebGPUModels(): boolean {
+  const v = process.env["MITHRIL_EVAL_INCLUDE_WEBGPU"];
+  return v !== undefined && v !== "" && v !== "0" && v.toLowerCase() !== "false";
 }
 
 /** Parse `MITHRIL_EVAL_MODELS` into a trimmed, non-empty filter list, or `undefined` when unset/blank. */
@@ -55,24 +63,35 @@ function matchesModel(term: string, model: LocalModel): boolean {
   return q.length >= 3 && targets.some((t) => isSubsequence(q, t));
 }
 
-/** The catalog models to evaluate, after applying the {@link envFilter} (forgiving id/label matching). */
+/**
+ * The catalog models to evaluate, after applying the {@link envFilter} (forgiving id/label matching).
+ * WebGPU-only models (e.g. Ternary-Bonsai-8B) are **excluded by default** — the harness runs on CPU
+ * (onnxruntime-node), where their quantized kernel can't execute — unless {@link includeWebGPUModels}
+ * (`MITHRIL_EVAL_INCLUDE_WEBGPU=1`) forces an attempt.
+ */
 export function selectedModels(): readonly EvalModel[] {
+  const runnable = includeWebGPUModels() ? LOCAL_MODELS : LOCAL_MODELS.filter((m) => !requiresWebGPU(m));
   const filter = envFilter();
-  if (filter === undefined) return LOCAL_MODELS.map(toEvalModel);
+  if (filter === undefined) return runnable.map(toEvalModel);
 
   const unmatched = filter.filter((term) => !LOCAL_MODELS.some((m) => matchesModel(term, m)));
   if (unmatched.length > 0) {
     console.warn(`[models] MITHRIL_EVAL_MODELS: no model matched ${unmatched.map((t) => JSON.stringify(t)).join(", ")} — run 'bun run models' to see valid names.`);
   }
+  // Warn when a filter term matches only WebGPU-only models that are being skipped, so the skip is never silent.
+  const skipped = LOCAL_MODELS.filter((m) => requiresWebGPU(m) && !runnable.includes(m) && filter.some((term) => matchesModel(term, m)));
+  if (skipped.length > 0) {
+    console.warn(`[models] Skipping WebGPU-only model(s) ${skipped.map((m) => JSON.stringify(m.label)).join(", ")} — they can't run on the CPU harness. Set MITHRIL_EVAL_INCLUDE_WEBGPU=1 to attempt anyway.`);
+  }
 
-  const models = LOCAL_MODELS.filter((m) => filter.some((term) => matchesModel(term, m)));
+  const models = runnable.filter((m) => filter.some((term) => matchesModel(term, m)));
   if (models.length === 0) {
-    console.warn("[models] MITHRIL_EVAL_MODELS matched no models; nothing will run. Run 'bun run models' to list them.");
+    console.warn("[models] MITHRIL_EVAL_MODELS matched no runnable models; nothing will run. Run 'bun run models' to list them.");
   }
   return models.map(toEvalModel);
 }
 
 /** Project a catalog {@link LocalModel} onto the {@link EvalModel} shape the provider consumes. */
 function toEvalModel(m: LocalModel): EvalModel {
-  return { repoId: m.id, label: m.label, ...(m.dtype !== undefined ? { dtype: m.dtype } : {}) };
+  return { repoId: m.id, label: m.label, ...(m.dtype !== undefined ? { dtype: m.dtype } : {}), ...(m.backends !== undefined ? { backends: m.backends } : {}) };
 }

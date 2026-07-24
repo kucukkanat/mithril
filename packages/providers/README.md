@@ -32,5 +32,6 @@ into one call, usage, finish reason). The loop stamps the ids/ordering.
 short-lived tokens). The only runtime dependency is `RuntimeAdapter.fetch`, which is injectable — that's how
 the tests drive real parsing with zero network.
 
-**Known gap:** tool parameters are sent as a permissive `{ type: "object" }` schema; a Standard-Schema →
-JSON-Schema converter is a follow-up.
+**Tool schemas:** tool parameters are converted precisely when the input schema self-describes (see
+`withJsonSchema`) or a `toolSchema` converter is supplied (e.g. `openai("gpt-4o", { toolSchema: z.toJSONSchema })`),
+falling back to a permissive `{ type: "object" }` schema otherwise.

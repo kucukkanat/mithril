@@ -9,7 +9,7 @@ title: "harmonyRepair"
 function harmonyRepair<Deps>(): Middleware<Deps>;
 ```
 
-Defined in: [packages/core/src/agent/healing.ts:158](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/healing.ts#L158)
+Defined in: [packages/core/src/agent/healing.ts:178](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/healing.ts#L178)
 
 Model-altitude salvage: when the provider parsed NO tool calls but the model's text contains a leaked
 tool call (its native tool grammar surfaced through the OpenAI-compat `content` channel instead of
@@ -25,4 +25,4 @@ names the agent actually exposes are salvaged, so a prose answer that merely men
 
 ## Returns
 
-[`Middleware`](/reference/core/protocol/interfaces/middleware/)\<`Deps`\>
+[`Middleware`](/mithril/reference/core/protocol/interfaces/middleware/)\<`Deps`\>

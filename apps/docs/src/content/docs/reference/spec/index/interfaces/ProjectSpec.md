@@ -5,7 +5,7 @@ prev: false
 title: "ProjectSpec"
 ---
 
-Defined in: [packages/spec/src/types.ts:163](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L163)
+Defined in: [packages/spec/src/types.ts:163](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L163)
 
 A whole serializable project: an ordered list of declarations plus the entry to run.
 Statement order in the generated file equals `decls` order, which is what makes
@@ -19,7 +19,7 @@ spec→code→spec round-trips lossless.
 readonly decls: readonly ProjectDecl[];
 ```
 
-Defined in: [packages/spec/src/types.ts:166](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L166)
+Defined in: [packages/spec/src/types.ts:166](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L166)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [packages/spec/src/types.ts:166](https://github.com/kucukkanat/mithr
 readonly entry: EntrySpec;
 ```
 
-Defined in: [packages/spec/src/types.ts:167](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L167)
+Defined in: [packages/spec/src/types.ts:167](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L167)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [packages/spec/src/types.ts:167](https://github.com/kucukkanat/mithr
 readonly optional meta?: SpecMeta;
 ```
 
-Defined in: [packages/spec/src/types.ts:168](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L168)
+Defined in: [packages/spec/src/types.ts:168](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L168)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [packages/spec/src/types.ts:168](https://github.com/kucukkanat/mithr
 readonly name: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:165](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L165)
+Defined in: [packages/spec/src/types.ts:165](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L165)
 
 ***
 
@@ -59,4 +59,4 @@ Defined in: [packages/spec/src/types.ts:165](https://github.com/kucukkanat/mithr
 readonly specVersion: 1;
 ```
 
-Defined in: [packages/spec/src/types.ts:164](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L164)
+Defined in: [packages/spec/src/types.ts:164](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L164)

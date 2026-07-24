@@ -11,19 +11,19 @@ type JsonSchemaConverter = (schema) =>
   | undefined;
 ```
 
-Defined in: [packages/core/src/protocol/json-schema.ts:25](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/json-schema.ts#L25)
+Defined in: [packages/core/src/protocol/json-schema.ts:25](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/json-schema.ts#L25)
 
-A caller-supplied converter from a [StandardSchemaV1](/reference/core/protocol/interfaces/standardschemav1/) to a [JsonSchema](/reference/core/protocol/type-aliases/jsonschema/).
+A caller-supplied converter from a [StandardSchemaV1](/mithril/reference/core/protocol/interfaces/standardschemav1/) to a [JsonSchema](/mithril/reference/core/protocol/type-aliases/jsonschema/).
 
 ## Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `schema` | [`StandardSchemaV1`](/reference/core/protocol/interfaces/standardschemav1/)\<`unknown`, `unknown`\> |
+| `schema` | [`StandardSchemaV1`](/mithril/reference/core/protocol/interfaces/standardschemav1/)\<`unknown`, `unknown`\> |
 
 ## Returns
 
-  \| [`JsonSchema`](/reference/core/protocol/type-aliases/jsonschema/)
+  \| [`JsonSchema`](/mithril/reference/core/protocol/type-aliases/jsonschema/)
   \| `undefined`
 
 ## Remarks

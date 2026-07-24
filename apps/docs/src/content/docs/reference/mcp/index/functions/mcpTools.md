@@ -9,7 +9,7 @@ title: "mcpTools"
 function mcpTools(client): Promise<readonly Tool<string, JsonValue, JsonValue, unknown>[]>;
 ```
 
-Defined in: [index.ts:113](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/mcp/src/index.ts#L113)
+Defined in: [index.ts:113](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/index.ts#L113)
 
 Fetch an MCP server's tools and wrap each as a Mithril Tool that calls it.
 
@@ -17,7 +17,7 @@ Fetch an MCP server's tools and wrap each as a Mithril Tool that calls it.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `client` | [`McpClient`](/reference/mcp/index/interfaces/mcpclient/) | A connected [McpClient](/reference/mcp/index/interfaces/mcpclient/) (see [mcpClient](/reference/mcp/index/functions/mcpclient/)). |
+| `client` | [`McpClient`](/mithril/reference/mcp/index/interfaces/mcpclient/) | A connected [McpClient](/mithril/reference/mcp/index/interfaces/mcpclient/) (see [mcpClient](/mithril/reference/mcp/index/functions/mcpclient/)). |
 
 ## Returns
 
@@ -29,4 +29,4 @@ One Mithril tool per advertised MCP tool, ready to hand to an agent.
 
 Each wrapped tool uses a **passthrough, non-validating** schema: the server's JSON Schema is not
 enforced client-side, so inputs are forwarded to the server as-is. Execution routes through
-[McpClient.callTool](/reference/mcp/index/interfaces/mcpclient/#calltool).
+[McpClient.callTool](/mithril/reference/mcp/index/interfaces/mcpclient/#calltool).

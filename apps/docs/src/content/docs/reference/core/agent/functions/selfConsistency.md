@@ -9,7 +9,7 @@ title: "selfConsistency"
 function selfConsistency(opts): Middleware;
 ```
 
-Defined in: [packages/core/src/agent/test-time.ts:41](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/test-time.ts#L41)
+Defined in: [packages/core/src/agent/test-time.ts:41](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/test-time.ts#L41)
 
 Self-consistency: sample the model `n` times and return the majority answer (Wang et al.).
 
@@ -17,13 +17,13 @@ Self-consistency: sample the model `n` times and return the majority answer (Wan
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `opts` | [`SelfConsistencyOptions`](/reference/core/agent/interfaces/selfconsistencyoptions/) | the sample count and optional early-stop agreement threshold. |
+| `opts` | [`SelfConsistencyOptions`](/mithril/reference/core/agent/interfaces/selfconsistencyoptions/) | the sample count and optional early-stop agreement threshold. |
 
 ## Returns
 
-[`Middleware`](/reference/core/protocol/interfaces/middleware/)
+[`Middleware`](/mithril/reference/core/protocol/interfaces/middleware/)
 
-a model-altitude [Middleware](/reference/core/protocol/interfaces/middleware/) to pass in an agent's `use` array.
+a model-altitude [Middleware](/mithril/reference/core/protocol/interfaces/middleware/) to pass in an agent's `use` array.
 
 ## Remarks
 

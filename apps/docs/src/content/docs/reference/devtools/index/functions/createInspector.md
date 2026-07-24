@@ -9,9 +9,9 @@ title: "createInspector"
 function createInspector(opts?): Inspector;
 ```
 
-Defined in: [packages/devtools/src/index.ts:70](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/index.ts#L70)
+Defined in: [packages/devtools/src/index.ts:70](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/index.ts#L70)
 
-Create a headless [Inspector](/reference/devtools/index/interfaces/inspector/) that captures runs from the event stream.
+Create a headless [Inspector](/mithril/reference/devtools/index/interfaces/inspector/) that captures runs from the event stream.
 
 ## Parameters
 
@@ -22,9 +22,9 @@ Create a headless [Inspector](/reference/devtools/index/interfaces/inspector/) t
 
 ## Returns
 
-[`Inspector`](/reference/devtools/index/interfaces/inspector/)
+[`Inspector`](/mithril/reference/devtools/index/interfaces/inspector/)
 
-an [Inspector](/reference/devtools/index/interfaces/inspector/); attach its `consumer` to an agent.
+an [Inspector](/mithril/reference/devtools/index/interfaces/inspector/); attach its `consumer` to an agent.
 
 ## Example
 

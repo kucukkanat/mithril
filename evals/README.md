@@ -32,7 +32,7 @@ models × suites heatmap — above promptfoo's full detailed results table.
 - Models run **on-device on CPU** (onnxruntime-node) — no network, no API keys. WebGPU is browser-only,
   so CPU here is **slow**; that's expected (correctness over speed).
 
-> The first run **downloads model weights** (~0.5–2 GB per model) into the Transformers.js cache. They
+> The first run **downloads model weights** (~0.5–4.75 GB per model) into the Transformers.js cache. They
 > are cached across runs. Use `MITHRIL_EVAL_MODELS` (below) to iterate on a single small model first.
 
 ## Run it

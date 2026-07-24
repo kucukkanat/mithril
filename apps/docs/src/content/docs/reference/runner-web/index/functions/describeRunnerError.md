@@ -9,7 +9,7 @@ title: "describeRunnerError"
 function describeRunnerError(raw): string | null;
 ```
 
-Defined in: [runner-web/src/client.ts:86](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/client.ts#L86)
+Defined in: [runner-web/src/client.ts:86](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/runner-web/src/client.ts#L86)
 
 Map a raw provider/runtime error to a friendly one-liner, or `null` when nothing specific applies.
 

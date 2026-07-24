@@ -39,6 +39,11 @@
     "kind": "type",
     "sig": "A const <id> = agent({ … }) declaration. Field order mirrors core's AgentConfig."
   },
+  "ALL_BACKENDS": {
+    "href": "/reference/runner-web/index/variables/all_backends/",
+    "kind": "const",
+    "sig": "const ALL_BACKENDS: readonly Backend[];"
+  },
   "angleToolCall": {
     "href": "/reference/providers/transformers/variables/angletoolcall/",
     "kind": "const",
@@ -93,6 +98,11 @@
     "href": "/reference/devtools/attach/functions/attachdevtools/",
     "kind": "fn",
     "sig": "function attachDevtools(): () => void;"
+  },
+  "Backend": {
+    "href": "/reference/runner-web/index/type-aliases/backend/",
+    "kind": "type",
+    "sig": "type Backend = \"webgpu\" | \"wasm\" | \"cpu\";"
   },
   "bestOfN": {
     "href": "/reference/core/agent/functions/bestofn/",
@@ -504,6 +514,11 @@
     "kind": "fn",
     "sig": "function harmonyRepair<Deps>(): Middleware<Deps>;"
   },
+  "hasWebGPU": {
+    "href": "/reference/runner-web/index/functions/haswebgpu/",
+    "kind": "fn",
+    "sig": "function hasWebGPU(): Promise<boolean>;"
+  },
   "healing": {
     "href": "/reference/core/agent/variables/healing/",
     "kind": "const",
@@ -829,6 +844,11 @@
     "kind": "class",
     "sig": "new MithrilRunInspectorElement(): MithrilRunInspectorElement;"
   },
+  "modelBackends": {
+    "href": "/reference/runner-web/index/functions/modelbackends/",
+    "kind": "fn",
+    "sig": "function modelBackends(model): readonly Backend[];"
+  },
   "ModelCall": {
     "href": "/reference/core/protocol/interfaces/modelcall/",
     "kind": "type",
@@ -979,6 +999,11 @@
     "kind": "const",
     "sig": "const PERMISSIVE_OBJECT: JsonSchema;"
   },
+  "Persistence": {
+    "href": "/reference/core/protocol/interfaces/persistence/",
+    "kind": "type",
+    "sig": "Opt-in durable persistence for a run, passed as RunOptions.persistence."
+  },
   "plugin": {
     "href": "/reference/core/agent/functions/plugin/",
     "kind": "fn",
@@ -1108,6 +1133,11 @@
     "href": "/reference/core/protocol/functions/replay/",
     "kind": "fn",
     "sig": "function replay(log, toSeq?): RunState;"
+  },
+  "requiresWebGPU": {
+    "href": "/reference/runner-web/index/functions/requireswebgpu/",
+    "kind": "fn",
+    "sig": "function requiresWebGPU(model): boolean;"
   },
   "ResolutionOf": {
     "href": "/reference/core/protocol/type-aliases/resolutionof/",

@@ -5,7 +5,7 @@ prev: false
 title: "EventTransport"
 ---
 
-Defined in: [packages/core/src/protocol/transport.ts:11](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/transport.ts#L11)
+Defined in: [packages/core/src/protocol/transport.ts:11](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/transport.ts#L11)
 
 A gap-detecting, cross-runtime event bus built on web standards only.
 
@@ -22,13 +22,13 @@ subscriber replay retained events before receiving live ones.
 publish(e): void;
 ```
 
-Defined in: [packages/core/src/protocol/transport.ts:12](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/transport.ts#L12)
+Defined in: [packages/core/src/protocol/transport.ts:12](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/transport.ts#L12)
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `e` | [`MithrilEvent`](/reference/core/protocol/type-aliases/mithrilevent/) |
+| `e` | [`MithrilEvent`](/mithril/reference/core/protocol/type-aliases/mithrilevent/) |
 
 #### Returns
 
@@ -42,7 +42,7 @@ Defined in: [packages/core/src/protocol/transport.ts:12](https://github.com/kucu
 subscribe(onEvent, resumeFrom?): () => void;
 ```
 
-Defined in: [packages/core/src/protocol/transport.ts:13](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/transport.ts#L13)
+Defined in: [packages/core/src/protocol/transport.ts:13](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/transport.ts#L13)
 
 #### Parameters
 

@@ -9,6 +9,6 @@ title: "gemmaToolCall"
 const gemmaToolCall: ToolFormat;
 ```
 
-Defined in: [transformers/tool-formats.ts:81](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/transformers/tool-formats.ts#L81)
+Defined in: [transformers/tool-formats.ts:81](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/providers/src/transformers/tool-formats.ts#L81)
 
 Gemma 4 native token `<|tool_call|>` (call runs to end-of-turn). Payload parsed as tolerant JSON.

@@ -86,7 +86,7 @@ const result = await local.run("Summarize this page."); // same event stream as 
 console.log(result.status);`} />
 
 `@huggingface/transformers` is an **optional peer dependency** — install it only in the app that uses local
-inference. Weights are ~0.4–2 GB (feature-detect WebGPU; it falls back to WASM), and tool-calling on small
+inference. Weights are ~0.5–4.75 GB (feature-detect WebGPU; it falls back to WASM), and tool-calling on small
 local models is **best-effort**. The full model catalog, worker recipe, and honest caveats are in the
 [Local inference guide](/guides/local-inference/).
 

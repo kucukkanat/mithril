@@ -39,7 +39,8 @@ Everything under "Shipped" below is implemented and covered by the test suite. E
   crash-hardening (provider/middleware throws → typed `run.error`), and opt-in test-time compute
   (`selfConsistency`, `bestOfN`). See [Self-correction](/guides/self-correction/).
 - **Composability** — **step-, model-, tool-, and finalize-altitude** middleware, plugins, event consumers.
-- **Memory** — `Checkpointer` (in-memory + Bun SQLite) with a conformance kit.
+- **Memory** — `Checkpointer` (in-memory + Bun SQLite) with a conformance kit, drivable automatically by
+  the loop for zero-glue durable runs (`run(input, { persistence })` + `resumeFrom`).
 - **Providers** — a Standard-Schema → JSON-Schema converter (`toJsonSchema`/`withJsonSchema`) feeds real
   tool-parameter schemas to OpenAI/Anthropic/Google when the input schema self-describes or a converter is
   supplied.

@@ -88,9 +88,10 @@ The `bunx mithril dev` CLI wrapper for the Studio (the Studio itself SHIPS as th
 in flight) and realtime/voice (v2); ANN-indexed `vectors` backends
 (sqlite-vec / pgvector / Vectorize) and a WASM `sandbox` backend; local-inference upgrades — a
 WASM/CPU-guaranteed backend (wllama) and native constrained/grammar decoding for hard structured-output
-guarantees on local models; the Chrome Prompt API provider; and durable persistence wired directly into
-`run()` (the `Checkpointer` interface + backends ship, but the loop never calls one — durability is BYO
-glue today). (Nested-`asTool` HITL resume through the parent's own token IS shipped — do not list it here.)
+guarantees on local models; and the Chrome Prompt API provider. (Nested-`asTool` HITL resume through
+the parent's own token IS shipped — do not list it here. Durable persistence wired into `run()` also
+ships now — the loop auto-checkpoints via `run(input, { persistence })` and `resumeFrom` — so do not
+list it here either.)
 
 ---
 

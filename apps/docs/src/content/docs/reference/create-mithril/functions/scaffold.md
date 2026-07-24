@@ -9,7 +9,7 @@ title: "scaffold"
 function scaffold(template, appName): Readonly<Record<string, string>>;
 ```
 
-Defined in: [index.ts:136](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/create-mithril/src/index.ts#L136)
+Defined in: [index.ts:136](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/create-mithril/src/index.ts#L136)
 
 Generate the files for a Mithril app as an in-memory map — pure, no disk I/O.
 
@@ -17,7 +17,7 @@ Generate the files for a Mithril app as an in-memory map — pure, no disk I/O.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `template` | [`Template`](/reference/create-mithril/type-aliases/template/) | Which starter to generate. |
+| `template` | [`Template`](/mithril/reference/create-mithril/type-aliases/template/) | Which starter to generate. |
 | `appName` | `string` | Used as the package `name` and in the generated README. |
 
 ## Returns
@@ -31,7 +31,7 @@ A map of relative file path to file contents.
 Always emits `package.json`, `src/agent.ts`, and `README.md`, plus a template-specific entry: a streaming
 `src/main.ts` CLI (`node-cli`), a streaming `Bun.serve` HTTP server in `src/main.ts` (`bun-server`), or a
 `useRun`-wired `src/Chat.tsx` component (`react-chat`, whose `package.json` includes the React deps).
-Being side-effect-free, it is trivially testable; use [createApp](/reference/create-mithril/functions/createapp/) to write the result.
+Being side-effect-free, it is trivially testable; use [createApp](/mithril/reference/create-mithril/functions/createapp/) to write the result.
 
 ## Example
 

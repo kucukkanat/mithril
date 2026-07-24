@@ -9,6 +9,6 @@ title: "FinishReason"
 type FinishReason = "stop" | "length" | "tool_calls" | "content_filter" | "error";
 ```
 
-Defined in: [packages/core/src/protocol/primitives.ts:43](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/primitives.ts#L43)
+Defined in: [packages/core/src/protocol/primitives.ts:43](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/primitives.ts#L43)
 
 Why a model turn or run stopped generating.

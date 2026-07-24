@@ -5,6 +5,7 @@ import type {
   Middleware,
   MithrilEvent,
   ModelInput,
+  Persistence,
   Plugin,
   ProviderRegistry,
   RunContext,
@@ -47,6 +48,9 @@ export interface RunOptionsBase<Deps = unknown> {
   readonly providers?: ProviderRegistry; // omitted ⇒ model must be a self-wiring handle
   readonly signal?: AbortSignal; // timeout idiom: AbortSignal.timeout(ms)
   readonly runtime?: RuntimeAdapter;
+  // Opt-in durable persistence. Present ⇒ the loop auto-checkpoints the run (terminal + suspend) into the
+  // Checkpointer, and resumeFrom()/resumeStreamFrom() can continue a suspended run straight from storage.
+  readonly persistence?: Persistence;
   readonly maxSteps?: number;
   readonly maxTokens?: number; // input+output token budget for the whole run; unset ⇒ unbounded
   readonly maxCostMicroUsd?: number; // cost budget in integer micro-USD; unset ⇒ unbounded
@@ -190,6 +194,11 @@ export interface AgentConfig<Tools extends readonly AnyTool<Deps>[], Deps, Out e
  *   for Tier-1 approval, or `{ kind: "resolve", value }` for a Tier-1b/Tier-2 resolution). It returns the
  *   final {@link RunResult} and does not re-stream events.
  * - `resumeStream` is `resume`'s streaming form: it returns a {@link RunHandle} over the resumed run.
+ * - `resumeFrom` is the zero-glue durable counterpart: given a `runId` and a {@link ResumeValue}, it loads
+ *   that run's latest checkpoint from `opts.persistence` (unsealing via `open` when configured) and resumes
+ *   it — no token handling. It throws {@link MithrilError} `CHECKPOINT_NOT_FOUND` / `NOT_SUSPENDED` when the
+ *   run is unknown or not resumable, and `NO_PERSISTENCE` when `opts.persistence` is absent.
+ * - `resumeStreamFrom` is `resumeFrom`'s streaming form: it returns a {@link RunHandle}.
  * - `deps`/`tools`/`instructions` are always re-provided via the reconstructed agent and `opts`; nothing
  *   is deserialized into behavior.
  * - `__tools` is a phantom type carrier for UI-tool inference; it is erased at build and never populated.
@@ -202,6 +211,9 @@ export interface Agent<Tools extends readonly AnyTool<Deps>[], Deps, Out extends
   // nothing is deserialized into behavior.
   resume(token: string, resolution: ResumeValue, ...opts: RunArgs<Deps>): Promise<RunResult<Out>>;
   resumeStream(token: string, resolution: ResumeValue, ...opts: RunArgs<Deps>): RunHandle<Out>;
+  // Zero-glue durable resume: load the run's latest checkpoint from opts.persistence and continue it.
+  resumeFrom(runId: string, resolution: ResumeValue, ...opts: RunArgs<Deps>): Promise<RunResult<Out>>;
+  resumeStreamFrom(runId: string, resolution: ResumeValue, ...opts: RunArgs<Deps>): RunHandle<Out>;
   readonly __tools?: Tools; // phantom carrier for InferUITools; erased at build
 }
 

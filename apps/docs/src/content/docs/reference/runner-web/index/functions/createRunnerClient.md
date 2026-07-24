@@ -9,9 +9,9 @@ title: "createRunnerClient"
 function createRunnerClient(spawn): RunnerClient;
 ```
 
-Defined in: [runner-web/src/client.ts:114](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/client.ts#L114)
+Defined in: [runner-web/src/client.ts:114](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/runner-web/src/client.ts#L114)
 
-Create a [RunnerClient](/reference/runner-web/index/interfaces/runnerclient/) over a worker factory. The factory must return a module worker
+Create a [RunnerClient](/mithril/reference/runner-web/index/interfaces/runnerclient/) over a worker factory. The factory must return a module worker
 whose entry calls `installRunner` (from `@mithril/runner-web/worker`) — each run spawns a fresh
 one so terminate is always a safe kill switch.
 
@@ -23,7 +23,7 @@ one so terminate is always a safe kill switch.
 
 ## Returns
 
-[`RunnerClient`](/reference/runner-web/index/interfaces/runnerclient/)
+[`RunnerClient`](/mithril/reference/runner-web/index/interfaces/runnerclient/)
 
 ## Example
 

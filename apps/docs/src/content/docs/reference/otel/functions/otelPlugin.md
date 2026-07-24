@@ -9,17 +9,17 @@ title: "otelPlugin"
 function otelPlugin(sink, opts?): Plugin;
 ```
 
-Defined in: [index.ts:133](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/otel/src/index.ts#L133)
+Defined in: [index.ts:133](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/otel/src/index.ts#L133)
 
-A Plugin that emits [GenAiSpan](/reference/otel/interfaces/genaispan/)s to `sink` as runs complete — the live counterpart to
-[toGenAiSpans](/reference/otel/functions/togenaispans/), so tracing is `use: [otelPlugin(exporter)]` instead of manually buffering a run's
+A Plugin that emits [GenAiSpan](/mithril/reference/otel/interfaces/genaispan/)s to `sink` as runs complete — the live counterpart to
+[toGenAiSpans](/mithril/reference/otel/functions/togenaispans/), so tracing is `use: [otelPlugin(exporter)]` instead of manually buffering a run's
 events and folding them yourself.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `sink` | [`SpanSink`](/reference/otel/interfaces/spansink/) | the [SpanSink](/reference/otel/interfaces/spansink/) each run's reconstructed spans are forwarded to. |
+| `sink` | [`SpanSink`](/mithril/reference/otel/interfaces/spansink/) | the [SpanSink](/mithril/reference/otel/interfaces/spansink/) each run's reconstructed spans are forwarded to. |
 | `opts?` | \{ `captureContent?`: `boolean`; \} | options; set `captureContent: true` to record tool input payloads. |
 | `opts.captureContent?` | `boolean` | - |
 

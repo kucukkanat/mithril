@@ -16,7 +16,7 @@ network after the one-time weight download. It's a normal Mithril `Provider`, so
 output, and devtools.
 
 <Aside type="caution" title="Browser-only, and heavy first load">
-This provider is for **browser use**. Model weights are large (~0.4–2 GB) and downloaded on first use, then
+This provider is for **browser use**. Model weights are large (~0.5–4.75 GB) and downloaded on first use, then
 cached across reloads. It needs WebGPU for real speed (it feature-detects and falls back to WASM/CPU). The
 [playground](/playground/) can run this live — pick a model from the **Local · in-browser** group in the
 **Run against** bar; selecting it downloads the weights once (cached across reloads), then runs on-device.
@@ -54,14 +54,14 @@ contract is untouched — the run stream is exactly the same as a cloud provider
 
 ## Curated models
 
-Seven models ship in the [playground](/playground/) picker: two long-standing defaults (Qwen3-0.6B, LFM2.5) plus
-five additions that were **researched and scored on a multi-tool test harness** before shipping — the full
+Ten models ship in the [playground](/playground/) picker: two long-standing defaults (Qwen3-0.6B, LFM2.5) plus
+eight additions that were **researched and scored on a multi-tool test harness** before shipping — the full
 methodology and results are in [How we chose these models](#how-we-chose-these-models). Each is a
-**text-generation** model, verified (2026-07-21) against the live Hugging Face file tree + raw chat template.
+**text-generation** model, verified (2026-07-21; Bonsai 2026-07-24) against the live Hugging Face file tree + raw chat template.
 The provider loads every model with `AutoModelForCausalLM` (a text-only path), so a multimodal
 (`image-text-to-text`) repo is **not** supported even when it ships an ONNX build — it loads through the wrong
 path and generates garbled output. Any other **text-generation** repo whose template emits a grammar the parser
-knows still runs via `transformers("<repo>")`: the `<tool_call>` grammar (Qwen/Granite), LFM2's
+knows still runs via `transformers("<repo>")`: the `<tool_call>` grammar (Qwen/Granite/Bonsai), LFM2's
 `<|tool_call_start|>` Python-call lists, or Gemma's native token.
 
 | `transformers("<id>")` | ~download | Family | Notes |
@@ -69,22 +69,68 @@ knows still runs via `transformers("<repo>")`: the `<tool_call>` grammar (Qwen/G
 | `onnx-community/Qwen3-0.6B-ONNX` | ~0.55 GB | Qwen3 | **default** — smallest reliable tool-caller; "thinks" first |
 | `onnx-community/Qwen2.5-0.5B-Instruct` | ~0.5 GB | Qwen2.5 | tiniest; direct (no thinking), fastest decode |
 | `LiquidAI/LFM2.5-1.2B-Instruct-ONNX` | ~0.8 GB | Liquid | agent-tuned; top tool score (4/4); LFM Open license |
+| `onnx-community/Bonsai-1.7B-ONNX` | ~1.1 GB | Bonsai (Qwen3) | PrismML's 1-bit-native model; Qwen3 arch → `<tool_call>` grammar; no `q4f16` build → auto-pinned to `q4` |
 | `onnx-community/Qwen2.5-1.5B-Instruct` | ~1.2 GB | Qwen2.5 | stronger mid-tier, direct |
 | `onnx-community/Qwen3-1.7B-ONNX` | ~1.4 GB | Qwen3 | more capable; thinks |
 | `onnx-community/granite-4.0-1b-ONNX-web` | ~1.8 GB | IBM Granite | Mamba2 hybrid — auto-pinned to `q4` (q4f16 NaNs on WebGPU) |
-| `onnx-community/Qwen3-4B-ONNX` | ~2.1 GB | Qwen3 | most capable; ships q4f16 only → WebGPU-first |
+| `onnx-community/Qwen3-4B-ONNX` | ~2.1 GB | Qwen3 | most capable Qwen3; ships q4f16 only → WebGPU-first |
+| `onnx-community/Ternary-Bonsai-8B-ONNX` | ~2.2 GB | Bonsai (Qwen3) | **WebGPU-only** — ships a lone `q2f16` (ternary/1.58-bit) build; runs at 8 B in ~2.2 GB. Tool-calling **unverified** (no headless WebGPU in CI). See [WebGPU-only models](#webgpu-only-models). |
+| `onnx-community/Bonsai-8B-ONNX` | ~4.75 GB | Bonsai (Qwen3) | largest; PrismML's 1-bit-native model at 8B; Qwen3 arch → `<tool_call>` grammar; ships both `q4f16` and `q4` → no pin |
 
 Device is feature-detected: `webgpu` when available, else **`cpu`** on Node/Bun (onnxruntime-node) or `wasm`
 in the browser — Node/Bun runs warn once on the CPU fallback. Override with `transformers(model, { device, dtype })`
 (`device` is `"webgpu" | "wasm" | "cpu"`). So the same handle runs headless in Node/Bun too: the
 the same harness scores these models headless on CPU with no browser.
 
-`dtype` defaults to **`q4f16`** on WebGPU (4-bit weights, fp16 activations) and **`q4`** on CPU/WASM. Two models
-need a pin (the playground catalog applies both automatically): (1) **fp16-fragile architectures** — Granite 4.0
+`dtype` defaults to **`q4f16`** on WebGPU (4-bit weights, fp16 activations) and **`q4`** on CPU/WASM. Three models
+need a pin (the playground catalog applies all three automatically): (1) **fp16-fragile architectures** — Granite 4.0
 is a Mamba2 hybrid whose state-space layers overflow to NaN under `q4f16` on WebGPU (it then streams a run of `!`,
 token 0), so it's pinned to `q4` per its model card: `transformers("onnx-community/granite-4.0-1b-ONNX-web", { dtype: "q4" })`;
 (2) **single-dtype repos** — Qwen3-4B ships `q4f16` only, so the CPU/WASM `q4` default 404s and it's pinned to
-`q4f16` (which also keeps it WebGPU-first).
+`q4f16` (which also keeps it WebGPU-first); (3) **no-`q4f16` repos** — Bonsai-1.7B-ONNX is a 1-bit-native model that
+ships `q1`/`q2`/`q4`/`q8` ONNX builds but no `q4f16`, so the WebGPU default 404s and it's pinned to the
+device-portable `q4`: `transformers("onnx-community/Bonsai-1.7B-ONNX", { dtype: "q4" })`. (Its native `q1`/`q2`
+builds are far smaller — ~0.29 GB / ~0.51 GB on disk — but `q4` is the one dtype that runs unchanged on WebGPU,
+WASM, and CPU, so the catalog ships it.)
+
+## WebGPU-only models
+
+Some builds run **only on WebGPU**. `Ternary-Bonsai-8B-ONNX` ships a lone `q2f16` (ternary / 1.58-bit)
+build: 2-bit weights with fp16 activations. ONNX Runtime's CPU/WASM `MatMulNBits` kernel has **no 2-bit
+fp16 path** (its assert `nbits_ == 8` fails on the fp16 activation path), so the model cannot run under
+onnxruntime-node/-web — only WebGPU's kernel handles it. The catalog marks such models with
+`backends: ["webgpu"]`.
+
+The provider treats this as a first-class capability, not a crash:
+
+- **Proactive** — `transformers(id, { backends: ["webgpu"] })` (or `preload(...)`) throws an ergonomic
+  `MithrilError` with code **`WEBGPU_REQUIRED`** *before* downloading multi-GB weights when it resolves to a
+  non-WebGPU device, and logs a `console.warn` for the developer. Any other backend mismatch throws
+  `UNSUPPORTED_BACKEND`.
+- **Reactive** — even without the hint, a mid-stream 2-bit-kernel failure on CPU/WASM is translated into the
+  same `WEBGPU_REQUIRED` guidance instead of a raw `Non-zero status code … MatMulNBits` stack.
+
+```ts
+import { transformers } from "@mithril/providers/transformers";
+
+// On a machine without WebGPU this throws MithrilError { code: "WEBGPU_REQUIRED", … } up front.
+const model = transformers("onnx-community/Ternary-Bonsai-8B-ONNX", {
+  dtype: "q2f16",
+  backends: ["webgpu"],
+});
+```
+
+The playground and Studio pickers probe `navigator.gpu.requestAdapter()` and **disable** a WebGPU-only model
+(with a "needs WebGPU" note) once WebGPU is confirmed unavailable. The CPU eval harness **skips** WebGPU-only
+models by default; set `MITHRIL_EVAL_INCLUDE_WEBGPU=1` to force an attempt (it will surface the
+`WEBGPU_REQUIRED` error).
+
+<Aside type="caution" title="Unverified on WebGPU">
+Ternary-Bonsai-8B is verified against the Hugging Face file tree and chat template, but its **tool-calling
+has not been run end-to-end** — there is no headless WebGPU in CI, and the CPU eval harness (which scores
+every other catalog model) cannot execute the 2-bit kernel. Treat its tool behavior as unconfirmed until run
+in a real WebGPU browser tab.
+</Aside>
 
 ## How we chose these models
 
@@ -113,6 +159,7 @@ not a precise ranking.
 | --- | --- | --- | --- |
 | `LiquidAI/LFM2.5-1.2B-Instruct-ONNX` | 1.2 B | 4/4 | ✅ ship (anchor) |
 | `onnx-community/Qwen3-4B-ONNX` | 4 B | 4/4 | ✅ ship — most capable; q4f16-only, slowest |
+| `onnx-community/Bonsai-1.7B-ONNX` | 1.7 B | 5/5 † | ✅ ship — PrismML 1-bit-native; pinned `q4` (no q4f16 build) |
 | `onnx-community/Qwen3-0.6B-ONNX` | 0.6 B | 3/4 | ✅ ship (anchor / default) |
 | `onnx-community/Qwen2.5-0.5B-Instruct` | 0.5 B | 3/4 | ✅ ship |
 | `onnx-community/Qwen2.5-1.5B-Instruct` | 1.5 B | 3/4 | ✅ ship |
@@ -126,25 +173,41 @@ not a precise ranking.
 | `onnx-community/gemma-3-1b-it-ONNX` | 1 B | gate 2 | ❌ cut — no tools template |
 | `onnx-community/DeepSeek-R1-Distill-Qwen-1.5B` | 1.5 B | gate 2 | ❌ cut — reasoning-only, no `<tool_call>` |
 
-The blunt finding: **at the ≤4 B scale, reliable tool-calling clusters in a few families** — Qwen (2.5 and 3),
-Liquid LFM2, and IBM Granite. Same-family look-alikes still fail for their own reasons (a 350 M Granite is too
+† Bonsai (added 2026-07-24) was validated on the newer [`evals/`](https://github.com/mithril-ai/mithril/tree/main/evals)
+promptfoo suite — the harness that now reads `LOCAL_MODELS` directly — rather than the original ad-hoc 4-scenario
+run above, so its score is out of that suite's **five** tool-calling scenarios (single call, calculator,
+doc-search, two-calls-in-one-turn, and currency-convert). It passed **5/5** tool-calling and **20/23** overall on
+CPU (Reasoning/QA 5/5, Orchestration 5/6, Instruction-following 4/5, Structured-output 1/2) — reliable
+tool-calling, on par with the other shipped models.
+| `onnx-community/Qwen2.5-Coder-1.5B-Instruct` | 1.5 B | 0/4 | ❌ cut — code-tuned, not agentic |
+| `onnx-community/granite-4.0-350m-ONNX-web` | 0.35 B | 0/4 | ❌ cut — too small to emit a call |
+| `HuggingFaceTB/SmolLM3-3B-ONNX` | 3 B | 0/4 | ❌ cut — reasons in prose, no parseable call |
+| `onnx-community/Llama-3.2-1B-Instruct` | 1 B | gate 2 | ❌ cut — emits bare JSON, not `<tool_call>` |
+| `HuggingFaceTB/SmolLM2-1.7B-Instruct` | 1.7 B | gate 2 | ❌ cut — no tools template |
+| `onnx-community/gemma-3-1b-it-ONNX` | 1 B | gate 2 | ❌ cut — no tools template |
+| `onnx-community/DeepSeek-R1-Distill-Qwen-1.5B` | 1.5 B | gate 2 | ❌ cut — reasoning-only, no `<tool_call>` |
+
+The blunt finding: **at the ≤8 B scale, reliable tool-calling clusters in a few families** — Qwen (2.5 and 3),
+Liquid LFM2, IBM Granite, and PrismML's Bonsai (itself Qwen3-architecture, so it inherits the `<tool_call>`
+grammar). Same-family look-alikes still fail for their own reasons (a 350 M Granite is too
 small; a code-tuned Qwen doesn't do agentic calls; an agentic-branded 3 B reasons in prose without emitting the
 call), which is exactly why we score every candidate instead of trusting the family name.
 
 ### Why these are good offline / in-browser picks
 
-- **They fit in a tab.** 0.5–2.1 GB one-time download (q4/q4f16), cached across reloads, then **zero network** —
-  no key, no server, no per-token cost.
+- **They fit in a tab.** 0.5–4.75 GB one-time download (q4/q4f16), cached across reloads, then **zero network** —
+  no key, no server, no per-token cost. Bonsai is a **1-bit-native** model — its native `q1`/`q2` ONNX builds are
+  ~0.29 GB / ~0.51 GB, though the catalog ships its device-portable `q4` (~1.1 GB) so it runs everywhere.
 - **Permissive licenses.** All Apache-2.0 except LFM2.5 (Liquid's own open license) — safe to ship in a product.
-- **A real capability ladder.** Pick by budget: Qwen2.5-0.5B (~0.5 GB) for the fastest/cheapest up to Qwen3-4B
-  (~2.1 GB) for the most capable. The Qwen3 models "think" (a `<think>` block before the answer — more capable,
+- **A real capability ladder.** Pick by budget: Qwen2.5-0.5B (~0.5 GB) for the fastest/cheapest up to Bonsai-8B
+  (~4.75 GB) for the most capable. The Qwen3 models "think" (a `<think>` block before the answer — more capable,
   more tokens); the Qwen2.5 models answer directly (faster).
-- **Vendor diversity where it's reliable.** Three vendors plus two Qwen generations across the set (Qwen2.5,
-  Qwen3, Liquid, IBM Granite) — different tokenizers and templates, no single-vendor lock-in, and the parser is
-  exercised across three distinct tool grammars.
+- **Vendor diversity where it's reliable.** Four vendors plus two Qwen generations across the set (Qwen2.5,
+  Qwen3, Liquid, IBM Granite, PrismML Bonsai) — different tokenizers and templates, no single-vendor lock-in, and
+  the parser is exercised across three distinct tool grammars.
 - **WebGPU-first, CPU-honest.** They run on WebGPU (fast) and fall back to WASM/CPU; the scores prove they work
-  headless on CPU too. Two carry an automatic dtype pin (Granite → `q4`, Qwen3-4B → `q4f16`) so they don't break
-  on a given backend.
+  headless on CPU too. Three carry an automatic dtype pin (Granite → `q4`, Qwen3-4B → `q4f16`, Bonsai → `q4`) so
+  they don't break on a given backend.
 
 ## Tools & structured output — honest limits
 

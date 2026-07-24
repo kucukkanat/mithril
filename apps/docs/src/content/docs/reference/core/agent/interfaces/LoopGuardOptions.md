@@ -5,9 +5,9 @@ prev: false
 title: "LoopGuardOptions"
 ---
 
-Defined in: [packages/core/src/agent/healing.ts:228](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/healing.ts#L228)
+Defined in: [packages/core/src/agent/healing.ts:248](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/healing.ts#L248)
 
-Options for [loopGuard](/reference/core/agent/functions/loopguard/).
+Options for [loopGuard](/mithril/reference/core/agent/functions/loopguard/).
 
 ## Properties
 
@@ -17,7 +17,7 @@ Options for [loopGuard](/reference/core/agent/functions/loopguard/).
 readonly optional haltAt?: number;
 ```
 
-Defined in: [packages/core/src/agent/healing.ts:232](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/healing.ts#L232)
+Defined in: [packages/core/src/agent/healing.ts:252](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/healing.ts#L252)
 
 Identical-call count at which the run halts with a `LoopDetected` error. Default 4.
 
@@ -29,6 +29,6 @@ Identical-call count at which the run halts with a `LoopDetected` error. Default
 readonly optional steerAt?: number;
 ```
 
-Defined in: [packages/core/src/agent/healing.ts:230](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/healing.ts#L230)
+Defined in: [packages/core/src/agent/healing.ts:250](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/healing.ts#L250)
 
 Identical-call count at which the model is steered once with a nudge. Default 3.

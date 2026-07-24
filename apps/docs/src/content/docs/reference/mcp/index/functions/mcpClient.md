@@ -9,19 +9,19 @@ title: "mcpClient"
 function mcpClient(transport): McpClient;
 ```
 
-Defined in: [index.ts:69](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/mcp/src/index.ts#L69)
+Defined in: [index.ts:69](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/index.ts#L69)
 
-Create an [McpClient](/reference/mcp/index/interfaces/mcpclient/) over a caller-supplied [McpTransport](/reference/mcp/index/interfaces/mcptransport/).
+Create an [McpClient](/mithril/reference/mcp/index/interfaces/mcpclient/) over a caller-supplied [McpTransport](/mithril/reference/mcp/index/interfaces/mcptransport/).
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `transport` | [`McpTransport`](/reference/mcp/index/interfaces/mcptransport/) | Your transport implementation (HTTP/SSE, stdio, or in-memory). |
+| `transport` | [`McpTransport`](/mithril/reference/mcp/index/interfaces/mcptransport/) | Your transport implementation (HTTP/SSE, stdio, or in-memory). |
 
 ## Returns
 
-[`McpClient`](/reference/mcp/index/interfaces/mcpclient/)
+[`McpClient`](/mithril/reference/mcp/index/interfaces/mcpclient/)
 
 A client that can list and call the server's tools.
 

@@ -12,19 +12,24 @@
  * `assembleExample`, which is what removes the need for separate "live" / "local" examples.
  */
 
-import { localModel, type LiveProvider, type LiveProviderId } from "@mithril/runner-web";
+import { localModel, requiresWebGPU, type LiveProvider, type LiveProviderId } from "@mithril/runner-web";
 
 export {
+  ALL_BACKENDS,
   DEFAULT_LOCAL_MODEL,
   LIVE_PROVIDERS,
   liveProvider,
   LOCAL_MODELS,
   localModel,
+  modelBackends,
+  requiresWebGPU,
+  type Backend,
   type LiveProvider,
   type LiveProviderId,
   type LocalModel,
   type ProviderMode,
 } from "@mithril/runner-web";
+export { hasWebGPU } from "@mithril/runner-web";
 
 interface NativeParts {
   readonly imp: string;
@@ -76,12 +81,18 @@ const model = testModel(scriptedProvider(${scriptedTurns}));`,
     };
   }
   if (target.kind === "local") {
-    const dtype = localModel(target.model)?.dtype;
-    const opts = dtype === undefined ? "" : `, { dtype: ${JSON.stringify(dtype)} }`;
-    const note = dtype === undefined ? "" : `\n// Pinned to dtype "${dtype}" — the default q4f16 is numerically unstable for this model on WebGPU.`;
+    const m = localModel(target.model);
+    const parts: string[] = [];
+    if (m?.dtype !== undefined) parts.push(`dtype: ${JSON.stringify(m.dtype)}`);
+    if (m?.backends !== undefined) parts.push(`backends: ${JSON.stringify(m.backends)}`);
+    const opts = parts.length === 0 ? "" : `, { ${parts.join(", ")} }`;
+    const dtypeNote = m?.dtype === undefined ? "" : `\n// Pinned to dtype "${m.dtype}" — the device default doesn't ship / isn't numerically stable for this model.`;
+    const gpuNote = requiresWebGPU(target.model)
+      ? `\n// WebGPU-only: its lone ${m?.dtype ?? "quantized"} build has no CPU/WASM kernel, so \`backends\` makes it throw a clear WEBGPU_REQUIRED error off-GPU.`
+      : "";
     return {
       imp: `import { transformers } from "mithril/transformers";`,
-      decl: `// Runs on-device in your browser tab (WebGPU → WASM). No key, no network after the one-time download.${note}
+      decl: `// Runs on-device in your browser tab (WebGPU → WASM). No key, no network after the one-time download.${gpuNote}${dtypeNote}
 const model = transformers(${JSON.stringify(target.model)}${opts});`,
     };
   }

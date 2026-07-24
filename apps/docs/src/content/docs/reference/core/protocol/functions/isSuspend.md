@@ -9,9 +9,9 @@ title: "isSuspend"
 function isSuspend(value): value is Suspend<unknown>;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:119](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/suspension.ts#L119)
+Defined in: [packages/core/src/protocol/suspension.ts:119](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/suspension.ts#L119)
 
-Type-guard for a [Suspend](/reference/core/protocol/interfaces/suspend/) marker.
+Type-guard for a [Suspend](/mithril/reference/core/protocol/interfaces/suspend/) marker.
 
 ## Parameters
 
@@ -23,4 +23,4 @@ Type-guard for a [Suspend](/reference/core/protocol/interfaces/suspend/) marker.
 
 `value is Suspend<unknown>`
 
-Whether `value` is a [Suspend](/reference/core/protocol/interfaces/suspend/) marker.
+Whether `value` is a [Suspend](/mithril/reference/core/protocol/interfaces/suspend/) marker.

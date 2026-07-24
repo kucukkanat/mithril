@@ -9,7 +9,7 @@ title: "generateStateKey"
 function generateStateKey(rt?): Promise<CryptoKey>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:43](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/seal.ts#L43)
+Defined in: [packages/core/src/agent/seal.ts:43](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/seal.ts#L43)
 
 Generate an extractable HMAC-SHA-256 signing key for sealing tokens.
 
@@ -17,14 +17,14 @@ Generate an extractable HMAC-SHA-256 signing key for sealing tokens.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `rt?` | [`RuntimeAdapter`](/reference/core/protocol/interfaces/runtimeadapter/) | optional [RuntimeAdapter](/reference/core/protocol/interfaces/runtimeadapter/) providing `subtle`; falls back to `globalThis.crypto.subtle`. |
+| `rt?` | [`RuntimeAdapter`](/mithril/reference/core/protocol/interfaces/runtimeadapter/) | optional [RuntimeAdapter](/mithril/reference/core/protocol/interfaces/runtimeadapter/) providing `subtle`; falls back to `globalThis.crypto.subtle`. |
 
 ## Returns
 
 `Promise`\<`CryptoKey`\>
 
-a `CryptoKey` usable for `sign`/`verify`, e.g. wrapped in a [singleKeyring](/reference/core/agent/functions/singlekeyring/).
+a `CryptoKey` usable for `sign`/`verify`, e.g. wrapped in a [singleKeyring](/mithril/reference/core/agent/functions/singlekeyring/).
 
 ## Throws
 
-[StateIntegrityError](/reference/core/agent/classes/stateintegrityerror/) when `crypto.subtle` is unavailable (insecure context).
+[StateIntegrityError](/mithril/reference/core/agent/classes/stateintegrityerror/) when `crypto.subtle` is unavailable (insecure context).

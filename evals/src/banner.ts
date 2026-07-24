@@ -7,7 +7,8 @@
  * emitted only to a real TTY (and suppressed under `NO_COLOR` or `TERM=dumb`), so piped/CI logs stay
  * clean plain text.
  */
-import type { EvalModel } from "./models.ts";
+import { LOCAL_MODELS, requiresWebGPU } from "@mithril/runner-web";
+import { includeWebGPUModels, type EvalModel } from "./models.ts";
 
 const useColor = process.stdout.isTTY === true && process.env["NO_COLOR"] === undefined && process.env["TERM"] !== "dumb";
 
@@ -85,6 +86,15 @@ export function printRunBanner(
     });
     lines.push("");
     lines.push(`${dim("Suites:")} ${silver(suites.join(dim(" · ")))}`);
+  }
+
+  // Note any WebGPU-only catalog models the CPU harness skips by default, so their absence is never silent.
+  if (!includeWebGPUModels()) {
+    const skipped = LOCAL_MODELS.filter((m) => requiresWebGPU(m) && !models.some((sel) => sel.repoId === m.id));
+    if (skipped.length > 0) {
+      lines.push("");
+      lines.push(dim(`${yellow("skipped (WebGPU-only):")} ${skipped.map((m) => m.label).join(dim(" · "))} ${dim("— set MITHRIL_EVAL_INCLUDE_WEBGPU=1 to attempt")}`));
+    }
   }
 
   process.stdout.write(`\n${box(lines)}\n\n`);

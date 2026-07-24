@@ -11,6 +11,9 @@ import { formatForModel, reasoningForModel, splitToolCalls } from "./tool-format
 // + real token counts from tensor dims + the per-model tool-call parser. WebGPU is feature-detected (it throws
 // on unsupported hardware, so we never request it blindly), falling back to WASM/CPU.
 
+/** An ONNX execution backend — mirrors {@link EdgeOptions.device}. */
+export type Backend = "webgpu" | "wasm" | "cpu";
+
 /** Options for {@link browserEngine} / {@link transformers} / {@link preload}. */
 export interface EdgeOptions {
   /** Model-download progress, reported OUTSIDE the event stream (aggregate `loaded/total` across files). */
@@ -20,9 +23,16 @@ export interface EdgeOptions {
    * (onnxruntime-node rejects `wasm`), else `wasm` in the browser. Pass this explicitly to silence the
    * Node/Bun CPU-fallback warning.
    */
-  readonly device?: "webgpu" | "wasm" | "cpu";
+  readonly device?: Backend;
   /** Force a quantization dtype; omit for `q4f16` (webgpu) / `q4` (cpu/wasm). */
   readonly dtype?: string;
+  /**
+   * Restrict the {@link Backend}s this model may run on (fed from the catalog's `LocalModel.backends`). When the
+   * resolved device isn't in this list, {@link loadModel}/{@link preload} throws an ergonomic `MithrilError`
+   * **before** downloading weights (code `WEBGPU_REQUIRED` for a WebGPU-only model, else `UNSUPPORTED_BACKEND`)
+   * instead of failing with a cryptic mid-stream ONNX kernel error. Omit ⇒ no restriction.
+   */
+  readonly backends?: readonly Backend[];
   readonly maxNewTokens?: number;
   readonly doSample?: boolean;
 }
@@ -40,10 +50,52 @@ export interface ProgressReport {
 interface Loaded {
   readonly tokenizer: PreTrainedTokenizer;
   readonly model: PreTrainedModel;
+  /** The device the weights were actually loaded on — used to shape reactive backend errors. */
+  readonly device: Backend;
 }
 
 // One weight-load per repo id, reused across handles/preload/generate (first opts win).
 const MODELS = new Map<string, Promise<Loaded>>();
+
+// Signatures of ONNX Runtime failures that mean "this quantized build has no kernel on this backend" —
+// notably 2-bit `MatMulNBits` (ternary models) on the CPU/WASM path. Used to translate an otherwise
+// cryptic mid-stream crash into an actionable {@link backendError}.
+const QUANT_KERNEL_ERROR = /MatMulNBits|nbits_|Non-zero status code returned/i;
+
+/**
+ * Pure, unit-tested backend-guard: the proactive error to throw when a model's resolved `device` isn't among
+ * its `allowed` backends, or `undefined` when it's allowed (or unrestricted). A WebGPU-only model yields code
+ * `WEBGPU_REQUIRED`; any other mismatch yields `UNSUPPORTED_BACKEND`.
+ */
+export function backendError(model: string, device: Backend, allowed: readonly Backend[] | undefined): MithrilError | undefined {
+  if (allowed === undefined || allowed.length === 0 || allowed.includes(device)) return undefined;
+  const webgpuOnly = allowed.length === 1 && allowed[0] === "webgpu";
+  const list = allowed.map((b) => `"${b}"`).join(" or ");
+  const detail = webgpuOnly
+    ? `It ships only a WebGPU-compatible build (e.g. a ternary/2-bit quantization whose ONNX MatMulNBits kernel has no CPU/WASM path). Run it in a browser tab with WebGPU enabled.`
+    : `Run it on a supported backend, or pass \`device\` explicitly.`;
+  return new MithrilError(
+    webgpuOnly ? "WEBGPU_REQUIRED" : "UNSUPPORTED_BACKEND",
+    `The local model "${model}" requires ${list}, but this runtime resolved to "${device}". ${detail}`,
+  );
+}
+
+/**
+ * Reactive translation of a mid-run ONNX failure: on a non-WebGPU device, a quantized-kernel error (see
+ * {@link QUANT_KERNEL_ERROR}) is almost always a missing-backend-kernel problem, so surface the same
+ * ergonomic `WEBGPU_REQUIRED` guidance instead of the raw stack. Anything else is returned unchanged.
+ */
+export function wrapRuntimeError(model: string, device: Backend, err: unknown): unknown {
+  if (err instanceof MithrilError) return err;
+  const message = err instanceof Error ? err.message : String(err);
+  if (device !== "webgpu" && QUANT_KERNEL_ERROR.test(message)) {
+    return new MithrilError(
+      "WEBGPU_REQUIRED",
+      `The local model "${model}" failed on the "${device}" backend (${message}). This build likely requires WebGPU — its quantized ONNX kernel has no CPU/WASM path. Run it in a browser tab with WebGPU enabled.`,
+    );
+  }
+  return err;
+}
 
 function isBrowserCapable(): boolean {
   return typeof WebAssembly !== "undefined";
@@ -95,8 +147,15 @@ function loadModel(modelId: string, opts?: EdgeOptions): Promise<Loaded> {
   if (cached !== undefined) return cached;
   const p = (async (): Promise<Loaded> => {
     if (!isBrowserCapable()) throw new MithrilError("NO_WASM", "@mithril/providers/transformers needs a WebAssembly runtime (browser); none was found.");
-    const hf = await import("@huggingface/transformers");
     const device = await pickDevice(opts?.device);
+    // Proactive backend guard: refuse a WebGPU-only model on CPU/WASM *before* downloading multi-GB weights,
+    // with an ergonomic typed error the playground/Studio/evals can surface (rather than a mid-stream crash).
+    const guard = backendError(modelId, device, opts?.backends);
+    if (guard !== undefined) {
+      console.warn(`[@mithril/providers/transformers] ${guard.message}`);
+      throw guard;
+    }
+    const hf = await import("@huggingface/transformers");
     const dtype = opts?.dtype ?? (device === "webgpu" ? "q4f16" : "q4");
     // Aggregate per-file download progress into a single 0..1 fraction.
     const files = new Map<string, { loaded: number; total: number }>();
@@ -113,7 +172,7 @@ function loadModel(modelId: string, opts?: EdgeOptions): Promise<Loaded> {
     };
     const load = { device, dtype, progress_callback };
     const [tokenizer, model] = await Promise.all([hf.AutoTokenizer.from_pretrained(modelId, load), hf.AutoModelForCausalLM.from_pretrained(modelId, load)]);
-    return { tokenizer, model };
+    return { tokenizer, model, device };
   })();
   MODELS.set(modelId, p);
   p.catch(() => MODELS.delete(modelId)); // don't cache a failed load
@@ -201,7 +260,7 @@ export function browserEngine(opts?: EdgeOptions): TransformersEngine {
     usage: () => lastUsage,
     async *generate(req: EngineRequest): AsyncGenerator<EngineChunk> {
       const hf = await import("@huggingface/transformers");
-      const { tokenizer, model } = await loadModel(req.model, opts);
+      const { tokenizer, model, device } = await loadModel(req.model, opts);
       const inputs = tokenizer.apply_chat_template(toChatMessages(req), {
         ...(req.tools.length > 0 ? { tools: toToolDefs(req.tools) } : {}),
         add_generation_prompt: true,
@@ -225,7 +284,8 @@ export function browserEngine(opts?: EdgeOptions): TransformersEngine {
             outputTokens = Math.max(0, (o.sequences.dims.at(-1) ?? inputTokens) - inputTokens);
             q.close();
           },
-          (e) => q.fail(e),
+          // Reactive safety net: a quantized-kernel crash on CPU/WASM becomes the same ergonomic WebGPU guidance.
+          (e) => q.fail(wrapRuntimeError(req.model, device, e)),
         );
 
       try {

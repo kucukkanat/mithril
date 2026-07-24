@@ -17,9 +17,9 @@ type DraftEvent =
 | Omit<EventOf<"object.invalid">, keyof EventMeta>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:33](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L33)
+Defined in: [packages/core/src/protocol/middleware.ts:33](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/middleware.ts#L33)
 
-An un-stamped event a middleware may [MiddlewareContext.emit](/reference/core/protocol/interfaces/middlewarecontext/#emit); the loop stamps [EventMeta](/reference/core/protocol/interfaces/eventmeta/).
+An un-stamped event a middleware may [MiddlewareContext.emit](/mithril/reference/core/protocol/interfaces/middlewarecontext/#emit); the loop stamps [EventMeta](/mithril/reference/core/protocol/interfaces/eventmeta/).
 
 ## Remarks
 

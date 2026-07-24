@@ -11,7 +11,7 @@ type Result<Output> =
   | FailureResult;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:33](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/standard-schema.ts#L33)
+Defined in: [packages/core/src/protocol/standard-schema.ts:33](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/standard-schema.ts#L33)
 
 ## Type Parameters
 

@@ -5,9 +5,9 @@ prev: false
 title: "RunnerRunOptions"
 ---
 
-Defined in: [runner-web/src/client.ts:38](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/client.ts#L38)
+Defined in: [runner-web/src/client.ts:38](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/runner-web/src/client.ts#L38)
 
-Options for one [RunnerClient.run](/reference/runner-web/index/interfaces/runnerclient/#run) call.
+Options for one [RunnerClient.run](/mithril/reference/runner-web/index/interfaces/runnerclient/#run) call.
 
 ## Properties
 
@@ -17,7 +17,7 @@ Options for one [RunnerClient.run](/reference/runner-web/index/interfaces/runner
 readonly optional env?: Readonly<Record<string, string>>;
 ```
 
-Defined in: [runner-web/src/client.ts:40](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/client.ts#L40)
+Defined in: [runner-web/src/client.ts:40](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/runner-web/src/client.ts#L40)
 
 Keys to seed into the worker's `process.env` (the active provider's key only).
 
@@ -29,7 +29,7 @@ Keys to seed into the worker's `process.env` (the active provider's key only).
 readonly optional idleTimeoutMs?: number | null;
 ```
 
-Defined in: [runner-web/src/client.ts:45](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/client.ts#L45)
+Defined in: [runner-web/src/client.ts:45](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/runner-web/src/client.ts#L45)
 
 Kill the run after this many ms with NO worker message (idle watchdog). `null` disables the
 watchdog entirely (e.g. unbounded local-model weight downloads). Default: 120 000.
@@ -42,9 +42,9 @@ watchdog entirely (e.g. unbounded local-model weight downloads). Default: 120 00
 readonly optional resume?: ResumeDirective;
 ```
 
-Defined in: [runner-web/src/client.ts:49](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/client.ts#L49)
+Defined in: [runner-web/src/client.ts:49](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/runner-web/src/client.ts#L49)
 
-Resume a persisted suspension instead of starting fresh (see [ResumeDirective](/reference/runner-web/index/interfaces/resumedirective/)).
+Resume a persisted suspension instead of starting fresh (see [ResumeDirective](/mithril/reference/runner-web/index/interfaces/resumedirective/)).
 
 ***
 
@@ -54,6 +54,6 @@ Resume a persisted suspension instead of starting fresh (see [ResumeDirective](/
 readonly optional timeoutMessage?: string;
 ```
 
-Defined in: [runner-web/src/client.ts:47](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/client.ts#L47)
+Defined in: [runner-web/src/client.ts:47](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/runner-web/src/client.ts#L47)
 
 The error message shown when the watchdog fires.

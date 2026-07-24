@@ -5,14 +5,14 @@ prev: false
 title: "KeyValue"
 ---
 
-Defined in: [index.ts:20](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/kv/src/index.ts#L20)
+Defined in: [index.ts:20](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/kv/src/index.ts#L20)
 
 A runtime-agnostic async key-value store (§10.2) for tools — caches, dedup sets, counters, scratch state.
 
 ## Remarks
 
-Injected into tools via `Deps` (`ctx.deps.kv`). Implementations must pass [kvConformance](/reference/kv/index/functions/kvconformance/);
-[memoryKv](/reference/kv/index/functions/memorykv/) is the reference in-memory impl, with indexeddb/sqlite/workerd-KV backends behind
+Injected into tools via `Deps` (`ctx.deps.kv`). Implementations must pass [kvConformance](/mithril/reference/kv/index/functions/kvconformance/);
+[memoryKv](/mithril/reference/kv/index/functions/memorykv/) is the reference in-memory impl, with indexeddb/sqlite/workerd-KV backends behind
 per-runtime subpaths.
 
 ## Methods
@@ -23,7 +23,7 @@ per-runtime subpaths.
 delete(key): Promise<void>;
 ```
 
-Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/kv/src/index.ts#L34)
+Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/kv/src/index.ts#L34)
 
 Removes `key` if present; a no-op otherwise.
 
@@ -45,7 +45,7 @@ Removes `key` if present; a no-op otherwise.
 get<T>(key): Promise<T | undefined>;
 ```
 
-Defined in: [index.ts:25](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/kv/src/index.ts#L25)
+Defined in: [index.ts:25](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/kv/src/index.ts#L25)
 
 Reads the value at `key`, or `undefined` if absent or expired.
 
@@ -73,7 +73,7 @@ Reads the value at `key`, or `undefined` if absent or expired.
 has(key): Promise<boolean>;
 ```
 
-Defined in: [index.ts:36](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/kv/src/index.ts#L36)
+Defined in: [index.ts:36](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/kv/src/index.ts#L36)
 
 Returns `true` if `key` exists and has not expired.
 
@@ -98,7 +98,7 @@ set(
 opts?): Promise<void>;
 ```
 
-Defined in: [index.ts:32](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/kv/src/index.ts#L32)
+Defined in: [index.ts:32](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/kv/src/index.ts#L32)
 
 Writes `value` at `key`, overwriting any existing entry.
 

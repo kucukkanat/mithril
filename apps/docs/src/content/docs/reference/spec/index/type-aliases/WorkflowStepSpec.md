@@ -31,7 +31,7 @@ type WorkflowStepSpec =
 };
 ```
 
-Defined in: [packages/spec/src/types.ts:100](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L100)
+Defined in: [packages/spec/src/types.ts:100](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L100)
 
 One step of a `defineWorkflow` — declarative shapes compile to real `goto`/`done` code.
 

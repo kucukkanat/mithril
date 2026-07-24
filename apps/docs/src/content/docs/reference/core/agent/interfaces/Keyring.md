@@ -5,15 +5,15 @@ prev: false
 title: "Keyring"
 ---
 
-Defined in: [packages/core/src/agent/seal.ts:14](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/seal.ts#L14)
+Defined in: [packages/core/src/agent/seal.ts:14](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/seal.ts#L14)
 
 A source of signing/verification keys for sealed tokens, indexed by key id (`kid`).
 
 ## Remarks
 
-`current()` supplies the `{ kid, key }` used to sign new tokens ([seal](/reference/core/agent/functions/seal/)); `resolve(kid)`
+`current()` supplies the `{ kid, key }` used to sign new tokens ([seal](/mithril/reference/core/agent/functions/seal/)); `resolve(kid)`
 picks a (possibly retired) key by the `kid` embedded in a token's envelope, so verification survives
-rotation ([open](/reference/core/agent/functions/open/)). Build a single-key keyring with [singleKeyring](/reference/core/agent/functions/singlekeyring/).
+rotation ([open](/mithril/reference/core/agent/functions/open/)). Build a single-key keyring with [singleKeyring](/mithril/reference/core/agent/functions/singlekeyring/).
 
 ## Methods
 
@@ -26,7 +26,7 @@ current(): Promise<{
 }>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:15](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/seal.ts#L15)
+Defined in: [packages/core/src/agent/seal.ts:15](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/seal.ts#L15)
 
 #### Returns
 
@@ -43,7 +43,7 @@ Defined in: [packages/core/src/agent/seal.ts:15](https://github.com/kucukkanat/m
 resolve(kid): Promise<CryptoKey | undefined>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:16](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/seal.ts#L16)
+Defined in: [packages/core/src/agent/seal.ts:16](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/seal.ts#L16)
 
 #### Parameters
 

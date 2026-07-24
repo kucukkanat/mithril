@@ -11,19 +11,19 @@ inspectable code. There is no hidden LLM routing unless you write it.
 
 ## Classes
 
-- [WorkflowError](/reference/workflows/classes/workflowerror/)
+- [WorkflowError](/mithril/reference/workflows/classes/workflowerror/)
 
 ## Interfaces
 
-- [Workflow](/reference/workflows/interfaces/workflow/)
+- [Workflow](/mithril/reference/workflows/interfaces/workflow/)
 
 ## Type Aliases
 
-- [StepResult](/reference/workflows/type-aliases/stepresult/)
-- [WorkflowStep](/reference/workflows/type-aliases/workflowstep/)
+- [StepResult](/mithril/reference/workflows/type-aliases/stepresult/)
+- [WorkflowStep](/mithril/reference/workflows/type-aliases/workflowstep/)
 
 ## Functions
 
-- [defineWorkflow](/reference/workflows/functions/defineworkflow/)
-- [done](/reference/workflows/functions/done/)
-- [goto](/reference/workflows/functions/goto/)
+- [defineWorkflow](/mithril/reference/workflows/functions/defineworkflow/)
+- [done](/mithril/reference/workflows/functions/done/)
+- [goto](/mithril/reference/workflows/functions/goto/)

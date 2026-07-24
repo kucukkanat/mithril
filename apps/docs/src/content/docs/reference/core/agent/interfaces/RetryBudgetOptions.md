@@ -5,9 +5,9 @@ prev: false
 title: "RetryBudgetOptions"
 ---
 
-Defined in: [packages/core/src/agent/healing.ts:179](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/healing.ts#L179)
+Defined in: [packages/core/src/agent/healing.ts:199](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/healing.ts#L199)
 
-Options for [retryBudget](/reference/core/agent/functions/retrybudget/).
+Options for [retryBudget](/mithril/reference/core/agent/functions/retrybudget/).
 
 ## Properties
 
@@ -17,6 +17,6 @@ Options for [retryBudget](/reference/core/agent/functions/retrybudget/).
 readonly optional max?: number;
 ```
 
-Defined in: [packages/core/src/agent/healing.ts:181](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/healing.ts#L181)
+Defined in: [packages/core/src/agent/healing.ts:201](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/healing.ts#L201)
 
 Consecutive-failure budget per tool before the run ends with a `TOOL_REPAIR_EXHAUSTED` error. Default 2.

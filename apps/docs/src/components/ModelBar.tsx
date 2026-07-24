@@ -1,4 +1,5 @@
-import { LIVE_PROVIDERS, LOCAL_MODELS, liveProvider, type LiveProviderId } from "../playground/providers.ts";
+import { useEffect, useState } from "react";
+import { hasWebGPU, LIVE_PROVIDERS, LOCAL_MODELS, liveProvider, requiresWebGPU, type LiveProviderId } from "../playground/providers.ts";
 import type { useProviderSettings } from "../playground/useProviderSettings.ts";
 
 /*
@@ -24,6 +25,22 @@ export function ModelBar({ settings, targetValue, onSelectTarget, onModelChange 
   const key = settings.keys[settings.activeProvider] ?? "";
   const pct = Math.round(download.progress * 100);
 
+  // Probe WebGPU once on mount: `undefined` while unknown (keep WebGPU-only models selectable + warn),
+  // `false` once confirmed unsupported (disable them), `true` when available.
+  const [webgpu, setWebgpu] = useState<boolean | undefined>(undefined);
+  useEffect(() => {
+    let live = true;
+    void hasWebGPU().then((ok) => {
+      if (live) setWebgpu(ok);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  const selectedModel = targetValue.startsWith("local:") ? targetValue.slice("local:".length) : undefined;
+  const gpuOnlySelected = selectedModel !== undefined && requiresWebGPU(selectedModel);
+
   return (
     <div className="pg-modelbar" data-testid="model-bar">
       <label className="pg-mb-label" htmlFor="pg-target">
@@ -45,11 +62,16 @@ export function ModelBar({ settings, targetValue, onSelectTarget, onModelChange 
           ))}
         </optgroup>
         <optgroup label="Local · in-browser">
-          {LOCAL_MODELS.map((m) => (
-            <option key={m.id} value={`local:${m.id}`}>
-              {m.label} · {m.size}
-            </option>
-          ))}
+          {LOCAL_MODELS.map((m) => {
+            const gpuOnly = requiresWebGPU(m);
+            const disabled = gpuOnly && webgpu === false;
+            return (
+              <option key={m.id} value={`local:${m.id}`} disabled={disabled}>
+                {m.label} · {m.size}
+                {gpuOnly ? (disabled ? " · needs WebGPU (unavailable)" : " · needs WebGPU") : ""}
+              </option>
+            );
+          })}
         </optgroup>
       </select>
 
@@ -106,6 +128,16 @@ export function ModelBar({ settings, targetValue, onSelectTarget, onModelChange 
 
       {mode === "local" && (
         <div className="pg-mb-detail" data-testid="model-bar-local-detail">
+          {gpuOnlySelected && webgpu === false && (
+            <span className="pg-mb-hint warn" data-testid="model-bar-webgpu-warning">
+              ⚠ This model runs only on WebGPU, which isn’t available in this browser — the run will fail with a WEBGPU_REQUIRED error. Pick another model or use a WebGPU-capable browser.
+            </span>
+          )}
+          {gpuOnlySelected && webgpu !== false && (
+            <span className="pg-mb-hint warn" data-testid="model-bar-webgpu-note">
+              Requires WebGPU (ternary/2-bit build — no CPU/WASM fallback).
+            </span>
+          )}
           {download.status === "loading" && (
             <>
               <div

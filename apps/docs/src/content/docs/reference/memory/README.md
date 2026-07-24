@@ -7,6 +7,6 @@ title: "@mithril/memory"
 
 ## Modules
 
-- [index](/reference/memory/index/readme/)
-- [sqlite-bun](/reference/memory/sqlite-bun/readme/)
-- [sqlite-node](/reference/memory/sqlite-node/readme/)
+- [index](/mithril/reference/memory/index/readme/)
+- [sqlite-bun](/mithril/reference/memory/sqlite-bun/readme/)
+- [sqlite-node](/mithril/reference/memory/sqlite-node/readme/)

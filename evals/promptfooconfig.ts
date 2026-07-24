@@ -40,7 +40,7 @@ function makeProvider(m: (typeof models)[number], v: (typeof healingVariants)[nu
   return {
     id: "file://./src/provider.ts",
     label: suffixHealing ? `${m.label} · ${v.name}` : m.label,
-    config: { repoId: m.repoId, ...(m.dtype !== undefined ? { dtype: m.dtype } : {}), healingVariant: v.name },
+    config: { repoId: m.repoId, ...(m.dtype !== undefined ? { dtype: m.dtype } : {}), ...(m.backends !== undefined ? { backends: m.backends } : {}), healingVariant: v.name },
   };
 }
 

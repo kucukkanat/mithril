@@ -9,7 +9,7 @@ title: "defaults"
 function defaults<Deps>(): readonly Middleware<Deps>[];
 ```
 
-Defined in: [packages/core/src/agent/healing.ts:319](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/healing.ts#L319)
+Defined in: [packages/core/src/agent/healing.ts:339](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/healing.ts#L339)
 
 The default self-healing stack, installed by every agent unless its `healing` field overrides it. Order
 matters: `argRepair` (tool) and `outputRetry` (finalize) act during a step, while `retryBudget` runs its
@@ -23,4 +23,4 @@ budget check before `loopGuard`'s no-progress check so an exhausted tool halts b
 
 ## Returns
 
-readonly [`Middleware`](/reference/core/protocol/interfaces/middleware/)\<`Deps`\>[]
+readonly [`Middleware`](/mithril/reference/core/protocol/interfaces/middleware/)\<`Deps`\>[]

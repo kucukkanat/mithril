@@ -11,7 +11,7 @@ function extractJson(s):
   | undefined;
 ```
 
-Defined in: [packages/core/src/protocol/json-repair.ts:132](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/json-repair.ts#L132)
+Defined in: [packages/core/src/protocol/json-repair.ts:132](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/json-repair.ts#L132)
 
 Extract and parse the JSON value from a model's FINAL structured-output text.
 
@@ -23,14 +23,14 @@ Extract and parse the JSON value from a model's FINAL structured-output text.
 
 ## Returns
 
-  \| [`JsonValue`](/reference/core/protocol/type-aliases/jsonvalue/)
+  \| [`JsonValue`](/mithril/reference/core/protocol/type-aliases/jsonvalue/)
   \| `undefined`
 
-the parsed [JsonValue](/reference/core/protocol/type-aliases/jsonvalue/), or `undefined` when no JSON can be recovered.
+the parsed [JsonValue](/mithril/reference/core/protocol/type-aliases/jsonvalue/), or `undefined` when no JSON can be recovered.
 
 ## Remarks
 
-Strips reasoning blocks and prose, then delegates to [repairJson](/reference/core/protocol/functions/repairjson/) (code fences, trailing
+Strips reasoning blocks and prose, then delegates to [repairJson](/mithril/reference/core/protocol/functions/repairjson/) (code fences, trailing
 commas, unterminated containers). Structured-output ONLY — it never alters the event stream, so reasoning
 tokens still reach the UI via `text.delta`. Lossless for already-valid JSON (fast path). See
-[repairPartialJson](/reference/core/protocol/functions/repairpartialjson/) for the streaming counterpart.
+[repairPartialJson](/mithril/reference/core/protocol/functions/repairpartialjson/) for the streaming counterpart.

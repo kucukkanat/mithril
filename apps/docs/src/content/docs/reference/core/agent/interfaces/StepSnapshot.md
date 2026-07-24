@@ -5,10 +5,10 @@ prev: false
 title: "StepSnapshot"
 ---
 
-Defined in: [packages/core/src/agent/agent-types.ts:132](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L132)
+Defined in: [packages/core/src/agent/agent-types.ts:136](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/agent-types.ts#L136)
 
-A per-step view yielded by [Agent.iterate](/reference/core/agent/interfaces/agent/#iterate): the step index, the events emitted during it, and a
-[RunState](/reference/core/protocol/interfaces/runstate/) replay of the whole run so far.
+A per-step view yielded by [Agent.iterate](/mithril/reference/core/agent/interfaces/agent/#iterate): the step index, the events emitted during it, and a
+[RunState](/mithril/reference/core/protocol/interfaces/runstate/) replay of the whole run so far.
 
 ## Properties
 
@@ -18,7 +18,7 @@ A per-step view yielded by [Agent.iterate](/reference/core/agent/interfaces/agen
 readonly events: readonly MithrilEvent[];
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:134](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L134)
+Defined in: [packages/core/src/agent/agent-types.ts:138](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/agent-types.ts#L138)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/core/src/agent/agent-types.ts:134](https://github.com/kucu
 readonly state: RunState;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:135](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L135)
+Defined in: [packages/core/src/agent/agent-types.ts:139](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/agent-types.ts#L139)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [packages/core/src/agent/agent-types.ts:135](https://github.com/kucu
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:133](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L133)
+Defined in: [packages/core/src/agent/agent-types.ts:137](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/agent-types.ts#L137)

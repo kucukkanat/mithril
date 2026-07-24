@@ -9,28 +9,28 @@ title: "toJsonSchema"
 function toJsonSchema(schema, convert?): JsonValue;
 ```
 
-Defined in: [packages/core/src/protocol/json-schema.ts:62](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/json-schema.ts#L62)
+Defined in: [packages/core/src/protocol/json-schema.ts:62](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/json-schema.ts#L62)
 
-Convert a [StandardSchemaV1](/reference/core/protocol/interfaces/standardschemav1/) to a JSON Schema for provider tool-parameter definitions.
+Convert a [StandardSchemaV1](/mithril/reference/core/protocol/interfaces/standardschemav1/) to a JSON Schema for provider tool-parameter definitions.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `schema` | [`StandardSchemaV1`](/reference/core/protocol/interfaces/standardschemav1/)\<`unknown`, `unknown`\> | the tool's input schema. |
-| `convert?` | [`JsonSchemaConverter`](/reference/core/protocol/type-aliases/jsonschemaconverter/) | an optional validator-specific converter, tried first (e.g. Zod v4's `z.toJSONSchema`). |
+| `schema` | [`StandardSchemaV1`](/mithril/reference/core/protocol/interfaces/standardschemav1/)\<`unknown`, `unknown`\> | the tool's input schema. |
+| `convert?` | [`JsonSchemaConverter`](/mithril/reference/core/protocol/type-aliases/jsonschemaconverter/) | an optional validator-specific converter, tried first (e.g. Zod v4's `z.toJSONSchema`). |
 
 ## Returns
 
-[`JsonValue`](/reference/core/protocol/type-aliases/jsonvalue/)
+[`JsonValue`](/mithril/reference/core/protocol/type-aliases/jsonvalue/)
 
-the derived JSON Schema, or [PERMISSIVE\_OBJECT](/reference/core/protocol/variables/permissive_object/) when the schema can't be described.
+the derived JSON Schema, or [PERMISSIVE\_OBJECT](/mithril/reference/core/protocol/variables/permissive_object/) when the schema can't be described.
 
 ## Remarks
 
 Standard Schema exposes no structural introspection, so this recovers a schema from a caller
-converter, a self-describing schema (see [withJsonSchema](/reference/core/protocol/functions/withjsonschema/)), or the permissive fallback — never by
-guessing shape from the validator. Attach a schema explicitly with [withJsonSchema](/reference/core/protocol/functions/withjsonschema/) for a
+converter, a self-describing schema (see [withJsonSchema](/mithril/reference/core/protocol/functions/withjsonschema/)), or the permissive fallback — never by
+guessing shape from the validator. Attach a schema explicitly with [withJsonSchema](/mithril/reference/core/protocol/functions/withjsonschema/) for a
 dependency-free path.
 
 ## Example

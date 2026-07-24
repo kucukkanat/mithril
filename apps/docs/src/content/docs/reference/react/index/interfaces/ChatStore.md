@@ -5,9 +5,9 @@ prev: false
 title: "ChatStore"
 ---
 
-Defined in: [index.ts:132](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/react/src/index.ts#L132)
+Defined in: [index.ts:132](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/react/src/index.ts#L132)
 
-A `useSyncExternalStore`-compatible chat store with a `send` action. Created by [createChatStore](/reference/react/index/functions/createchatstore/).
+A `useSyncExternalStore`-compatible chat store with a `send` action. Created by [createChatStore](/mithril/reference/react/index/functions/createchatstore/).
 
 ## Methods
 
@@ -17,11 +17,11 @@ A `useSyncExternalStore`-compatible chat store with a `send` action. Created by 
 getSnapshot(): ChatSnapshot;
 ```
 
-Defined in: [index.ts:134](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/react/src/index.ts#L134)
+Defined in: [index.ts:134](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/react/src/index.ts#L134)
 
 #### Returns
 
-[`ChatSnapshot`](/reference/react/index/interfaces/chatsnapshot/)
+[`ChatSnapshot`](/mithril/reference/react/index/interfaces/chatsnapshot/)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [index.ts:134](https://github.com/kucukkanat/mithril/blob/55ab1949bb
 send(input): void;
 ```
 
-Defined in: [index.ts:136](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/react/src/index.ts#L136)
+Defined in: [index.ts:136](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/react/src/index.ts#L136)
 
 Append a user message and stream the assistant's reply, accumulating history. Ignored mid-stream.
 
@@ -53,7 +53,7 @@ Append a user message and stream the assistant's reply, accumulating history. Ig
 subscribe(onChange): () => void;
 ```
 
-Defined in: [index.ts:133](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/react/src/index.ts#L133)
+Defined in: [index.ts:133](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/react/src/index.ts#L133)
 
 #### Parameters
 

@@ -47,6 +47,7 @@ you override the `healing` field.
 | Correction | The failure it fixes | What the harness does | Middleware | Event |
 | --- | --- | --- | --- | --- |
 | **Parse-repair** | Malformed JSON from a local model (code fences, trailing commas, unterminated strings/brackets) | Repairs the text before validation — losslessly for valid JSON | — (provider) | — (wire-level) |
+| **Harmony-repair** | A local model's tool call leaked into text (gateway workaround) | Salvages tool calls surfaced as prose, recovers the call to execution | `healing.harmonyRepair` | `tool.repair` |
 | **Schema coercion** | Args emitted as a JSON *string* instead of an object | Decodes and re-validates the string, once | `healing.argRepair` | `tool.repair` |
 | **Bounded re-ask** | A tool called wrong, repeatedly | Re-asks with the concrete error; after the retry budget (default 2) consecutive failures, ends with a clear terminal error instead of looping to `maxSteps` | `healing.retryBudget` | `tool.retry` |
 | **Loop detection** | The same `(tool, args)` call over and over | Nudges the model once, then halts | `healing.loopGuard` | `loop.detected` |
@@ -104,8 +105,8 @@ The whole self-healing stack is **pluggable middleware**, controlled by a single
 [`AgentConfig`](/reference/core/agent/interfaces/agentconfig/) (per-agent) and on `RunOptions` (per-run; the
 per-run value wins). It takes three shapes:
 
-- **omitted** ⇒ the batteries-included default ([`healing.defaults()`](/reference/core/agent/functions/defaults/) — arg-repair, loop guard, retry budget, output retry),
-- **`false` or `[]`** ⇒ the **raw loop** — no coercion, no loop detection, unbounded tool retries, no output re-ask,
+- **omitted** ⇒ the batteries-included default ([`healing.defaults()`](/reference/core/agent/functions/defaults/) — harmony-repair, arg-repair, loop guard, retry budget, output retry),
+- **`false` or `[]`** ⇒ the **raw loop** — no healing, no coercion, no loop detection, unbounded tool retries, no output re-ask,
 - **an explicit array** ⇒ exactly those healing middleware, each independently configurable.
 
 <Tabs>
@@ -118,7 +119,7 @@ const raw = agent({
   model,
   instructions,
   tools,
-  healing: false, // just the loop — no coercion, no loop guard, unbounded retries, no output re-ask
+  healing: false, // just the loop — no healing, no coercion, no loop guard, unbounded retries, no output re-ask
 });
 ```
 
@@ -148,9 +149,10 @@ const a = agent({
 
 | Factory | Governs | Options (defaults) |
 | --- | --- | --- |
+| [`healing.harmonyRepair()`](/reference/core/agent/functions/harmonyrepair/) | Model-altitude salvage of leaked tool calls | — |
 | [`healing.argRepair()`](/reference/core/agent/functions/argrepair/) | Schema coercion (the `tool.repair` events) | — |
-| [`healing.retryBudget()`](/reference/core/agent/functions/retrybudget/) | The per-tool re-ask budget | `max` (2); `max: 0` ⇒ give up on first failure |
 | [`healing.loopGuard()`](/reference/core/agent/functions/loopguard/) | Identical-call loop detection | `steerAt` (3), `haltAt` (4) |
+| [`healing.retryBudget()`](/reference/core/agent/functions/retrybudget/) | The per-tool re-ask budget | `max` (2); `max: 0` ⇒ give up on first failure |
 | [`healing.outputRetry()`](/reference/core/agent/functions/outputretry/) | Structured-output re-ask | `max` (2) |
 
 </TabItem>

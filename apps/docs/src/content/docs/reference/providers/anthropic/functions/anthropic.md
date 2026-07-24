@@ -9,7 +9,7 @@ title: "anthropic"
 function anthropic(model, opts?): ModelHandle;
 ```
 
-Defined in: [anthropic/index.ts:135](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/anthropic/index.ts#L135)
+Defined in: [anthropic/index.ts:135](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/providers/src/anthropic/index.ts#L135)
 
 Self-wiring model handle: `agent({ model: anthropic("claude-sonnet-4"), … })` needs no provider registry.
 
@@ -25,7 +25,7 @@ Self-wiring model handle: `agent({ model: anthropic("claude-sonnet-4"), … })` 
 
 `ModelHandle`
 
-A ModelHandle bound to a shared default-configured [anthropicProvider](/reference/providers/anthropic/functions/anthropicprovider/) (or a
+A ModelHandle bound to a shared default-configured [anthropicProvider](/mithril/reference/providers/anthropic/functions/anthropicprovider/) (or a
   dedicated one when `toolSchema` is given).
 
 ## Example
@@ -39,4 +39,4 @@ const a = agent({ model: anthropic("claude-sonnet-4"), instructions: "…", tool
 
 ## Remarks
 
-Need a custom `baseUrl`? Build a provider with [anthropicProvider](/reference/providers/anthropic/functions/anthropicprovider/) instead.
+Need a custom `baseUrl`? Build a provider with [anthropicProvider](/mithril/reference/providers/anthropic/functions/anthropicprovider/) instead.

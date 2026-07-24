@@ -28,13 +28,18 @@ export {
   type RunnerSnapshot,
 } from "./client.ts";
 export {
+  ALL_BACKENDS,
   DEFAULT_LOCAL_MODEL,
   LIVE_PROVIDERS,
   liveProvider,
   LOCAL_MODELS,
   localModel,
+  modelBackends,
+  requiresWebGPU,
+  type Backend,
   type LiveProvider,
   type LiveProviderId,
   type LocalModel,
   type ProviderMode,
 } from "./catalog.ts";
+export { hasWebGPU } from "./webgpu.ts";

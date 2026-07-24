@@ -9,4 +9,4 @@ title: "LOCAL_MODELS"
 const LOCAL_MODELS: readonly LocalModel[];
 ```
 
-Defined in: [runner-web/src/catalog.ts:70](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L70)
+Defined in: [runner-web/src/catalog.ts:93](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/runner-web/src/catalog.ts#L93)

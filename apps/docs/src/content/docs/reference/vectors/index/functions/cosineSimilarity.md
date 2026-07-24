@@ -9,7 +9,7 @@ title: "cosineSimilarity"
 function cosineSimilarity(a, b): number;
 ```
 
-Defined in: [index.ts:65](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L65)
+Defined in: [index.ts:65](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/vectors/src/index.ts#L65)
 
 Cosine similarity of two vectors; `0` when either has zero magnitude.
 

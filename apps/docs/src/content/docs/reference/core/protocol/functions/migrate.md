@@ -9,7 +9,7 @@ title: "migrate"
 function migrate(event): MithrilEvent;
 ```
 
-Defined in: [packages/core/src/protocol/migrate.ts:68](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/migrate.ts#L68)
+Defined in: [packages/core/src/protocol/migrate.ts:68](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/migrate.ts#L68)
 
 Forward-only migration codec for a single event.
 
@@ -17,15 +17,15 @@ Forward-only migration codec for a single event.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `event` | [`MithrilEvent`](/reference/core/protocol/type-aliases/mithrilevent/) | An event tagged with a protocol MAJOR `v`. |
+| `event` | [`MithrilEvent`](/mithril/reference/core/protocol/type-aliases/mithrilevent/) | An event tagged with a protocol MAJOR `v`. |
 
 ## Returns
 
-[`MithrilEvent`](/reference/core/protocol/type-aliases/mithrilevent/)
+[`MithrilEvent`](/mithril/reference/core/protocol/type-aliases/mithrilevent/)
 
 The event unchanged (v1 is identity).
 
 ## Throws
 
-[ProtocolVersionError](/reference/core/protocol/classes/protocolversionerror/) when `v` is not `1` — a newer or unknown
+[ProtocolVersionError](/mithril/reference/core/protocol/classes/protocolversionerror/) when `v` is not `1` — a newer or unknown
 MAJOR is refused, never silently coerced.

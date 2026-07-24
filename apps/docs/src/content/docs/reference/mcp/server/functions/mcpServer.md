@@ -12,7 +12,7 @@ function mcpServer(
    opts?): McpServer;
 ```
 
-Defined in: [server.ts:57](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/mcp/src/server.ts#L57)
+Defined in: [server.ts:57](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/server.ts#L57)
 
 Expose a set of Mithril AnyTools as an MCP server.
 
@@ -21,7 +21,7 @@ Expose a set of Mithril AnyTools as an MCP server.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `tools` | readonly `AnyTool`\<`unknown`\>[] | the tools to advertise and run. |
-| `info` | [`McpServerInfo`](/reference/mcp/server/interfaces/mcpserverinfo/) | server identity returned on `initialize` (default `{ name: "mithril", version: "0.0.0" }`). |
+| `info` | [`McpServerInfo`](/mithril/reference/mcp/server/interfaces/mcpserverinfo/) | server identity returned on `initialize` (default `{ name: "mithril", version: "0.0.0" }`). |
 | `opts?` | \{ `deps?`: `unknown`; `runtime?`: `RuntimeAdapter`; `toolSchema?`: `JsonSchemaConverter`; \} | `deps` are injected into each tool's `execute`; `toolSchema` is a JsonSchemaConverter for advertised parameters; `runtime` overrides the RuntimeAdapter. |
 | `opts.deps?` | `unknown` | - |
 | `opts.runtime?` | `RuntimeAdapter` | - |
@@ -29,9 +29,9 @@ Expose a set of Mithril AnyTools as an MCP server.
 
 ## Returns
 
-[`McpServer`](/reference/mcp/server/interfaces/mcpserver/)
+[`McpServer`](/mithril/reference/mcp/server/interfaces/mcpserver/)
 
-an [McpServer](/reference/mcp/server/interfaces/mcpserver/) with `handle` (one JSON-RPC call) and `serve` (a `fetch` handler).
+an [McpServer](/mithril/reference/mcp/server/interfaces/mcpserver/) with `handle` (one JSON-RPC call) and `serve` (a `fetch` handler).
 
 ## Remarks
 

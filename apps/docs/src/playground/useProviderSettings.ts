@@ -114,9 +114,14 @@ export function useProviderSettings() {
     setDownload({ status: "loading", progress: 0 });
     try {
       const { preload } = await import("mithril/transformers");
-      // Pin the same dtype the assembled example uses, so the worker run reuses these cached weights.
-      const dtype = localModel(model)?.dtype;
-      await preload(model, { ...(dtype === undefined ? {} : { dtype }), onProgress: (r) => setDownload({ status: "loading", progress: r.progress }) });
+      // Pin the same dtype the assembled example uses, so the worker run reuses these cached weights, and pass
+      // the catalog's `backends` so a WebGPU-only model throws a clear WEBGPU_REQUIRED error *before* a big download.
+      const m = localModel(model);
+      await preload(model, {
+        ...(m?.dtype === undefined ? {} : { dtype: m.dtype }),
+        ...(m?.backends === undefined ? {} : { backends: m.backends }),
+        onProgress: (r) => setDownload({ status: "loading", progress: r.progress }),
+      });
       setDownload({ status: "ready", progress: 1 });
     } catch (e) {
       setDownload({ status: "error", progress: 0, error: e instanceof Error ? e.message : String(e) });

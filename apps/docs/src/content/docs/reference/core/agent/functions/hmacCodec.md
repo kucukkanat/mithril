@@ -9,12 +9,12 @@ title: "hmacCodec"
 function hmacCodec(): SealCodec;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:67](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/seal.ts#L67)
+Defined in: [packages/core/src/agent/seal.ts:67](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/seal.ts#L67)
 
-The identity [SealCodec](/reference/core/agent/interfaces/sealcodec/) (`id: "hmac"`): integrity-only, leaving the payload bytes untransformed.
+The identity [SealCodec](/mithril/reference/core/agent/interfaces/sealcodec/) (`id: "hmac"`): integrity-only, leaving the payload bytes untransformed.
 
 ## Returns
 
-[`SealCodec`](/reference/core/agent/interfaces/sealcodec/)
+[`SealCodec`](/mithril/reference/core/agent/interfaces/sealcodec/)
 
 a codec that passes bytes through unchanged; the outer HMAC provides tamper-evidence.

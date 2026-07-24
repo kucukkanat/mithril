@@ -9,9 +9,9 @@ title: "nodeFileSystem"
 function nodeFileSystem(rootOrOpts): FileSystem;
 ```
 
-Defined in: [packages/fs/src/node.ts:26](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/fs/src/node.ts#L26)
+Defined in: [packages/fs/src/node.ts:26](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/fs/src/node.ts#L26)
 
-Create a [FileSystem](/reference/fs/index/interfaces/filesystem/) backed by the local disk, confined to `root`.
+Create a [FileSystem](/mithril/reference/fs/index/interfaces/filesystem/) backed by the local disk, confined to `root`.
 
 ## Parameters
 
@@ -21,14 +21,14 @@ Create a [FileSystem](/reference/fs/index/interfaces/filesystem/) backed by the 
 
 ## Returns
 
-[`FileSystem`](/reference/fs/index/interfaces/filesystem/)
+[`FileSystem`](/mithril/reference/fs/index/interfaces/filesystem/)
 
 A rooted filesystem over `root`.
 
 ## Remarks
 
 **Server-only** — requires `node:fs/promises`; runs on Node 18+ and Bun. Any path that resolves
-outside `root` is rejected with an [FsError](/reference/fs/index/classes/fserror/), giving the same confinement guarantee as the
+outside `root` is rejected with an [FsError](/mithril/reference/fs/index/classes/fserror/), giving the same confinement guarantee as the
 in-memory and OPFS adapters. Writes create parent directories automatically.
 
 ## Throws

@@ -3,6 +3,7 @@ import {
   type AnyTool,
   type ApprovalDecision,
   type ChatRequest,
+  type CheckpointRecord,
   classifiedError,
   type EventConsumer,
   type EventMeta,
@@ -18,6 +19,7 @@ import {
   type ModelCall,
   type ModelInput,
   type ModelResult,
+  type Persistence,
   type ProviderChunk,
   type ProviderRegistry,
   PERMISSIVE_OBJECT,
@@ -199,6 +201,8 @@ export interface LoopOptions<Deps> {
   readonly maxSteps?: number;
   readonly runId?: string;
   readonly resume?: ResumeState;
+  /** Opt-in durable persistence; present ⇒ {@link agentLoop} auto-checkpoints the run (terminal + suspend). */
+  readonly persistence?: Persistence;
   readonly output?: StandardSchemaV1<unknown, JsonValue>;
   readonly outputSchema?: JsonSchemaConverter;
   readonly maxTokens?: number;
@@ -335,7 +339,8 @@ function pendingCalls(messages: readonly LoopMessage[]): readonly Call[] {
  * suspends. Three suspension tiers are wired: Tier-1 approval (`needsApproval`), Tier-1b (a tool returns
  * `suspend(...)`), and Tier-2 (`ctx.suspend()` mid-execute, resumed by replaying journaled effects).
  * Middleware wraps both the model call and each tool invocation. Consumers see every stamped event.
- * Aborting `opts.signal` returns a `"cancelled"` result at the next step boundary.
+ * Aborting `opts.signal` returns a `"cancelled"` result at the next step boundary. When `opts.persistence`
+ * is supplied, the run's terminal or suspended outcome is checkpointed automatically before this returns.
  * @example
  * ```ts
  * import { agentLoop } from "@mithril/core/agent";
@@ -358,6 +363,71 @@ function pendingCalls(messages: readonly LoopMessage[]): readonly Call[] {
  * ```
  */
 export async function* agentLoop<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEvent, RunResult<JsonValue>> {
+  const p = opts.persistence;
+  // No persistence ⇒ the loop is a pure event producer, zero overhead and unchanged behavior.
+  if (p === undefined) return yield* runCore<Deps>(opts);
+  // Persistence ⇒ pin a stable runId (opts.runId wins, then persistence.runId, else fresh) so the loop and
+  // the checkpoint agree, drive the run, then chain a checkpoint recording its terminal/suspended outcome.
+  const rt = opts.runtime ?? defaultRuntime();
+  const runId = opts.runId ?? p.runId ?? rt.randomUUID();
+  const result = yield* runCore<Deps>({ ...opts, runId });
+  await persistResult(p, runId, result, rt);
+  return result;
+}
+
+// Crockford's base32 (no I/L/O/U) — the ULID alphabet used for `getRandomValues`-derived checkpoint ids.
+const CROCKFORD = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+
+// A time-ordered, insecure-context-safe checkpoint id: a 10-char millisecond timestamp prefix plus 80 bits
+// of `getRandomValues` randomness (16 chars), in Crockford base32 — a ULID, sortable by creation time.
+function ulid(rt: RuntimeAdapter): string {
+  let t = rt.now();
+  const time = new Array<string>(10);
+  for (let i = 9; i >= 0; i--) {
+    time[i] = CROCKFORD[t % 32] ?? "0";
+    t = Math.floor(t / 32);
+  }
+  const bytes = rt.getRandomValues(new Uint8Array(10));
+  let out = "";
+  let bits = 0;
+  let value = 0;
+  for (const b of bytes) {
+    value = (value << 8) | b;
+    bits += 8;
+    while (bits >= 5) {
+      bits -= 5;
+      out += CROCKFORD[(value >> bits) & 31];
+      value &= (1 << bits) - 1; // keep `value` bounded so the shifts stay inside JS's 32-bit bitwise range
+    }
+  }
+  return time.join("") + out;
+}
+
+// Chain a checkpoint recording the run's outcome. A suspended run stores its (optionally sealed) resumable
+// token + pending descriptor; terminal states store a null token. `ifParent` chains onto the latest record;
+// a rare optimistic-concurrency conflict (a concurrent writer on the same runId) is retried a few times.
+async function persistResult(p: Persistence, runId: string, result: RunResult<JsonValue>, rt: RuntimeAdapter): Promise<void> {
+  const rawToken = result.status === "suspended" ? result.token : null;
+  const token = rawToken !== null && p.seal !== undefined ? await p.seal(rawToken) : rawToken;
+  const pending = result.status === "suspended" ? result.request : undefined;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const latest = await p.checkpointer.latest(runId);
+    const parentId = latest?.checkpointId ?? null;
+    const rec: CheckpointRecord = {
+      runId,
+      checkpointId: ulid(rt),
+      parentId,
+      token,
+      status: result.status,
+      createdAt: new Date(rt.now()).toISOString(),
+      ...(pending !== undefined ? { pending } : {}),
+    };
+    if ((await p.checkpointer.put(rec, { ifParent: parentId })) === "ok") return;
+  }
+  throw new MithrilError("CHECKPOINT_CONFLICT", `Failed to persist a checkpoint for run "${runId}" after repeated concurrency conflicts.`);
+}
+
+async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEvent, RunResult<JsonValue>> {
   const rt = opts.runtime ?? defaultRuntime();
   const signal = opts.signal ?? new AbortController().signal;
   const { id: modelId, provider } = resolveModel(opts.model, opts.providers);

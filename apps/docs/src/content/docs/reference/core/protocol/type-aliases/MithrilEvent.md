@@ -162,18 +162,18 @@ type MithrilEvent =
 };
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:55](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/events.ts#L55)
+Defined in: [packages/core/src/protocol/events.ts:55](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/events.ts#L55)
 
 The discriminated union of every event on the wire — the core product type.
 
 ## Remarks
 
 Discriminated by `type`. Payloads are monomorphic (`input`/`output` are
-[JsonValue](/reference/core/protocol/type-aliases/jsonvalue/)) so the union never indexes over a per-tool record, the
+[JsonValue](/mithril/reference/core/protocol/type-aliases/jsonvalue/)) so the union never indexes over a per-tool record, the
 structural defence against type-instantiation collapse; per-call input types
-are recovered on demand via [narrow](/reference/core/protocol/functions/narrow/).
+are recovered on demand via [narrow](/mithril/reference/core/protocol/functions/narrow/).
 
 The union is deliberately **non-exhaustive**: adding a member is a MINOR
 version bump, and the trailing `custom.${string}` member is an open escape
 hatch. Consumers must route unknown `type`s to a default branch rather than
-`assertNever` — see [isKnownEvent](/reference/core/protocol/functions/isknownevent/).
+`assertNever` — see [isKnownEvent](/mithril/reference/core/protocol/functions/isknownevent/).

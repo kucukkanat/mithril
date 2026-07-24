@@ -102,8 +102,8 @@ if (r.status === "suspended") {
 
 Middleware wraps four altitudes — **model**, **tool**, **step**, and **finalize** (structured-output
 validation). It can transform or short-circuit, `steer`/`halt` the run, and only ever reads/emits events —
-no hidden side channel. The built-in **self-healing stack is just middleware** (`healing.argRepair`,
-`healing.loopGuard`, `healing.retryBudget`, `healing.outputRetry`), installed by default and fully
+no hidden side channel. The built-in **self-healing stack is just middleware** (`healing.harmonyRepair`, `healing.argRepair`,
+`healing.loopGuard`, `healing.retryBudget`, `healing.outputRetry` — five behaviors), installed by default and fully
 pluggable via the `healing` field (`false`/`[]` for a raw loop, or an explicit array to pick/configure).
 A `plugin()` bundles tools + middleware + consumers behind one `use:`.
 

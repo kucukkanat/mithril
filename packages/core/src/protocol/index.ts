@@ -64,7 +64,7 @@ export { narrow } from "./narrow.ts";
 export type { ContiguityResult, EventTransport } from "./transport.ts";
 export { assertContiguous, inMemoryTransport } from "./transport.ts";
 export { isKnownEvent, migrate, ProtocolVersionError } from "./migrate.ts";
-export type { Checkpointer, CheckpointRecord, SerializedRunState, TestAdapter } from "./checkpointer.ts";
+export type { Checkpointer, CheckpointRecord, Persistence, SerializedRunState, TestAdapter } from "./checkpointer.ts";
 export type {
   DraftEvent,
   EventConsumer,

@@ -5,7 +5,7 @@ prev: false
 title: "MithrilRunInspectorElement"
 ---
 
-Defined in: [packages/devtools/src/element.ts:16](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L16)
+Defined in: [packages/devtools/src/element.ts:16](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L16)
 
 `<mithril-run-inspector>` — the visual inspector as a custom element.
 
@@ -1680,7 +1680,7 @@ The read-only **`firstChild`** property of the Node interface returns the node's
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`firstChild`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#firstchild)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`firstChild`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#firstchild)
 
 ***
 
@@ -1698,7 +1698,7 @@ Returns the first child that is an element, and null otherwise.
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`firstElementChild`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#firstelementchild)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`firstElementChild`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#firstelementchild)
 
 ***
 
@@ -1892,7 +1892,7 @@ The read-only **`lastChild`** property of the Node interface returns the last ch
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`lastChild`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#lastchild)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`lastChild`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#lastchild)
 
 ***
 
@@ -1910,7 +1910,7 @@ Returns the last child that is an element, and null otherwise.
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`lastElementChild`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#lastelementchild)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`lastElementChild`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#lastelementchild)
 
 ***
 
@@ -1948,7 +1948,7 @@ The **`Element.namespaceURI`** read-only property returns the namespace URI of t
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`namespaceURI`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#namespaceuri)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`namespaceURI`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#namespaceuri)
 
 ***
 
@@ -1986,7 +1986,7 @@ The read-only **`nextSibling`** property of the Node interface returns the node 
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`nextSibling`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#nextsibling)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`nextSibling`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#nextsibling)
 
 ***
 
@@ -2044,7 +2044,7 @@ The **`nodeValue`** property of the Node interface returns or sets the value of 
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`nodeValue`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#nodevalue)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`nodeValue`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#nodevalue)
 
 ***
 
@@ -2136,7 +2136,7 @@ The **`HTMLElement.offsetParent`** read-only property returns a reference to the
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`offsetParent`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#offsetparent)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`offsetParent`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#offsetparent)
 
 ***
 
@@ -4110,7 +4110,7 @@ The read-only **`parentElement`** property of Node interface returns the DOM nod
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`parentElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#parentelement)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`parentElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#parentelement)
 
 ***
 
@@ -4128,7 +4128,7 @@ The read-only **`parentNode`** property of the Node interface returns the parent
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`parentNode`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#parentnode)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`parentNode`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#parentnode)
 
 ***
 
@@ -4146,7 +4146,7 @@ The **`popover`** property of the HTMLElement interface gets and sets an element
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`popover`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#popover)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`popover`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#popover)
 
 ***
 
@@ -4164,7 +4164,7 @@ The **`Element.prefix`** read-only property returns the namespace prefix of the 
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`prefix`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#prefix)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`prefix`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#prefix)
 
 ***
 
@@ -4202,7 +4202,7 @@ The read-only **`previousSibling`** property of the Node interface returns the n
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`previousSibling`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#previoussibling)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`previousSibling`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#previoussibling)
 
 ***
 
@@ -4336,7 +4336,7 @@ The `Element.shadowRoot` read-only property represents the shadow root hosted by
 
 #### Inherited from
 
-[`MithrilDevtoolsPanelElement`](/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`shadowRoot`](/reference/devtools/element/classes/mithrildevtoolspanelelement/#shadowroot)
+[`MithrilDevtoolsPanelElement`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/).[`shadowRoot`](/mithril/reference/devtools/element/classes/mithrildevtoolspanelelement/#shadowroot)
 
 ***
 
@@ -4548,7 +4548,7 @@ HTMLElement.classList
 get events(): readonly MithrilEvent[] | undefined;
 ```
 
-Defined in: [packages/devtools/src/element.ts:31](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L31)
+Defined in: [packages/devtools/src/element.ts:31](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L31)
 
 ##### Returns
 
@@ -4560,7 +4560,7 @@ readonly `MithrilEvent`[] \| `undefined`
 set events(v): void;
 ```
 
-Defined in: [packages/devtools/src/element.ts:27](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L27)
+Defined in: [packages/devtools/src/element.ts:27](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L27)
 
 ##### Parameters
 
@@ -4582,7 +4582,7 @@ Defined in: [packages/devtools/src/element.ts:27](https://github.com/kucukkanat/
 get onResolve(): ((resolution) => void) | undefined;
 ```
 
-Defined in: [packages/devtools/src/element.ts:52](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L52)
+Defined in: [packages/devtools/src/element.ts:52](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L52)
 
 ##### Returns
 
@@ -4594,7 +4594,7 @@ Defined in: [packages/devtools/src/element.ts:52](https://github.com/kucukkanat/
 set onResolve(v): void;
 ```
 
-Defined in: [packages/devtools/src/element.ts:48](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L48)
+Defined in: [packages/devtools/src/element.ts:48](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L48)
 
 ##### Parameters
 
@@ -4662,11 +4662,11 @@ get source():
   | undefined;
 ```
 
-Defined in: [packages/devtools/src/element.ts:38](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L38)
+Defined in: [packages/devtools/src/element.ts:38](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L38)
 
 ##### Returns
 
-  \| [`RunSource`](/reference/devtools/dom/interfaces/runsource/)
+  \| [`RunSource`](/mithril/reference/devtools/dom/interfaces/runsource/)
   \| `undefined`
 
 #### Set Signature
@@ -4675,13 +4675,13 @@ Defined in: [packages/devtools/src/element.ts:38](https://github.com/kucukkanat/
 set source(v): void;
 ```
 
-Defined in: [packages/devtools/src/element.ts:34](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L34)
+Defined in: [packages/devtools/src/element.ts:34](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L34)
 
 ##### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `v` | \| [`RunSource`](/reference/devtools/dom/interfaces/runsource/) \| `undefined` |
+| `v` | \| [`RunSource`](/mithril/reference/devtools/dom/interfaces/runsource/) \| `undefined` |
 
 ##### Returns
 
@@ -4785,7 +4785,7 @@ HTMLElement.textContent
 get transport(): EventTransport | undefined;
 ```
 
-Defined in: [packages/devtools/src/element.ts:45](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L45)
+Defined in: [packages/devtools/src/element.ts:45](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L45)
 
 ##### Returns
 
@@ -4797,7 +4797,7 @@ Defined in: [packages/devtools/src/element.ts:45](https://github.com/kucukkanat/
 set transport(v): void;
 ```
 
-Defined in: [packages/devtools/src/element.ts:41](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L41)
+Defined in: [packages/devtools/src/element.ts:41](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L41)
 
 ##### Parameters
 
@@ -4819,7 +4819,7 @@ Defined in: [packages/devtools/src/element.ts:41](https://github.com/kucukkanat/
 get static observedAttributes(): readonly string[];
 ```
 
-Defined in: [packages/devtools/src/element.ts:23](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L23)
+Defined in: [packages/devtools/src/element.ts:23](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L23)
 
 ##### Returns
 
@@ -5084,7 +5084,7 @@ HTMLElement.attachShadow
 attributeChangedCallback(): void;
 ```
 
-Defined in: [packages/devtools/src/element.ts:63](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L63)
+Defined in: [packages/devtools/src/element.ts:63](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L63)
 
 #### Returns
 
@@ -5418,7 +5418,7 @@ HTMLElement.computedStyleMap
 connectedCallback(): void;
 ```
 
-Defined in: [packages/devtools/src/element.ts:56](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L56)
+Defined in: [packages/devtools/src/element.ts:56](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L56)
 
 #### Returns
 
@@ -5462,7 +5462,7 @@ HTMLElement.contains
 disconnectedCallback(): void;
 ```
 
-Defined in: [packages/devtools/src/element.ts:59](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/element.ts#L59)
+Defined in: [packages/devtools/src/element.ts:59](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/element.ts#L59)
 
 #### Returns
 

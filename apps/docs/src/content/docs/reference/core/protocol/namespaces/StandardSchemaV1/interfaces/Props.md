@@ -5,7 +5,7 @@ prev: false
 title: "Props"
 ---
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:25](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/standard-schema.ts#L25)
+Defined in: [packages/core/src/protocol/standard-schema.ts:25](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/standard-schema.ts#L25)
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:25](https://github.co
 readonly optional types?: Types<Input, Output>;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:31](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/standard-schema.ts#L31)
+Defined in: [packages/core/src/protocol/standard-schema.ts:31](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/standard-schema.ts#L31)
 
 ***
 
@@ -34,7 +34,7 @@ readonly validate: (value) =>
 | Promise<Result<Output>>;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:28](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/standard-schema.ts#L28)
+Defined in: [packages/core/src/protocol/standard-schema.ts:28](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/standard-schema.ts#L28)
 
 #### Parameters
 
@@ -44,8 +44,8 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:28](https://github.co
 
 #### Returns
 
-  \| [`Result`](/reference/core/protocol/namespaces/standardschemav1/type-aliases/result/)\<`Output`\>
-  \| `Promise`\<[`Result`](/reference/core/protocol/namespaces/standardschemav1/type-aliases/result/)\<`Output`\>\>
+  \| [`Result`](/mithril/reference/core/protocol/namespaces/standardschemav1/type-aliases/result/)\<`Output`\>
+  \| `Promise`\<[`Result`](/mithril/reference/core/protocol/namespaces/standardschemav1/type-aliases/result/)\<`Output`\>\>
 
 ***
 
@@ -55,7 +55,7 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:28](https://github.co
 readonly vendor: string;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:27](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/standard-schema.ts#L27)
+Defined in: [packages/core/src/protocol/standard-schema.ts:27](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/standard-schema.ts#L27)
 
 ***
 
@@ -65,4 +65,4 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:27](https://github.co
 readonly version: 1;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:26](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/standard-schema.ts#L26)
+Defined in: [packages/core/src/protocol/standard-schema.ts:26](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/standard-schema.ts#L26)

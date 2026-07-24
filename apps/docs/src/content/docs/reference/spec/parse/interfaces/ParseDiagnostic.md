@@ -5,7 +5,7 @@ prev: false
 title: "ParseDiagnostic"
 ---
 
-Defined in: [packages/spec/src/parse.ts:31](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/parse.ts#L31)
+Defined in: [packages/spec/src/parse.ts:31](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/parse.ts#L31)
 
 One parser message, with source offsets a code editor can mark.
 
@@ -17,7 +17,7 @@ One parser message, with source offsets a code editor can mark.
 readonly length: number;
 ```
 
-Defined in: [packages/spec/src/parse.ts:35](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/parse.ts#L35)
+Defined in: [packages/spec/src/parse.ts:35](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/parse.ts#L35)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/spec/src/parse.ts:35](https://github.com/kucukkanat/mithri
 readonly message: string;
 ```
 
-Defined in: [packages/spec/src/parse.ts:33](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/parse.ts#L33)
+Defined in: [packages/spec/src/parse.ts:33](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/parse.ts#L33)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/spec/src/parse.ts:33](https://github.com/kucukkanat/mithri
 readonly severity: "error" | "warning";
 ```
 
-Defined in: [packages/spec/src/parse.ts:32](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/parse.ts#L32)
+Defined in: [packages/spec/src/parse.ts:32](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/parse.ts#L32)
 
 ***
 
@@ -47,4 +47,4 @@ Defined in: [packages/spec/src/parse.ts:32](https://github.com/kucukkanat/mithri
 readonly start: number;
 ```
 
-Defined in: [packages/spec/src/parse.ts:34](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/parse.ts#L34)
+Defined in: [packages/spec/src/parse.ts:34](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/parse.ts#L34)

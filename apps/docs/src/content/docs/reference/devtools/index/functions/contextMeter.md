@@ -9,9 +9,9 @@ title: "contextMeter"
 function contextMeter(state, opts?): ContextMeter;
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:141](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/selectors.ts#L141)
+Defined in: [packages/devtools/src/selectors.ts:141](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/selectors.ts#L141)
 
-Project a RunState's usage into a [ContextMeter](/reference/devtools/index/interfaces/contextmeter/) for the cost/context display.
+Project a RunState's usage into a [ContextMeter](/mithril/reference/devtools/index/interfaces/contextmeter/) for the cost/context display.
 
 ## Parameters
 
@@ -23,6 +23,6 @@ Project a RunState's usage into a [ContextMeter](/reference/devtools/index/inter
 
 ## Returns
 
-[`ContextMeter`](/reference/devtools/index/interfaces/contextmeter/)
+[`ContextMeter`](/mithril/reference/devtools/index/interfaces/contextmeter/)
 
 tokens, cost, steps, and — when `contextWindow` is given — the fill `pct`.

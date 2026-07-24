@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { LIVE_PROVIDERS, LOCAL_MODELS, liveProvider, type LiveProviderId } from "@mithril/runner-web";
+import { useEffect, useState } from "react";
+import { hasWebGPU, LIVE_PROVIDERS, LOCAL_MODELS, liveProvider, requiresWebGPU, type LiveProviderId } from "@mithril/runner-web";
 import type { ModelSpec } from "@mithril/spec";
 
 /*
@@ -31,6 +31,17 @@ const defaultFor = (kind: ModelSpec["kind"]): ModelSpec =>
 export function ModelPicker({ value, onChange }: ModelPickerProps) {
   // Remember each mode's last value so a segment switch restores it instead of resetting to a default.
   const [stash, setStash] = useState<Partial<Record<ModelSpec["kind"], ModelSpec>>>({});
+  // Probe WebGPU once: `undefined` while unknown, `false` once confirmed unsupported (disable WebGPU-only models).
+  const [webgpu, setWebgpu] = useState<boolean | undefined>(undefined);
+  useEffect(() => {
+    let live = true;
+    void hasWebGPU().then((ok) => {
+      if (live) setWebgpu(ok);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
   const switchKind = (kind: ModelSpec["kind"]): void => {
     if (kind === value.kind) return;
     setStash((s) => ({ ...s, [value.kind]: value }));
@@ -38,6 +49,7 @@ export function ModelPicker({ value, onChange }: ModelPickerProps) {
   };
 
   const isCustomLocal = value.kind === "local" && !LOCAL_MODELS.some((m) => m.id === value.model);
+  const gpuOnlySelected = value.kind === "local" && requiresWebGPU(value.model);
 
   return (
     <div className="field-group" data-testid="model-picker">
@@ -104,14 +116,25 @@ export function ModelPicker({ value, onChange }: ModelPickerProps) {
                 onChange({ kind: "local", model: id, ...(dtype === undefined ? {} : { dtype }) });
               }}
             >
-              {LOCAL_MODELS.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.label} ({m.size})
-                </option>
-              ))}
+              {LOCAL_MODELS.map((m) => {
+                const gpuOnly = requiresWebGPU(m);
+                const disabled = gpuOnly && webgpu === false;
+                return (
+                  <option key={m.id} value={m.id} disabled={disabled}>
+                    {m.label} ({m.size}){gpuOnly ? (disabled ? " — needs WebGPU (unavailable)" : " — needs WebGPU") : ""}
+                  </option>
+                );
+              })}
               <option value="__custom">Custom HF repo…</option>
             </select>
           </label>
+          {gpuOnlySelected && (
+            <p className="hint" data-testid="model-local-webgpu-note">
+              {webgpu === false
+                ? "⚠ This model runs only on WebGPU, unavailable in this browser — a run will fail with WEBGPU_REQUIRED. Pick another model or switch browsers."
+                : "Requires WebGPU (ternary/2-bit build — no CPU/WASM fallback)."}
+            </p>
+          )}
           {isCustomLocal && (
             <label data-testid="model-local-repo-field">
               Repo id

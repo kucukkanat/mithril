@@ -5,16 +5,16 @@ prev: false
 title: "AsToolOptions"
 ---
 
-Defined in: [packages/core/src/agent/factory.ts:380](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L380)
+Defined in: [packages/core/src/agent/factory.ts:455](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/factory.ts#L455)
 
-Options for [asTool](/reference/core/agent/functions/astool/): how a sub-agent is exposed as a callable tool.
+Options for [asTool](/mithril/reference/core/agent/functions/astool/): how a sub-agent is exposed as a callable tool.
 
 ## Type Parameters
 
 | Type Parameter | Description |
 | ------ | ------ |
 | `In` | the tool's validated input type (defaults to `{ task: string }`). |
-| `ChildDeps` | the sub-agent's dependency type, provided per call via [AsToolOptions.deps](/reference/core/agent/interfaces/astooloptions/#deps). |
+| `ChildDeps` | the sub-agent's dependency type, provided per call via [AsToolOptions.deps](/mithril/reference/core/agent/interfaces/astooloptions/#deps). |
 
 ## Properties
 
@@ -24,15 +24,15 @@ Options for [asTool](/reference/core/agent/functions/astool/): how a sub-agent i
 readonly optional deps?: (ctx) => ChildDeps;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:389](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L389)
+Defined in: [packages/core/src/agent/factory.ts:464](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/factory.ts#L464)
 
-Provide the sub-agent's dependencies from the calling tool's [RunContext](/reference/core/protocol/interfaces/runcontext/).
+Provide the sub-agent's dependencies from the calling tool's [RunContext](/mithril/reference/core/protocol/interfaces/runcontext/).
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `ctx` | [`RunContext`](/reference/core/protocol/interfaces/runcontext/)\<`unknown`\> |
+| `ctx` | [`RunContext`](/mithril/reference/core/protocol/interfaces/runcontext/)\<`unknown`\> |
 
 #### Returns
 
@@ -46,7 +46,7 @@ Provide the sub-agent's dependencies from the calling tool's [RunContext](/refer
 readonly description: string;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:382](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L382)
+Defined in: [packages/core/src/agent/factory.ts:457](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/factory.ts#L457)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [packages/core/src/agent/factory.ts:382](https://github.com/kucukkan
 readonly optional input?: (input) => Input;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:387](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L387)
+Defined in: [packages/core/src/agent/factory.ts:462](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/factory.ts#L462)
 
 Map the validated tool input to the sub-agent's run input; defaults to `input.task` (or the raw string).
 
@@ -68,7 +68,7 @@ Map the validated tool input to the sub-agent's run input; defaults to `input.ta
 
 #### Returns
 
-[`Input`](/reference/core/agent/type-aliases/input/)
+[`Input`](/mithril/reference/core/agent/type-aliases/input/)
 
 ***
 
@@ -78,9 +78,9 @@ Map the validated tool input to the sub-agent's run input; defaults to `input.ta
 readonly optional inputSchema?: StandardSchemaV1<unknown, In>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:385](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L385)
+Defined in: [packages/core/src/agent/factory.ts:460](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/factory.ts#L460)
 
-Input schema; defaults to `{ task: string }`. Supply [AsToolOptions.input](/reference/core/agent/interfaces/astooloptions/#input) when you change it.
+Input schema; defaults to `{ task: string }`. Supply [AsToolOptions.input](/mithril/reference/core/agent/interfaces/astooloptions/#input) when you change it.
 
 ***
 
@@ -90,7 +90,7 @@ Input schema; defaults to `{ task: string }`. Supply [AsToolOptions.input](/refe
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:381](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L381)
+Defined in: [packages/core/src/agent/factory.ts:456](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/factory.ts#L456)
 
 ***
 
@@ -100,7 +100,7 @@ Defined in: [packages/core/src/agent/factory.ts:381](https://github.com/kucukkan
 readonly optional needsApproval?: boolean;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:391](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L391)
+Defined in: [packages/core/src/agent/factory.ts:466](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/factory.ts#L466)
 
 Gate the sub-agent call behind Tier-1 approval.
 
@@ -112,4 +112,4 @@ Gate the sub-agent call behind Tier-1 approval.
 readonly optional version?: string;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:383](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L383)
+Defined in: [packages/core/src/agent/factory.ts:458](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/factory.ts#L458)

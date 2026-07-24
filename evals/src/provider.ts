@@ -16,6 +16,8 @@ import { toolset } from "./tools.ts";
 interface ProviderConfig {
   readonly repoId: string;
   readonly dtype?: string;
+  /** Backends the model may run on (catalog). Passed through so a forced WebGPU-only run throws a clear WEBGPU_REQUIRED error on CPU. */
+  readonly backends?: readonly ("webgpu" | "wasm" | "cpu")[];
   /** Named self-healing variant to run this model under (see {@link file://./healing.ts}); omitted ⇒ default. */
   readonly healingVariant?: string;
 }
@@ -53,9 +55,9 @@ export default class MithrilLocalProvider {
     error?: string;
   }> {
     const vars = context?.vars ?? {};
-    const { repoId, dtype } = this.config;
+    const { repoId, dtype, backends } = this.config;
 
-    const model = transformers(repoId, { device: "cpu", ...(dtype !== undefined ? { dtype } : {}) });
+    const model = transformers(repoId, { device: "cpu", ...(dtype !== undefined ? { dtype } : {}), ...(backends !== undefined ? { backends } : {}) });
     // The `orchestrator` toolset builds the multi-agent lead (research/analyze sub-agents) around this
     // model; every other name resolves to a flat tool array via `toolset`.
     const isOrchestrator = vars["toolset"] === "orchestrator";

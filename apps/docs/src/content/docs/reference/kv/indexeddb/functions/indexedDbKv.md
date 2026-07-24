@@ -9,9 +9,9 @@ title: "indexedDbKv"
 function indexedDbKv(opts?): KeyValue;
 ```
 
-Defined in: [indexeddb.ts:34](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/kv/src/indexeddb.ts#L34)
+Defined in: [indexeddb.ts:34](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/kv/src/indexeddb.ts#L34)
 
-Create a [KeyValue](/reference/kv/index/interfaces/keyvalue/) backed by the browser's IndexedDB.
+Create a [KeyValue](/mithril/reference/kv/index/interfaces/keyvalue/) backed by the browser's IndexedDB.
 
 ## Parameters
 
@@ -24,9 +24,9 @@ Create a [KeyValue](/reference/kv/index/interfaces/keyvalue/) backed by the brow
 
 ## Returns
 
-[`KeyValue`](/reference/kv/index/interfaces/keyvalue/)
+[`KeyValue`](/mithril/reference/kv/index/interfaces/keyvalue/)
 
-A persistent, per-origin [KeyValue](/reference/kv/index/interfaces/keyvalue/).
+A persistent, per-origin [KeyValue](/mithril/reference/kv/index/interfaces/keyvalue/).
 
 ## Remarks
 

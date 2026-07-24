@@ -5,9 +5,9 @@ prev: false
 title: "DevtoolsPanelOptions"
 ---
 
-Defined in: [packages/devtools/src/dom.ts:348](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/dom.ts#L348)
+Defined in: [packages/devtools/src/dom.ts:348](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/dom.ts#L348)
 
-Options for [mountDevtoolsPanel](/reference/devtools/dom/functions/mountdevtoolspanel/).
+Options for [mountDevtoolsPanel](/mithril/reference/devtools/dom/functions/mountdevtoolspanel/).
 
 ## Properties
 
@@ -17,7 +17,7 @@ Options for [mountDevtoolsPanel](/reference/devtools/dom/functions/mountdevtools
 readonly optional channel?: string;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:349](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/dom.ts#L349)
+Defined in: [packages/devtools/src/dom.ts:349](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/dom.ts#L349)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [packages/devtools/src/dom.ts:349](https://github.com/kucukkanat/mit
 readonly optional contextWindow?: number;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:350](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/dom.ts#L350)
+Defined in: [packages/devtools/src/dom.ts:350](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/dom.ts#L350)

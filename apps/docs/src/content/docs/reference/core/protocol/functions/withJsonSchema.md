@@ -9,9 +9,9 @@ title: "withJsonSchema"
 function withJsonSchema<In, Out>(schema, jsonSchema): StandardSchemaV1<In, Out>;
 ```
 
-Defined in: [packages/core/src/protocol/json-schema.ts:91](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/json-schema.ts#L91)
+Defined in: [packages/core/src/protocol/json-schema.ts:91](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/json-schema.ts#L91)
 
-Attach an explicit JSON Schema to a Standard Schema so [toJsonSchema](/reference/core/protocol/functions/tojsonschema/) recovers it with no converter.
+Attach an explicit JSON Schema to a Standard Schema so [toJsonSchema](/mithril/reference/core/protocol/functions/tojsonschema/) recovers it with no converter.
 
 ## Type Parameters
 
@@ -24,12 +24,12 @@ Attach an explicit JSON Schema to a Standard Schema so [toJsonSchema](/reference
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `schema` | [`StandardSchemaV1`](/reference/core/protocol/interfaces/standardschemav1/)\<`In`, `Out`\> | any Standard Schema (its `~standard` validator is preserved unchanged). |
-| `jsonSchema` | [`JsonValue`](/reference/core/protocol/type-aliases/jsonvalue/) | the JSON Schema to expose for provider tool definitions. |
+| `schema` | [`StandardSchemaV1`](/mithril/reference/core/protocol/interfaces/standardschemav1/)\<`In`, `Out`\> | any Standard Schema (its `~standard` validator is preserved unchanged). |
+| `jsonSchema` | [`JsonValue`](/mithril/reference/core/protocol/type-aliases/jsonvalue/) | the JSON Schema to expose for provider tool definitions. |
 
 ## Returns
 
-[`StandardSchemaV1`](/reference/core/protocol/interfaces/standardschemav1/)\<`In`, `Out`\>
+[`StandardSchemaV1`](/mithril/reference/core/protocol/interfaces/standardschemav1/)\<`In`, `Out`\>
 
 the same schema with a `jsonSchema` property carrying `jsonSchema`.
 

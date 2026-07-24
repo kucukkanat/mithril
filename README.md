@@ -46,12 +46,12 @@ Anthropic, Google) plus on-device inference via transformers.js, all three human
 (approval, tool-returned `suspend`, mid-execute `ctx.suspend`) with first-class nested `asTool` resume and
 resumable tokens (unsigned by default; opt-in HMAC/AES-GCM sealing), typed structured output with
 validate→retry and streamed `object.delta`, step/tool/model-altitude middleware + plugin bundling + event
-consumers, a portable Checkpointer (in-memory + SQLite), OTel spans, runtime-agnostic
+consumers, a portable Checkpointer (in-memory + SQLite) that the loop can drive automatically for
+zero-glue durable runs (`run(input, { persistence })` + `resumeFrom`), OTel spans, runtime-agnostic
 KV/FS/vector adapters (in-memory + real Node/Bun + browser IndexedDB/OPFS), deterministic workflows, an MCP
 client + server, React bindings, a devtools inspector, and a scaffolder.
 
-**Remaining follow-ups:** durable persistence wired directly into `run()` (the `Checkpointer` ships, but the
-loop doesn't call it yet — durability is BYO glue today), a standalone studio app, ANN-indexed vector
+**Remaining follow-ups:** a standalone studio app, ANN-indexed vector
 backends (sqlite-vec / pgvector / Vectorize), and realtime/voice. These are scoped work, not blockers.
 
 ## Develop

@@ -9,9 +9,9 @@ title: "classifyEvent"
 function classifyEvent(type): EventKind;
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:18](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/selectors.ts#L18)
+Defined in: [packages/devtools/src/selectors.ts:18](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/selectors.ts#L18)
 
-Classify an event `type` into a colour-coded [EventKind](/reference/devtools/index/type-aliases/eventkind/) family for the inspector.
+Classify an event `type` into a colour-coded [EventKind](/mithril/reference/devtools/index/type-aliases/eventkind/) family for the inspector.
 
 ## Parameters
 
@@ -21,6 +21,6 @@ Classify an event `type` into a colour-coded [EventKind](/reference/devtools/ind
 
 ## Returns
 
-[`EventKind`](/reference/devtools/index/type-aliases/eventkind/)
+[`EventKind`](/mithril/reference/devtools/index/type-aliases/eventkind/)
 
 the family used to colour the event's row.

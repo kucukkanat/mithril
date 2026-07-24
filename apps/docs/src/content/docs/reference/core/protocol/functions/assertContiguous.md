@@ -9,7 +9,7 @@ title: "assertContiguous"
 function assertContiguous(prev, e): ContiguityResult;
 ```
 
-Defined in: [packages/core/src/protocol/transport.ts:64](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/transport.ts#L64)
+Defined in: [packages/core/src/protocol/transport.ts:64](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/transport.ts#L64)
 
 Check whether `e` immediately follows the previously-seen `seq`.
 
@@ -18,11 +18,11 @@ Check whether `e` immediately follows the previously-seen `seq`.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `prev` | `number` | The last-seen `seq`; `prev < 0` means nothing seen yet. |
-| `e` | [`MithrilEvent`](/reference/core/protocol/type-aliases/mithrilevent/) | The next event. |
+| `e` | [`MithrilEvent`](/mithril/reference/core/protocol/type-aliases/mithrilevent/) | The next event. |
 
 ## Returns
 
-[`ContiguityResult`](/reference/core/protocol/type-aliases/contiguityresult/)
+[`ContiguityResult`](/mithril/reference/core/protocol/type-aliases/contiguityresult/)
 
 `{ ok: true }` when contiguous, else `{ ok: false, missingFrom }`
 naming the first missing `seq`.

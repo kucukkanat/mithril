@@ -9,7 +9,7 @@ title: "anthropicProvider"
 function anthropicProvider(config?): Provider;
 ```
 
-Defined in: [anthropic/index.ts:83](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/anthropic/index.ts#L83)
+Defined in: [anthropic/index.ts:83](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/providers/src/anthropic/index.ts#L83)
 
 Creates an Anthropic Provider whose `chat` method streams `/messages` responses.
 
@@ -30,7 +30,7 @@ A Provider bound to the Anthropic wire format.
 ## Remarks
 
 Use this when you need a provider configured for a custom endpoint. For the common case, prefer the
-[anthropic](/reference/providers/anthropic/functions/anthropic/) model-handle factory, which wraps a shared default-configured instance.
+[anthropic](/mithril/reference/providers/anthropic/functions/anthropic/) model-handle factory, which wraps a shared default-configured instance.
 
 Tool parameters are converted via toJsonSchema: precise `input_schema` when the tool's input
 schema self-describes (see `withJsonSchema`) or a `toolSchema` converter is supplied, permissive

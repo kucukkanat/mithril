@@ -9,15 +9,15 @@ title: "nodeVmRunner"
 function nodeVmRunner(): CodeRunner;
 ```
 
-Defined in: [node.ts:41](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/sandbox/src/node.ts#L41)
+Defined in: [node.ts:41](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/sandbox/src/node.ts#L41)
 
-Build a [CodeRunner](/reference/sandbox/index/interfaces/coderunner/) that evaluates code in a fresh `node:vm` context (Node/Bun only).
+Build a [CodeRunner](/mithril/reference/sandbox/index/interfaces/coderunner/) that evaluates code in a fresh `node:vm` context (Node/Bun only).
 
 ## Returns
 
-[`CodeRunner`](/reference/sandbox/index/interfaces/coderunner/)
+[`CodeRunner`](/mithril/reference/sandbox/index/interfaces/coderunner/)
 
-A [CodeRunner](/reference/sandbox/index/interfaces/coderunner/) that runs each snippet in an isolated scope with a captured `console`.
+A [CodeRunner](/mithril/reference/sandbox/index/interfaces/coderunner/) that runs each snippet in an isolated scope with a captured `console`.
 
 ## Remarks
 

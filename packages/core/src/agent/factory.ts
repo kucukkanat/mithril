@@ -204,6 +204,7 @@ function makeAgent<Tools extends readonly AnyTool<Deps>[], Deps, Out extends Jso
       ...(o?.transport !== undefined ? { transport: o.transport } : {}),
       ...(o?.providers !== undefined ? { providers: o.providers } : {}),
       ...(o?.runtime !== undefined ? { runtime: o.runtime } : {}),
+      ...(o?.persistence !== undefined ? { persistence: o.persistence } : {}),
       ...(signal !== undefined ? { signal } : {}),
       ...(o?.maxSteps ?? config.maxSteps ? { maxSteps: o?.maxSteps ?? config.maxSteps } : {}),
       ...(config.output !== undefined ? { output: config.output } : {}),
@@ -225,6 +226,14 @@ function makeAgent<Tools extends readonly AnyTool<Deps>[], Deps, Out extends Jso
     return { messages: parsed.messages, usage: parsed.usage, step: parsed.step, pending: parsed.pending, resolution };
   };
 
+  // The runId embedded in a run token, so a token-driven resume continues under the SAME id — keeping the
+  // checkpoint chain (and any persistence) contiguous across processes rather than forking a new run.
+  const tokenRunId = (token: string): string => {
+    const parsed = JSON.parse(token) as RunTokenV2;
+    if (parsed.v !== 2) throw new MithrilError("BAD_TOKEN", "Unsupported run-token version.");
+    return parsed.runId;
+  };
+
   const drain = async (gen: AsyncGenerator<MithrilEvent, RunResult<Out>>): Promise<RunResult<Out>> => {
     for (;;) {
       const r = await gen.next();
@@ -234,27 +243,58 @@ function makeAgent<Tools extends readonly AnyTool<Deps>[], Deps, Out extends Jso
 
   const rt = (o: RunOptions<Deps> | undefined): RuntimeAdapter => o?.runtime ?? defaultRuntime();
 
+  // The runId a fresh run adopts: an explicit override wins, else a persisted run's stable id, else random.
+  const freshRunId = (o: RunOptions<Deps> | undefined, fixedRunId?: string): string =>
+    fixedRunId ?? o?.persistence?.runId ?? rt(o).randomUUID();
+
   // Open a streaming handle over a run built by `make`, wiring cancel() (internal AbortController) and
-  // in-process resolve() (rebuild from the suspension token, streamed).
+  // in-process resolve() (rebuild from the suspension token, streamed). `fixedRunId` pins the handle/run id
+  // for a resume (the token's runId) or a persisted run (persistence.runId) so the checkpoint chain stays
+  // contiguous; otherwise a fresh random id is used.
   const streamFrom = (
     make: (signal: AbortSignal, runId: string) => AsyncGenerator<MithrilEvent, RunResult<Out>>,
     o: RunOptions<Deps> | undefined,
+    fixedRunId?: string,
   ): RunHandle<Out> => {
     const ctrl = new AbortController();
     linkSignal(ctrl, o?.signal);
-    const runId = rt(o).randomUUID();
+    const runId = freshRunId(o, fixedRunId);
     const gen = make(ctrl.signal, runId);
     const resume = (token: string, resolution: ResumeValue): RunHandle<Out> =>
-      streamFrom((sig, rid) => build("", o, { resume: toResumeState(token, resolution), signal: sig, runId: rid }), o);
+      streamFrom((sig, rid) => build("", o, { resume: toResumeState(token, resolution), signal: sig, runId: rid }), o, tokenRunId(token));
     return makeRunHandle<Out>(gen, runId, { cancel: (reason?: string) => ctrl.abort(reason), resume });
   };
+
+  // Zero-glue durable resume: load a run's latest checkpoint from opts.persistence, unseal it if configured,
+  // and continue the SAME run (same id, still persisting) from its stored token. Throws a typed MithrilError
+  // when persistence is absent, the run is unknown, or its latest checkpoint is not a resumable suspension.
+  async function* buildFromStore(
+    runId: string,
+    resolution: ResumeValue,
+    o: RunOptions<Deps> | undefined,
+    signal?: AbortSignal,
+  ): AsyncGenerator<MithrilEvent, RunResult<Out>> {
+    if (o?.persistence === undefined) {
+      throw new MithrilError("NO_PERSISTENCE", "resumeFrom() requires opts.persistence with a checkpointer.");
+    }
+    const p = o.persistence;
+    const latest = await p.checkpointer.latest(runId);
+    if (latest === undefined) throw new MithrilError("CHECKPOINT_NOT_FOUND", `No checkpoint found for run "${runId}".`);
+    if (latest.status !== "suspended" || latest.token === null) {
+      throw new MithrilError("NOT_SUSPENDED", `Run "${runId}" is not resumable (checkpoint status: "${latest.status}"); only a suspended run can be resumed.`);
+    }
+    const token = p.open !== undefined ? await p.open(latest.token) : latest.token;
+    // Continue under the same runId and keep writing into the same checkpointer chain.
+    const oEff = { ...o, persistence: { ...p, runId } } as RunOptions<Deps>;
+    return yield* build("", oEff, { resume: toResumeState(token, resolution), runId, ...(signal !== undefined ? { signal } : {}) });
+  }
 
   // Step-level control: drive the loop, yielding a snapshot at each step boundary. Abandoning the iterator
   // (break/return) runs the finally, which aborts the run.
   async function* iterate(input: Input, o: RunOptions<Deps> | undefined): AsyncGenerator<StepSnapshot, RunResult<Out>> {
     const ctrl = new AbortController();
     linkSignal(ctrl, o?.signal);
-    const runId = rt(o).randomUUID();
+    const runId = freshRunId(o);
     const gen = build(input, o, { runId, signal: ctrl.signal });
     const all: MithrilEvent[] = [];
     let sinceStep: MithrilEvent[] = [];
@@ -290,11 +330,19 @@ function makeAgent<Tools extends readonly AnyTool<Deps>[], Deps, Out extends Jso
     },
     resume(token, resolution, ...args) {
       const o = args[0] as RunOptions<Deps> | undefined;
-      return drain(build("", o, { resume: toResumeState(token, resolution) }));
+      return drain(build("", o, { resume: toResumeState(token, resolution), runId: tokenRunId(token) }));
     },
     resumeStream(token, resolution, ...args) {
       const o = args[0] as RunOptions<Deps> | undefined;
-      return streamFrom((sig, rid) => build("", o, { resume: toResumeState(token, resolution), signal: sig, runId: rid }), o);
+      return streamFrom((sig, rid) => build("", o, { resume: toResumeState(token, resolution), signal: sig, runId: rid }), o, tokenRunId(token));
+    },
+    resumeFrom(runId, resolution, ...args) {
+      const o = args[0] as RunOptions<Deps> | undefined;
+      return drain(buildFromStore(runId, resolution, o));
+    },
+    resumeStreamFrom(runId, resolution, ...args) {
+      const o = args[0] as RunOptions<Deps> | undefined;
+      return streamFrom((sig) => buildFromStore(runId, resolution, o, sig), o, runId);
     },
   };
 }

@@ -9,7 +9,7 @@ title: "outputRetry"
 function outputRetry<Deps>(opts?): Middleware<Deps>;
 ```
 
-Defined in: [packages/core/src/agent/healing.ts:292](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/healing.ts#L292)
+Defined in: [packages/core/src/agent/healing.ts:312](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/healing.ts#L312)
 
 Finalize-altitude structured-output retry: when the model's final text fails the `output` schema, emit a
 visible `object.invalid`, then either re-ask (steer the model with the failing issues plus the schema
@@ -26,8 +26,8 @@ for agents that declare an `output` schema.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `opts` | [`OutputRetryOptions`](/reference/core/agent/interfaces/outputretryoptions/) | see [OutputRetryOptions](/reference/core/agent/interfaces/outputretryoptions/). `max` defaults to 2. |
+| `opts` | [`OutputRetryOptions`](/mithril/reference/core/agent/interfaces/outputretryoptions/) | see [OutputRetryOptions](/mithril/reference/core/agent/interfaces/outputretryoptions/). `max` defaults to 2. |
 
 ## Returns
 
-[`Middleware`](/reference/core/protocol/interfaces/middleware/)\<`Deps`\>
+[`Middleware`](/mithril/reference/core/protocol/interfaces/middleware/)\<`Deps`\>

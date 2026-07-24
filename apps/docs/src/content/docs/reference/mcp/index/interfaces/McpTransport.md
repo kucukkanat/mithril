@@ -5,7 +5,7 @@ prev: false
 title: "McpTransport"
 ---
 
-Defined in: [index.ts:27](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/mcp/src/index.ts#L27)
+Defined in: [index.ts:27](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/index.ts#L27)
 
 The transport you implement to carry MCP JSON-RPC calls to a server.
 
@@ -13,7 +13,7 @@ The transport you implement to carry MCP JSON-RPC calls to a server.
 
 An official Streamable-HTTP transport ships at `@mithril/mcp/http` (httpTransport). Implement
 this interface yourself only for other carriers — stdio, or the in-memory server the client is tested
-against. Passed to [mcpClient](/reference/mcp/index/functions/mcpclient/).
+against. Passed to [mcpClient](/mithril/reference/mcp/index/functions/mcpclient/).
 
 ## Methods
 
@@ -23,9 +23,9 @@ against. Passed to [mcpClient](/reference/mcp/index/functions/mcpclient/).
 optional close(): Promise<void>;
 ```
 
-Defined in: [index.ts:31](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/mcp/src/index.ts#L31)
+Defined in: [index.ts:31](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/index.ts#L31)
 
-Optional teardown, invoked by [McpClient.close](/reference/mcp/index/interfaces/mcpclient/#close).
+Optional teardown, invoked by [McpClient.close](/mithril/reference/mcp/index/interfaces/mcpclient/#close).
 
 #### Returns
 
@@ -39,7 +39,7 @@ Optional teardown, invoked by [McpClient.close](/reference/mcp/index/interfaces/
 request(method, params): Promise<JsonValue>;
 ```
 
-Defined in: [index.ts:29](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/mcp/src/index.ts#L29)
+Defined in: [index.ts:29](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/index.ts#L29)
 
 Send an MCP JSON-RPC request (e.g. `"tools/list"`, `"tools/call"`) and resolve its result.
 

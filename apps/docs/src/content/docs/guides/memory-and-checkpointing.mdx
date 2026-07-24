@@ -59,6 +59,37 @@ if (r.status === "suspended") {
 const rec = await cp.latest(handle.runId);
 if (rec?.token) console.log((await assistant.resume(rec.token, { kind: "approve" })).status);`} />
 
+## Zero-glue durable runs
+
+The round-trip above is the **low-level** primitive — you own the `put`/`latest`/`resume` wiring. For
+the common case, hand `run` (or `stream`) a **`persistence`** option and the loop drives the
+Checkpointer for you: it saves a checkpoint whenever the run suspends or completes, keying the chain
+by `runId`. Then `resumeFrom(runId, resolution)` loads the latest checkpoint and continues — you never
+touch the token (highlighted). Run the whole durable round-trip in one tab:
+
+<Runnable title="durable.ts" highlight={["12", "17"]} code={`import { agent, tool } from "mithril";
+import { memoryCheckpointer } from "@mithril/memory";
+import { scriptedProvider, testModel, toolCallTurn, textTurn } from "@mithril/core/testkit";
+import { z } from "zod";
+
+const deploy = tool({ name: "deploy", description: "Deploy.", inputSchema: z.object({ env: z.string() }), needsApproval: true, execute: async ({ env }) => ({ env }) });
+const model = testModel(scriptedProvider([toolCallTurn("deploy", { env: "prod" }), textTurn("Deployed.")]));
+const assistant = agent({ model, instructions: "Deploy when asked.", tools: [deploy] });
+
+const persistence = { checkpointer: memoryCheckpointer(), runId: "deploy-42" };
+
+// Run auto-checkpoints on suspend — no put()/token handling from you.
+const r = await assistant.run("Deploy to production.", { persistence });
+console.log("suspended?", r.status); // "suspended", already saved under runId "deploy-42"
+
+// Later / elsewhere: resume purely from the runId. The token is loaded from the checkpointer.
+const done = await assistant.resumeFrom("deploy-42", { kind: "approve" }, { persistence });
+console.log("done:", done.status); // "completed"`} />
+
+To seal what gets stored (see below), add `seal`/`open` hooks to the `persistence` object — the loop
+seals before writing and opens before resuming. Write failures propagate rather than being swallowed,
+so a broken store surfaces immediately. `stream` has the matching `resumeStreamFrom(runId, resolution)`.
+
 ## Sealing: integrity and confidentiality
 
 Before persisting sensitive state, seal it. `seal`/`open` produce a three-part authenticated token

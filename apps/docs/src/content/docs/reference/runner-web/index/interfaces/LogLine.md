@@ -5,7 +5,7 @@ prev: false
 title: "LogLine"
 ---
 
-Defined in: [runner-web/src/client.ts:15](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/client.ts#L15)
+Defined in: [runner-web/src/client.ts:15](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/runner-web/src/client.ts#L15)
 
 One forwarded `console.*` line from the snippet.
 
@@ -17,7 +17,7 @@ One forwarded `console.*` line from the snippet.
 readonly level: LogLevel;
 ```
 
-Defined in: [runner-web/src/client.ts:16](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/client.ts#L16)
+Defined in: [runner-web/src/client.ts:16](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/runner-web/src/client.ts#L16)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [runner-web/src/client.ts:16](https://github.com/kucukkanat/mithril/
 readonly text: string;
 ```
 
-Defined in: [runner-web/src/client.ts:17](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/client.ts#L17)
+Defined in: [runner-web/src/client.ts:17](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/runner-web/src/client.ts#L17)

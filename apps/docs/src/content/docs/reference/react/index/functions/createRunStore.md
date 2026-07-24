@@ -9,9 +9,9 @@ title: "createRunStore"
 function createRunStore(source): RunStore;
 ```
 
-Defined in: [index.ts:70](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/react/src/index.ts#L70)
+Defined in: [index.ts:70](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/react/src/index.ts#L70)
 
-Build a framework-agnostic [RunStore](/reference/react/index/interfaces/runstore/) that folds an event stream into a live [RunSnapshot](/reference/react/index/interfaces/runsnapshot/).
+Build a framework-agnostic [RunStore](/mithril/reference/react/index/interfaces/runstore/) that folds an event stream into a live [RunSnapshot](/mithril/reference/react/index/interfaces/runsnapshot/).
 
 ## Parameters
 
@@ -21,7 +21,7 @@ Build a framework-agnostic [RunStore](/reference/react/index/interfaces/runstore
 
 ## Returns
 
-[`RunStore`](/reference/react/index/interfaces/runstore/)
+[`RunStore`](/mithril/reference/react/index/interfaces/runstore/)
 
 A store exposing `subscribe` and `getSnapshot`.
 

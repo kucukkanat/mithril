@@ -5,9 +5,9 @@ prev: false
 title: "ProviderRegistry"
 ---
 
-Defined in: [packages/core/src/protocol/provider.ts:116](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/provider.ts#L116)
+Defined in: [packages/core/src/protocol/provider.ts:116](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/provider.ts#L116)
 
-Resolves a [ModelId](/reference/core/protocol/type-aliases/modelid/) to its [Provider](/reference/core/protocol/interfaces/provider/) over the set of registered [ProviderSpec](/reference/core/protocol/interfaces/providerspec/)s.
+Resolves a [ModelId](/mithril/reference/core/protocol/type-aliases/modelid/) to its [Provider](/mithril/reference/core/protocol/interfaces/provider/) over the set of registered [ProviderSpec](/mithril/reference/core/protocol/interfaces/providerspec/)s.
 
 ## Properties
 
@@ -17,7 +17,7 @@ Resolves a [ModelId](/reference/core/protocol/type-aliases/modelid/) to its [Pro
 readonly specs: readonly ProviderSpec[];
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:118](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/provider.ts#L118)
+Defined in: [packages/core/src/protocol/provider.ts:118](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/provider.ts#L118)
 
 ## Methods
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/protocol/provider.ts:118](https://github.com/kucu
 resolve(model): Provider;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:117](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/provider.ts#L117)
+Defined in: [packages/core/src/protocol/provider.ts:117](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/provider.ts#L117)
 
 #### Parameters
 
@@ -37,4 +37,4 @@ Defined in: [packages/core/src/protocol/provider.ts:117](https://github.com/kucu
 
 #### Returns
 
-[`Provider`](/reference/core/protocol/interfaces/provider/)
+[`Provider`](/mithril/reference/core/protocol/interfaces/provider/)

@@ -9,15 +9,15 @@ title: "RunOptions"
 type RunOptions<Deps> = DepsOption<Deps> & RunOptionsBase<Deps>;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:69](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/agent-types.ts#L69)
+Defined in: [packages/core/src/agent/agent-types.ts:73](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/agent-types.ts#L73)
 
-Per-run options passed to [Agent.run](/reference/core/agent/interfaces/agent/#run), [Agent.stream](/reference/core/agent/interfaces/agent/#stream), and [Agent.resume](/reference/core/agent/interfaces/agent/#resume).
+Per-run options passed to [Agent.run](/mithril/reference/core/agent/interfaces/agent/#run), [Agent.stream](/mithril/reference/core/agent/interfaces/agent/#stream), and [Agent.resume](/mithril/reference/core/agent/interfaces/agent/#resume).
 
 ## Type Parameters
 
 | Type Parameter | Description |
 | ------ | ------ |
-| `Deps` | the dependency object injected into tool/instruction [RunContext](/reference/core/protocol/interfaces/runcontext/)s. |
+| `Deps` | the dependency object injected into tool/instruction [RunContext](/mithril/reference/core/protocol/interfaces/runcontext/)s. |
 
 ## Remarks
 

@@ -14,8 +14,9 @@
 
 // @mithril/core/agent — the ONE producer of the protocol. Ships the tool()/agent()/createHarness()
 // factories and the streaming loop (agentLoop), structured output, all three HITL suspension tiers,
-// middleware/plugins, iterate()/resume()/resumeStream()/asTool(), and sealed-token helpers. Durable
-// persistence wiring into run() is not yet shipped — see the roadmap.
+// middleware/plugins, iterate()/resume()/resumeStream()/asTool(), and sealed-token helpers. Opt-in durable
+// persistence is wired into the loop: pass RunOptions.persistence and the loop auto-checkpoints, with
+// resumeFrom()/resumeStreamFrom() continuing a suspended run straight from the Checkpointer.
 
 // ── Tool & Agent Factories ─────────────────────────────────────────────────────────────────────
 export type { ToolDef, ToolFactory, AsToolOptions } from "./factory.ts";

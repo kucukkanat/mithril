@@ -9,9 +9,9 @@ title: "sqliteBunVectorStore"
 function sqliteBunVectorStore(pathOrOpts?): VectorStore;
 ```
 
-Defined in: [sqlite-bun.ts:40](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/sqlite-bun.ts#L40)
+Defined in: [sqlite-bun.ts:40](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/vectors/src/sqlite-bun.ts#L40)
 
-Create a durable [VectorStore](/reference/vectors/index/interfaces/vectorstore/) backed by `bun:sqlite` (Bun runtime only).
+Create a durable [VectorStore](/mithril/reference/vectors/index/interfaces/vectorstore/) backed by `bun:sqlite` (Bun runtime only).
 
 ## Parameters
 
@@ -21,9 +21,9 @@ Create a durable [VectorStore](/reference/vectors/index/interfaces/vectorstore/)
 
 ## Returns
 
-[`VectorStore`](/reference/vectors/index/interfaces/vectorstore/)
+[`VectorStore`](/mithril/reference/vectors/index/interfaces/vectorstore/)
 
-a [VectorStore](/reference/vectors/index/interfaces/vectorstore/) with the same semantics as `memoryVectorStore`, persisted to SQLite.
+a [VectorStore](/mithril/reference/vectors/index/interfaces/vectorstore/) with the same semantics as `memoryVectorStore`, persisted to SQLite.
 
 ## Remarks
 

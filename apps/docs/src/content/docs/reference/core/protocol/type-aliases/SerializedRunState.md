@@ -11,9 +11,9 @@ type SerializedRunState = string & {
 };
 ```
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:7](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/checkpointer.ts#L7)
+Defined in: [packages/core/src/protocol/checkpointer.ts:7](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/checkpointer.ts#L7)
 
-A branded opaque string holding a serialized [RunState](/reference/core/protocol/interfaces/runstate/) token blob (v1).
+A branded opaque string holding a serialized [RunState](/mithril/reference/core/protocol/interfaces/runstate/) token blob (v1).
 
 ## Type Declaration
 

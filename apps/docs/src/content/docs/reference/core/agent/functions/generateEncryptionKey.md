@@ -9,15 +9,15 @@ title: "generateEncryptionKey"
 function generateEncryptionKey(rt?): Promise<CryptoKey>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:86](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/seal.ts#L86)
+Defined in: [packages/core/src/agent/seal.ts:86](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/seal.ts#L86)
 
-Generate an extractable AES-GCM-256 key for the [aesGcmCodec](/reference/core/agent/functions/aesgcmcodec/) confidentiality codec.
+Generate an extractable AES-GCM-256 key for the [aesGcmCodec](/mithril/reference/core/agent/functions/aesgcmcodec/) confidentiality codec.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `rt?` | [`RuntimeAdapter`](/reference/core/protocol/interfaces/runtimeadapter/) | optional [RuntimeAdapter](/reference/core/protocol/interfaces/runtimeadapter/) providing `subtle`; falls back to `globalThis.crypto.subtle`. |
+| `rt?` | [`RuntimeAdapter`](/mithril/reference/core/protocol/interfaces/runtimeadapter/) | optional [RuntimeAdapter](/mithril/reference/core/protocol/interfaces/runtimeadapter/) providing `subtle`; falls back to `globalThis.crypto.subtle`. |
 
 ## Returns
 
@@ -27,4 +27,4 @@ a `CryptoKey` usable for `encrypt`/`decrypt`.
 
 ## Throws
 
-[StateIntegrityError](/reference/core/agent/classes/stateintegrityerror/) when `crypto.subtle` is unavailable (insecure context).
+[StateIntegrityError](/mithril/reference/core/agent/classes/stateintegrityerror/) when `crypto.subtle` is unavailable (insecure context).
