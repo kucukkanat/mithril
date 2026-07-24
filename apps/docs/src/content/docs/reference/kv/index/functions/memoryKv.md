@@ -9,9 +9,9 @@ title: "memoryKv"
 function memoryKv(now?): KeyValue;
 ```
 
-Defined in: [index.ts:62](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/kv/src/index.ts#L62)
+Defined in: [index.ts:62](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/kv/src/index.ts#L62)
 
-Creates an in-memory [KeyValue](/reference/kv/index/interfaces/keyvalue/) store backed by a `Map`, with lazy TTL expiry on read.
+Creates an in-memory [KeyValue](/mithril/reference/kv/index/interfaces/keyvalue/) store backed by a `Map`, with lazy TTL expiry on read.
 
 ## Parameters
 
@@ -21,13 +21,13 @@ Creates an in-memory [KeyValue](/reference/kv/index/interfaces/keyvalue/) store 
 
 ## Returns
 
-[`KeyValue`](/reference/kv/index/interfaces/keyvalue/)
+[`KeyValue`](/mithril/reference/kv/index/interfaces/keyvalue/)
 
-A fresh [KeyValue](/reference/kv/index/interfaces/keyvalue/) with no shared state.
+A fresh [KeyValue](/mithril/reference/kv/index/interfaces/keyvalue/) with no shared state.
 
 ## Remarks
 
-Works in every runtime and is the reference implementation for [kvConformance](/reference/kv/index/functions/kvconformance/). Expiry is lazy:
+Works in every runtime and is the reference implementation for [kvConformance](/mithril/reference/kv/index/functions/kvconformance/). Expiry is lazy:
 an expired entry is evicted the next time it is read via `get`/`has`, not on a timer.
 
 ## Example

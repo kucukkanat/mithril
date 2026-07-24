@@ -4,6 +4,8 @@ import starlight from "@astrojs/starlight";
 import react from "@astrojs/react";
 import { mithrilAliases } from "../../scripts/mithril-aliases.mjs";
 import rehypeSymbolLinks from "./src/lib/rehype-symbol-links.ts";
+import rehypeBaseLinks from "./src/lib/rehype-base-links.ts";
+import { BASE } from "./src/lib/base.ts";
 import { createStarlightTypeDocPlugin } from "starlight-typedoc";
 import { generateSymbols } from "./scripts/gen-symbols.ts";
 
@@ -72,7 +74,7 @@ for (const pkg of TD_PACKAGES) {
 // https://astro.build/config
 export default defineConfig({
   site: "https://kucukkanat.github.io",
-  base: "/mithril",
+  base: BASE,
   integrations: [
     starlight({
       title: "Mithril",
@@ -167,8 +169,9 @@ export default defineConfig({
     genSymbolsIntegration,
   ],
   markdown: {
-    // Auto-link inline-code symbol mentions to the reference, with hover tooltips.
-    rehypePlugins: [rehypeSymbolLinks],
+    // Auto-link inline-code symbol mentions to the reference (symbol anchors are already based via
+    // load-symbols), THEN prefix the site base onto every remaining root-absolute internal link.
+    rehypePlugins: [rehypeSymbolLinks, rehypeBaseLinks],
   },
   vite: {
     resolve: { alias: mithrilAliases() },

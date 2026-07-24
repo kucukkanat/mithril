@@ -13,7 +13,7 @@ function seal(
 codec?): Promise<string>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:182](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/seal.ts#L182)
+Defined in: [packages/core/src/agent/seal.ts:182](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/seal.ts#L182)
 
 Seal a string into a signed, tamper-evident `header.payload.digest` envelope.
 
@@ -21,10 +21,10 @@ Seal a string into a signed, tamper-evident `header.payload.digest` envelope.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `body` | `string` | the plaintext to protect (e.g. a run resume token from [RunResult](/reference/core/agent/type-aliases/runresult/)). |
-| `keyring` | [`Keyring`](/reference/core/agent/interfaces/keyring/) | supplies the current signing key and its `kid`. |
-| `rt?` | [`RuntimeAdapter`](/reference/core/protocol/interfaces/runtimeadapter/) | optional [RuntimeAdapter](/reference/core/protocol/interfaces/runtimeadapter/) providing `subtle`; falls back to `globalThis.crypto.subtle`. |
-| `codec?` | [`SealCodec`](/reference/core/agent/interfaces/sealcodec/) | the payload [SealCodec](/reference/core/agent/interfaces/sealcodec/); defaults to [hmacCodec](/reference/core/agent/functions/hmaccodec/) (integrity-only). |
+| `body` | `string` | the plaintext to protect (e.g. a run resume token from [RunResult](/mithril/reference/core/agent/type-aliases/runresult/)). |
+| `keyring` | [`Keyring`](/mithril/reference/core/agent/interfaces/keyring/) | supplies the current signing key and its `kid`. |
+| `rt?` | [`RuntimeAdapter`](/mithril/reference/core/protocol/interfaces/runtimeadapter/) | optional [RuntimeAdapter](/mithril/reference/core/protocol/interfaces/runtimeadapter/) providing `subtle`; falls back to `globalThis.crypto.subtle`. |
+| `codec?` | [`SealCodec`](/mithril/reference/core/agent/interfaces/sealcodec/) | the payload [SealCodec](/mithril/reference/core/agent/interfaces/sealcodec/); defaults to [hmacCodec](/mithril/reference/core/agent/functions/hmaccodec/) (integrity-only). |
 
 ## Returns
 
@@ -35,7 +35,7 @@ readable and tamper-evident before verification.
 
 ## Throws
 
-[StateIntegrityError](/reference/core/agent/classes/stateintegrityerror/) when `crypto.subtle` is unavailable (insecure context).
+[StateIntegrityError](/mithril/reference/core/agent/classes/stateintegrityerror/) when `crypto.subtle` is unavailable (insecure context).
 
 ## Example
 

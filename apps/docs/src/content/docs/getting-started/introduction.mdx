@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import { CardGrid, LinkCard, Aside } from "@astrojs/starlight/components";
+import { withBase } from "../../../lib/base.ts";
 import Runnable from "../../../components/Runnable.astro";
 
 Mithril is a batteries-included, provider-agnostic TypeScript AI-agent harness. It runs
@@ -98,6 +99,6 @@ a deeper read you can take any time. It explains the design; it isn't a prerequi
 </Aside>
 
 <CardGrid>
-  <LinkCard title="Quickstart" href="/getting-started/quickstart/" description="Build and run your first agent in a few minutes." />
-  <LinkCard title="Playground" href="/playground/" description="Run a real agent loop in your browser — no keys." />
+  <LinkCard title="Quickstart" href={withBase("/getting-started/quickstart/")} description="Build and run your first agent in a few minutes." />
+  <LinkCard title="Playground" href={withBase("/playground/")} description="Run a real agent loop in your browser — no keys." />
 </CardGrid>

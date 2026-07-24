@@ -9,9 +9,9 @@ title: "formatForModel"
 function formatForModel(modelId): ToolFormat;
 ```
 
-Defined in: [transformers/tool-formats.ts:171](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/transformers/tool-formats.ts#L171)
+Defined in: [transformers/tool-formats.ts:171](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/providers/src/transformers/tool-formats.ts#L171)
 
-Pick the [ToolFormat](/reference/providers/transformers/interfaces/toolformat/) for a model repo id: Gemma → native tokens, LFM2/Liquid → its Python-call
+Pick the [ToolFormat](/mithril/reference/providers/transformers/interfaces/toolformat/) for a model repo id: Gemma → native tokens, LFM2/Liquid → its Python-call
 grammar, everything else → the `<tool_call>` grammar shared by Qwen/Granite.
 
 ## Parameters
@@ -22,6 +22,6 @@ grammar, everything else → the `<tool_call>` grammar shared by Qwen/Granite.
 
 ## Returns
 
-[`ToolFormat`](/reference/providers/transformers/interfaces/toolformat/)
+[`ToolFormat`](/mithril/reference/providers/transformers/interfaces/toolformat/)
 
-the format, defaulting to [angleToolCall](/reference/providers/transformers/variables/angletoolcall/).
+the format, defaulting to [angleToolCall](/mithril/reference/providers/transformers/variables/angletoolcall/).

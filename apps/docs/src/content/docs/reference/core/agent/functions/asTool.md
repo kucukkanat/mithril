@@ -9,9 +9,9 @@ title: "asTool"
 function asTool<In, ChildDeps, COut>(child, opts): Tool<string, In, COut, unknown>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:427](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L427)
+Defined in: [packages/core/src/agent/factory.ts:427](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L427)
 
-Wrap an [Agent](/reference/core/agent/interfaces/agent/) as a [Tool](/reference/core/protocol/interfaces/tool/), so one agent can call another as a sub-agent.
+Wrap an [Agent](/mithril/reference/core/agent/interfaces/agent/) as a [Tool](/mithril/reference/core/protocol/interfaces/tool/), so one agent can call another as a sub-agent.
 
 ## Type Parameters
 
@@ -19,27 +19,27 @@ Wrap an [Agent](/reference/core/agent/interfaces/agent/) as a [Tool](/reference/
 | ------ | ------ |
 | `In` | the tool input type; defaults to `{ task: string }`. |
 | `ChildDeps` | the sub-agent's dependency type. |
-| `COut` *extends* [`JsonValue`](/reference/core/protocol/type-aliases/jsonvalue/) | the sub-agent's output type, returned as the tool result. |
+| `COut` *extends* [`JsonValue`](/mithril/reference/core/protocol/type-aliases/jsonvalue/) | the sub-agent's output type, returned as the tool result. |
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `child` | [`Agent`](/reference/core/agent/interfaces/agent/)\<readonly [`AnyTool`](/reference/core/protocol/type-aliases/anytool/)\<`ChildDeps`\>[], `ChildDeps`, `COut`\> | the sub-agent to expose. |
-| `opts` | [`AsToolOptions`](/reference/core/agent/interfaces/astooloptions/)\<`In`, `ChildDeps`\> | naming, schema, input mapping, and dependency wiring ([AsToolOptions](/reference/core/agent/interfaces/astooloptions/)). |
+| `child` | [`Agent`](/mithril/reference/core/agent/interfaces/agent/)\<readonly [`AnyTool`](/mithril/reference/core/protocol/type-aliases/anytool/)\<`ChildDeps`\>[], `ChildDeps`, `COut`\> | the sub-agent to expose. |
+| `opts` | [`AsToolOptions`](/mithril/reference/core/agent/interfaces/astooloptions/)\<`In`, `ChildDeps`\> | naming, schema, input mapping, and dependency wiring ([AsToolOptions](/mithril/reference/core/agent/interfaces/astooloptions/)). |
 
 ## Returns
 
-[`Tool`](/reference/core/protocol/interfaces/tool/)\<`string`, `In`, `COut`, `unknown`\>
+[`Tool`](/mithril/reference/core/protocol/interfaces/tool/)\<`string`, `In`, `COut`, `unknown`\>
 
-a [Tool](/reference/core/protocol/interfaces/tool/) whose `execute` runs the sub-agent to completion and returns its output.
+a [Tool](/mithril/reference/core/protocol/interfaces/tool/) whose `execute` runs the sub-agent to completion and returns its output.
 
 ## Remarks
 
 **Inherited run context.** The sub-agent run automatically inherits the parent run's
-`transport`, `providers`, and `runtime` (read from the calling [RunContext](/reference/core/protocol/interfaces/runcontext/)), so a nested agent
+`transport`, `providers`, and `runtime` (read from the calling [RunContext](/mithril/reference/core/protocol/interfaces/runcontext/)), so a nested agent
 authenticates, resolves bare-string model ids, and uses the same runtime with no extra wiring. Supply the
-child's own `deps` via [AsToolOptions.deps](/reference/core/agent/interfaces/astooloptions/#deps).
+child's own `deps` via [AsToolOptions.deps](/mithril/reference/core/agent/interfaces/astooloptions/#deps).
 
 **Nested HITL is first-class.** If the sub-agent suspends (its own approval or `ctx.suspend`),
 this tool suspends the *parent* via Tier-2 with a `handoff.suspended` request whose payload carries the
@@ -47,7 +47,7 @@ child's pending `child` descriptor. Resume the parent run with `{ kind: "resolve
 ResumeValue> }` (an `ApprovalDecision`, or `{ kind: "resolve", value }`): the tool resumes the child with
 it, loops until the child finishes, and returns its output — all through the parent's own token, across as
 many nested pauses as the child needs. The child run is journaled, so it is never re-executed on resume. A
-sub-agent `error`/`cancel` surfaces as a [MithrilError](/reference/core/agent/classes/mithrilerror/) (`SUBAGENT_ERROR`/`SUBAGENT_CANCELLED`).
+sub-agent `error`/`cancel` surfaces as a [MithrilError](/mithril/reference/core/agent/classes/mithrilerror/) (`SUBAGENT_ERROR`/`SUBAGENT_CANCELLED`).
 
 ## Example
 

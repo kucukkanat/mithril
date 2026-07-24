@@ -5,16 +5,16 @@ prev: false
 title: "ToolDef"
 ---
 
-Defined in: [packages/core/src/agent/factory.ts:43](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L43)
+Defined in: [packages/core/src/agent/factory.ts:43](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L43)
 
-The definition object passed to [tool](/reference/core/agent/functions/tool/) to declare a single tool.
+The definition object passed to [tool](/mithril/reference/core/agent/functions/tool/) to declare a single tool.
 
 ## Remarks
 
 - `inputSchema` validates the model-supplied arguments before `execute` runs; invalid input throws
-  [MithrilError](/reference/core/agent/classes/mithrilerror/) `INVALID_TOOL_INPUT`.
+  [MithrilError](/mithril/reference/core/agent/classes/mithrilerror/) `INVALID_TOOL_INPUT`.
 - `needsApproval` gates the call behind Tier-1 HITL: a `true` result suspends the run for approval.
-- `execute` may return the value directly or be an `AsyncGenerator` that yields [ToolProgress](/reference/core/protocol/interfaces/toolprogress/)
+- `execute` may return the value directly or be an `AsyncGenerator` that yields [ToolProgress](/mithril/reference/core/protocol/interfaces/toolprogress/)
   before returning the value. It may also return `suspend(...)` to pause the run (Tier-1b), or call
   `ctx.suspend(...)` to pause mid-execution (Tier-2).
 
@@ -23,9 +23,9 @@ The definition object passed to [tool](/reference/core/agent/functions/tool/) to
 | Type Parameter | Description |
 | ------ | ------ |
 | `Name` *extends* `string` | the tool's literal name (kept `const` so the model call site sees the exact string). |
-| `SIn` *extends* [`StandardSchemaV1`](/reference/core/protocol/interfaces/standardschemav1/) | the input [Standard Schema](https://standardschema.dev); its output type becomes `execute`'s input. |
+| `SIn` *extends* [`StandardSchemaV1`](/mithril/reference/core/protocol/interfaces/standardschemav1/) | the input [Standard Schema](https://standardschema.dev); its output type becomes `execute`'s input. |
 | `Deps` | the dependency object reachable via `ctx.deps` inside `execute`. |
-| `Out` *extends* [`JsonValue`](/reference/core/protocol/type-aliases/jsonvalue/) | the tool's JSON-safe return type (constrained to `JsonValue`). |
+| `Out` *extends* [`JsonValue`](/mithril/reference/core/protocol/type-aliases/jsonvalue/) | the tool's JSON-safe return type (constrained to `JsonValue`). |
 
 ## Properties
 
@@ -35,7 +35,7 @@ The definition object passed to [tool](/reference/core/agent/functions/tool/) to
 description: string;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:45](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L45)
+Defined in: [packages/core/src/agent/factory.ts:45](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L45)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [packages/core/src/agent/factory.ts:45](https://github.com/kucukkana
 optional examples?: readonly JsonValue[];
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:48](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L48)
+Defined in: [packages/core/src/agent/factory.ts:48](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L48)
 
 Optional few-shot example inputs, surfaced into the tool's wire description to steer small models.
 
@@ -63,23 +63,23 @@ execute: (input, ctx) =>
 | Suspend<NoInfer<Out>>, any>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:52](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L52)
+Defined in: [packages/core/src/agent/factory.ts:52](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L52)
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
 | `input` | `Infer`\<`SIn`\> |
-| `ctx` | [`RunContext`](/reference/core/protocol/interfaces/runcontext/)\<`Deps`\> |
+| `ctx` | [`RunContext`](/mithril/reference/core/protocol/interfaces/runcontext/)\<`Deps`\> |
 
 #### Returns
 
   \| `Promise`\<
   \| `Out`
-  \| [`Suspend`](/reference/core/protocol/interfaces/suspend/)\<`NoInfer`\<`Out`\>\>\>
-  \| `AsyncGenerator`\<[`ToolProgress`](/reference/core/protocol/interfaces/toolprogress/), 
+  \| [`Suspend`](/mithril/reference/core/protocol/interfaces/suspend/)\<`NoInfer`\<`Out`\>\>\>
+  \| `AsyncGenerator`\<[`ToolProgress`](/mithril/reference/core/protocol/interfaces/toolprogress/), 
   \| `Out`
-  \| [`Suspend`](/reference/core/protocol/interfaces/suspend/)\<`NoInfer`\<`Out`\>\>, `any`\>
+  \| [`Suspend`](/mithril/reference/core/protocol/interfaces/suspend/)\<`NoInfer`\<`Out`\>\>, `any`\>
 
 ***
 
@@ -89,7 +89,7 @@ Defined in: [packages/core/src/agent/factory.ts:52](https://github.com/kucukkana
 inputSchema: SIn;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:49](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L49)
+Defined in: [packages/core/src/agent/factory.ts:49](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L49)
 
 ***
 
@@ -99,7 +99,7 @@ Defined in: [packages/core/src/agent/factory.ts:49](https://github.com/kucukkana
 name: Name;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:44](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L44)
+Defined in: [packages/core/src/agent/factory.ts:44](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L44)
 
 ***
 
@@ -109,7 +109,7 @@ Defined in: [packages/core/src/agent/factory.ts:44](https://github.com/kucukkana
 optional needsApproval?: boolean | ((input, ctx) => boolean | Promise<boolean>);
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:51](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L51)
+Defined in: [packages/core/src/agent/factory.ts:51](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L51)
 
 ***
 
@@ -119,7 +119,7 @@ Defined in: [packages/core/src/agent/factory.ts:51](https://github.com/kucukkana
 optional outputSchema?: StandardSchemaV1<unknown, Out>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:50](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L50)
+Defined in: [packages/core/src/agent/factory.ts:50](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L50)
 
 ***
 
@@ -129,4 +129,4 @@ Defined in: [packages/core/src/agent/factory.ts:50](https://github.com/kucukkana
 optional version?: string;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:46](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L46)
+Defined in: [packages/core/src/agent/factory.ts:46](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L46)

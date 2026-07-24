@@ -11,14 +11,14 @@ Turn a Mithril event stream into OpenTelemetry GenAI (`gen_ai.*`) spans — depe
 
 Reconstructs the `invoke_agent > chat > execute_tool` span hierarchy directly off the wire, with
 no dependency on `@opentelemetry/api`. A real OTel exporter is a thin adapter over the
-[SpanSink](/reference/otel/interfaces/spansink/) interface. See [toGenAiSpans](/reference/otel/functions/togenaispans/).
+[SpanSink](/mithril/reference/otel/interfaces/spansink/) interface. See [toGenAiSpans](/mithril/reference/otel/functions/togenaispans/).
 
 ## Interfaces
 
-- [GenAiSpan](/reference/otel/interfaces/genaispan/)
-- [SpanSink](/reference/otel/interfaces/spansink/)
+- [GenAiSpan](/mithril/reference/otel/interfaces/genaispan/)
+- [SpanSink](/mithril/reference/otel/interfaces/spansink/)
 
 ## Functions
 
-- [otelPlugin](/reference/otel/functions/otelplugin/)
-- [toGenAiSpans](/reference/otel/functions/togenaispans/)
+- [otelPlugin](/mithril/reference/otel/functions/otelplugin/)
+- [toGenAiSpans](/mithril/reference/otel/functions/togenaispans/)

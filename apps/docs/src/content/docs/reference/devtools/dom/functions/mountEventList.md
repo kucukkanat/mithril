@@ -9,7 +9,7 @@ title: "mountEventList"
 function mountEventList(target, options): DevtoolsHandle<EventListOptions>;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:169](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/dom.ts#L169)
+Defined in: [packages/devtools/src/dom.ts:169](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/dom.ts#L169)
 
 Mount the colour-coded event log into `target`. Controlled: pass `cursor`/`onSelect` in.
 
@@ -18,8 +18,8 @@ Mount the colour-coded event log into `target`. Controlled: pass `cursor`/`onSel
 | Parameter | Type |
 | ------ | ------ |
 | `target` | `HTMLElement` |
-| `options` | [`EventListOptions`](/reference/devtools/dom/interfaces/eventlistoptions/) |
+| `options` | [`EventListOptions`](/mithril/reference/devtools/dom/interfaces/eventlistoptions/) |
 
 ## Returns
 
-[`DevtoolsHandle`](/reference/devtools/dom/interfaces/devtoolshandle/)\<[`EventListOptions`](/reference/devtools/dom/interfaces/eventlistoptions/)\>
+[`DevtoolsHandle`](/mithril/reference/devtools/dom/interfaces/devtoolshandle/)\<[`EventListOptions`](/mithril/reference/devtools/dom/interfaces/eventlistoptions/)\>

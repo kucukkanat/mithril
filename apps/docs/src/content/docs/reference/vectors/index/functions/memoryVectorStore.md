@@ -9,19 +9,19 @@ title: "memoryVectorStore"
 function memoryVectorStore(): VectorStore;
 ```
 
-Defined in: [index.ts:96](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L96)
+Defined in: [index.ts:96](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/vectors/src/index.ts#L96)
 
-Create an in-memory [VectorStore](/reference/vectors/index/interfaces/vectorstore/) that answers queries with an exact brute-force cosine scan.
+Create an in-memory [VectorStore](/mithril/reference/vectors/index/interfaces/vectorstore/) that answers queries with an exact brute-force cosine scan.
 
 ## Returns
 
-[`VectorStore`](/reference/vectors/index/interfaces/vectorstore/)
+[`VectorStore`](/mithril/reference/vectors/index/interfaces/vectorstore/)
 
 A fresh, browser-capable store with no shared state.
 
 ## Remarks
 
-The reference implementation for [vectorsConformance](/reference/vectors/index/functions/vectorsconformance/). Exact (not approximate) — every
+The reference implementation for [vectorsConformance](/mithril/reference/vectors/index/functions/vectorsconformance/). Exact (not approximate) — every
 query scans all records, which is ideal for small collections and for tests; swap in an ANN-indexed
 backend for large corpora. Vectors are copied into `Float32Array` on upsert.
 

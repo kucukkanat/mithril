@@ -5,14 +5,14 @@ prev: false
 title: "VectorStore"
 ---
 
-Defined in: [index.ts:44](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L44)
+Defined in: [index.ts:44](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/vectors/src/index.ts#L44)
 
 A runtime-agnostic vector store (§10.4) — the portable core of retrieval-augmented generation.
 
 ## Remarks
 
-Injected into tools via `Deps` (`ctx.deps.vectors`). Implementations must pass [vectorsConformance](/reference/vectors/index/functions/vectorsconformance/);
-[memoryVectorStore](/reference/vectors/index/functions/memoryvectorstore/) is the reference brute-force impl, with sqlite-vec / pgvector / Vectorize backends
+Injected into tools via `Deps` (`ctx.deps.vectors`). Implementations must pass [vectorsConformance](/mithril/reference/vectors/index/functions/vectorsconformance/);
+[memoryVectorStore](/mithril/reference/vectors/index/functions/memoryvectorstore/) is the reference brute-force impl, with sqlite-vec / pgvector / Vectorize backends
 behind per-runtime subpaths. Embeddings are the caller's responsibility (a store persists and searches
 vectors; it does not compute them).
 
@@ -24,7 +24,7 @@ vectors; it does not compute them).
 delete(ids): Promise<void>;
 ```
 
-Defined in: [index.ts:50](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L50)
+Defined in: [index.ts:50](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/vectors/src/index.ts#L50)
 
 Remove records by id; unknown ids are ignored.
 
@@ -46,7 +46,7 @@ Remove records by id; unknown ids are ignored.
 query(vector, opts?): Promise<readonly VectorMatch[]>;
 ```
 
-Defined in: [index.ts:48](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L48)
+Defined in: [index.ts:48](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/vectors/src/index.ts#L48)
 
 Return the nearest records to `vector` by cosine similarity, most similar first.
 
@@ -55,11 +55,11 @@ Return the nearest records to `vector` by cosine similarity, most similar first.
 | Parameter | Type |
 | ------ | ------ |
 | `vector` | `ArrayLike`\<`number`\> |
-| `opts?` | [`QueryOptions`](/reference/vectors/index/interfaces/queryoptions/) |
+| `opts?` | [`QueryOptions`](/mithril/reference/vectors/index/interfaces/queryoptions/) |
 
 #### Returns
 
-`Promise`\<readonly [`VectorMatch`](/reference/vectors/index/interfaces/vectormatch/)[]\>
+`Promise`\<readonly [`VectorMatch`](/mithril/reference/vectors/index/interfaces/vectormatch/)[]\>
 
 ***
 
@@ -69,7 +69,7 @@ Return the nearest records to `vector` by cosine similarity, most similar first.
 size(): Promise<number>;
 ```
 
-Defined in: [index.ts:52](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L52)
+Defined in: [index.ts:52](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/vectors/src/index.ts#L52)
 
 The number of stored records.
 
@@ -85,7 +85,7 @@ The number of stored records.
 upsert(records): Promise<void>;
 ```
 
-Defined in: [index.ts:46](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L46)
+Defined in: [index.ts:46](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/vectors/src/index.ts#L46)
 
 Insert or replace records by id.
 
@@ -93,7 +93,7 @@ Insert or replace records by id.
 
 | Parameter | Type |
 | ------ | ------ |
-| `records` | readonly [`VectorRecord`](/reference/vectors/index/interfaces/vectorrecord/)[] |
+| `records` | readonly [`VectorRecord`](/mithril/reference/vectors/index/interfaces/vectorrecord/)[] |
 
 #### Returns
 

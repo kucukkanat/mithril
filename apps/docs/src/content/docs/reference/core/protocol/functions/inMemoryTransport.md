@@ -9,13 +9,13 @@ title: "inMemoryTransport"
 function inMemoryTransport(): EventTransport;
 ```
 
-Defined in: [packages/core/src/protocol/transport.ts:29](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/transport.ts#L29)
+Defined in: [packages/core/src/protocol/transport.ts:29](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/transport.ts#L29)
 
-Create an in-memory fan-out [EventTransport](/reference/core/protocol/interfaces/eventtransport/) backed by a retained log.
+Create an in-memory fan-out [EventTransport](/mithril/reference/core/protocol/interfaces/eventtransport/) backed by a retained log.
 
 ## Returns
 
-[`EventTransport`](/reference/core/protocol/interfaces/eventtransport/)
+[`EventTransport`](/mithril/reference/core/protocol/interfaces/eventtransport/)
 
 A transport whose late subscribers catch up gap-free from `resumeFrom`.
 

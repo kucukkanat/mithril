@@ -13,7 +13,7 @@ function open(
 opts?): Promise<string>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:216](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/seal.ts#L216)
+Defined in: [packages/core/src/agent/seal.ts:216](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/seal.ts#L216)
 
 Verify a sealed token and recover its original body.
 
@@ -21,11 +21,11 @@ Verify a sealed token and recover its original body.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `token` | `string` | a `header.payload.digest` string produced by [seal](/reference/core/agent/functions/seal/). |
-| `keyring` | [`Keyring`](/reference/core/agent/interfaces/keyring/) | resolves the verification key by the envelope's `kid`. |
-| `rt?` | [`RuntimeAdapter`](/reference/core/protocol/interfaces/runtimeadapter/) | optional [RuntimeAdapter](/reference/core/protocol/interfaces/runtimeadapter/) providing `subtle`; falls back to `globalThis.crypto.subtle`. |
-| `opts?` | \{ `codec?`: [`SealCodec`](/reference/core/agent/interfaces/sealcodec/); `maxBytes?`: `number`; \} | `codec` must match the sealing codec (default [hmacCodec](/reference/core/agent/functions/hmaccodec/)); `maxBytes` caps token size (default 4 MiB) as a cheap DoS guard before any crypto runs. |
-| `opts.codec?` | [`SealCodec`](/reference/core/agent/interfaces/sealcodec/) | - |
+| `token` | `string` | a `header.payload.digest` string produced by [seal](/mithril/reference/core/agent/functions/seal/). |
+| `keyring` | [`Keyring`](/mithril/reference/core/agent/interfaces/keyring/) | resolves the verification key by the envelope's `kid`. |
+| `rt?` | [`RuntimeAdapter`](/mithril/reference/core/protocol/interfaces/runtimeadapter/) | optional [RuntimeAdapter](/mithril/reference/core/protocol/interfaces/runtimeadapter/) providing `subtle`; falls back to `globalThis.crypto.subtle`. |
+| `opts?` | \{ `codec?`: [`SealCodec`](/mithril/reference/core/agent/interfaces/sealcodec/); `maxBytes?`: `number`; \} | `codec` must match the sealing codec (default [hmacCodec](/mithril/reference/core/agent/functions/hmaccodec/)); `maxBytes` caps token size (default 4 MiB) as a cheap DoS guard before any crypto runs. |
+| `opts.codec?` | [`SealCodec`](/mithril/reference/core/agent/interfaces/sealcodec/) | - |
 | `opts.maxBytes?` | `number` | - |
 
 ## Returns
@@ -36,7 +36,7 @@ the recovered plaintext body.
 
 ## Throws
 
-[StateIntegrityError](/reference/core/agent/classes/stateintegrityerror/) on oversize input, a malformed 3-part envelope or header, an
+[StateIntegrityError](/mithril/reference/core/agent/classes/stateintegrityerror/) on oversize input, a malformed 3-part envelope or header, an
 unresolvable `kid`, failed HMAC verification (possible tampering), or a codec-id mismatch.
 
 ## Example

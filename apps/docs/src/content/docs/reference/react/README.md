@@ -7,5 +7,5 @@ title: "@mithril/react"
 
 ## Modules
 
-- [hooks](/reference/react/hooks/readme/)
-- [index](/reference/react/index/readme/)
+- [hooks](/mithril/reference/react/hooks/readme/)
+- [index](/mithril/reference/react/index/readme/)

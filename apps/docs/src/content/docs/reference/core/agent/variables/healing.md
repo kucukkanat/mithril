@@ -16,9 +16,9 @@ const healing: {
 };
 ```
 
-Defined in: [packages/core/src/agent/healing.ts:335](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/healing.ts#L335)
+Defined in: [packages/core/src/agent/healing.ts:335](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/healing.ts#L335)
 
-The built-in self-healing middleware, as a namespace. Spread [healing.defaults](/reference/core/agent/variables/healing/#defaults) (the agent default)
+The built-in self-healing middleware, as a namespace. Spread [healing.defaults](/mithril/reference/core/agent/variables/healing/#defaults) (the agent default)
 or pick individual behaviors into an agent's `healing` field / a plugin's `use`.
 
 ## Type Declaration
@@ -42,7 +42,7 @@ left untouched for the model to see.
 
 #### Returns
 
-[`Middleware`](/reference/core/protocol/interfaces/middleware/)\<`Deps`\>
+[`Middleware`](/mithril/reference/core/protocol/interfaces/middleware/)\<`Deps`\>
 
 ### defaults
 
@@ -62,7 +62,7 @@ budget check before `loopGuard`'s no-progress check so an exhausted tool halts b
 
 #### Returns
 
-readonly [`Middleware`](/reference/core/protocol/interfaces/middleware/)\<`Deps`\>[]
+readonly [`Middleware`](/mithril/reference/core/protocol/interfaces/middleware/)\<`Deps`\>[]
 
 ### harmonyRepair
 
@@ -84,7 +84,7 @@ names the agent actually exposes are salvaged, so a prose answer that merely men
 
 #### Returns
 
-[`Middleware`](/reference/core/protocol/interfaces/middleware/)\<`Deps`\>
+[`Middleware`](/mithril/reference/core/protocol/interfaces/middleware/)\<`Deps`\>
 
 ### loopGuard
 
@@ -96,7 +96,7 @@ Step-altitude no-progress guard: over identical `(tool, canonical-args)` signatu
 steered once at `steerAt` (a `loop.detected` with `action: "steer"` plus an injected nudge), then the
 run halts at `haltAt` with a typed `LoopDetected` error (`action: "halt"`). Catches the residual case of
 identical calls that don't (or no longer) error — repeated *failing* calls are bounded by
-[retryBudget](/reference/core/agent/functions/retrybudget/) first.
+[retryBudget](/mithril/reference/core/agent/functions/retrybudget/) first.
 
 #### Type Parameters
 
@@ -108,11 +108,11 @@ identical calls that don't (or no longer) error — repeated *failing* calls are
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `opts` | [`LoopGuardOptions`](/reference/core/agent/interfaces/loopguardoptions/) | see [LoopGuardOptions](/reference/core/agent/interfaces/loopguardoptions/). `steerAt` defaults to 3, `haltAt` to 4. |
+| `opts` | [`LoopGuardOptions`](/mithril/reference/core/agent/interfaces/loopguardoptions/) | see [LoopGuardOptions](/mithril/reference/core/agent/interfaces/loopguardoptions/). `steerAt` defaults to 3, `haltAt` to 4. |
 
 #### Returns
 
-[`Middleware`](/reference/core/protocol/interfaces/middleware/)\<`Deps`\>
+[`Middleware`](/mithril/reference/core/protocol/interfaces/middleware/)\<`Deps`\>
 
 ### outputRetry
 
@@ -135,11 +135,11 @@ for agents that declare an `output` schema.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `opts` | [`OutputRetryOptions`](/reference/core/agent/interfaces/outputretryoptions/) | see [OutputRetryOptions](/reference/core/agent/interfaces/outputretryoptions/). `max` defaults to 2. |
+| `opts` | [`OutputRetryOptions`](/mithril/reference/core/agent/interfaces/outputretryoptions/) | see [OutputRetryOptions](/mithril/reference/core/agent/interfaces/outputretryoptions/). `max` defaults to 2. |
 
 #### Returns
 
-[`Middleware`](/reference/core/protocol/interfaces/middleware/)\<`Deps`\>
+[`Middleware`](/mithril/reference/core/protocol/interfaces/middleware/)\<`Deps`\>
 
 ### retryBudget
 
@@ -162,11 +162,11 @@ that tool's counter.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `opts` | [`RetryBudgetOptions`](/reference/core/agent/interfaces/retrybudgetoptions/) | see [RetryBudgetOptions](/reference/core/agent/interfaces/retrybudgetoptions/). `max` defaults to 2; `max: 0` gives up on the first failure. |
+| `opts` | [`RetryBudgetOptions`](/mithril/reference/core/agent/interfaces/retrybudgetoptions/) | see [RetryBudgetOptions](/mithril/reference/core/agent/interfaces/retrybudgetoptions/). `max` defaults to 2; `max: 0` gives up on the first failure. |
 
 #### Returns
 
-[`Middleware`](/reference/core/protocol/interfaces/middleware/)\<`Deps`\>
+[`Middleware`](/mithril/reference/core/protocol/interfaces/middleware/)\<`Deps`\>
 
 ## Example
 

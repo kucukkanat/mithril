@@ -4,6 +4,7 @@ description: The complete @mithril/* API — generated from the TypeScript sourc
 ---
 
 import { CardGrid, LinkCard, Aside } from "@astrojs/starlight/components";
+import { withBase } from "../../lib/base.ts";
 
 Every page under this section is **generated from the framework source** with TypeDoc — the
 signatures, cross-links, and prose all come straight from the `@mithril/*` packages' types and
@@ -18,19 +19,19 @@ exhaustive, always-accurate symbol reference.
 ## Packages
 
 <CardGrid>
-  <LinkCard title="@mithril/core" href="/reference/core/readme/" description="The event protocol, the agent loop, tools, sealing, and the testkit." />
-  <LinkCard title="@mithril/providers" href="/reference/providers/readme/" description="OpenAI, Anthropic, and Google adapters with self-wiring model handles." />
-  <LinkCard title="@mithril/memory" href="/reference/memory/readme/" description="The Checkpointer interface + in-memory and Bun-SQLite impls." />
-  <LinkCard title="@mithril/kv" href="/reference/kv/readme/" description="A runtime-agnostic key-value store for tools." />
-  <LinkCard title="@mithril/fs" href="/reference/fs/readme/" description="A rooted, runtime-agnostic FileSystem (memory / node / OPFS)." />
-  <LinkCard title="@mithril/otel" href="/reference/otel/readme/" description="Fold the event stream into gen_ai.* OpenTelemetry spans." />
-  <LinkCard title="@mithril/workflows" href="/reference/workflows/readme/" description="Deterministic, code-first routing over a shared typed state." />
-  <LinkCard title="@mithril/mcp" href="/reference/mcp/readme/" description="An MCP client + Streamable-HTTP transport, and a server to expose your own tools." />
-  <LinkCard title="@mithril/vectors" href="/reference/vectors/readme/" description="A runtime-agnostic vector store (memory + Bun-SQLite) for RAG." />
-  <LinkCard title="@mithril/react" href="/reference/react/readme/" description="Headless run-store + useRun / useObject hooks." />
-  <LinkCard title="@mithril/devtools" href="/reference/devtools/readme/" description="Headless inspector + embeddable event-stream UI + zero-touch attach." />
-  <LinkCard title="@mithril/sandbox" href="/reference/sandbox/readme/" description="A CodeRunner interface with Node VM and remote runners." />
-  <LinkCard title="create-mithril" href="/reference/create-mithril/readme/" description="Scaffold a runnable app from a template." />
+  <LinkCard title="@mithril/core" href={withBase("/reference/core/readme/")} description="The event protocol, the agent loop, tools, sealing, and the testkit." />
+  <LinkCard title="@mithril/providers" href={withBase("/reference/providers/readme/")} description="OpenAI, Anthropic, and Google adapters with self-wiring model handles." />
+  <LinkCard title="@mithril/memory" href={withBase("/reference/memory/readme/")} description="The Checkpointer interface + in-memory and Bun-SQLite impls." />
+  <LinkCard title="@mithril/kv" href={withBase("/reference/kv/readme/")} description="A runtime-agnostic key-value store for tools." />
+  <LinkCard title="@mithril/fs" href={withBase("/reference/fs/readme/")} description="A rooted, runtime-agnostic FileSystem (memory / node / OPFS)." />
+  <LinkCard title="@mithril/otel" href={withBase("/reference/otel/readme/")} description="Fold the event stream into gen_ai.* OpenTelemetry spans." />
+  <LinkCard title="@mithril/workflows" href={withBase("/reference/workflows/readme/")} description="Deterministic, code-first routing over a shared typed state." />
+  <LinkCard title="@mithril/mcp" href={withBase("/reference/mcp/readme/")} description="An MCP client + Streamable-HTTP transport, and a server to expose your own tools." />
+  <LinkCard title="@mithril/vectors" href={withBase("/reference/vectors/readme/")} description="A runtime-agnostic vector store (memory + Bun-SQLite) for RAG." />
+  <LinkCard title="@mithril/react" href={withBase("/reference/react/readme/")} description="Headless run-store + useRun / useObject hooks." />
+  <LinkCard title="@mithril/devtools" href={withBase("/reference/devtools/readme/")} description="Headless inspector + embeddable event-stream UI + zero-touch attach." />
+  <LinkCard title="@mithril/sandbox" href={withBase("/reference/sandbox/readme/")} description="A CodeRunner interface with Node VM and remote runners." />
+  <LinkCard title="create-mithril" href={withBase("/reference/create-mithril/readme/")} description="Scaffold a runnable app from a template." />
 </CardGrid>
 
 <Aside type="note">

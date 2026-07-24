@@ -9,7 +9,7 @@ title: "providerImportEntries"
 function providerImportEntries(providers): Map<string, readonly string[]>;
 ```
 
-Defined in: [packages/spec/src/codegen.ts:52](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/codegen.ts#L52)
+Defined in: [packages/spec/src/codegen.ts:52](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/codegen.ts#L52)
 
 Map a set of provider tokens to their `{ module → named imports }` entries — the provider half of an import plan.
 

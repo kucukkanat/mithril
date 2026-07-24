@@ -9,9 +9,9 @@ title: "sqliteNodeKv"
 function sqliteNodeKv(opts?): KeyValue;
 ```
 
-Defined in: [sqlite-node.ts:29](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/kv/src/sqlite-node.ts#L29)
+Defined in: [sqlite-node.ts:29](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/kv/src/sqlite-node.ts#L29)
 
-Creates a durable [KeyValue](/reference/kv/index/interfaces/keyvalue/) store backed by `node:sqlite` (Node >= 22.5, no native dependency).
+Creates a durable [KeyValue](/mithril/reference/kv/index/interfaces/keyvalue/) store backed by `node:sqlite` (Node >= 22.5, no native dependency).
 
 ## Parameters
 
@@ -23,9 +23,9 @@ Creates a durable [KeyValue](/reference/kv/index/interfaces/keyvalue/) store bac
 
 ## Returns
 
-[`KeyValue`](/reference/kv/index/interfaces/keyvalue/)
+[`KeyValue`](/mithril/reference/kv/index/interfaces/keyvalue/)
 
-A [KeyValue](/reference/kv/index/interfaces/keyvalue/) persisted to SQLite, with the same TTL semantics as memoryKv.
+A [KeyValue](/mithril/reference/kv/index/interfaces/keyvalue/) persisted to SQLite, with the same TTL semantics as memoryKv.
 
 ## Remarks
 

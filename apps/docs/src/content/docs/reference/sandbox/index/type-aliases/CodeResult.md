@@ -19,6 +19,6 @@ type CodeResult =
 };
 ```
 
-Defined in: [index.ts:14](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/sandbox/src/index.ts#L14)
+Defined in: [index.ts:14](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/sandbox/src/index.ts#L14)
 
-The outcome of a [CodeRunner.run](/reference/sandbox/index/interfaces/coderunner/#run): the returned value (on success) or an error, plus captured logs.
+The outcome of a [CodeRunner.run](/mithril/reference/sandbox/index/interfaces/coderunner/#run): the returned value (on success) or an error, plus captured logs.

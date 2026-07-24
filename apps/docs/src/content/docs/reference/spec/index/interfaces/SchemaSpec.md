@@ -5,7 +5,7 @@ prev: false
 title: "SchemaSpec"
 ---
 
-Defined in: [packages/spec/src/types.ts:41](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L41)
+Defined in: [packages/spec/src/types.ts:41](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L41)
 
 A schema stored as zod SOURCE (e.g. `z.object({ city: z.string() })`), not JSON Schema.
 Rationale: core takes any Standard Schema, so zod source is exactly what generated code needs
@@ -20,4 +20,4 @@ Rationale: core takes any Standard Schema, so zod source is exactly what generat
 readonly zod: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:42](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L42)
+Defined in: [packages/spec/src/types.ts:42](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L42)

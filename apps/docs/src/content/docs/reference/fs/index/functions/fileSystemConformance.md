@@ -9,16 +9,16 @@ title: "fileSystemConformance"
 function fileSystemConformance(make, t): void;
 ```
 
-Defined in: [packages/fs/src/index.ts:170](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/fs/src/index.ts#L170)
+Defined in: [packages/fs/src/index.ts:170](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/fs/src/index.ts#L170)
 
-Run the shared behavioral conformance suite against any [FileSystem](/reference/fs/index/interfaces/filesystem/) implementation.
+Run the shared behavioral conformance suite against any [FileSystem](/mithril/reference/fs/index/interfaces/filesystem/) implementation.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `make` | () => `Promise`\<[`FileSystem`](/reference/fs/index/interfaces/filesystem/)\> | Factory that produces a fresh, empty filesystem for each test. |
-| `t` | [`FsTestAdapter`](/reference/fs/index/interfaces/fstestadapter/) | [FsTestAdapter](/reference/fs/index/interfaces/fstestadapter/) bridging the suite to your test runner. |
+| `make` | () => `Promise`\<[`FileSystem`](/mithril/reference/fs/index/interfaces/filesystem/)\> | Factory that produces a fresh, empty filesystem for each test. |
+| `t` | [`FsTestAdapter`](/mithril/reference/fs/index/interfaces/fstestadapter/) | [FsTestAdapter](/mithril/reference/fs/index/interfaces/fstestadapter/) bridging the suite to your test runner. |
 
 ## Returns
 

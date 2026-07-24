@@ -9,15 +9,15 @@ title: "suspend"
 function suspend<Req>(req): Suspend<ResolutionOf<Req>>;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:109](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/suspension.ts#L109)
+Defined in: [packages/core/src/protocol/suspension.ts:109](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/suspension.ts#L109)
 
-Build a [Suspend](/reference/core/protocol/interfaces/suspend/) marker from a [SuspensionRequest](/reference/core/protocol/interfaces/suspensionrequest/).
+Build a [Suspend](/mithril/reference/core/protocol/interfaces/suspend/) marker from a [SuspensionRequest](/mithril/reference/core/protocol/interfaces/suspensionrequest/).
 
 ## Type Parameters
 
 | Type Parameter |
 | ------ |
-| `Req` *extends* [`SuspensionRequest`](/reference/core/protocol/interfaces/suspensionrequest/)\<`string`, [`JsonValue`](/reference/core/protocol/type-aliases/jsonvalue/), [`JsonValue`](/reference/core/protocol/type-aliases/jsonvalue/)\> |
+| `Req` *extends* [`SuspensionRequest`](/mithril/reference/core/protocol/interfaces/suspensionrequest/)\<`string`, [`JsonValue`](/mithril/reference/core/protocol/type-aliases/jsonvalue/), [`JsonValue`](/mithril/reference/core/protocol/type-aliases/jsonvalue/)\> |
 
 ## Parameters
 
@@ -27,9 +27,9 @@ Build a [Suspend](/reference/core/protocol/interfaces/suspend/) marker from a [S
 
 ## Returns
 
-[`Suspend`](/reference/core/protocol/interfaces/suspend/)\<[`ResolutionOf`](/reference/core/protocol/type-aliases/resolutionof/)\<`Req`\>\>
+[`Suspend`](/mithril/reference/core/protocol/interfaces/suspend/)\<[`ResolutionOf`](/mithril/reference/core/protocol/type-aliases/resolutionof/)\<`Req`\>\>
 
-A [Suspend](/reference/core/protocol/interfaces/suspend/) marker typed with the request's resolution.
+A [Suspend](/mithril/reference/core/protocol/interfaces/suspend/) marker typed with the request's resolution.
 
 ## Example
 

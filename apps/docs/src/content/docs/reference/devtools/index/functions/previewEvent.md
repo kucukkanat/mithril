@@ -9,7 +9,7 @@ title: "previewEvent"
 function previewEvent(e): string;
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:42](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/selectors.ts#L42)
+Defined in: [packages/devtools/src/selectors.ts:42](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/selectors.ts#L42)
 
 A short, human-friendly one-line preview of an event's payload, for an inspector row.
 

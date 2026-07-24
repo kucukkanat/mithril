@@ -9,19 +9,19 @@ title: "resolveTransport"
 function resolveTransport(explicit, modelId): Transport;
 ```
 
-Defined in: [packages/core/src/agent/registry.ts:96](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/registry.ts#L96)
+Defined in: [packages/core/src/agent/registry.ts:96](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/registry.ts#L96)
 
-Resolve the [Transport](/reference/core/protocol/type-aliases/transport/) for a run, defaulting to BYOK from the environment.
+Resolve the [Transport](/mithril/reference/core/protocol/type-aliases/transport/) for a run, defaulting to BYOK from the environment.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `explicit` | \| [`Transport`](/reference/core/protocol/type-aliases/transport/) \| `undefined` | a caller-supplied transport; returned unchanged when present. |
+| `explicit` | \| [`Transport`](/mithril/reference/core/protocol/type-aliases/transport/) \| `undefined` | a caller-supplied transport; returned unchanged when present. |
 | `modelId` | `` `${string}/${string}` `` | the resolved model id; its `provider` segment selects the `<PROVIDER>_API_KEY` env var. |
 
 ## Returns
 
-[`Transport`](/reference/core/protocol/type-aliases/transport/)
+[`Transport`](/mithril/reference/core/protocol/type-aliases/transport/)
 
 the explicit transport, or a `byok` transport reading `<PROVIDER>_API_KEY` (empty string if unset).

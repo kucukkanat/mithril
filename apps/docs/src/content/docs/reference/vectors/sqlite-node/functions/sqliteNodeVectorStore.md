@@ -9,9 +9,9 @@ title: "sqliteNodeVectorStore"
 function sqliteNodeVectorStore(pathOrOpts?): VectorStore;
 ```
 
-Defined in: [sqlite-node.ts:36](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/sqlite-node.ts#L36)
+Defined in: [sqlite-node.ts:36](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/vectors/src/sqlite-node.ts#L36)
 
-Create a durable [VectorStore](/reference/vectors/index/interfaces/vectorstore/) backed by `node:sqlite` (Node >= 22.5, no native dependency).
+Create a durable [VectorStore](/mithril/reference/vectors/index/interfaces/vectorstore/) backed by `node:sqlite` (Node >= 22.5, no native dependency).
 
 ## Parameters
 
@@ -21,9 +21,9 @@ Create a durable [VectorStore](/reference/vectors/index/interfaces/vectorstore/)
 
 ## Returns
 
-[`VectorStore`](/reference/vectors/index/interfaces/vectorstore/)
+[`VectorStore`](/mithril/reference/vectors/index/interfaces/vectorstore/)
 
-a [VectorStore](/reference/vectors/index/interfaces/vectorstore/) with the same semantics as `memoryVectorStore`, persisted to SQLite.
+a [VectorStore](/mithril/reference/vectors/index/interfaces/vectorstore/) with the same semantics as `memoryVectorStore`, persisted to SQLite.
 
 ## Remarks
 

@@ -5,7 +5,7 @@ prev: false
 title: "ToolSpec"
 ---
 
-Defined in: [packages/spec/src/types.ts:46](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L46)
+Defined in: [packages/spec/src/types.ts:46](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L46)
 
 A `const <id> = tool({ … })` declaration.
 
@@ -17,7 +17,7 @@ A `const <id> = tool({ … })` declaration.
 readonly optional builtin?: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:61](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L61)
+Defined in: [packages/spec/src/types.ts:61](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L61)
 
 Provenance id when materialized from a built-in library template.
 
@@ -29,7 +29,7 @@ Provenance id when materialized from a built-in library template.
 readonly description: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:52](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L52)
+Defined in: [packages/spec/src/types.ts:52](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L52)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [packages/spec/src/types.ts:52](https://github.com/kucukkanat/mithri
 readonly optional examples?: readonly unknown[];
 ```
 
-Defined in: [packages/spec/src/types.ts:55](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L55)
+Defined in: [packages/spec/src/types.ts:55](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L55)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [packages/spec/src/types.ts:55](https://github.com/kucukkanat/mithri
 readonly execute: CodeRegion;
 ```
 
-Defined in: [packages/spec/src/types.ts:59](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L59)
+Defined in: [packages/spec/src/types.ts:59](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L59)
 
 The `execute` function (arrow or method form), stored verbatim.
 
@@ -61,7 +61,7 @@ The `execute` function (arrow or method form), stored verbatim.
 readonly id: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:49](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L49)
+Defined in: [packages/spec/src/types.ts:49](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L49)
 
 The const identifier in generated code — also the graph-node id.
 
@@ -73,7 +73,7 @@ The const identifier in generated code — also the graph-node id.
 readonly inputSchema: SchemaSpec;
 ```
 
-Defined in: [packages/spec/src/types.ts:53](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L53)
+Defined in: [packages/spec/src/types.ts:53](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L53)
 
 ***
 
@@ -83,7 +83,7 @@ Defined in: [packages/spec/src/types.ts:53](https://github.com/kucukkanat/mithri
 readonly kind: "tool";
 ```
 
-Defined in: [packages/spec/src/types.ts:47](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L47)
+Defined in: [packages/spec/src/types.ts:47](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L47)
 
 ***
 
@@ -93,7 +93,7 @@ Defined in: [packages/spec/src/types.ts:47](https://github.com/kucukkanat/mithri
 readonly name: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:51](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L51)
+Defined in: [packages/spec/src/types.ts:51](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L51)
 
 The wire name (`ToolDef.name`).
 
@@ -102,10 +102,12 @@ The wire name (`ToolDef.name`).
 ### needsApproval?
 
 ```ts
-readonly optional needsApproval?: boolean | CodeRegion;
+readonly optional needsApproval?: 
+  | boolean
+  | CodeRegion;
 ```
 
-Defined in: [packages/spec/src/types.ts:57](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L57)
+Defined in: [packages/spec/src/types.ts:57](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L57)
 
 `true`/`false` literal, or a predicate function stored verbatim.
 
@@ -117,4 +119,4 @@ Defined in: [packages/spec/src/types.ts:57](https://github.com/kucukkanat/mithri
 readonly optional outputSchema?: SchemaSpec;
 ```
 
-Defined in: [packages/spec/src/types.ts:54](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L54)
+Defined in: [packages/spec/src/types.ts:54](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L54)

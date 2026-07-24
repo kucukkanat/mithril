@@ -7,5 +7,5 @@ title: "@mithril/sandbox"
 
 ## Modules
 
-- [index](/reference/sandbox/index/readme/)
-- [node](/reference/sandbox/node/readme/)
+- [index](/mithril/reference/sandbox/index/readme/)
+- [node](/mithril/reference/sandbox/node/readme/)

@@ -14,9 +14,9 @@ type ToolInvocation = {
 };
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:14](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L14)
+Defined in: [packages/core/src/protocol/middleware.ts:14](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/middleware.ts#L14)
 
-A tool call passed to a [Middleware.tool](/reference/core/protocol/interfaces/middleware/#tool) wrapper.
+A tool call passed to a [Middleware.tool](/mithril/reference/core/protocol/interfaces/middleware/#tool) wrapper.
 
 ## Properties
 
@@ -26,7 +26,7 @@ A tool call passed to a [Middleware.tool](/reference/core/protocol/interfaces/mi
 readonly callId: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:15](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L15)
+Defined in: [packages/core/src/protocol/middleware.ts:15](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/middleware.ts#L15)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:15](https://github.com/kuc
 readonly input: JsonValue;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:17](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L17)
+Defined in: [packages/core/src/protocol/middleware.ts:17](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/middleware.ts#L17)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:17](https://github.com/kuc
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:16](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L16)
+Defined in: [packages/core/src/protocol/middleware.ts:16](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/middleware.ts#L16)
 
 ***
 
@@ -56,4 +56,4 @@ Defined in: [packages/core/src/protocol/middleware.ts:16](https://github.com/kuc
 readonly optional version?: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:18](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/middleware.ts#L18)
+Defined in: [packages/core/src/protocol/middleware.ts:18](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/middleware.ts#L18)

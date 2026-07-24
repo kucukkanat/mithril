@@ -9,7 +9,7 @@ title: "bestOfN"
 function bestOfN(opts): Middleware;
 ```
 
-Defined in: [packages/core/src/agent/test-time.ts:91](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/test-time.ts#L91)
+Defined in: [packages/core/src/agent/test-time.ts:91](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/test-time.ts#L91)
 
 Best-of-N: draw `n` candidates and keep the highest-scoring one (the T1 pattern — pair a small generator
 with a deterministic verifier).
@@ -18,13 +18,13 @@ with a deterministic verifier).
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `opts` | [`BestOfNOptions`](/reference/core/agent/interfaces/bestofnoptions/) | the candidate count, a `score` function, and an optional early-stop `threshold`. |
+| `opts` | [`BestOfNOptions`](/mithril/reference/core/agent/interfaces/bestofnoptions/) | the candidate count, a `score` function, and an optional early-stop `threshold`. |
 
 ## Returns
 
-[`Middleware`](/reference/core/protocol/interfaces/middleware/)
+[`Middleware`](/mithril/reference/core/protocol/interfaces/middleware/)
 
-a model-altitude [Middleware](/reference/core/protocol/interfaces/middleware/) to pass in an agent's `use` array.
+a model-altitude [Middleware](/mithril/reference/core/protocol/interfaces/middleware/) to pass in an agent's `use` array.
 
 ## Remarks
 

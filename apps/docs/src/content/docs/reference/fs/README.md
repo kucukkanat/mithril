@@ -7,6 +7,6 @@ title: "@mithril/fs"
 
 ## Modules
 
-- [index](/reference/fs/index/readme/)
-- [node](/reference/fs/node/readme/)
-- [opfs](/reference/fs/opfs/readme/)
+- [index](/mithril/reference/fs/index/readme/)
+- [node](/mithril/reference/fs/node/readme/)
+- [opfs](/mithril/reference/fs/opfs/readme/)

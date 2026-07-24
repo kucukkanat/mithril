@@ -7,6 +7,6 @@ title: "@mithril/mcp"
 
 ## Modules
 
-- [http](/reference/mcp/http/readme/)
-- [index](/reference/mcp/index/readme/)
-- [server](/reference/mcp/server/readme/)
+- [http](/mithril/reference/mcp/http/readme/)
+- [index](/mithril/reference/mcp/index/readme/)
+- [server](/mithril/reference/mcp/server/readme/)
