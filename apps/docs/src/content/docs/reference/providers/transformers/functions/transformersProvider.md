@@ -9,15 +9,15 @@ title: "transformersProvider"
 function transformersProvider(engine): Provider;
 ```
 
-Defined in: [transformers/core.ts:65](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/providers/src/transformers/core.ts#L65)
+Defined in: [transformers/core.ts:65](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/transformers/core.ts#L65)
 
-Build a Provider from an injected [TransformersEngine](/mithril/reference/providers/transformers/interfaces/transformersengine/) — the pure, Node-testable core.
+Build a Provider from an injected [TransformersEngine](/reference/providers/transformers/interfaces/transformersengine/) — the pure, Node-testable core.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `engine` | [`TransformersEngine`](/mithril/reference/providers/transformers/interfaces/transformersengine/) | the inference engine (a browser engine for real use, a fake for tests). |
+| `engine` | [`TransformersEngine`](/reference/providers/transformers/interfaces/transformersengine/) | the inference engine (a browser engine for real use, a fake for tests). |
 
 ## Returns
 

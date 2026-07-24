@@ -9,19 +9,19 @@ title: "browserEngine"
 function browserEngine(opts?): TransformersEngine;
 ```
 
-Defined in: [transformers/edge.ts:198](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/providers/src/transformers/edge.ts#L198)
+Defined in: [transformers/edge.ts:198](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/transformers/edge.ts#L198)
 
-Build the browser [TransformersEngine](/mithril/reference/providers/transformers/interfaces/transformersengine/) backing a [transformers](/mithril/reference/providers/transformers/functions/transformers/) handle.
+Build the browser [TransformersEngine](/reference/providers/transformers/interfaces/transformersengine/) backing a [transformers](/reference/providers/transformers/functions/transformers/) handle.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `opts?` | [`EdgeOptions`](/mithril/reference/providers/transformers/interfaces/edgeoptions/) | device/dtype/progress ([EdgeOptions](/mithril/reference/providers/transformers/interfaces/edgeoptions/)); omit to feature-detect WebGPU → CPU (Node/Bun) / WASM (browser). |
+| `opts?` | [`EdgeOptions`](/reference/providers/transformers/interfaces/edgeoptions/) | device/dtype/progress ([EdgeOptions](/reference/providers/transformers/interfaces/edgeoptions/)); omit to feature-detect WebGPU → CPU (Node/Bun) / WASM (browser). |
 
 ## Returns
 
-[`TransformersEngine`](/mithril/reference/providers/transformers/interfaces/transformersengine/)
+[`TransformersEngine`](/reference/providers/transformers/interfaces/transformersengine/)
 
 an engine that loads (cached) the requested model, streams tokens, and parses tool calls per model.
 

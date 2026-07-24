@@ -9,7 +9,7 @@ title: "googleProvider"
 function googleProvider(config?): Provider;
 ```
 
-Defined in: [google/index.ts:109](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/providers/src/google/index.ts#L109)
+Defined in: [google/index.ts:109](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/google/index.ts#L109)
 
 Creates a Google Gemini Provider whose `chat` method streams `:streamGenerateContent` responses.
 
@@ -30,7 +30,7 @@ A Provider bound to the Gemini wire format.
 ## Remarks
 
 Use this when you need a provider configured for a custom endpoint. For the common case, prefer the
-[google](/mithril/reference/providers/google/functions/google/) model-handle factory, which wraps a shared default-configured instance.
+[google](/reference/providers/google/functions/google/) model-handle factory, which wraps a shared default-configured instance.
 
 The API key is passed as a `?key=` query parameter (Gemini's scheme), read from a `byok` transport's
 `apiKey` or an `ephemeral` transport's `token()`. Tool parameters are converted via toJsonSchema:

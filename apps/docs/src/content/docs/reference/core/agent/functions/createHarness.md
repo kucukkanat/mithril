@@ -13,9 +13,9 @@ function createHarness<Deps>(): {
 };
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:345](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L345)
+Defined in: [packages/core/src/agent/factory.ts:345](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L345)
 
-Bind `Deps` once for a whole app and get back `Deps`-typed [agent](/mithril/reference/core/agent/functions/agent/) and [tool](/mithril/reference/core/agent/functions/tool/) factories.
+Bind `Deps` once for a whole app and get back `Deps`-typed [agent](/reference/core/agent/functions/agent/) and [tool](/reference/core/agent/functions/tool/) factories.
 
 ## Type Parameters
 
@@ -33,8 +33,8 @@ Bind `Deps` once for a whole app and get back `Deps`-typed [agent](/mithril/refe
 }
 ```
 
-an object with `agent` ([AgentFactory](/mithril/reference/core/agent/interfaces/agentfactory/)), `tool` ([ToolFactory](/mithril/reference/core/agent/interfaces/toolfactory/)), and `plugin`
-(a `Deps`-bound [plugin](/mithril/reference/core/agent/functions/plugin/) factory), so no individual definition has to restate `<Deps>()`.
+an object with `agent` ([AgentFactory](/reference/core/agent/interfaces/agentfactory/)), `tool` ([ToolFactory](/reference/core/agent/interfaces/toolfactory/)), and `plugin`
+(a `Deps`-bound [plugin](/reference/core/agent/functions/plugin/) factory), so no individual definition has to restate `<Deps>()`.
 
 ### agent
 
@@ -52,17 +52,17 @@ readonly plugin: <Tools>(p) => Plugin<Deps, Tools>;
 
 | Type Parameter | Default type |
 | ------ | ------ |
-| `Tools` *extends* readonly [`AnyTool`](/mithril/reference/core/protocol/type-aliases/anytool/)\<`Deps`\>[] | \[\] |
+| `Tools` *extends* readonly [`AnyTool`](/reference/core/protocol/type-aliases/anytool/)\<`Deps`\>[] | \[\] |
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `p` | [`Plugin`](/mithril/reference/core/protocol/interfaces/plugin/)\<`Deps`, `Tools`\> |
+| `p` | [`Plugin`](/reference/core/protocol/interfaces/plugin/)\<`Deps`, `Tools`\> |
 
 #### Returns
 
-[`Plugin`](/mithril/reference/core/protocol/interfaces/plugin/)\<`Deps`, `Tools`\>
+[`Plugin`](/reference/core/protocol/interfaces/plugin/)\<`Deps`, `Tools`\>
 
 ### tool
 

@@ -9,7 +9,7 @@ title: "memoryCheckpointer"
 function memoryCheckpointer(): Checkpointer;
 ```
 
-Defined in: [index.ts:33](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/memory/src/index.ts#L33)
+Defined in: [index.ts:33](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/memory/src/index.ts#L33)
 
 Creates an in-memory Checkpointer — records are held in a `Map` keyed by run id and lost on
 process exit.
@@ -23,7 +23,7 @@ A fresh Checkpointer with no shared state.
 ## Remarks
 
 Works in every runtime and is the reference implementation the conformance kit
-([checkpointerConformance](/mithril/reference/memory/index/functions/checkpointerconformance/)) is written against. `put` is idempotent on `checkpointId` and, when
+([checkpointerConformance](/reference/memory/index/functions/checkpointerconformance/)) is written against. `put` is idempotent on `checkpointId` and, when
 `opts.ifParent` is supplied, guards optimistic concurrency by returning `"conflict"` if it does not match
 the latest checkpoint. For durability across restarts use a persistent backend such as
 sqliteBunCheckpointer.

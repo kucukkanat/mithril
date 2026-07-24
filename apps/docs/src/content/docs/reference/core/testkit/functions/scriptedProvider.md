@@ -9,19 +9,19 @@ title: "scriptedProvider"
 function scriptedProvider(turns): Provider;
 ```
 
-Defined in: [packages/core/src/testkit/index.ts:103](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/testkit/index.ts#L103)
+Defined in: [packages/core/src/testkit/index.ts:103](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/testkit/index.ts#L103)
 
-Build a deterministic [Provider](/mithril/reference/core/protocol/interfaces/provider/) that replays a fixed script of provider chunks.
+Build a deterministic [Provider](/reference/core/protocol/interfaces/provider/) that replays a fixed script of provider chunks.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `turns` | readonly readonly [`ProviderChunk`](/mithril/reference/core/protocol/type-aliases/providerchunk/)[][] | one array of [ProviderChunk](/mithril/reference/core/protocol/type-aliases/providerchunk/)s per model turn; the Nth `chat()` call yields the Nth turn (an exhausted script yields an empty turn). |
+| `turns` | readonly readonly [`ProviderChunk`](/reference/core/protocol/type-aliases/providerchunk/)[][] | one array of [ProviderChunk](/reference/core/protocol/type-aliases/providerchunk/)s per model turn; the Nth `chat()` call yields the Nth turn (an exhausted script yields an empty turn). |
 
 ## Returns
 
-[`Provider`](/mithril/reference/core/protocol/interfaces/provider/)
+[`Provider`](/reference/core/protocol/interfaces/provider/)
 
 a `Provider` whose `spec` advertises a single `test/x` model and never touches the network.
 

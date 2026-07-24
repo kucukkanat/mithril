@@ -7,7 +7,7 @@ title: "@mithril/providers"
 
 ## Modules
 
-- [anthropic](/mithril/reference/providers/anthropic/readme/)
-- [google](/mithril/reference/providers/google/readme/)
-- [openai](/mithril/reference/providers/openai/readme/)
-- [transformers](/mithril/reference/providers/transformers/readme/)
+- [anthropic](/reference/providers/anthropic/readme/)
+- [google](/reference/providers/google/readme/)
+- [openai](/reference/providers/openai/readme/)
+- [transformers](/reference/providers/transformers/readme/)

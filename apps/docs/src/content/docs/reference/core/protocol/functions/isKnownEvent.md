@@ -9,7 +9,7 @@ title: "isKnownEvent"
 function isKnownEvent(e): boolean;
 ```
 
-Defined in: [packages/core/src/protocol/migrate.ts:47](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/migrate.ts#L47)
+Defined in: [packages/core/src/protocol/migrate.ts:47](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/migrate.ts#L47)
 
 Tolerant guard: `true` for any known event member or any `custom.*` type.
 
@@ -17,7 +17,7 @@ Tolerant guard: `true` for any known event member or any `custom.*` type.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `e` | [`MithrilEvent`](/mithril/reference/core/protocol/type-aliases/mithrilevent/) | The event to classify. |
+| `e` | [`MithrilEvent`](/reference/core/protocol/type-aliases/mithrilevent/) | The event to classify. |
 
 ## Returns
 

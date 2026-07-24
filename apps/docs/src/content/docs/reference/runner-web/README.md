@@ -7,5 +7,5 @@ title: "@mithril/runner-web"
 
 ## Modules
 
-- [index](/mithril/reference/runner-web/index/readme/)
-- [worker](/mithril/reference/runner-web/worker/readme/)
+- [index](/reference/runner-web/index/readme/)
+- [worker](/reference/runner-web/worker/readme/)

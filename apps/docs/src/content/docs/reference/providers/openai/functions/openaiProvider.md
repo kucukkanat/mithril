@@ -9,7 +9,7 @@ title: "openaiProvider"
 function openaiProvider(config?): Provider;
 ```
 
-Defined in: [openai/index.ts:62](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/providers/src/openai/index.ts#L62)
+Defined in: [openai/index.ts:62](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/openai/index.ts#L62)
 
 Creates an OpenAI Provider whose `chat` method streams `/chat/completions` responses.
 
@@ -30,7 +30,7 @@ A Provider bound to the OpenAI wire format.
 ## Remarks
 
 Use this when you need a provider configured for a custom endpoint. For the common case, prefer the
-[openai](/mithril/reference/providers/openai/functions/openai/) model-handle factory, which wraps a shared default-configured instance.
+[openai](/reference/providers/openai/functions/openai/) model-handle factory, which wraps a shared default-configured instance.
 
 Tool parameters are converted via toJsonSchema: precise when the input schema self-describes
 (see `withJsonSchema`) or a `toolSchema` converter is supplied, and a permissive `{ type: "object" }`

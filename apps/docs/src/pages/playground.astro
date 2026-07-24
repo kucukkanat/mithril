@@ -1,5 +1,4 @@
 ---
-import { withBase } from "../lib/base.ts";
 import Landing from "../layouts/Landing.astro";
 import Playground from "../components/Playground.tsx";
 ---
@@ -11,10 +10,10 @@ import Playground from "../components/Playground.tsx";
 >
   <div class="pg-page" data-testid="playground-page">
     <header class="pg-nav" data-testid="playground-page-nav">
-      <a href={withBase("/")} class="brand" data-testid="playground-page-brand-link"><span class="mth-sheen">Mithril</span></a>
+      <a href="/" class="brand" data-testid="playground-page-brand-link"><span class="mth-sheen">Mithril</span></a>
       <div class="pg-nav-meta">
         <span class="pg-nav-tag">live · runs in your browser</span>
-        <a href={withBase("/getting-started/introduction/")} class="pg-nav-link" data-testid="playground-page-docs-link">Docs</a>
+        <a href="/getting-started/introduction/" class="pg-nav-link" data-testid="playground-page-docs-link">Docs</a>
       </div>
     </header>
     <div class="pg-mount" data-testid="playground-page-mount">

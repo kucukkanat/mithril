@@ -5,7 +5,7 @@ prev: false
 title: "LocalModel"
 ---
 
-Defined in: [runner-web/src/catalog.ts:52](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L52)
+Defined in: [runner-web/src/catalog.ts:52](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L52)
 
 A curated in-browser model — all `text-generation` ONNX repos. This MUST hold: the transformers
 provider loads every model with `AutoModelForCausalLM` (a text-only path), so a vision-language /
@@ -20,7 +20,7 @@ never emits tool calls in its trained shape.
 readonly optional dtype?: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:64](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L64)
+Defined in: [runner-web/src/catalog.ts:64](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L64)
 
 Pin a quantization dtype, overriding the provider's device default (`q4f16` on WebGPU, `q4` on CPU/WASM).
 Two reasons a model needs this: (1) fp16 instability — Granite 4.0's Mamba2 layers overflow to NaN under
@@ -36,7 +36,7 @@ only one dtype — Qwen3-4B ships `q4f16` only, so the CPU/WASM `q4` default 404
 readonly id: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:53](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L53)
+Defined in: [runner-web/src/catalog.ts:53](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L53)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [runner-web/src/catalog.ts:53](https://github.com/kucukkanat/mithril
 readonly label: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:54](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L54)
+Defined in: [runner-web/src/catalog.ts:54](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L54)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [runner-web/src/catalog.ts:54](https://github.com/kucukkanat/mithril
 readonly size: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:55](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L55)
+Defined in: [runner-web/src/catalog.ts:55](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L55)
 
 ***
 
@@ -66,4 +66,4 @@ Defined in: [runner-web/src/catalog.ts:55](https://github.com/kucukkanat/mithril
 readonly tools: boolean;
 ```
 
-Defined in: [runner-web/src/catalog.ts:56](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L56)
+Defined in: [runner-web/src/catalog.ts:56](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L56)

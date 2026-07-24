@@ -12,9 +12,9 @@ function splitToolCalls(
 reasoning?): AsyncGenerator<EngineChunk>;
 ```
 
-Defined in: [transformers/tool-formats.ts:217](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/providers/src/transformers/tool-formats.ts#L217)
+Defined in: [transformers/tool-formats.ts:217](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/transformers/tool-formats.ts#L217)
 
-Transform a raw token stream into [EngineChunk](/mithril/reference/providers/transformers/type-aliases/enginechunk/)s, suppressing tool-call and reasoning sentinels from
+Transform a raw token stream into [EngineChunk](/reference/providers/transformers/type-aliases/enginechunk/)s, suppressing tool-call and reasoning sentinels from
 visible text.
 
 ## Parameters
@@ -22,12 +22,12 @@ visible text.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `tokens` | `AsyncIterable`\<`string`\> | the model's decoded token stream (whole-word chunks from `TextStreamer`). |
-| `fmt` | \| [`ToolFormat`](/mithril/reference/providers/transformers/interfaces/toolformat/) \| `undefined` | the tool grammar; `undefined` disables tool detection. |
+| `fmt` | \| [`ToolFormat`](/reference/providers/transformers/interfaces/toolformat/) \| `undefined` | the tool grammar; `undefined` disables tool detection. |
 | `reasoning?` | `ReasoningFormat` | the reasoning grammar; `undefined` disables reasoning detection (so `<think>` content, if any, stays in the visible text — the exact legacy behavior). When set, a `<think>…</think>` block is routed to `reasoning` chunks (→ the generic `reasoning.delta` channel) instead of leaking into the answer. |
 
 ## Returns
 
-`AsyncGenerator`\<[`EngineChunk`](/mithril/reference/providers/transformers/type-aliases/enginechunk/)\>
+`AsyncGenerator`\<[`EngineChunk`](/reference/providers/transformers/type-aliases/enginechunk/)\>
 
 an async stream of `token` chunks (answer text), `reasoning` chunks, and parsed `toolCall` chunks.
 

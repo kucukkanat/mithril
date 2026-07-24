@@ -5,7 +5,7 @@ prev: false
 title: "ChatRequest"
 ---
 
-Defined in: [packages/core/src/protocol/provider.ts:57](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/provider.ts#L57)
+Defined in: [packages/core/src/protocol/provider.ts:57](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/provider.ts#L57)
 
 The provider-agnostic semantic input for one model call.
 
@@ -17,7 +17,7 @@ The provider-agnostic semantic input for one model call.
 readonly messages: readonly Message[];
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:60](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/provider.ts#L60)
+Defined in: [packages/core/src/protocol/provider.ts:60](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/provider.ts#L60)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/protocol/provider.ts:60](https://github.com/kucuk
 readonly model: `${string}/${string}`;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:58](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/provider.ts#L58)
+Defined in: [packages/core/src/protocol/provider.ts:58](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/provider.ts#L58)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/core/src/protocol/provider.ts:58](https://github.com/kucuk
 readonly optional output?: StandardSchemaV1<unknown, JsonValue>;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:63](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/provider.ts#L63)
+Defined in: [packages/core/src/protocol/provider.ts:63](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/provider.ts#L63)
 
 When set, the caller wants structured output (JSON mode) validated by this schema.
 
@@ -49,7 +49,7 @@ When set, the caller wants structured output (JSON mode) validated by this schem
 readonly system: string;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:59](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/provider.ts#L59)
+Defined in: [packages/core/src/protocol/provider.ts:59](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/provider.ts#L59)
 
 ***
 
@@ -59,4 +59,4 @@ Defined in: [packages/core/src/protocol/provider.ts:59](https://github.com/kucuk
 readonly tools: readonly AnyTool<unknown>[];
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:61](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/provider.ts#L61)
+Defined in: [packages/core/src/protocol/provider.ts:61](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/provider.ts#L61)

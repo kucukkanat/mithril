@@ -12,7 +12,7 @@ function createApp(
 dir): Promise<readonly string[]>;
 ```
 
-Defined in: [index.ts:170](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/create-mithril/src/index.ts#L170)
+Defined in: [index.ts:170](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/create-mithril/src/index.ts#L170)
 
 Write a scaffolded template to disk under `dir`, creating parent directories as needed.
 
@@ -20,7 +20,7 @@ Write a scaffolded template to disk under `dir`, creating parent directories as 
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `template` | [`Template`](/mithril/reference/create-mithril/type-aliases/template/) | Which starter to generate. |
+| `template` | [`Template`](/reference/create-mithril/type-aliases/template/) | Which starter to generate. |
 | `appName` | `string` | Package name embedded in the generated files. |
 | `dir` | `string` | Target directory the files are written under. |
 
@@ -32,4 +32,4 @@ The relative paths written, in generation order.
 
 ## Remarks
 
-Server-only (`node:fs/promises`). Thin I/O wrapper around [scaffold](/mithril/reference/create-mithril/functions/scaffold/).
+Server-only (`node:fs/promises`). Thin I/O wrapper around [scaffold](/reference/create-mithril/functions/scaffold/).

@@ -9,9 +9,9 @@ title: "done"
 function done<S>(state): StepResult<S>;
 ```
 
-Defined in: [packages/workflows/src/index.ts:92](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/workflows/src/index.ts#L92)
+Defined in: [packages/workflows/src/index.ts:92](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/workflows/src/index.ts#L92)
 
-Build a [StepResult](/mithril/reference/workflows/type-aliases/stepresult/) that finishes the workflow with the given final `state`.
+Build a [StepResult](/reference/workflows/type-aliases/stepresult/) that finishes the workflow with the given final `state`.
 
 ## Type Parameters
 
@@ -27,4 +27,4 @@ Build a [StepResult](/mithril/reference/workflows/type-aliases/stepresult/) that
 
 ## Returns
 
-[`StepResult`](/mithril/reference/workflows/type-aliases/stepresult/)\<`S`\>
+[`StepResult`](/reference/workflows/type-aliases/stepresult/)\<`S`\>

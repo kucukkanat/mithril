@@ -9,10 +9,10 @@ title: "defineWorkflow"
 function defineWorkflow<S>(steps, opts): Workflow<S>;
 ```
 
-Defined in: [packages/workflows/src/index.ts:59](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/workflows/src/index.ts#L59)
+Defined in: [packages/workflows/src/index.ts:59](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/workflows/src/index.ts#L59)
 
-Define a workflow: a map of named steps plus a `start` step. Each step returns [goto](/mithril/reference/workflows/functions/goto/) to
-continue or [done](/mithril/reference/workflows/functions/done/) to finish. Routing is deterministic and network-free — the ideal place
+Define a workflow: a map of named steps plus a `start` step. Each step returns [goto](/reference/workflows/functions/goto/) to
+continue or [done](/reference/workflows/functions/done/) to finish. Routing is deterministic and network-free — the ideal place
 for branching that shouldn't cost an LLM call.
 
 ## Type Parameters
@@ -25,20 +25,20 @@ for branching that shouldn't cost an LLM call.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `steps` | `Readonly`\<`Record`\<`string`, [`WorkflowStep`](/mithril/reference/workflows/type-aliases/workflowstep/)\<`S`\>\>\> | named steps; each is a [WorkflowStep](/mithril/reference/workflows/type-aliases/workflowstep/). |
+| `steps` | `Readonly`\<`Record`\<`string`, [`WorkflowStep`](/reference/workflows/type-aliases/workflowstep/)\<`S`\>\>\> | named steps; each is a [WorkflowStep](/reference/workflows/type-aliases/workflowstep/). |
 | `opts` | \{ `maxSteps?`: `number`; `start`: `string`; \} | `start` (the first step) and optional `maxSteps` (default `100`, a cycle guard). |
 | `opts.maxSteps?` | `number` | - |
 | `opts.start` | `string` | - |
 
 ## Returns
 
-[`Workflow`](/mithril/reference/workflows/interfaces/workflow/)\<`S`\>
+[`Workflow`](/reference/workflows/interfaces/workflow/)\<`S`\>
 
-a [Workflow](/mithril/reference/workflows/interfaces/workflow/) you can `run`.
+a [Workflow](/reference/workflows/interfaces/workflow/) you can `run`.
 
 ## Throws
 
-[WorkflowError](/mithril/reference/workflows/classes/workflowerror/) if a step routes to an unknown name or `maxSteps` is exceeded.
+[WorkflowError](/reference/workflows/classes/workflowerror/) if a step routes to an unknown name or `maxSteps` is exceeded.
 
 ## Example
 

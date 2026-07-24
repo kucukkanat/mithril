@@ -23,7 +23,7 @@ type ModelSpec =
 };
 ```
 
-Defined in: [packages/spec/src/types.ts:27](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/spec/src/types.ts#L27)
+Defined in: [packages/spec/src/types.ts:27](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/spec/src/types.ts#L27)
 
 How an agent's `model` is produced in generated code.
 

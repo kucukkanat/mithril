@@ -7,7 +7,6 @@ sidebar:
 ---
 
 import { Aside, Tabs, TabItem, CardGrid, LinkCard } from "@astrojs/starlight/components";
-import { withBase } from "../../../lib/base.ts";
 
 Small models (0.5B–8B, including the in-browser ones) get tool calls and JSON *almost* right. Mithril's
 job is to close that gap **without magic**: every correction is visible as a typed
@@ -223,8 +222,8 @@ When you want a small model to *try harder*, add a test-time-compute middleware 
 unless you add them** — a default run never spends N× tokens, and every sample is streamed and visible.
 
 <CardGrid>
-<LinkCard title="selfConsistency" href={withBase("/reference/core/agent/functions/selfconsistency/")} description="Sample N times, keep the majority answer — voting by canonical equality of the tool calls or text." />
-<LinkCard title="bestOfN" href={withBase("/reference/core/agent/functions/bestofn/")} description="Draw N candidates, keep the highest-scoring one. Prefer a deterministic scorer over model self-judgement." />
+<LinkCard title="selfConsistency" href="/reference/core/agent/functions/selfconsistency/" description="Sample N times, keep the majority answer — voting by canonical equality of the tool calls or text." />
+<LinkCard title="bestOfN" href="/reference/core/agent/functions/bestofn/" description="Draw N candidates, keep the highest-scoring one. Prefer a deterministic scorer over model self-judgement." />
 </CardGrid>
 
 ```ts
@@ -247,8 +246,8 @@ support today, so parse-repair plus the bounded re-ask above is the shipped loca
 ## Choosing settings
 
 <CardGrid>
-<LinkCard title="Tiny / in-browser models" href={withBase("/guides/local-inference/")} description="Keep every default on, add examples to your tools, and consider selfConsistency({ n: 3 }) for the calls that matter." />
-<LinkCard title="Frontier models" href={withBase("/guides/building-agents/")} description="Defaults are cheap insurance. You may raise healing.retryBudget({ max }) or drop healing.argRepair() if you never see malformed calls." />
-<LinkCard title="Deterministic pipelines" href={withBase("/guides/ejecting-the-loop/")} description="healing: false gives you the exact raw loop — every step is the model's, nothing is coerced or steered." />
-<LinkCard title="Cost-capped runs" href={withBase("/guides/observability/")} description="Set maxTokens / maxCostMicroUsd and watch for budget.exceeded to fail fast with a clear error." />
+<LinkCard title="Tiny / in-browser models" href="/guides/local-inference/" description="Keep every default on, add examples to your tools, and consider selfConsistency({ n: 3 }) for the calls that matter." />
+<LinkCard title="Frontier models" href="/guides/building-agents/" description="Defaults are cheap insurance. You may raise healing.retryBudget({ max }) or drop healing.argRepair() if you never see malformed calls." />
+<LinkCard title="Deterministic pipelines" href="/guides/ejecting-the-loop/" description="healing: false gives you the exact raw loop — every step is the model's, nothing is coerced or steered." />
+<LinkCard title="Cost-capped runs" href="/guides/observability/" description="Set maxTokens / maxCostMicroUsd and watch for budget.exceeded to fail fast with a clear error." />
 </CardGrid>

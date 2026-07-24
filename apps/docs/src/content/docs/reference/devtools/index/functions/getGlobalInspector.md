@@ -9,10 +9,10 @@ title: "getGlobalInspector"
 function getGlobalInspector(): Inspector;
 ```
 
-Defined in: [packages/devtools/src/index.ts:140](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/index.ts#L140)
+Defined in: [packages/devtools/src/index.ts:140](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/index.ts#L140)
 
-The process-wide default [Inspector](/mithril/reference/devtools/index/interfaces/inspector/), created on first use — a shared sink for a whole app's runs.
+The process-wide default [Inspector](/reference/devtools/index/interfaces/inspector/), created on first use — a shared sink for a whole app's runs.
 
 ## Returns
 
-[`Inspector`](/mithril/reference/devtools/index/interfaces/inspector/)
+[`Inspector`](/reference/devtools/index/interfaces/inspector/)

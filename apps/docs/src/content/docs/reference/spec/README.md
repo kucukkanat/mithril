@@ -7,5 +7,5 @@ title: "@mithril/spec"
 
 ## Modules
 
-- [index](/mithril/reference/spec/index/readme/)
-- [parse](/mithril/reference/spec/parse/readme/)
+- [index](/reference/spec/index/readme/)
+- [parse](/reference/spec/parse/readme/)

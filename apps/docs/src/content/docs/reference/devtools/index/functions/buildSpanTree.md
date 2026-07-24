@@ -9,7 +9,7 @@ title: "buildSpanTree"
 function buildSpanTree(events): readonly SpanNode[];
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:96](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/selectors.ts#L96)
+Defined in: [packages/devtools/src/selectors.ts:96](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/selectors.ts#L96)
 
 Group a run's events into a tree of spans by their `span.parentId`.
 
@@ -21,9 +21,9 @@ Group a run's events into a tree of spans by their `span.parentId`.
 
 ## Returns
 
-readonly [`SpanNode`](/mithril/reference/devtools/index/interfaces/spannode/)[]
+readonly [`SpanNode`](/reference/devtools/index/interfaces/spannode/)[]
 
-the root [SpanNode](/mithril/reference/devtools/index/interfaces/spannode/)s (spans with no parent, or whose parent is absent from the log), each
+the root [SpanNode](/reference/devtools/index/interfaces/spannode/)s (spans with no parent, or whose parent is absent from the log), each
 carrying its own events and nested child spans — so nested `asTool`/handoff sub-runs render as sub-trees.
 
 ## Remarks

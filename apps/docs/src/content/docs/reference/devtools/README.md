@@ -7,7 +7,7 @@ title: "@mithril/devtools"
 
 ## Modules
 
-- [attach](/mithril/reference/devtools/attach/readme/)
-- [dom](/mithril/reference/devtools/dom/readme/)
-- [element](/mithril/reference/devtools/element/readme/)
-- [index](/mithril/reference/devtools/index/readme/)
+- [attach](/reference/devtools/attach/readme/)
+- [dom](/reference/devtools/dom/readme/)
+- [element](/reference/devtools/element/readme/)
+- [index](/reference/devtools/index/readme/)

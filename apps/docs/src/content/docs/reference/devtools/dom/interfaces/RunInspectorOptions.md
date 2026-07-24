@@ -5,9 +5,9 @@ prev: false
 title: "RunInspectorOptions"
 ---
 
-Defined in: [packages/devtools/src/dom.ts:212](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/dom.ts#L212)
+Defined in: [packages/devtools/src/dom.ts:212](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/dom.ts#L212)
 
-Options for [mountRunInspector](/mithril/reference/devtools/dom/functions/mountruninspector/). Provide exactly one of `events` / `source` / `transport`.
+Options for [mountRunInspector](/reference/devtools/dom/functions/mountruninspector/). Provide exactly one of `events` / `source` / `transport`.
 
 ## Properties
 
@@ -17,7 +17,7 @@ Options for [mountRunInspector](/mithril/reference/devtools/dom/functions/mountr
 readonly optional contextWindow?: number;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:216](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/dom.ts#L216)
+Defined in: [packages/devtools/src/dom.ts:216](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/dom.ts#L216)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/devtools/src/dom.ts:216](https://github.com/kucukkanat/mit
 readonly optional events?: readonly MithrilEvent[];
 ```
 
-Defined in: [packages/devtools/src/dom.ts:213](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/dom.ts#L213)
+Defined in: [packages/devtools/src/dom.ts:213](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/dom.ts#L213)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/devtools/src/dom.ts:213](https://github.com/kucukkanat/mit
 readonly optional onResolve?: (resolution) => void;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:217](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/dom.ts#L217)
+Defined in: [packages/devtools/src/dom.ts:217](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/dom.ts#L217)
 
 #### Parameters
 
@@ -57,7 +57,7 @@ Defined in: [packages/devtools/src/dom.ts:217](https://github.com/kucukkanat/mit
 readonly optional source?: RunSource;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:214](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/dom.ts#L214)
+Defined in: [packages/devtools/src/dom.ts:214](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/dom.ts#L214)
 
 ***
 
@@ -67,4 +67,4 @@ Defined in: [packages/devtools/src/dom.ts:214](https://github.com/kucukkanat/mit
 readonly optional transport?: EventTransport;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:215](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/dom.ts#L215)
+Defined in: [packages/devtools/src/dom.ts:215](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/dom.ts#L215)

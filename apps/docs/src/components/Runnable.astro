@@ -1,7 +1,6 @@
 ---
 import { Code } from "@astrojs/starlight/components";
 import { encodeCode } from "../playground/share.ts";
-import { withBase } from "../lib/base.ts";
 
 interface Props {
   code: string;
@@ -21,7 +20,7 @@ interface Props {
   highlight?: (number | string)[];
 }
 const { code, lang = "ts", title = "example.ts", runnable = true, preset, highlight } = Astro.props;
-const href = !runnable ? null : preset ? withBase(`/playground/#preset=${encodeURIComponent(preset)}`) : withBase(`/playground/#code=${encodeCode(code.trim())}`);
+const href = !runnable ? null : preset ? `/playground/#preset=${encodeURIComponent(preset)}` : `/playground/#code=${encodeCode(code.trim())}`;
 // Expressive Code treats a bare string mark as a text search; a line number/range needs `{ range }`.
 const mark = highlight?.map((h) => ({ range: String(h) }));
 ---

@@ -1,5 +1,4 @@
 ---
-import { withBase } from "../lib/base.ts";
 import { Code } from "astro:components";
 import Landing from "../layouts/Landing.astro";
 import Pillars from "../components/Pillars.astro";
@@ -40,13 +39,13 @@ const stats = [
 >
   <header class="nav" data-testid="site-nav">
     <div class="mth-container nav-inner">
-      <a href={withBase("/")} class="brand" data-testid="site-nav-brand-link"><span class="mth-sheen">Mithril</span></a>
+      <a href="/" class="brand" data-testid="site-nav-brand-link"><span class="mth-sheen">Mithril</span></a>
       <nav class="nav-links" data-testid="site-nav-links">
-        <a href={withBase("/getting-started/introduction/")}>Docs</a>
-        <a href={withBase("/playground/")}>Playground</a>
-        <a href={withBase("/guides/devtools/")}>Devtools</a>
-        <a href={withBase("/reference/")}>Reference</a>
-        <a href={withBase("/roadmap/")}>Roadmap</a>
+        <a href="/getting-started/introduction/">Docs</a>
+        <a href="/playground/">Playground</a>
+        <a href="/guides/devtools/">Devtools</a>
+        <a href="/reference/">Reference</a>
+        <a href="/roadmap/">Roadmap</a>
       </nav>
     </div>
   </header>
@@ -65,8 +64,8 @@ const stats = [
           and a live inspector.
         </p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href={withBase("/getting-started/introduction/")} data-testid="hero-get-started-link">Get started →</a>
-          <a class="btn btn-ghost" href={withBase("/playground/")} data-testid="hero-try-playground-link">Try the playground</a>
+          <a class="btn btn-primary" href="/getting-started/introduction/" data-testid="hero-get-started-link">Get started →</a>
+          <a class="btn btn-ghost" href="/playground/" data-testid="hero-try-playground-link">Try the playground</a>
         </div>
         <p class="hero-note">
           <span class="dot"></span> The typed, versioned event stream is the product.
@@ -111,7 +110,7 @@ const stats = [
         <Playground client:only="react" embedded={true} />
       </div>
       <p class="demo-more">
-        <a href={withBase("/playground/")} data-testid="home-playground-open-full-link">Open the full playground — add your own key or run a local model →</a>
+        <a href="/playground/" data-testid="home-playground-open-full-link">Open the full playground — add your own key or run a local model →</a>
       </p>
     </section>
 
@@ -131,7 +130,7 @@ const stats = [
         <DevtoolsDemo client:only="react" />
       </div>
       <p class="demo-more">
-        <a href={withBase("/guides/devtools/")} data-testid="home-devtools-guide-link">Read the devtools guide →</a>
+        <a href="/guides/devtools/" data-testid="home-devtools-guide-link">Read the devtools guide →</a>
       </p>
     </section>
 
@@ -153,8 +152,8 @@ const stats = [
           cliff, not against DIY.
         </p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href={withBase("/getting-started/introduction/")} data-testid="cta-read-docs-link">Read the docs →</a>
-          <a class="btn btn-ghost" href={withBase("/getting-started/installation/")} data-testid="cta-create-mithril-link">
+          <a class="btn btn-primary" href="/getting-started/introduction/" data-testid="cta-read-docs-link">Read the docs →</a>
+          <a class="btn btn-ghost" href="/getting-started/installation/" data-testid="cta-create-mithril-link">
             <code>bunx create-mithril</code>
           </a>
         </div>
@@ -169,10 +168,10 @@ const stats = [
         <span class="footer-muted"> · MIT · built with its own React bindings</span>
       </div>
       <nav class="footer-links" data-testid="site-footer-links">
-        <a href={withBase("/getting-started/introduction/")}>Docs</a>
-        <a href={withBase("/playground/")}>Playground</a>
-        <a href={withBase("/reference/")}>API</a>
-        <a href={withBase("/design/how-mithril-was-designed/")}>Design</a>
+        <a href="/getting-started/introduction/">Docs</a>
+        <a href="/playground/">Playground</a>
+        <a href="/reference/">API</a>
+        <a href="/design/how-mithril-was-designed/">Design</a>
       </nav>
     </div>
   </footer>

@@ -9,22 +9,22 @@ title: "replay"
 function replay(log, toSeq?): RunState;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:216](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/state.ts#L216)
+Defined in: [packages/core/src/protocol/state.ts:216](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/state.ts#L216)
 
-Fold an event log into a [RunState](/mithril/reference/core/protocol/interfaces/runstate/), optionally up to a cursor (time-travel).
+Fold an event log into a [RunState](/reference/core/protocol/interfaces/runstate/), optionally up to a cursor (time-travel).
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `log` | readonly [`MithrilEvent`](/mithril/reference/core/protocol/type-aliases/mithrilevent/)[] | The ordered event log to replay. |
+| `log` | readonly [`MithrilEvent`](/reference/core/protocol/type-aliases/mithrilevent/)[] | The ordered event log to replay. |
 | `toSeq?` | `number` | Inclusive upper bound on `seq`; omit for the final state. |
 
 ## Returns
 
-[`RunState`](/mithril/reference/core/protocol/interfaces/runstate/)
+[`RunState`](/reference/core/protocol/interfaces/runstate/)
 
-The [RunState](/mithril/reference/core/protocol/interfaces/runstate/) after reducing every included event over [INITIAL](/mithril/reference/core/protocol/variables/initial/).
+The [RunState](/reference/core/protocol/interfaces/runstate/) after reducing every included event over [INITIAL](/reference/core/protocol/variables/initial/).
 
 ## Example
 

@@ -9,7 +9,7 @@ title: "openai"
 function openai(model, opts?): ModelHandle;
 ```
 
-Defined in: [openai/index.ts:112](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/providers/src/openai/index.ts#L112)
+Defined in: [openai/index.ts:112](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/openai/index.ts#L112)
 
 Self-wiring model handle: `agent({ model: openai("gpt-4o"), … })` needs no provider registry.
 
@@ -25,7 +25,7 @@ Self-wiring model handle: `agent({ model: openai("gpt-4o"), … })` needs no pro
 
 `ModelHandle`
 
-A ModelHandle bound to a shared default-configured [openaiProvider](/mithril/reference/providers/openai/functions/openaiprovider/) (or a
+A ModelHandle bound to a shared default-configured [openaiProvider](/reference/providers/openai/functions/openaiprovider/) (or a
   dedicated one when `toolSchema` is given).
 
 ## Example
@@ -39,4 +39,4 @@ const a = agent({ model: openai("gpt-4o"), instructions: "…", tools: [] });
 
 ## Remarks
 
-Need a custom `baseUrl`? Build a provider with [openaiProvider](/mithril/reference/providers/openai/functions/openaiprovider/) instead.
+Need a custom `baseUrl`? Build a provider with [openaiProvider](/reference/providers/openai/functions/openaiprovider/) instead.

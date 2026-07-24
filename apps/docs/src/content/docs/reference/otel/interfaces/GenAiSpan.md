@@ -5,7 +5,7 @@ prev: false
 title: "GenAiSpan"
 ---
 
-Defined in: [index.ts:25](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/otel/src/index.ts#L25)
+Defined in: [index.ts:25](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/otel/src/index.ts#L25)
 
 A reconstructed OpenTelemetry GenAI span, following the `gen_ai.*` semantic conventions.
 
@@ -22,7 +22,7 @@ timestamps for that span.
 readonly attributes: Record<string, string | number | boolean>;
 ```
 
-Defined in: [index.ts:41](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/otel/src/index.ts#L41)
+Defined in: [index.ts:41](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/otel/src/index.ts#L41)
 
 `gen_ai.*` attributes (model, tool name, output tokens, span kind, …).
 
@@ -34,7 +34,7 @@ Defined in: [index.ts:41](https://github.com/kucukkanat/mithril/blob/027d627cec2
 optional endTime?: number;
 ```
 
-Defined in: [index.ts:39](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/otel/src/index.ts#L39)
+Defined in: [index.ts:39](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/otel/src/index.ts#L39)
 
 End timestamp (epoch ms) — the last event seen for this span; `undefined` until the span sees a second event.
 
@@ -46,7 +46,7 @@ End timestamp (epoch ms) — the last event seen for this span; `undefined` unti
 readonly kind: "invoke_agent" | "chat" | "execute_tool" | "workflow" | "handoff";
 ```
 
-Defined in: [index.ts:35](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/otel/src/index.ts#L35)
+Defined in: [index.ts:35](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/otel/src/index.ts#L35)
 
 The GenAI operation this span represents.
 
@@ -58,9 +58,9 @@ The GenAI operation this span represents.
 name: string;
 ```
 
-Defined in: [index.ts:33](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/otel/src/index.ts#L33)
+Defined in: [index.ts:33](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/otel/src/index.ts#L33)
 
-Display name; starts as the [GenAiSpan.kind](/mithril/reference/otel/interfaces/genaispan/#kind) and becomes `execute_tool <tool>` once the tool is known.
+Display name; starts as the [GenAiSpan.kind](/reference/otel/interfaces/genaispan/#kind) and becomes `execute_tool <tool>` once the tool is known.
 
 ***
 
@@ -70,7 +70,7 @@ Display name; starts as the [GenAiSpan.kind](/mithril/reference/otel/interfaces/
 readonly parentSpanId: string | null;
 ```
 
-Defined in: [index.ts:29](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/otel/src/index.ts#L29)
+Defined in: [index.ts:29](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/otel/src/index.ts#L29)
 
 The parent span's id, or `null` for a root span.
 
@@ -82,7 +82,7 @@ The parent span's id, or `null` for a root span.
 readonly spanId: string;
 ```
 
-Defined in: [index.ts:27](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/otel/src/index.ts#L27)
+Defined in: [index.ts:27](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/otel/src/index.ts#L27)
 
 The span's own id (the source event's `span.id`).
 
@@ -94,7 +94,7 @@ The span's own id (the source event's `span.id`).
 readonly startTime: number;
 ```
 
-Defined in: [index.ts:37](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/otel/src/index.ts#L37)
+Defined in: [index.ts:37](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/otel/src/index.ts#L37)
 
 Start timestamp (epoch ms) — the first event seen for this span.
 
@@ -106,6 +106,6 @@ Start timestamp (epoch ms) — the first event seen for this span.
 readonly traceId: string;
 ```
 
-Defined in: [index.ts:31](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/otel/src/index.ts#L31)
+Defined in: [index.ts:31](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/otel/src/index.ts#L31)
 
 The trace this span belongs to.

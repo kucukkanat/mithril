@@ -7,6 +7,6 @@ title: "@mithril/kv"
 
 ## Modules
 
-- [index](/mithril/reference/kv/index/readme/)
-- [indexeddb](/mithril/reference/kv/indexeddb/readme/)
-- [sqlite-node](/mithril/reference/kv/sqlite-node/readme/)
+- [index](/reference/kv/index/readme/)
+- [indexeddb](/reference/kv/indexeddb/readme/)
+- [sqlite-node](/reference/kv/sqlite-node/readme/)

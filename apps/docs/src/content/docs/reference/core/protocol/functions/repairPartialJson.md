@@ -11,9 +11,9 @@ function repairPartialJson(s):
   | undefined;
 ```
 
-Defined in: [packages/core/src/protocol/json-repair.ts:150](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/json-repair.ts#L150)
+Defined in: [packages/core/src/protocol/json-repair.ts:150](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/json-repair.ts#L150)
 
-Best-effort parse of an IN-PROGRESS structured-output stream into a deep-partial [JsonValue](/mithril/reference/core/protocol/type-aliases/jsonvalue/), for
+Best-effort parse of an IN-PROGRESS structured-output stream into a deep-partial [JsonValue](/reference/core/protocol/type-aliases/jsonvalue/), for
 `object.delta` streaming.
 
 ## Parameters
@@ -24,7 +24,7 @@ Best-effort parse of an IN-PROGRESS structured-output stream into a deep-partial
 
 ## Returns
 
-  \| [`JsonValue`](/mithril/reference/core/protocol/type-aliases/jsonvalue/)
+  \| [`JsonValue`](/reference/core/protocol/type-aliases/jsonvalue/)
   \| `undefined`
 
 the partial value, or `undefined` when nothing parseable has formed yet.
@@ -33,4 +33,4 @@ the partial value, or `undefined` when nothing parseable has formed yet.
 
 Holds back entirely while a `<think>` block is still open (reasoning is not the answer), then skips
 any preamble and closes the open strings/objects/arrays formed so far. Reasoning is never removed from the
-event stream — this only governs the partial value. See [extractJson](/mithril/reference/core/protocol/functions/extractjson/) for the terminal counterpart.
+event stream — this only governs the partial value. See [extractJson](/reference/core/protocol/functions/extractjson/) for the terminal counterpart.

@@ -1,5 +1,4 @@
 ---
-import { withBase } from "../lib/base.ts";
 interface Pillar {
   n: string;
   title: string;
@@ -87,7 +86,7 @@ const pillars: Pillar[] = [
   <div class="pillars-grid" data-testid="pillars-grid">
     {
       pillars.map((p) => (
-        <a class="pillar mth-card" href={withBase(p.href)} data-testid={`pillar-card-${p.n}`}>
+        <a class="pillar mth-card" href={p.href} data-testid={`pillar-card-${p.n}`}>
           <div class="pillar-top">
             <span class="pillar-n">{p.n}</span>
             <code class="pillar-tag">{p.tag}</code>

@@ -9,21 +9,17 @@
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { symbols } from "../src/lib/load-symbols.ts";
-import { BASE } from "../src/lib/base.ts";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const SYMBOLS = symbols();
 
 const failures: string[] = [];
 for (const [name, def] of Object.entries(SYMBOLS)) {
-  // hrefs are base-prefixed (`/mithril/reference/…`) for the browser, but Astro emits pages to
-  // `dist/reference/…` (base affects URLs, not the output path) — so check the base-relative path.
-  const rel = def.href.startsWith(`${BASE}/`) ? def.href.slice(BASE.length) : def.href;
-  if (!rel.startsWith("/reference/")) {
+  if (!def.href.startsWith("/reference/")) {
     failures.push(`${name}: href "${def.href}" is not under /reference/`);
     continue;
   }
-  if (!existsSync(`${root}dist${rel}index.html`)) {
+  if (!existsSync(`${root}dist${def.href}index.html`)) {
     failures.push(`${name}: no built page at ${def.href}`);
   }
 }

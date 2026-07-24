@@ -9,6 +9,6 @@ title: "PendingKind"
 type PendingKind = "approval" | "return" | "midtool";
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:69](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/loop.ts#L69)
+Defined in: [packages/core/src/agent/loop.ts:69](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/loop.ts#L69)
 
-How a run paused, so [agentLoop](/mithril/reference/core/agent/functions/agentloop/) can dispatch the right resume behavior.
+How a run paused, so [agentLoop](/reference/core/agent/functions/agentloop/) can dispatch the right resume behavior.

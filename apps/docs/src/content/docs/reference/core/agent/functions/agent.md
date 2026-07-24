@@ -11,9 +11,9 @@ title: "agent"
 function agent<Deps>(): AgentFactory<Deps>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:310](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L310)
+Defined in: [packages/core/src/agent/factory.ts:310](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L310)
 
-Build a runnable [Agent](/mithril/reference/core/agent/interfaces/agent/) from an [AgentConfig](/mithril/reference/core/agent/interfaces/agentconfig/), or curry over `Deps` first.
+Build a runnable [Agent](/reference/core/agent/interfaces/agent/) from an [AgentConfig](/reference/core/agent/interfaces/agentconfig/), or curry over `Deps` first.
 
 ### Type Parameters
 
@@ -23,18 +23,18 @@ Build a runnable [Agent](/mithril/reference/core/agent/interfaces/agent/) from a
 
 ### Returns
 
-[`AgentFactory`](/mithril/reference/core/agent/interfaces/agentfactory/)\<`Deps`\>
+[`AgentFactory`](/reference/core/agent/interfaces/agentfactory/)\<`Deps`\>
 
-the built [Agent](/mithril/reference/core/agent/interfaces/agent/), or an [AgentFactory](/mithril/reference/core/agent/interfaces/agentfactory/) when called with no arguments.
+the built [Agent](/reference/core/agent/interfaces/agent/), or an [AgentFactory](/reference/core/agent/interfaces/agentfactory/) when called with no arguments.
 
 ### Remarks
 
 Two forms:
-- `agent<Deps>()` returns an [AgentFactory](/mithril/reference/core/agent/interfaces/agentfactory/) that binds `Deps` for the config.
+- `agent<Deps>()` returns an [AgentFactory](/reference/core/agent/interfaces/agentfactory/) that binds `Deps` for the config.
 - `agent(config)` builds a no-deps agent (`Deps = void`) directly.
 
 `Tools` and `Out` are inferred from the config, so tool typings and the structured-output type flow
-through to [RunResult](/mithril/reference/core/agent/type-aliases/runresult/).
+through to [RunResult](/reference/core/agent/type-aliases/runresult/).
 
 ### Example
 
@@ -67,37 +67,37 @@ if (result.status === "completed") console.log(result.output);
 function agent<Tools, Out>(config): Agent<Tools, void, Out>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:311](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L311)
+Defined in: [packages/core/src/agent/factory.ts:311](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L311)
 
-Build a runnable [Agent](/mithril/reference/core/agent/interfaces/agent/) from an [AgentConfig](/mithril/reference/core/agent/interfaces/agentconfig/), or curry over `Deps` first.
+Build a runnable [Agent](/reference/core/agent/interfaces/agent/) from an [AgentConfig](/reference/core/agent/interfaces/agentconfig/), or curry over `Deps` first.
 
 ### Type Parameters
 
 | Type Parameter | Default type |
 | ------ | ------ |
-| `Tools` *extends* readonly [`AnyTool`](/mithril/reference/core/protocol/type-aliases/anytool/)\<`void`\>[] | \[\] |
-| `Out` *extends* [`JsonValue`](/mithril/reference/core/protocol/type-aliases/jsonvalue/) | `string` |
+| `Tools` *extends* readonly [`AnyTool`](/reference/core/protocol/type-aliases/anytool/)\<`void`\>[] | \[\] |
+| `Out` *extends* [`JsonValue`](/reference/core/protocol/type-aliases/jsonvalue/) | `string` |
 
 ### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `config` | [`AgentConfig`](/mithril/reference/core/agent/interfaces/agentconfig/)\<`Tools`, `void`, `Out`\> | the [AgentConfig](/mithril/reference/core/agent/interfaces/agentconfig/), omitted in the curried form. |
+| `config` | [`AgentConfig`](/reference/core/agent/interfaces/agentconfig/)\<`Tools`, `void`, `Out`\> | the [AgentConfig](/reference/core/agent/interfaces/agentconfig/), omitted in the curried form. |
 
 ### Returns
 
-[`Agent`](/mithril/reference/core/agent/interfaces/agent/)\<`Tools`, `void`, `Out`\>
+[`Agent`](/reference/core/agent/interfaces/agent/)\<`Tools`, `void`, `Out`\>
 
-the built [Agent](/mithril/reference/core/agent/interfaces/agent/), or an [AgentFactory](/mithril/reference/core/agent/interfaces/agentfactory/) when called with no arguments.
+the built [Agent](/reference/core/agent/interfaces/agent/), or an [AgentFactory](/reference/core/agent/interfaces/agentfactory/) when called with no arguments.
 
 ### Remarks
 
 Two forms:
-- `agent<Deps>()` returns an [AgentFactory](/mithril/reference/core/agent/interfaces/agentfactory/) that binds `Deps` for the config.
+- `agent<Deps>()` returns an [AgentFactory](/reference/core/agent/interfaces/agentfactory/) that binds `Deps` for the config.
 - `agent(config)` builds a no-deps agent (`Deps = void`) directly.
 
 `Tools` and `Out` are inferred from the config, so tool typings and the structured-output type flow
-through to [RunResult](/mithril/reference/core/agent/type-aliases/runresult/).
+through to [RunResult](/reference/core/agent/type-aliases/runresult/).
 
 ### Example
 

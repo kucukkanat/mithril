@@ -5,7 +5,7 @@ prev: false
 title: "LiveProvider"
 ---
 
-Defined in: [runner-web/src/catalog.ts:14](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L14)
+Defined in: [runner-web/src/catalog.ts:14](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L14)
 
 A remote provider a browser snippet can call directly with the user's own key.
 
@@ -17,7 +17,7 @@ A remote provider a browser snippet can call directly with the user's own key.
 readonly optional baseUrl?: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:24](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L24)
+Defined in: [runner-web/src/catalog.ts:24](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L24)
 
 The OpenAI-wire base URL — set only for `openai-compat` providers.
 
@@ -29,7 +29,7 @@ The OpenAI-wire base URL — set only for `openai-compat` providers.
 readonly consoleUrl: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:28](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L28)
+Defined in: [runner-web/src/catalog.ts:28](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L28)
 
 Where a visitor creates a key (linked from the panel).
 
@@ -41,7 +41,7 @@ Where a visitor creates a key (linked from the panel).
 readonly defaultModel: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:20](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L20)
+Defined in: [runner-web/src/catalog.ts:20](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L20)
 
 A cheap, sensible default model, prefilled in the panel.
 
@@ -53,7 +53,7 @@ A cheap, sensible default model, prefilled in the panel.
 readonly envVar: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:18](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L18)
+Defined in: [runner-web/src/catalog.ts:18](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L18)
 
 The env var the BYOK fallback reads — `<PROVIDER>_API_KEY`, keyed off the model id's prefix.
 
@@ -65,7 +65,7 @@ The env var the BYOK fallback reads — `<PROVIDER>_API_KEY`, keyed off the mode
 readonly host: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:26](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L26)
+Defined in: [runner-web/src/catalog.ts:26](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L26)
 
 The host the BYOK key is sent to (shown in the security-confirm gate).
 
@@ -77,7 +77,7 @@ The host the BYOK key is sent to (shown in the security-confirm gate).
 readonly id: LiveProviderId;
 ```
 
-Defined in: [runner-web/src/catalog.ts:15](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L15)
+Defined in: [runner-web/src/catalog.ts:15](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L15)
 
 ***
 
@@ -87,7 +87,7 @@ Defined in: [runner-web/src/catalog.ts:15](https://github.com/kucukkanat/mithril
 readonly kind: "native" | "openai-compat";
 ```
 
-Defined in: [runner-web/src/catalog.ts:22](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L22)
+Defined in: [runner-web/src/catalog.ts:22](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L22)
 
 `native` adapters ship first-class; `openai-compat` reuse the OpenAI adapter + a `baseUrl`.
 
@@ -99,4 +99,4 @@ Defined in: [runner-web/src/catalog.ts:22](https://github.com/kucukkanat/mithril
 readonly label: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:16](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/runner-web/src/catalog.ts#L16)
+Defined in: [runner-web/src/catalog.ts:16](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/runner-web/src/catalog.ts#L16)

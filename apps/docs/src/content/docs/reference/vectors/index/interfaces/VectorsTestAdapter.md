@@ -5,9 +5,9 @@ prev: false
 title: "VectorsTestAdapter"
 ---
 
-Defined in: [index.ts:127](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/vectors/src/index.ts#L127)
+Defined in: [index.ts:127](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L127)
 
-Minimal test-runner shim so [vectorsConformance](/mithril/reference/vectors/index/functions/vectorsconformance/) runs under bun:test / vitest with no hard dependency.
+Minimal test-runner shim so [vectorsConformance](/reference/vectors/index/functions/vectorsconformance/) runs under bun:test / vitest with no hard dependency.
 
 ## Methods
 
@@ -17,7 +17,7 @@ Minimal test-runner shim so [vectorsConformance](/mithril/reference/vectors/inde
 assertEqual(actual, expected): void;
 ```
 
-Defined in: [index.ts:129](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/vectors/src/index.ts#L129)
+Defined in: [index.ts:129](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L129)
 
 #### Parameters
 
@@ -38,7 +38,7 @@ Defined in: [index.ts:129](https://github.com/kucukkanat/mithril/blob/027d627cec
 assertTrue(value, message?): void;
 ```
 
-Defined in: [index.ts:130](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/vectors/src/index.ts#L130)
+Defined in: [index.ts:130](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L130)
 
 #### Parameters
 
@@ -59,7 +59,7 @@ Defined in: [index.ts:130](https://github.com/kucukkanat/mithril/blob/027d627cec
 test(name, fn): void;
 ```
 
-Defined in: [index.ts:128](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/vectors/src/index.ts#L128)
+Defined in: [index.ts:128](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/vectors/src/index.ts#L128)
 
 #### Parameters
 

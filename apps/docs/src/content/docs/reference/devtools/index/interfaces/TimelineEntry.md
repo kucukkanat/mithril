@@ -5,7 +5,7 @@ prev: false
 title: "TimelineEntry"
 ---
 
-Defined in: [packages/devtools/src/index.ts:22](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/index.ts#L22)
+Defined in: [packages/devtools/src/index.ts:22](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/index.ts#L22)
 
 One row of a run's timeline: the event's sequence, timestamp, `type`, and owning span id.
 
@@ -17,7 +17,7 @@ One row of a run's timeline: the event's sequence, timestamp, `type`, and owning
 readonly seq: number;
 ```
 
-Defined in: [packages/devtools/src/index.ts:23](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/index.ts#L23)
+Defined in: [packages/devtools/src/index.ts:23](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/index.ts#L23)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/devtools/src/index.ts:23](https://github.com/kucukkanat/mi
 readonly span: string;
 ```
 
-Defined in: [packages/devtools/src/index.ts:26](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/index.ts#L26)
+Defined in: [packages/devtools/src/index.ts:26](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/index.ts#L26)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/devtools/src/index.ts:26](https://github.com/kucukkanat/mi
 readonly ts: number;
 ```
 
-Defined in: [packages/devtools/src/index.ts:24](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/index.ts#L24)
+Defined in: [packages/devtools/src/index.ts:24](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/index.ts#L24)
 
 ***
 
@@ -47,4 +47,4 @@ Defined in: [packages/devtools/src/index.ts:24](https://github.com/kucukkanat/mi
 readonly type: string;
 ```
 
-Defined in: [packages/devtools/src/index.ts:25](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/devtools/src/index.ts#L25)
+Defined in: [packages/devtools/src/index.ts:25](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/devtools/src/index.ts#L25)

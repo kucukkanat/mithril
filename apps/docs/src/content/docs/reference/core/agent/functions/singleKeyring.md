@@ -9,9 +9,9 @@ title: "singleKeyring"
 function singleKeyring(key, kid?): Keyring;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:127](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/seal.ts#L127)
+Defined in: [packages/core/src/agent/seal.ts:127](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/seal.ts#L127)
 
-The common single-key [Keyring](/mithril/reference/core/agent/interfaces/keyring/): signs and verifies with one key under a fixed `kid`.
+The common single-key [Keyring](/reference/core/agent/interfaces/keyring/): signs and verifies with one key under a fixed `kid`.
 
 ## Parameters
 
@@ -22,7 +22,7 @@ The common single-key [Keyring](/mithril/reference/core/agent/interfaces/keyring
 
 ## Returns
 
-[`Keyring`](/mithril/reference/core/agent/interfaces/keyring/)
+[`Keyring`](/reference/core/agent/interfaces/keyring/)
 
 a keyring whose `current()` always returns this key and whose `resolve(id)` returns it only for
 the matching `kid`. Rotate by composing a keyring whose `current()` is new while `resolve()` retains the old.

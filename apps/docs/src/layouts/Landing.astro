@@ -1,5 +1,4 @@
 ---
-import { withBase } from "../lib/base.ts";
 /**
  * Standalone shell for the bespoke, full-bleed pages (landing, playground) that
  * live outside Starlight's docs layout. It loads the same tokens and mirrors
@@ -31,7 +30,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://mithril.dev
     {description && <meta property="og:description" content={description} />}
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" href={withBase("/favicon.svg")} type="image/svg+xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {site && <link rel="sitemap" href={`${site}/sitemap-index.xml`} />}
     <script is:inline>
       // Keep the standalone pages in sync with Starlight's theme choice.

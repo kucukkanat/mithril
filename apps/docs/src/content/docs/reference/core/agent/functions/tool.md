@@ -11,7 +11,7 @@ title: "tool"
 function tool<Deps>(): ToolFactory<Deps>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:98](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L98)
+Defined in: [packages/core/src/agent/factory.ts:98](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L98)
 
 Define a tool, or curry over `Deps` first.
 
@@ -23,15 +23,15 @@ Define a tool, or curry over `Deps` first.
 
 ### Returns
 
-[`ToolFactory`](/mithril/reference/core/agent/interfaces/toolfactory/)\<`Deps`\>
+[`ToolFactory`](/reference/core/agent/interfaces/toolfactory/)\<`Deps`\>
 
-the typed [Tool](/mithril/reference/core/protocol/interfaces/tool/), or a [ToolFactory](/mithril/reference/core/agent/interfaces/toolfactory/) when called with no arguments.
+the typed [Tool](/reference/core/protocol/interfaces/tool/), or a [ToolFactory](/reference/core/agent/interfaces/toolfactory/) when called with no arguments.
 
 ### Remarks
 
 Two forms:
-- `tool<Deps>()` returns a [ToolFactory](/mithril/reference/core/agent/interfaces/toolfactory/) that binds `Deps` for every subsequent definition.
-- `tool(def)` defines a single tool inline (dependency-free unless bound via [createHarness](/mithril/reference/core/agent/functions/createharness/)).
+- `tool<Deps>()` returns a [ToolFactory](/reference/core/agent/interfaces/toolfactory/) that binds `Deps` for every subsequent definition.
+- `tool(def)` defines a single tool inline (dependency-free unless bound via [createHarness](/reference/core/agent/functions/createharness/)).
 
 The definition is returned essentially as-is; the value of this helper is the type inference it drives
 (tool name, validated input type, and JSON-safe output type).
@@ -58,7 +58,7 @@ const getWeather = tool({
 function tool<Name, SIn, Out>(def): Tool<Name, Infer<SIn>, Out, unknown>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:99](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/agent/factory.ts#L99)
+Defined in: [packages/core/src/agent/factory.ts:99](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/agent/factory.ts#L99)
 
 Define a tool, or curry over `Deps` first.
 
@@ -67,26 +67,26 @@ Define a tool, or curry over `Deps` first.
 | Type Parameter | Default type |
 | ------ | ------ |
 | `Name` *extends* `string` | - |
-| `SIn` *extends* [`StandardSchemaV1`](/mithril/reference/core/protocol/interfaces/standardschemav1/)\<`unknown`, `unknown`\> | - |
-| `Out` *extends* [`JsonValue`](/mithril/reference/core/protocol/type-aliases/jsonvalue/) | `string` |
+| `SIn` *extends* [`StandardSchemaV1`](/reference/core/protocol/interfaces/standardschemav1/)\<`unknown`, `unknown`\> | - |
+| `Out` *extends* [`JsonValue`](/reference/core/protocol/type-aliases/jsonvalue/) | `string` |
 
 ### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `def` | [`ToolDef`](/mithril/reference/core/agent/interfaces/tooldef/)\<`Name`, `SIn`, `unknown`, `Out`\> | the [ToolDef](/mithril/reference/core/agent/interfaces/tooldef/), omitted in the curried form. |
+| `def` | [`ToolDef`](/reference/core/agent/interfaces/tooldef/)\<`Name`, `SIn`, `unknown`, `Out`\> | the [ToolDef](/reference/core/agent/interfaces/tooldef/), omitted in the curried form. |
 
 ### Returns
 
-[`Tool`](/mithril/reference/core/protocol/interfaces/tool/)\<`Name`, `Infer`\<`SIn`\>, `Out`, `unknown`\>
+[`Tool`](/reference/core/protocol/interfaces/tool/)\<`Name`, `Infer`\<`SIn`\>, `Out`, `unknown`\>
 
-the typed [Tool](/mithril/reference/core/protocol/interfaces/tool/), or a [ToolFactory](/mithril/reference/core/agent/interfaces/toolfactory/) when called with no arguments.
+the typed [Tool](/reference/core/protocol/interfaces/tool/), or a [ToolFactory](/reference/core/agent/interfaces/toolfactory/) when called with no arguments.
 
 ### Remarks
 
 Two forms:
-- `tool<Deps>()` returns a [ToolFactory](/mithril/reference/core/agent/interfaces/toolfactory/) that binds `Deps` for every subsequent definition.
-- `tool(def)` defines a single tool inline (dependency-free unless bound via [createHarness](/mithril/reference/core/agent/functions/createharness/)).
+- `tool<Deps>()` returns a [ToolFactory](/reference/core/agent/interfaces/toolfactory/) that binds `Deps` for every subsequent definition.
+- `tool(def)` defines a single tool inline (dependency-free unless bound via [createHarness](/reference/core/agent/functions/createharness/)).
 
 The definition is returned essentially as-is; the value of this helper is the type inference it drives
 (tool name, validated input type, and JSON-safe output type).

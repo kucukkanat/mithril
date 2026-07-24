@@ -9,9 +9,9 @@ title: "memoryFileSystem"
 function memoryFileSystem(now?): FileSystem;
 ```
 
-Defined in: [packages/fs/src/index.ts:85](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/fs/src/index.ts#L85)
+Defined in: [packages/fs/src/index.ts:85](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/fs/src/index.ts#L85)
 
-Create an in-memory [FileSystem](/mithril/reference/fs/index/interfaces/filesystem/) — works in any runtime, holds nothing on disk.
+Create an in-memory [FileSystem](/reference/fs/index/interfaces/filesystem/) — works in any runtime, holds nothing on disk.
 
 ## Parameters
 
@@ -21,13 +21,13 @@ Create an in-memory [FileSystem](/mithril/reference/fs/index/interfaces/filesyst
 
 ## Returns
 
-[`FileSystem`](/mithril/reference/fs/index/interfaces/filesystem/)
+[`FileSystem`](/reference/fs/index/interfaces/filesystem/)
 
 A fresh, empty rooted filesystem backed by a `Map`.
 
 ## Remarks
 
-Directories are implicit: they exist as long as a file lives under them, so [FileSystem.mkdir](/mithril/reference/fs/index/interfaces/filesystem/#mkdir)
+Directories are implicit: they exist as long as a file lives under them, so [FileSystem.mkdir](/reference/fs/index/interfaces/filesystem/#mkdir)
 is a no-op. Ideal for tests and ephemeral scratch space.
 
 ## Example

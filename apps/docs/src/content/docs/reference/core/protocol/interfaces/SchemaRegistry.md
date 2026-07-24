@@ -5,7 +5,7 @@ prev: false
 title: "SchemaRegistry"
 ---
 
-Defined in: [packages/core/src/protocol/suspension.ts:124](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/suspension.ts#L124)
+Defined in: [packages/core/src/protocol/suspension.ts:124](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/suspension.ts#L124)
 
 Resolves a `resolutionSchemaId` to its Standard Schema for validating a resume resolution.
 
@@ -17,7 +17,7 @@ Resolves a `resolutionSchemaId` to its Standard Schema for validating a resume r
 readonly ids: readonly string[];
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:126](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/suspension.ts#L126)
+Defined in: [packages/core/src/protocol/suspension.ts:126](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/suspension.ts#L126)
 
 ## Methods
 
@@ -29,7 +29,7 @@ get(id):
   | undefined;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:125](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/suspension.ts#L125)
+Defined in: [packages/core/src/protocol/suspension.ts:125](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/suspension.ts#L125)
 
 #### Parameters
 
@@ -39,5 +39,5 @@ Defined in: [packages/core/src/protocol/suspension.ts:125](https://github.com/ku
 
 #### Returns
 
-  \| [`StandardSchemaV1`](/mithril/reference/core/protocol/interfaces/standardschemav1/)\<`unknown`, [`JsonValue`](/mithril/reference/core/protocol/type-aliases/jsonvalue/)\>
+  \| [`StandardSchemaV1`](/reference/core/protocol/interfaces/standardschemav1/)\<`unknown`, [`JsonValue`](/reference/core/protocol/type-aliases/jsonvalue/)\>
   \| `undefined`

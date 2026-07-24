@@ -9,7 +9,7 @@ title: "transformers"
 function transformers(model?, opts?): ModelHandle;
 ```
 
-Defined in: [transformers/index.ts:53](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/providers/src/transformers/index.ts#L53)
+Defined in: [transformers/index.ts:53](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/providers/src/transformers/index.ts#L53)
 
 Self-wiring model handle for a local Transformers.js model: `agent({ model: transformers("…") })`.
 
@@ -17,8 +17,8 @@ Self-wiring model handle for a local Transformers.js model: `agent({ model: tran
 
 | Parameter | Type | Default value | Description |
 | ------ | ------ | ------ | ------ |
-| `model` | `string` | `DEFAULT_MODEL` | a Hugging Face repo id (default [DEFAULT\_MODEL](/mithril/reference/providers/transformers/variables/default_model/)), e.g. `onnx-community/Qwen3-0.6B-ONNX`. |
-| `opts?` | [`TransformersHandleOptions`](/mithril/reference/providers/transformers/interfaces/transformershandleoptions/) | `undefined` | [TransformersHandleOptions](/mithril/reference/providers/transformers/interfaces/transformershandleoptions/) — `onProgress`/`device`/`dtype`, or an injected `engine`. |
+| `model` | `string` | `DEFAULT_MODEL` | a Hugging Face repo id (default [DEFAULT\_MODEL](/reference/providers/transformers/variables/default_model/)), e.g. `onnx-community/Qwen3-0.6B-ONNX`. |
+| `opts?` | [`TransformersHandleOptions`](/reference/providers/transformers/interfaces/transformershandleoptions/) | `undefined` | [TransformersHandleOptions](/reference/providers/transformers/interfaces/transformershandleoptions/) — `onProgress`/`device`/`dtype`, or an injected `engine`. |
 
 ## Returns
 

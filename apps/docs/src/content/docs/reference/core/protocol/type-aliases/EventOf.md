@@ -11,12 +11,12 @@ type EventOf<T> = Extract<MithrilEvent, {
 }>;
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:102](https://github.com/kucukkanat/mithril/blob/027d627cec23402d12149767f5ba5f29d7e47052/packages/core/src/protocol/events.ts#L102)
+Defined in: [packages/core/src/protocol/events.ts:102](https://github.com/kucukkanat/mithril/blob/55ab1949bb0acd328508323b9e426a08a538cc79/packages/core/src/protocol/events.ts#L102)
 
-The specific [MithrilEvent](/mithril/reference/core/protocol/type-aliases/mithrilevent/) member whose discriminant is `T`.
+The specific [MithrilEvent](/reference/core/protocol/type-aliases/mithrilevent/) member whose discriminant is `T`.
 
 ## Type Parameters
 
 | Type Parameter | Description |
 | ------ | ------ |
-| `T` *extends* [`EventType`](/mithril/reference/core/protocol/type-aliases/eventtype/) | An [EventType](/mithril/reference/core/protocol/type-aliases/eventtype/) literal, e.g. `'tool.call'`. |
+| `T` *extends* [`EventType`](/reference/core/protocol/type-aliases/eventtype/) | An [EventType](/reference/core/protocol/type-aliases/eventtype/) literal, e.g. `'tool.call'`. |
