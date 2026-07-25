@@ -1,0 +1,66 @@
+# Tool-authoring suite — can the model DEFINE a tool, not just call one?
+#
+# This is the honest capability floor for self-authored tools. `define_tool` takes a nested object (a name,
+# a JSON Schema, and a composition body), which is materially harder than the flat tool calls the
+# tool-calling suite measures — and this repo's own results show several small local models scoring zero on
+# even those. Publishing that as a claim without measuring it would be exactly the drift the docs forbid, so
+# it is measured here instead.
+#
+# The `authoring` toolset gives the model two primitives (get_weather, c_to_f) and the three meta-tools.
+# Composing them is the only way to answer in Fahrenheit, so a pass means it actually composed.
+- description: "define a tool — compose weather + conversion"
+  vars:
+    input: "I want the weather in Paris in Fahrenheit. First define a tool that does this by combining the tools you already have, then use it."
+    toolset: authoring
+    expectToolCalls:
+      - name: define_tool
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "define a tool — the definition names a composition body"
+  vars:
+    input: "Define a tool called weather_f that looks up a city's weather and converts it to Fahrenheit, then call it for Paris."
+    toolset: authoring
+    expectToolCalls:
+      - name: define_tool
+        args: { name: "weather_f" }
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "use the defined tool on the next turn"
+  vars:
+    input: "Define a tool that gives weather in Fahrenheit, then use it to tell me the temperature in Paris."
+    toolset: authoring
+    # The timing rule made observable: a tool defined on one turn is callable on the NEXT one, so a model
+    # that only defines has not finished the task.
+    expectToolCalls:
+      - name: define_tool
+      - name: weather_f
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "inspect before defining — list_tools"
+  vars:
+    input: "What tools have you defined so far in this session? Use list_tools to check."
+    toolset: authoring
+    expectToolCalls:
+      - name: list_tools
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls
+
+- description: "prefer an existing tool over defining a redundant one"
+  vars:
+    input: "What's the weather in Paris? Answer in Celsius."
+    toolset: authoring
+    # Defining a tool here would be waste: get_weather already answers it. Measures restraint, not just
+    # capability — an agent that authors a tool for every request burns its whole context on tool defs.
+    expectToolCalls:
+      - name: get_weather
+        args: { city: "Paris" }
+  assert:
+    - type: javascript
+      value: file://src/grading.ts:expectToolCalls

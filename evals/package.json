@@ -13,6 +13,7 @@
     "view": "bunx promptfoo view"
   },
   "dependencies": {
+    "@mithril/authoring": "workspace:*",
     "@mithril/core": "workspace:*",
     "@mithril/providers": "workspace:*",
     "@mithril/runner-web": "workspace:*"

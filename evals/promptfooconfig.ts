@@ -59,6 +59,7 @@ const suites: readonly Suite[] = [
   { file: "suites/structured-output.yaml", category: "Structured output" },
   { file: "suites/reasoning-qa.yaml", category: "Reasoning / QA" },
   { file: "suites/orchestration.yaml", category: "Orchestration" },
+  { file: "suites/tool-authoring.yaml", category: "Tool authoring" },
   ...(rubricEnabled ? [{ file: "suites/reasoning-rubric.yaml", category: "Reasoning (rubric)" }] : []),
 ];
 

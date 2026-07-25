@@ -1,0 +1,20 @@
+{
+  "name": "@mithril/authoring",
+  "version": "0.0.0",
+  "description": "Runtime tool authoring for Mithril — the agent defines its own tools, gated by approval.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./persistence": {
+      "types": "./src/persistence.ts",
+      "import": "./src/persistence.ts"
+    }
+  },
+  "scripts": {
+    "test": "bun test"
+  }
+}

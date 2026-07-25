@@ -6,6 +6,7 @@
  * both. Everything runs on-device on CPU (onnxruntime-node) — no network, no keys.
  */
 import { agent } from "@mithril/core/agent";
+import { toolAuthoring } from "@mithril/authoring";
 import { transformers } from "@mithril/providers/transformers";
 import { resolveHealing } from "./healing.ts";
 import { ORCHESTRATOR_INSTRUCTIONS, orchestratorTools } from "./orchestrator.ts";
@@ -66,10 +67,14 @@ export default class MithrilLocalProvider {
     const instructions = typeof vars["instructions"] === "string" ? vars["instructions"] : defaultInstructions;
     const output = outputSchema(vars["outputSchema"]);
 
+    // The authoring suite measures whether a model can emit a valid nested tool definition at all — the
+    // honest capability floor for self-authored tools. Approval is off so a run completes unattended.
+    const isAuthoring = vars["toolset"] === "authoring";
     const a = agent({
       model,
       instructions,
       ...(tools.length > 0 ? { tools } : {}),
+      ...(isAuthoring ? { use: [toolAuthoring({ requireApprovalToDefine: false })] } : {}),
       ...(output !== undefined ? { output, outputSchema: outputSchemaConverter } : {}),
       ...resolveHealing(this.config.healingVariant),
     });

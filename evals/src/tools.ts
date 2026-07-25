@@ -44,12 +44,24 @@ const convertCurrency = tool({
   execute: async ({ amount, from, to }) => ({ amount, from, to, converted: amount * 0.9 }),
 });
 
+/** Celsius → Fahrenheit: a clean composition target for the tool-authoring suite. */
+const celsiusToFahrenheit = tool({
+  name: "c_to_f",
+  description: "Convert a temperature from Celsius to Fahrenheit.",
+  inputSchema: z.object({ celsius: z.number().describe("Temperature in degrees Celsius") }),
+  examples: [{ celsius: 21 }],
+  execute: async ({ celsius }) => ({ f: celsius * 1.8 + 32 }),
+});
+
 /** The named tool sets a suite test can request via its `toolset` var. */
 const TOOLSETS = {
   weather: [getWeather],
   math: [calculate],
   search: [searchDocs],
   multi: [getWeather, calculate, searchDocs, convertCurrency],
+  // Two composable primitives: enough to build `weather in Fahrenheit` and nothing else, so a pass means
+  // the model actually composed rather than guessed.
+  authoring: [getWeather, celsiusToFahrenheit],
 } as const;
 
 /** Resolve a `toolset` var to the tool array for `agent({ tools })`; unknown/empty ⇒ no tools. */

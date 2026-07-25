@@ -13,6 +13,7 @@ import * as kvIndexedDb from "@mithril/kv/indexeddb";
 import * as fs from "@mithril/fs";
 import * as fsOpfs from "@mithril/fs/opfs";
 import * as vectors from "@mithril/vectors";
+import * as authoring from "@mithril/authoring";
 import * as workflows from "@mithril/workflows";
 import * as otel from "@mithril/otel";
 import * as mithrilMeta from "mithril";
@@ -60,6 +61,7 @@ export function defaultModules(opts?: DefaultModulesOptions): Record<string, unk
     "@mithril/fs": fs,
     "@mithril/fs/opfs": fsOpfs,
     "@mithril/vectors": vectors,
+    "@mithril/authoring": authoring,
     "@mithril/workflows": workflows,
     "@mithril/otel": otel,
     zod: { z },
