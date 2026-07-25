@@ -9,7 +9,7 @@ title: "transformers"
 function transformers(model?, opts?): ModelHandle;
 ```
 
-Defined in: [transformers/index.ts:53](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/providers/src/transformers/index.ts#L53)
+Defined in: [transformers/index.ts:53](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/providers/src/transformers/index.ts#L53)
 
 Self-wiring model handle for a local Transformers.js model: `agent({ model: transformers("…") })`.
 

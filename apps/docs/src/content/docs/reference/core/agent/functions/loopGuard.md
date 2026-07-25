@@ -9,7 +9,7 @@ title: "loopGuard"
 function loopGuard<Deps>(opts?): Middleware<Deps>;
 ```
 
-Defined in: [packages/core/src/agent/healing.ts:264](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/healing.ts#L264)
+Defined in: [packages/core/src/agent/healing.ts:264](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/healing.ts#L264)
 
 Step-altitude no-progress guard: over identical `(tool, canonical-args)` signatures, the model is
 steered once at `steerAt` (a `loop.detected` with `action: "steer"` plus an injected nudge), then the

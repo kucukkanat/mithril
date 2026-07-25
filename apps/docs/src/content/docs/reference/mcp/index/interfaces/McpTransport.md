@@ -5,15 +5,17 @@ prev: false
 title: "McpTransport"
 ---
 
-Defined in: [index.ts:27](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/index.ts#L27)
+Defined in: [packages/mcp/src/index.ts:68](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L68)
 
-The transport you implement to carry MCP JSON-RPC calls to a server.
+The transport you implement to carry MCP JSON-RPC traffic to a server.
 
 ## Remarks
 
 An official Streamable-HTTP transport ships at `@mithril/mcp/http` (httpTransport). Implement
 this interface yourself only for other carriers — stdio, or the in-memory server the client is tested
-against. Passed to [mcpClient](/mithril/reference/mcp/index/functions/mcpclient/).
+against. `request` carries a call that expects a reply; `notify` (optional) carries a fire-and-forget
+JSON-RPC notification such as `notifications/initialized` (a transport that omits it simply skips the
+post-handshake notification). Passed to [mcpClient](/mithril/reference/mcp/index/functions/mcpclient/).
 
 ## Methods
 
@@ -23,9 +25,32 @@ against. Passed to [mcpClient](/mithril/reference/mcp/index/functions/mcpclient/
 optional close(): Promise<void>;
 ```
 
-Defined in: [index.ts:31](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/index.ts#L31)
+Defined in: [packages/mcp/src/index.ts:74](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L74)
 
 Optional teardown, invoked by [McpClient.close](/mithril/reference/mcp/index/interfaces/mcpclient/#close).
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### notify()?
+
+```ts
+optional notify(method, params): Promise<void>;
+```
+
+Defined in: [packages/mcp/src/index.ts:72](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L72)
+
+Send a JSON-RPC notification (no id, no reply expected), e.g. `"notifications/initialized"`.
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `method` | `string` |
+| `params` | `JsonValue` |
 
 #### Returns
 
@@ -39,7 +64,7 @@ Optional teardown, invoked by [McpClient.close](/mithril/reference/mcp/index/int
 request(method, params): Promise<JsonValue>;
 ```
 
-Defined in: [index.ts:29](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/index.ts#L29)
+Defined in: [packages/mcp/src/index.ts:70](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L70)
 
 Send an MCP JSON-RPC request (e.g. `"tools/list"`, `"tools/call"`) and resolve its result.
 

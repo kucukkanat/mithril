@@ -9,7 +9,7 @@ title: "assertContiguous"
 function assertContiguous(prev, e): ContiguityResult;
 ```
 
-Defined in: [packages/core/src/protocol/transport.ts:64](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/transport.ts#L64)
+Defined in: [packages/core/src/protocol/transport.ts:64](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/transport.ts#L64)
 
 Check whether `e` immediately follows the previously-seen `seq`.
 

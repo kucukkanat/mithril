@@ -5,6 +5,7 @@ import {
   type ChatRequest,
   type CheckpointRecord,
   classifiedError,
+  type ContentPart,
   type EventConsumer,
   type EventMeta,
   type FinalizeCall,
@@ -12,6 +13,7 @@ import {
   type FinishReason,
   isSuspend,
   type JsonValue,
+  normalizeContent,
   type JsonSchemaConverter,
   type Middleware,
   type MiddlewareContext,
@@ -85,6 +87,24 @@ import { defaultRuntime } from "./runtime.ts";
 
 const ZERO_DELTA: UsageDelta = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, costMicroUsd: 0 };
 const APPROVAL_SCHEMA_ID = "mithril.approval";
+/** Default cap on tool calls executed concurrently within a single step (see `maxConcurrentTools`). */
+const DEFAULT_TOOL_CONCURRENCY = 8;
+
+// Run `fn(0..count-1)` with at most `limit` in flight at once — a bounded worker pool that dispatches indices
+// in order. Workers pull the next index and await `fn`, so slow calls never block ready ones. Used to execute
+// a step's independent tool calls concurrently (results are still committed in call order by the caller).
+async function forEachConcurrent(count: number, limit: number, fn: (i: number) => Promise<void>): Promise<void> {
+  if (count <= 0) return;
+  let next = 0;
+  const worker = async (): Promise<void> => {
+    for (;;) {
+      const i = next++;
+      if (i >= count) return;
+      await fn(i);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(Math.max(1, limit), count) }, () => worker()));
+}
 
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 type EventBody = DistributiveOmit<MithrilEvent, keyof EventMeta>;
@@ -96,7 +116,7 @@ interface Call {
 }
 interface LoopMessage {
   readonly role: string;
-  readonly content: string;
+  readonly content: string | readonly ContentPart[];
   readonly toolCalls: readonly Call[];
 }
 
@@ -207,6 +227,13 @@ export interface LoopOptions<Deps> {
   readonly outputSchema?: JsonSchemaConverter;
   readonly maxTokens?: number;
   readonly maxCostMicroUsd?: number;
+  /**
+   * Max tool calls executed concurrently within one step (default {@link DEFAULT_TOOL_CONCURRENCY}). A model
+   * that requests several independent tool calls in a turn runs them in a bounded pool instead of serially;
+   * `1` restores strict sequential execution. Results still commit in call order, so the event stream and
+   * message history are deterministic regardless of completion order.
+   */
+  readonly maxConcurrentTools?: number;
   /**
    * The self-healing stack. Omitted ⇒ the batteries-included default ({@link healing.defaults}); `false`
    * or `[]` ⇒ a raw loop (crash-hardening still on); an array ⇒ exactly those healing middleware. Composed
@@ -542,8 +569,14 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
     token: serialize(step, pending),
   });
 
-  // Execute a list of tool calls in order. Yields events; returns a PendingSuspension when a call pauses
-  // (approval, Tier-1b return, or Tier-2 mid-tool). `firstDirective` applies to calls[0] only (the resumed one).
+  // Execute a turn's tool calls CONCURRENTLY (bounded by `maxConcurrentTools`), committing results in strict
+  // call order so the event stream and message history stay deterministic regardless of completion order.
+  // Yields events; returns a PendingSuspension when a call pauses. `firstDirective` applies to calls[0] only
+  // (the resumed one). Suspension keeps sequential semantics: Tier-1 approval is a barrier resolved BEFORE any
+  // execution (a gated call never speculatively runs later calls); a Tier-1b/Tier-2 mid-tool suspension forms
+  // a second barrier — the earliest barrier wins, calls before it commit, the barrier call suspends. (A tool
+  // that suspends mid-execution should journal its side effects: calls after it in the same turn re-run on
+  // resume, and `ctx.journal` keeps that replay-safe.)
   async function* runToolCalls(
     calls: readonly Call[],
     firstDirective: Directive | undefined,
@@ -551,129 +584,282 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
     step: number,
   ): AsyncGenerator<MithrilEvent, { readonly suspend?: PendingSuspension; readonly outcomes: readonly ToolStepOutcome[] }> {
     const outcomes: ToolStepOutcome[] = [];
-    for (let i = 0; i < calls.length; i++) {
-      const call = calls[i];
-      if (call === undefined) continue;
-      const directive = i === 0 ? firstDirective : undefined;
-      const toolSpan: SpanRef = { id: rt.randomUUID(), parentId: chatSpan.id, traceId, kind: "execute_tool" };
+    const concurrency = opts.maxConcurrentTools ?? DEFAULT_TOOL_CONCURRENCY;
+
+    // A per-call settled unit: raw event BODIES (unstamped) to emit in call order at flush, plus either a
+    // `commit` (append the tool message + record the outcome) or a `pending` suspension.
+    interface Settled {
+      readonly span: SpanRef;
+      readonly events: readonly EventBody[];
+      readonly commit?: () => void;
+      readonly pending?: PendingSuspension;
+    }
+    // A plan produced WITHOUT executing the call: a fully-settled unit (unknown tool / reject / return), a
+    // Tier-1 approval gate (known before execution), or an execution thunk.
+    interface Plan {
+      readonly span: SpanRef;
+      readonly approval?: PendingSuspension;
+      readonly approvalEvents?: readonly EventBody[];
+      readonly settled?: Settled;
+      readonly run?: () => Promise<Settled>;
+    }
+
+    // Raw-collecting contexts: they buffer event BODIES rather than stamping, so concurrent tools can still be
+    // emitted in deterministic call order — the loop stamps (assigning seq + notifying consumers) at flush.
+    const approvalContext = (sink: EventBody[]): RunContext<Deps> => ({
+      deps: opts.deps,
+      runId,
+      step,
+      signal,
+      usage,
+      runtime: rt,
+      transport,
+      ...(opts.providers !== undefined ? { providers: opts.providers } : {}),
+      emit(payload, type) {
+        sink.push({ type: type ?? "custom.emit", payload });
+      },
+      suspend() {
+        return Promise.reject(new MithrilError("NOT_IMPLEMENTED", "ctx.suspend() is only available inside a tool's execute()."));
+      },
+      journal(_key, fn) {
+        return fn();
+      },
+    });
+    const execContext = (exec: ExecState, sink: EventBody[]): RunContext<Deps> => ({
+      deps: opts.deps,
+      runId,
+      step,
+      signal,
+      usage,
+      runtime: rt,
+      transport,
+      ...(opts.providers !== undefined ? { providers: opts.providers } : {}),
+      emit(payload, type) {
+        sink.push({ type: type ?? "custom.emit", payload });
+      },
+      async suspend<Req extends SuspensionRequest>(req: Req) {
+        const ord = exec.ordinal++;
+        if (ord < exec.priorResolutions.length) return exec.priorResolutions[ord] as never;
+        throw new SuspendSignal("midtool", req, exec.journal, exec.priorResolutions);
+      },
+      async journal(key, fn) {
+        if (Object.hasOwn(exec.journal, key)) return exec.journal[key] as never;
+        const v = await fn();
+        exec.journal[key] = v as JsonValue;
+        return v;
+      },
+    });
+    const execMwContext = (sink: EventBody[]): MiddlewareContext<Deps> => ({
+      deps: opts.deps,
+      runId,
+      step,
+      signal,
+      runtime: rt,
+      journal: (_key, fn) => fn(),
+      emit: (e) => {
+        sink.push(e as EventBody);
+      },
+      steer: (message) => {
+        messages.push({ role: "user", content: message, toolCalls: [] });
+        steerPending = true;
+      },
+      halt: (error) => {
+        if (haltError === undefined) haltError = error;
+      },
+      get halted() {
+        return haltError !== undefined;
+      },
+      scope: <T>(key: string, init: () => T): T => {
+        if (!mwStore.has(key)) mwStore.set(key, init());
+        return mwStore.get(key) as T;
+      },
+    });
+
+    const okSettled = (call: Call, span: SpanRef, output: JsonValue, ms: number, pre: readonly EventBody[]): Settled => ({
+      span,
+      events: [...pre, { type: "tool.result", callId: call.callId, output, ms }],
+      commit: () => {
+        messages.push({ role: "tool", content: JSON.stringify(output), toolCalls: [] });
+        outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: true });
+      },
+    });
+
+    // Build the execution thunk for a call that must actually run (fresh-approved, edited, or Tier-2 replay).
+    const makeRun =
+      (call: Call, tool: AnyTool<Deps>, directive: Directive | undefined, span: SpanRef, sink: EventBody[]) => async (): Promise<Settled> => {
+        const exec: ExecState =
+          directive?.kind === "midtool"
+            ? { journal: { ...directive.journal }, priorResolutions: [...directive.resolutions, directive.value], ordinal: 0 }
+            : { journal: {}, priorResolutions: [], ordinal: 0 };
+        const rawInput = directive?.kind === "edit" ? directive.input : call.input;
+        const started = rt.now();
+        const ctx = execContext(exec, sink);
+        const mwCtx = execMwContext(sink);
+        const core = async (inv: ToolInvocation): Promise<ToolOutcome> => {
+          try {
+            const parsed = await resolveInput(tool.inputSchema, inv.input);
+            const raw = await runExecute(tool, parsed, ctx, (payload) => {
+              sink.push({ type: "tool.progress", callId: inv.callId, payload });
+            });
+            if (isSuspend(raw)) throw new SuspendSignal("return", raw.request, {}, []);
+            const output = raw as JsonValue;
+            // A declared outputSchema is enforced: a violating tool result is a classified tool.error the model
+            // sees, catching a silent-bug class (and MCP structuredContent drift).
+            if (tool.outputSchema !== undefined) {
+              const checked = await tool.outputSchema["~standard"].validate(output);
+              if (checked.issues !== undefined) {
+                throw new MithrilError(
+                  "INVALID_TOOL_OUTPUT",
+                  `tool "${inv.name}" returned output that failed its outputSchema: ${checked.issues.map((i) => i.message).join("; ")}`,
+                );
+              }
+            }
+            return { callId: inv.callId, status: "ok", output };
+          } catch (err) {
+            if (err instanceof SuspendSignal) throw err;
+            return { callId: inv.callId, status: "error", error: classifyToolError(err) };
+          }
+        };
+        const chain = middlewares.reduceRight<(inv: ToolInvocation) => Promise<ToolOutcome>>((next, mw) => {
+          const wrap = mw.tool;
+          return wrap === undefined ? next : (inv) => wrap(mwCtx, inv, next);
+        }, core);
+        const invocation: ToolInvocation = {
+          callId: call.callId,
+          name: call.name,
+          input: rawInput,
+          ...(tool.version !== undefined ? { version: tool.version } : {}),
+        };
+        let outcome: ToolOutcome;
+        try {
+          outcome = await chain(invocation);
+        } catch (err) {
+          if (err instanceof SuspendSignal) {
+            const descriptor = reqToDescriptor(err.request, call.callId);
+            const pending: PendingSuspension =
+              err.kind === "midtool"
+                ? { kind: "midtool", callId: call.callId, descriptor, journal: err.journal, resolutions: err.resolutions }
+                : { kind: "return", callId: call.callId, descriptor };
+            return { span, events: [...sink, { type: "suspend", descriptor }], pending };
+          }
+          // A tool-altitude middleware threw (not a suspension). Degrade to a model-visible tool.error rather
+          // than crashing the whole run — a buggy guardrail must not take the run down with it.
+          outcome = { callId: call.callId, status: "error", error: classifyToolError(err) };
+        }
+        if (outcome.status === "ok") return okSettled(call, span, outcome.output, rt.now() - started, sink);
+        const error = outcome.error;
+        return {
+          span,
+          events: [...sink, { type: "tool.error", callId: call.callId, error }],
+          commit: () => {
+            messages.push({ role: "tool", content: JSON.stringify({ error: error.message }), toolCalls: [] });
+            outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: false, error });
+          },
+        };
+      };
+
+    // Phase 1 — plan every call WITHOUT executing: resolve the tool, apply resume directives, and evaluate
+    // Tier-1 approval predicates. No side-effecting tool body runs here.
+    const plan = async (call: Call | undefined, directive: Directive | undefined): Promise<Plan> => {
+      const span: SpanRef = { id: rt.randomUUID(), parentId: chatSpan.id, traceId, kind: "execute_tool" };
+      if (call === undefined) return { span, settled: { span, events: [], commit: () => {} } };
       const tool = opts.tools.find((t) => t.name === call.name);
       if (tool === undefined) {
         const known = opts.tools.map((t) => t.name).join(", ");
         const error = classifiedError("UnknownTool", `No tool "${call.name}". Available tools: ${known}.`, "unknown_tool", { retryable: true });
-        yield stamp(toolSpan, { type: "tool.error", callId: call.callId, error });
-        messages.push({ role: "tool", content: `error: unknown tool ${call.name}. Available tools: ${known}.`, toolCalls: [] });
-        outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: false, error });
-        continue;
+        return {
+          span,
+          settled: {
+            span,
+            events: [{ type: "tool.error", callId: call.callId, error }],
+            commit: () => {
+              messages.push({ role: "tool", content: `error: unknown tool ${call.name}. Available tools: ${known}.`, toolCalls: [] });
+              outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: false, error });
+            },
+          },
+        };
       }
-      const emitted: MithrilEvent[] = [];
+      if (directive?.kind === "reject") {
+        const output: JsonValue = { approved: false, message: directive.message };
+        return { span, settled: okSettled(call, span, output, 0, []) };
+      }
+      // Tier-1b: the tool already produced a suspend marker; the resolution IS its result. Do not re-run.
+      if (directive?.kind === "return") return { span, settled: okSettled(call, span, directive.value, 0, []) };
 
-      // ── directive dispatch (calls[0] on resume) ──────────────────────────────────────────────────────
+      const sink: EventBody[] = [];
       if (directive === undefined) {
-        // Fresh call: gate behind Tier-1 approval if requested.
         const na = tool.needsApproval;
-        const ctx = makeCtx(step, toolSpan, emitted);
-        const needs = na === undefined ? false : typeof na === "boolean" ? na : await na(call.input as never, ctx);
-        for (const e of emitted) yield e;
-        emitted.length = 0;
+        const needs = na === undefined ? false : typeof na === "boolean" ? na : await na(call.input as never, approvalContext(sink));
         if (needs) {
-          yield stamp(toolSpan, { type: "tool.approval.requested", callId: call.callId, name: call.name, input: call.input });
           const descriptor: SuspensionDescriptor = {
             kind: "tool.approval",
             callId: call.callId,
             payload: { name: call.name, input: call.input },
             resolutionSchemaId: APPROVAL_SCHEMA_ID,
           };
-          yield stamp(toolSpan, { type: "suspend", descriptor });
-          return { suspend: { kind: "approval", callId: call.callId, descriptor }, outcomes };
+          return {
+            span,
+            approval: { kind: "approval", callId: call.callId, descriptor },
+            approvalEvents: [...sink, { type: "tool.approval.requested", callId: call.callId, name: call.name, input: call.input }, { type: "suspend", descriptor }],
+          };
         }
-      } else if (directive.kind === "reject") {
-        const output: JsonValue = { approved: false, message: directive.message };
-        yield stamp(toolSpan, { type: "tool.result", callId: call.callId, output, ms: 0 });
-        messages.push({ role: "tool", content: JSON.stringify(output), toolCalls: [] });
-        outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: true });
-        continue;
-      } else if (directive.kind === "return") {
-        // Tier-1b: the tool already produced a suspend marker; the resolution IS its result. Do not re-run.
-        yield stamp(toolSpan, { type: "tool.result", callId: call.callId, output: directive.value, ms: 0 });
-        messages.push({ role: "tool", content: JSON.stringify(directive.value), toolCalls: [] });
-        outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: true });
-        continue;
       }
+      return { span, run: makeRun(call, tool, directive, span, sink) };
+    };
 
-      // ── execution (fresh, approved/edited, or Tier-2 replay) ─────────────────────────────────────────
-      const exec: ExecState =
-        directive?.kind === "midtool"
-          ? { journal: { ...directive.journal }, priorResolutions: [...directive.resolutions, directive.value], ordinal: 0 }
-          : { journal: {}, priorResolutions: [], ordinal: 0 };
-      const rawInput = directive?.kind === "edit" ? directive.input : call.input;
-      const started = rt.now();
-      const ctx = makeExecCtx(step, toolSpan, emitted, exec);
-      const mwCtx = makeMwContext(step, toolSpan, emitted);
-      // Core execution as a ToolOutcome; middleware (tool altitude) wraps it and may short-circuit. A
-      // suspension (Tier-1b marker or Tier-2 ctx.suspend) unwinds as a SuspendSignal caught below.
-      const runCore = async (inv: ToolInvocation): Promise<ToolOutcome> => {
-        try {
-          const parsed = await resolveInput(tool.inputSchema, inv.input);
-          const raw = await runExecute(tool, parsed, ctx, (payload) => {
-            emitted.push(stamp(toolSpan, { type: "tool.progress", callId: inv.callId, payload }));
-          });
-          if (isSuspend(raw)) throw new SuspendSignal("return", raw.request, {}, []);
-          const output = raw as JsonValue;
-          // A declared outputSchema is now enforced (previously trusted as-is): a violating tool result is a
-          // classified tool.error the model sees, catching a silent-bug class (and MCP structuredContent drift).
-          if (tool.outputSchema !== undefined) {
-            const checked = await tool.outputSchema["~standard"].validate(output);
-            if (checked.issues !== undefined) {
-              throw new MithrilError(
-                "INVALID_TOOL_OUTPUT",
-                `tool "${inv.name}" returned output that failed its outputSchema: ${checked.issues.map((i) => i.message).join("; ")}`,
-              );
-            }
-          }
-          return { callId: inv.callId, status: "ok", output };
-        } catch (err) {
-          if (err instanceof SuspendSignal) throw err;
-          return { callId: inv.callId, status: "error", error: classifyToolError(err) };
-        }
-      };
-      const chain = middlewares.reduceRight<(inv: ToolInvocation) => Promise<ToolOutcome>>((next, mw) => {
-        const wrap = mw.tool;
-        return wrap === undefined ? next : (inv) => wrap(mwCtx, inv, next);
-      }, runCore);
-      const invocation: ToolInvocation = {
-        callId: call.callId,
-        name: call.name,
-        input: rawInput,
-        ...(tool.version !== undefined ? { version: tool.version } : {}),
-      };
-      let outcome: ToolOutcome;
-      try {
-        outcome = await chain(invocation);
-      } catch (err) {
-        if (err instanceof SuspendSignal) {
-          for (const e of emitted) yield e; // flush any progress/custom events emitted before the pause
-          const descriptor = reqToDescriptor(err.request, call.callId);
-          yield stamp(toolSpan, { type: "suspend", descriptor });
-          const pending: PendingSuspension =
-            err.kind === "midtool"
-              ? { kind: "midtool", callId: call.callId, descriptor, journal: err.journal, resolutions: err.resolutions }
-              : { kind: "return", callId: call.callId, descriptor };
-          return { suspend: pending, outcomes };
-        }
-        // A tool-altitude middleware threw (not a suspension). Degrade to a model-visible tool.error
-        // rather than crashing the whole run — a buggy guardrail must not take the run down with it.
-        outcome = { callId: call.callId, status: "error", error: classifyToolError(err) };
+    const plans: Plan[] = new Array<Plan>(calls.length);
+    await forEachConcurrent(calls.length, concurrency, async (i) => {
+      plans[i] = await plan(calls[i], i === 0 ? firstDirective : undefined);
+    });
+
+    // The Tier-1 approval barrier is known without executing anything: the first call needing approval
+    // suspends, and — exactly as a sequential loop would — no call at or after it runs.
+    let approvalBarrier = calls.length;
+    for (let i = 0; i < calls.length; i++) {
+      if (plans[i]?.approval !== undefined) {
+        approvalBarrier = i;
+        break;
       }
-      for (const e of emitted) yield e;
-      if (outcome.status === "ok") {
-        yield stamp(toolSpan, { type: "tool.result", callId: call.callId, output: outcome.output, ms: rt.now() - started });
-        messages.push({ role: "tool", content: JSON.stringify(outcome.output), toolCalls: [] });
-        outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: true });
-      } else {
-        yield stamp(toolSpan, { type: "tool.error", callId: call.callId, error: outcome.error });
-        messages.push({ role: "tool", content: JSON.stringify({ error: outcome.error.message }), toolCalls: [] });
-        outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: false, error: outcome.error });
+    }
+
+    // Phase 2 — execute the eligible prefix [0, approvalBarrier) concurrently. Settled plans need no work.
+    const settled: (Settled | undefined)[] = new Array<Settled | undefined>(approvalBarrier);
+    await forEachConcurrent(approvalBarrier, concurrency, async (i) => {
+      const p = plans[i];
+      settled[i] = p?.settled ?? (p?.run !== undefined ? await p.run() : undefined);
+    });
+
+    // A Tier-1b/Tier-2 suspension (discoverable only by running) forms a second barrier; the earliest wins.
+    let suspendBarrier = approvalBarrier;
+    for (let i = 0; i < approvalBarrier; i++) {
+      if (settled[i]?.pending !== undefined) {
+        suspendBarrier = i;
+        break;
       }
+    }
+    const barrier = Math.min(approvalBarrier, suspendBarrier);
+
+    // Flush [0, barrier) in strict call order: stamp each buffered event (deterministic seq) and commit.
+    for (let i = 0; i < barrier; i++) {
+      const s = settled[i];
+      if (s === undefined) continue;
+      for (const body of s.events) yield stamp(s.span, body);
+      s.commit?.();
+    }
+    if (barrier >= calls.length) return { outcomes };
+    // A mid-tool suspension takes precedence when it is the earlier barrier.
+    if (suspendBarrier < approvalBarrier) {
+      const s = settled[suspendBarrier];
+      if (s?.pending !== undefined) {
+        for (const body of s.events) yield stamp(s.span, body);
+        return { suspend: s.pending, outcomes };
+      }
+    }
+    // Otherwise the barrier is a Tier-1 approval gate.
+    const gate = plans[barrier];
+    if (gate?.approval !== undefined) {
+      for (const body of gate.approvalEvents ?? []) yield stamp(gate.span, body);
+      return { suspend: gate.approval, outcomes };
     }
     return { outcomes };
   }
@@ -681,7 +867,7 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
   // ── entry: fresh vs resume ────────────────────────────────────────────────────────────────────────
   if (opts.resume === undefined) {
     if (typeof opts.input === "string") messages.push({ role: "user", content: opts.input, toolCalls: [] });
-    else for (const m of opts.input) messages.push({ role: m.role, content: m.content, toolCalls: [] });
+    else for (const m of opts.input) messages.push({ role: m.role, content: normalizeContent(m.content), toolCalls: [] });
     const preCtx = makeCtx(-1, rootSpan, []);
     const instructions = typeof opts.instructions === "string" ? opts.instructions : await opts.instructions(preCtx);
     yield stamp(rootSpan, { type: "run.start", input: inputToJson(opts.input), model: modelId, depsDigest: "" });

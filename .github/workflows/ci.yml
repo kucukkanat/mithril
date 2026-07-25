@@ -1,0 +1,44 @@
+name: CI
+
+# Correctness gate: the framework's own verification suite must pass on every push and PR. Mirrors the
+# checks in CLAUDE.md (bun test, strict typecheck, the runtime-agnostic browser-safe gate) so a regression
+# cannot merge unblocked. Docs checks run only when docs-affecting files change (they need the site build).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Test · Typecheck · Browser-safe
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Test (framework)
+        run: bun test
+
+      - name: Typecheck (strict tsc, all packages)
+        run: bun run typecheck
+
+      - name: Browser-safe entrypoints
+        run: bun run check:browser-safe

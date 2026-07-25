@@ -9,7 +9,7 @@ title: "opfsFileSystem"
 function opfsFileSystem(): FileSystem;
 ```
 
-Defined in: [packages/fs/src/opfs.ts:48](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/fs/src/opfs.ts#L48)
+Defined in: [packages/fs/src/opfs.ts:48](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/fs/src/opfs.ts#L48)
 
 ## Returns
 

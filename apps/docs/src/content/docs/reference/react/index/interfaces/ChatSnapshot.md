@@ -5,7 +5,7 @@ prev: false
 title: "ChatSnapshot"
 ---
 
-Defined in: [index.ts:120](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/react/src/index.ts#L120)
+Defined in: [index.ts:120](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/react/src/index.ts#L120)
 
 An immutable view of a chat: completed `messages`, the in-flight assistant `streaming` text, and `status`.
 
@@ -21,7 +21,7 @@ An immutable view of a chat: completed `messages`, the in-flight assistant `stre
 readonly messages: readonly ChatMessage[];
 ```
 
-Defined in: [index.ts:121](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/react/src/index.ts#L121)
+Defined in: [index.ts:121](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/react/src/index.ts#L121)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [index.ts:121](https://github.com/kucukkanat/mithril/blob/2df801475c
 readonly status: "error" | "streaming" | "idle";
 ```
 
-Defined in: [index.ts:123](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/react/src/index.ts#L123)
+Defined in: [index.ts:123](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/react/src/index.ts#L123)
 
 ***
 
@@ -41,4 +41,4 @@ Defined in: [index.ts:123](https://github.com/kucukkanat/mithril/blob/2df801475c
 readonly streaming: string;
 ```
 
-Defined in: [index.ts:122](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/react/src/index.ts#L122)
+Defined in: [index.ts:122](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/react/src/index.ts#L122)

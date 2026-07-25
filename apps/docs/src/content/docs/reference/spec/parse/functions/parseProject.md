@@ -12,7 +12,7 @@ function parseProject(
    prev?): ParseResult;
 ```
 
-Defined in: [packages/spec/src/parse.ts:358](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/parse.ts#L358)
+Defined in: [packages/spec/src/parse.ts:358](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/parse.ts#L358)
 
 Parse a whole source file into a [ProjectSpec](/mithril/reference/spec/index/interfaces/projectspec/). `prev` carries what code cannot express —
 the project `name` and canvas `meta` — forward across reparses.

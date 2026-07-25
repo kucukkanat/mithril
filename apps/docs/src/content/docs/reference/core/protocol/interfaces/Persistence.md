@@ -5,7 +5,7 @@ prev: false
 title: "Persistence"
 ---
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:70](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/checkpointer.ts#L70)
+Defined in: [packages/core/src/protocol/checkpointer.ts:70](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/checkpointer.ts#L70)
 
 Opt-in durable persistence for a run, passed as `RunOptions.persistence`.
 
@@ -45,7 +45,7 @@ if (r.status === "suspended") {
 readonly checkpointer: Checkpointer;
 ```
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:72](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/checkpointer.ts#L72)
+Defined in: [packages/core/src/protocol/checkpointer.ts:72](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/checkpointer.ts#L72)
 
 Where checkpoints are written and read.
 
@@ -57,7 +57,7 @@ Where checkpoints are written and read.
 readonly optional open?: (blob) => string | Promise<string>;
 ```
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:78](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/checkpointer.ts#L78)
+Defined in: [packages/core/src/protocol/checkpointer.ts:78](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/checkpointer.ts#L78)
 
 Optional: reverse of `seal`, applied to a stored blob before resume (e.g. wrap [open](/mithril/reference/core/protocol/interfaces/persistence/#open)).
 
@@ -79,7 +79,7 @@ Optional: reverse of `seal`, applied to a stored blob before resume (e.g. wrap [
 readonly optional runId?: string;
 ```
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:74](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/checkpointer.ts#L74)
+Defined in: [packages/core/src/protocol/checkpointer.ts:74](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/checkpointer.ts#L74)
 
 Stable id addressing this run across processes; omitted ⇒ a fresh random id.
 
@@ -91,7 +91,7 @@ Stable id addressing this run across processes; omitted ⇒ a fresh random id.
 readonly optional seal?: (token) => string | Promise<string>;
 ```
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:76](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/checkpointer.ts#L76)
+Defined in: [packages/core/src/protocol/checkpointer.ts:76](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/checkpointer.ts#L76)
 
 Optional: seal the token before it is stored (e.g. wrap [seal](/mithril/reference/core/protocol/interfaces/persistence/#seal)); paired with `open`.
 

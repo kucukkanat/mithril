@@ -5,7 +5,7 @@ prev: false
 title: "EventConsumer"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:196](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/middleware.ts#L196)
+Defined in: [packages/core/src/protocol/middleware.ts:196](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L196)
 
 A passive observer that receives every [MithrilEvent](/mithril/reference/core/protocol/type-aliases/mithrilevent/) in order.
 
@@ -17,7 +17,7 @@ A passive observer that receives every [MithrilEvent](/mithril/reference/core/pr
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:197](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/middleware.ts#L197)
+Defined in: [packages/core/src/protocol/middleware.ts:197](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L197)
 
 ## Methods
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:197](https://github.com/ku
 onEvent(e): void;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:198](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/middleware.ts#L198)
+Defined in: [packages/core/src/protocol/middleware.ts:198](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L198)
 
 #### Parameters
 

@@ -1,5 +1,16 @@
-import type { AnyTool, ChatRequest, JsonSchemaConverter } from "@mithril/core/protocol";
+import type { AnyTool, ChatRequest, ContentPart, JsonSchemaConverter } from "@mithril/core/protocol";
 import { toJsonSchema } from "@mithril/core/protocol";
+
+// Map multimodal content to OpenAI chat parts. OpenAI accepts a `data:`/`https:` URL directly for images and
+// file data, so the normalized string sources pass straight through.
+function toOpenAIContent(content: string | readonly ContentPart[]): string | unknown[] {
+  if (typeof content === "string") return content;
+  return content.map((p) => {
+    if (p.type === "text") return { type: "text", text: p.text };
+    if (p.type === "image") return { type: "image_url", image_url: { url: typeof p.image === "string" ? p.image : "" } };
+    return { type: "file", file: { filename: p.filename ?? "file", file_data: typeof p.data === "string" ? p.data : "" } };
+  });
+}
 
 // Map a Mithril ChatRequest to an OpenAI chat-completions request body. Tool-result messages are paired to
 // their originating assistant tool_calls BY ORDER (the loop emits them sequentially), so no tool_call_id
@@ -35,7 +46,7 @@ export function toOpenAIBody(req: ChatRequest, convert?: JsonSchemaConverter): s
       const id = pendingCallIds.shift();
       messages.push({ role: "tool", content: m.content, ...(id !== undefined ? { tool_call_id: id } : {}) });
     } else {
-      messages.push({ role: m.role, content: m.content });
+      messages.push({ role: m.role, content: toOpenAIContent(m.content) });
     }
   }
 

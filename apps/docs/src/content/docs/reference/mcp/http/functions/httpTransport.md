@@ -9,7 +9,7 @@ title: "httpTransport"
 function httpTransport(opts): McpTransport;
 ```
 
-Defined in: [http.ts:42](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/http.ts#L42)
+Defined in: [packages/mcp/src/http.ts:46](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/http.ts#L46)
 
 Create an [McpTransport](/mithril/reference/mcp/index/interfaces/mcptransport/) that speaks MCP over Streamable HTTP.
 
@@ -17,7 +17,7 @@ Create an [McpTransport](/mithril/reference/mcp/index/interfaces/mcptransport/) 
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `opts` | \{ `fetch?`: \{ (`input`, `init?`): `Promise`\<`Response`\>; (`input`, `init?`): `Promise`\<`Response`\>; \}; `headers?`: `Readonly`\<`Record`\<`string`, `string`\>\>; `sessionId?`: `string`; `url`: `string`; \} | `url` is the MCP endpoint; `fetch` injects the fetcher (default the global `fetch`); `headers` are sent on every request (e.g. auth); `sessionId` is echoed as `Mcp-Session-Id`. |
+| `opts` | \{ `fetch?`: \{ (`input`, `init?`): `Promise`\<`Response`\>; (`input`, `init?`): `Promise`\<`Response`\>; \}; `headers?`: `Readonly`\<`Record`\<`string`, `string`\>\>; `sessionId?`: `string`; `url`: `string`; \} | `url` is the MCP endpoint; `fetch` injects the fetcher (default the global `fetch`); `headers` are sent on every request (e.g. auth); `sessionId` seeds the `Mcp-Session-Id` (usually you let the server assign it — the transport captures it from the `initialize` reply and reuses it). |
 | `opts.fetch?` | \{ (`input`, `init?`): `Promise`\<`Response`\>; (`input`, `init?`): `Promise`\<`Response`\>; \} | - |
 | `opts.headers?` | `Readonly`\<`Record`\<`string`, `string`\>\> | - |
 | `opts.sessionId?` | `string` | - |
@@ -31,9 +31,10 @@ A transport ready for mcpClient.
 
 ## Remarks
 
-Sends `Accept: application/json, text/event-stream` and handles either response shape. JSON-RPC
-errors are thrown as `Error`. Notifications (methods with no reply) are not modeled — `request` always
-expects a response.
+Sends `Accept: application/json, text/event-stream` and handles either response shape. A
+  server-assigned `Mcp-Session-Id` response header is captured and echoed on all later requests and
+  notifications. JSON-RPC errors throw [McpError](/mithril/reference/mcp/index/classes/mcperror/) (with the JSON-RPC `code`/`data`). `notify` posts
+  a fire-and-forget notification (no id) and tolerates an empty `202 Accepted` body.
 
 ## Example
 

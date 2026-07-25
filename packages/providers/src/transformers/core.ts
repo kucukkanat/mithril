@@ -1,4 +1,5 @@
 import type { AnyTool, JsonValue, Message, Provider, ProviderChunk, ProviderSpec, UsageDelta } from "@mithril/core/protocol";
+import { contentToText } from "@mithril/core/protocol";
 
 // Pure, dependency-free CORE for the browser-local Transformers.js provider. It imports only TYPES (erasable),
 // so `@mithril/providers` stays dependency-free and this provider is Node-unit-testable with a fake engine —
@@ -71,7 +72,8 @@ export function transformersProvider(engine: TransformersEngine): Provider {
       for await (const c of engine.generate({
         model: stripPrefix(req.model),
         system: req.system,
-        messages: req.messages,
+        // A local text-only model gets a flattened text rendering of any multimodal parts.
+        messages: req.messages.map((m) => ({ role: m.role, content: contentToText(m.content), toolCalls: m.toolCalls })),
         tools: req.tools,
         signal,
       })) {

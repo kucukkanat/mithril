@@ -80,3 +80,43 @@ test("mcpServer reports an unknown tool as a JSON-RPC error", async () => {
   };
   expect(res.error?.code).toBe(-32602);
 });
+
+test("httpTransport captures the server-assigned Mcp-Session-Id and echoes it on later requests", async () => {
+  const server = makeServer();
+  const seen: (string | null)[] = [];
+  const fakeFetch = (async (_url: string, init?: { body?: string; headers?: HeadersInit }) => {
+    seen.push(new Headers(init?.headers).get("mcp-session-id"));
+    return server.serve(new Request("https://mcp.test/", { method: "POST", body: init?.body, headers: { "content-type": "application/json" } }));
+  }) as unknown as typeof fetch;
+
+  const client = mcpClient(httpTransport({ url: "https://mcp.test/", fetch: fakeFetch }));
+  await client.listTools();
+  // First call is `initialize` (no session yet); the server assigns one, and every later request carries it.
+  expect(seen[0]).toBeNull();
+  expect(seen.length).toBeGreaterThan(1);
+  expect(seen.slice(1).every((s) => typeof s === "string" && s.length > 0)).toBe(true);
+});
+
+test("mcpServer negotiates the client's requested protocol version and answers ping", async () => {
+  const server = makeServer();
+  const init = (await server.handle({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-03-26" } })) as {
+    result?: { protocolVersion?: string };
+  };
+  expect(init.result?.protocolVersion).toBe("2025-03-26");
+  const pong = (await server.handle({ jsonrpc: "2.0", id: 2, method: "ping", params: {} })) as { result?: JsonValue };
+  expect(pong.result).toEqual({});
+});
+
+test("mcpServer acknowledges a notification with a bodyless 202 and no JSON-RPC reply", async () => {
+  const res = await makeServer().serve(
+    new Request("https://mcp.test/", { method: "POST", body: JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }), headers: { "content-type": "application/json" } }),
+  );
+  expect(res.status).toBe(202);
+  expect(await res.text()).toBe("");
+});
+
+test("mcpServer replies to a malformed JSON body with a JSON-RPC parse error", async () => {
+  const res = await makeServer().serve(new Request("https://mcp.test/", { method: "POST", body: "{not json", headers: { "content-type": "application/json" } }));
+  expect(res.status).toBe(400);
+  expect(((await res.json()) as { error?: { code: number } }).error?.code).toBe(-32700);
+});

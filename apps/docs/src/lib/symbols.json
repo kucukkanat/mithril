@@ -199,6 +199,21 @@
     "kind": "fn",
     "sig": "function compactionSavings(events): number;"
   },
+  "ContentPart": {
+    "href": "/reference/core/protocol/type-aliases/contentpart/",
+    "kind": "type",
+    "sig": "type ContentPart = | { text: string; type: \"text\"; } | { image: string | Uint8Array; mediaType?: string; type: \"image\"; } | { data: string …"
+  },
+  "contentToJson": {
+    "href": "/reference/core/protocol/functions/contenttojson/",
+    "kind": "fn",
+    "sig": "function contentToJson(content): JsonValue;"
+  },
+  "contentToText": {
+    "href": "/reference/core/protocol/functions/contenttotext/",
+    "kind": "fn",
+    "sig": "function contentToText(content): string;"
+  },
   "contextMeter": {
     "href": "/reference/devtools/index/functions/contextmeter/",
     "kind": "fn",
@@ -587,7 +602,7 @@
   "InputMessage": {
     "href": "/reference/core/agent/type-aliases/inputmessage/",
     "kind": "type",
-    "sig": "type InputMessage = | { content: string; role: \"user\"; } | { content: string; role: \"assistant\"; };"
+    "sig": "type InputMessage = | { content: | string | readonly ContentPart[]; role: \"user\"; } | { content: string; role: \"assistant\"; };"
   },
   "inputToJson": {
     "href": "/reference/core/agent/functions/inputtojson/",
@@ -739,15 +754,35 @@
     "kind": "fn",
     "sig": "function makeRunHandle<Out>( gen, runId, controls): RunHandle<Out>;"
   },
+  "MCP_PROTOCOL_VERSION": {
+    "href": "/reference/mcp/index/variables/mcp_protocol_version/",
+    "kind": "const",
+    "sig": "const MCP_PROTOCOL_VERSION: \"2025-06-18\" = \"2025-06-18\";"
+  },
   "mcpClient": {
     "href": "/reference/mcp/index/functions/mcpclient/",
     "kind": "fn",
-    "sig": "function mcpClient(transport): McpClient;"
+    "sig": "function mcpClient(transport, opts?): McpClient;"
   },
   "McpClient": {
     "href": "/reference/mcp/index/interfaces/mcpclient/",
     "kind": "type",
     "sig": "A connected MCP client over an McpTransport. Create one with mcpClient."
+  },
+  "McpClientInfo": {
+    "href": "/reference/mcp/index/interfaces/mcpclientinfo/",
+    "kind": "type",
+    "sig": "Identifies this client to a server on initialize."
+  },
+  "McpClientOptions": {
+    "href": "/reference/mcp/index/interfaces/mcpclientoptions/",
+    "kind": "type",
+    "sig": "The client capabilities and identity advertised on initialize."
+  },
+  "McpError": {
+    "href": "/reference/mcp/index/classes/mcperror/",
+    "kind": "class",
+    "sig": "new McpError(message, opts?): McpError;"
   },
   "mcpServer": {
     "href": "/reference/mcp/server/functions/mcpserver/",
@@ -758,6 +793,11 @@
     "href": "/reference/mcp/server/interfaces/mcpserver/",
     "kind": "type",
     "sig": "A Mithril-tools-backed MCP server. Create one with mcpServer."
+  },
+  "McpServerDescription": {
+    "href": "/reference/mcp/index/interfaces/mcpserverdescription/",
+    "kind": "type",
+    "sig": "The result of the MCP lifecycle handshake — what the server negotiated on initialize."
   },
   "McpServerInfo": {
     "href": "/reference/mcp/server/interfaces/mcpserverinfo/",
@@ -777,7 +817,12 @@
   "McpTransport": {
     "href": "/reference/mcp/index/interfaces/mcptransport/",
     "kind": "type",
-    "sig": "The transport you implement to carry MCP JSON-RPC calls to a server."
+    "sig": "The transport you implement to carry MCP JSON-RPC traffic to a server."
+  },
+  "MediaSource": {
+    "href": "/reference/core/protocol/type-aliases/mediasource/",
+    "kind": "type",
+    "sig": "type MediaSource = | { kind: \"url\"; url: string; } | { data: string; kind: \"base64\"; mediaType: string; };"
   },
   "memoryCheckpointer": {
     "href": "/reference/memory/index/functions/memorycheckpointer/",
@@ -879,6 +924,11 @@
     "kind": "type",
     "sig": "type ModelInput = | ModelId | ModelHandle;"
   },
+  "ModelMessage": {
+    "href": "/reference/core/protocol/interfaces/modelmessage/",
+    "kind": "type",
+    "sig": "A message at the model-call boundary — like Message, but content may carry multimodal"
+  },
   "ModelResult": {
     "href": "/reference/core/protocol/interfaces/modelresult/",
     "kind": "type",
@@ -923,6 +973,16 @@
     "href": "/reference/sandbox/node/functions/nodevmrunner/",
     "kind": "fn",
     "sig": "function nodeVmRunner(): CodeRunner;"
+  },
+  "normalizeContent": {
+    "href": "/reference/core/protocol/functions/normalizecontent/",
+    "kind": "fn",
+    "sig": "function normalizeContent(content): | string | readonly ContentPart[];"
+  },
+  "normalizeContentPart": {
+    "href": "/reference/core/protocol/functions/normalizecontentpart/",
+    "kind": "fn",
+    "sig": "function normalizeContentPart(part): ContentPart;"
   },
   "OpaqueDecl": {
     "href": "/reference/spec/index/interfaces/opaquedecl/",
@@ -1513,6 +1573,11 @@
     "href": "/reference/core/protocol/functions/tojsonschema/",
     "kind": "fn",
     "sig": "function toJsonSchema(schema, convert?): JsonValue;"
+  },
+  "toMediaSource": {
+    "href": "/reference/core/protocol/functions/tomediasource/",
+    "kind": "fn",
+    "sig": "function toMediaSource(source, fallbackMediaType?): MediaSource;"
   },
   "tool": {
     "href": "/reference/core/agent/functions/tool/",

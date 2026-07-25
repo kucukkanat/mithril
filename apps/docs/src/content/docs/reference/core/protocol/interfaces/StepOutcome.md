@@ -5,7 +5,7 @@ prev: false
 title: "StepOutcome"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:119](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/middleware.ts#L119)
+Defined in: [packages/core/src/protocol/middleware.ts:119](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L119)
 
 The summary of one completed step seen by a [Middleware.step](/mithril/reference/core/protocol/interfaces/middleware/#step) wrapper.
 
@@ -24,7 +24,7 @@ otherwise) — the input a retry-budget / loop-detection middleware reads.
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:120](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/middleware.ts#L120)
+Defined in: [packages/core/src/protocol/middleware.ts:120](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L120)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:120](https://github.com/ku
 readonly stop: "length" | "error" | "output" | "suspend" | "tool" | "text";
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:121](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/middleware.ts#L121)
+Defined in: [packages/core/src/protocol/middleware.ts:121](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L121)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:121](https://github.com/ku
 readonly optional toolOutcomes?: readonly ToolStepOutcome[];
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:123](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/middleware.ts#L123)
+Defined in: [packages/core/src/protocol/middleware.ts:123](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L123)
 
 ***
 
@@ -54,4 +54,4 @@ Defined in: [packages/core/src/protocol/middleware.ts:123](https://github.com/ku
 readonly usage: UsageDelta;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:122](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/protocol/middleware.ts#L122)
+Defined in: [packages/core/src/protocol/middleware.ts:122](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L122)

@@ -5,7 +5,7 @@ prev: false
 title: "CodeRegion"
 ---
 
-Defined in: [packages/spec/src/types.ts:9](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L9)
+Defined in: [packages/spec/src/types.ts:9](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L9)
 
 Verbatim TypeScript preserved losslessly through spec→code→spec round-trips.
 
@@ -17,4 +17,4 @@ Verbatim TypeScript preserved losslessly through spec→code→spec round-trips.
 readonly code: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:10](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L10)
+Defined in: [packages/spec/src/types.ts:10](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L10)

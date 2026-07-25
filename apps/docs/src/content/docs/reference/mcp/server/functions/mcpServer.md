@@ -12,7 +12,7 @@ function mcpServer(
    opts?): McpServer;
 ```
 
-Defined in: [server.ts:57](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/server.ts#L57)
+Defined in: [packages/mcp/src/server.ts:59](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/server.ts#L59)
 
 Expose a set of Mithril AnyTools as an MCP server.
 

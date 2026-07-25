@@ -1,5 +1,6 @@
 import type {
   AnyTool,
+  ContentPart,
   JsonSchemaConverter,
   JsonValue,
   Middleware,
@@ -17,6 +18,7 @@ import type {
   Transport,
   UsageTotals,
 } from "../protocol/index.ts";
+import { contentToJson, normalizeContent } from "../protocol/index.ts";
 import type { ResumeValue } from "./loop.ts";
 import { MithrilError, RETRYABLE_CODES } from "./registry.ts";
 
@@ -26,7 +28,7 @@ import { MithrilError, RETRYABLE_CODES } from "./registry.ts";
  * @see {@link Input} for the aggregate input shape accepted by {@link Agent.run}.
  */
 export type InputMessage =
-  | { readonly role: "user"; readonly content: string }
+  | { readonly role: "user"; readonly content: string | readonly ContentPart[] }
   | { readonly role: "assistant"; readonly content: string };
 
 /**
@@ -54,6 +56,7 @@ export interface RunOptionsBase<Deps = unknown> {
   readonly maxSteps?: number;
   readonly maxTokens?: number; // input+output token budget for the whole run; unset ⇒ unbounded
   readonly maxCostMicroUsd?: number; // cost budget in integer micro-USD; unset ⇒ unbounded
+  readonly maxConcurrentTools?: number; // max tool calls run concurrently per step; unset ⇒ 8, `1` ⇒ sequential
   // Self-healing stack. Omitted ⇒ the batteries-included default (arg-repair, loop guard, retry budget,
   // output retry); `false`/`[]` ⇒ a raw loop; an explicit array ⇒ pick/configure the healing middleware.
   // Crash-hardening (a throwing provider/middleware/tool becomes a typed run.error) is never disabled.
@@ -173,6 +176,7 @@ export interface AgentConfig<Tools extends readonly AnyTool<Deps>[], Deps, Out e
   readonly outputSchema?: JsonSchemaConverter;
   readonly maxTokens?: number; // input+output token budget for the whole run; unset ⇒ unbounded
   readonly maxCostMicroUsd?: number; // cost budget in integer micro-USD; unset ⇒ unbounded
+  readonly maxConcurrentTools?: number; // max tool calls run concurrently per step; unset ⇒ 8, `1` ⇒ sequential
   // Self-healing stack; omitted ⇒ the batteries-included default. `false`/`[]` ⇒ a raw loop; an explicit
   // array ⇒ pick/configure the healing middleware (see the `healing` namespace). See @remarks above.
   readonly healing?: false | readonly Middleware<Deps>[];
@@ -259,5 +263,5 @@ export function toSerializedError(err: unknown): SerializedError {
  */
 export function inputToJson(input: Input): JsonValue {
   if (typeof input === "string") return input;
-  return input.map((m) => ({ role: m.role, content: m.content }));
+  return input.map((m) => ({ role: m.role, content: contentToJson(normalizeContent(m.content)) }));
 }

@@ -9,7 +9,7 @@ title: "agentLoop"
 function agentLoop<Deps>(opts): AsyncGenerator<MithrilEvent, RunResult<JsonValue>>;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:365](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/loop.ts#L365)
+Defined in: [packages/core/src/agent/loop.ts:392](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L392)
 
 The core streaming agent loop: drives model turns and tool execution, emitting [MithrilEvent](/mithril/reference/core/protocol/type-aliases/mithrilevent/)s and
 returning a terminal [RunResult](/mithril/reference/core/agent/type-aliases/runresult/).

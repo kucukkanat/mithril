@@ -23,6 +23,6 @@ type EngineChunk =
 };
 ```
 
-Defined in: [transformers/core.ts:22](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/providers/src/transformers/core.ts#L22)
+Defined in: [transformers/core.ts:23](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/providers/src/transformers/core.ts#L23)
 
 One item a [TransformersEngine](/mithril/reference/providers/transformers/interfaces/transformersengine/) yields: a visible text token, a reasoning token, or a fully-parsed tool call.

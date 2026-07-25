@@ -1,7 +1,7 @@
 import type { RuntimeAdapter } from "./context.ts";
 import type { EventMeta, EventOf, MithrilEvent } from "./events.ts";
 import type { FinishReason, JsonValue, ModelId, SerializedError, UsageDelta } from "./primitives.ts";
-import type { RunState } from "./state.ts";
+import type { ModelMessage } from "./state.ts";
 import type { AnyTool, Tool, ToolInputOf } from "./tool.ts";
 
 // §3.8 — producer-side composability. Middleware observes/transforms ONLY by reading & emitting events
@@ -78,7 +78,7 @@ export interface MiddlewareContext<Deps> {
 export interface ModelCall {
   readonly model: ModelId;
   readonly system: string;
-  readonly messages: RunState["messages"];
+  readonly messages: readonly ModelMessage[];
   readonly tools: readonly AnyTool<unknown>[];
 }
 
@@ -93,7 +93,7 @@ export interface ModelResult {
 /** The input to one step (model call + tool execution), observed by a {@link Middleware.step} wrapper. */
 export interface StepInput {
   readonly step: number;
-  readonly messages: RunState["messages"];
+  readonly messages: readonly ModelMessage[];
 }
 
 /**

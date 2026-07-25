@@ -3,10 +3,12 @@ import { toJsonSchema, ZERO_USAGE } from "@mithril/core/protocol";
 import { defaultRuntime } from "@mithril/core/agent";
 
 // MCP server exposure: present a set of Mithril tools AS an MCP server. `handle` dispatches a single JSON-RPC
-// request (initialize / tools/list / tools/call); `serve` is a fetch-style wrapper you can mount on any HTTP
-// server. Tool params are advertised via toJsonSchema; results are returned as MCP text content.
+// request (initialize / tools/list / tools/call / ping) or notification; `serve` is a fetch-style wrapper you
+// can mount on any HTTP server. Tool params are advertised via toJsonSchema; results are returned as MCP text
+// content. The server negotiates the client's requested protocol version, assigns an `Mcp-Session-Id`, and
+// answers notifications (e.g. `notifications/initialized`) with a bodyless `202 Accepted`.
 
-const PROTOCOL_VERSION = "2024-11-05";
+const PROTOCOL_VERSION = "2025-06-18";
 
 /** Identifies an {@link mcpServer} to connecting clients. */
 export interface McpServerInfo {
@@ -99,11 +101,26 @@ export function mcpServer(
   const ok = (id: JsonValue | undefined, result: JsonValue): JsonValue => ({ jsonrpc: "2.0", id: id ?? null, result });
   const err = (id: JsonValue | undefined, code: number, message: string): JsonValue => ({ jsonrpc: "2.0", id: id ?? null, error: { code, message } });
 
+  let sessionId: string | undefined; // assigned on `initialize`, echoed by `serve` as `Mcp-Session-Id`
+
   const handle = async (request: JsonValue): Promise<JsonValue> => {
     const req = request as JsonRpcRequest;
+    // A JSON-RPC notification carries no `id` and expects no reply (e.g. `notifications/initialized`);
+    // acknowledge it with a null return that `serve` maps to a bodyless 202.
+    if (req.id === undefined && (req.method ?? "").startsWith("notifications/")) return null;
     switch (req.method) {
-      case "initialize":
-        return ok(req.id, { protocolVersion: PROTOCOL_VERSION, capabilities: { tools: {} }, serverInfo: { name: info.name, version: info.version } });
+      case "initialize": {
+        // Negotiate: echo the client's requested protocol version when it sent one, else our default.
+        const requested = (req.params as { readonly protocolVersion?: string } | undefined)?.protocolVersion;
+        sessionId ??= rt.randomUUID();
+        return ok(req.id, {
+          protocolVersion: requested ?? PROTOCOL_VERSION,
+          capabilities: { tools: {} },
+          serverInfo: { name: info.name, version: info.version },
+        });
+      }
+      case "ping":
+        return ok(req.id, {});
       case "tools/list":
         return ok(req.id, {
           tools: tools.map((t) => ({
@@ -128,12 +145,25 @@ export function mcpServer(
     }
   };
 
+  const sessionHeader = (): Record<string, string> => (sessionId !== undefined ? { "mcp-session-id": sessionId } : {});
+
   return {
     handle,
     async serve(request: Request): Promise<Response> {
-      const body = (await request.json()) as JsonValue;
+      let body: JsonValue;
+      try {
+        body = (await request.json()) as JsonValue;
+      } catch {
+        // Malformed JSON body — reply with a JSON-RPC parse error rather than throwing out of the handler.
+        return new Response(JSON.stringify(err(null, -32700, "parse error: request body is not valid JSON")), {
+          status: 400,
+          headers: { "content-type": "application/json" },
+        });
+      }
       const response = await handle(body);
-      return new Response(JSON.stringify(response), { status: 200, headers: { "content-type": "application/json" } });
+      // A notification (handle → null) has no JSON-RPC reply: acknowledge with a bodyless 202.
+      if (response === null) return new Response(null, { status: 202, headers: sessionHeader() });
+      return new Response(JSON.stringify(response), { status: 200, headers: { "content-type": "application/json", ...sessionHeader() } });
     },
   };
 }

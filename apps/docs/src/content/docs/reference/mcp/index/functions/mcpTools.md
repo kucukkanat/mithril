@@ -9,7 +9,7 @@ title: "mcpTools"
 function mcpTools(client): Promise<readonly Tool<string, JsonValue, JsonValue, unknown>[]>;
 ```
 
-Defined in: [index.ts:113](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/index.ts#L113)
+Defined in: [packages/mcp/src/index.ts:276](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L276)
 
 Fetch an MCP server's tools and wrap each as a Mithril Tool that calls it.
 
@@ -27,6 +27,7 @@ One Mithril tool per advertised MCP tool, ready to hand to an agent.
 
 ## Remarks
 
-Each wrapped tool uses a **passthrough, non-validating** schema: the server's JSON Schema is not
-enforced client-side, so inputs are forwarded to the server as-is. Execution routes through
-[McpClient.callTool](/mithril/reference/mcp/index/interfaces/mcpclient/#calltool).
+Runs the lifecycle handshake (via [McpClient.listTools](/mithril/reference/mcp/index/interfaces/mcpclient/#listtools)) if it has not happened yet. Each wrapped
+tool uses a **passthrough, non-validating** schema: the server's JSON Schema is not enforced client-side,
+so inputs are forwarded to the server as-is. Execution routes through [McpClient.callTool](/mithril/reference/mcp/index/interfaces/mcpclient/#calltool), so a
+server-reported `isError` result throws [McpError](/mithril/reference/mcp/index/classes/mcperror/) and the agent loop surfaces it as a `tool.error`.

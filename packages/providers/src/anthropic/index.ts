@@ -4,10 +4,25 @@
  * @packageDocumentation
  */
 
-import type { AnyTool, ChatRequest, JsonSchemaConverter, ModelHandle, Provider, ProviderSpec, Transport } from "@mithril/core/protocol";
-import { toJsonSchema } from "@mithril/core/protocol";
+import type { AnyTool, ChatRequest, ContentPart, JsonSchemaConverter, ModelHandle, Provider, ProviderSpec, Transport } from "@mithril/core/protocol";
+import { toJsonSchema, toMediaSource } from "@mithril/core/protocol";
 // stream.ts is internal: SSE parsing for the `/messages` endpoint. Request serialization lives inline below.
 import { parseAnthropicStream } from "./stream.ts";
+
+// Map multimodal content to Anthropic content blocks. Anthropic inlines bytes as base64 (or references a URL),
+// so a normalized `data:` source is split into `{ media_type, data }`; an `https:` source stays a URL block.
+function toAnthropicContent(content: string | readonly ContentPart[]): string | unknown[] {
+  if (typeof content === "string") return content;
+  return content.map((p) => {
+    if (p.type === "text") return { type: "text", text: p.text };
+    if (p.type === "image") {
+      const s = toMediaSource(typeof p.image === "string" ? p.image : "", p.mediaType);
+      return { type: "image", source: s.kind === "url" ? { type: "url", url: s.url } : { type: "base64", media_type: s.mediaType, data: s.data } };
+    }
+    const s = toMediaSource(typeof p.data === "string" ? p.data : "", p.mediaType);
+    return { type: "document", source: s.kind === "url" ? { type: "url", url: s.url } : { type: "base64", media_type: s.mediaType, data: s.data } };
+  });
+}
 
 const ANTHROPIC_SPEC: ProviderSpec = { id: "anthropic", models: {} };
 const DEFAULT_BASE = "https://api.anthropic.com/v1";
@@ -31,7 +46,7 @@ function toAnthropicBody(req: ChatRequest, convert?: JsonSchemaConverter): strin
       const id = pending.shift();
       messages.push({ role: "user", content: [{ type: "tool_result", tool_use_id: id ?? "", content: m.content }] });
     } else {
-      messages.push({ role: m.role, content: m.content });
+      messages.push({ role: m.role, content: toAnthropicContent(m.content) });
     }
   }
   const body: Record<string, unknown> = { model, system: req.system, messages, max_tokens: 4096, stream: true };

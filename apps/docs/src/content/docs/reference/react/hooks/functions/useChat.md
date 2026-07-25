@@ -9,7 +9,7 @@ title: "useChat"
 function useChat(agent): UseChatResult;
 ```
 
-Defined in: [hooks.ts:83](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/react/src/hooks.ts#L83)
+Defined in: [hooks.ts:83](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/react/src/hooks.ts#L83)
 
 Subscribe a component to a multi-turn conversation with an agent — the industry-standard chat hook.
 

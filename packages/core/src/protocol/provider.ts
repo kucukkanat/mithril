@@ -1,7 +1,7 @@
 import type { RuntimeAdapter, Transport } from "./context.ts";
 import type { FinishReason, JsonValue, ModelId, UsageDelta } from "./primitives.ts";
 import type { StandardSchemaV1 } from "./standard-schema.ts";
-import type { Message } from "./state.ts";
+import type { ModelMessage } from "./state.ts";
 import type { AnyTool } from "./tool.ts";
 
 // §6 — a tiny, published, versioned provider spec. `'provider/model'` strings route over a registry; a
@@ -57,7 +57,7 @@ export interface ProviderSpec {
 export interface ChatRequest {
   readonly model: ModelId;
   readonly system: string;
-  readonly messages: readonly Message[];
+  readonly messages: readonly ModelMessage[];
   readonly tools: readonly AnyTool<unknown>[];
   /** When set, the caller wants structured output (JSON mode) validated by this schema. */
   readonly output?: StandardSchemaV1<unknown, JsonValue>;

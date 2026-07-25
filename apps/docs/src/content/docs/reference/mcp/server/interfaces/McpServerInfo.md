@@ -5,7 +5,7 @@ prev: false
 title: "McpServerInfo"
 ---
 
-Defined in: [server.ts:12](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/server.ts#L12)
+Defined in: [packages/mcp/src/server.ts:14](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/server.ts#L14)
 
 Identifies an [mcpServer](/mithril/reference/mcp/server/functions/mcpserver/) to connecting clients.
 
@@ -17,7 +17,7 @@ Identifies an [mcpServer](/mithril/reference/mcp/server/functions/mcpserver/) to
 readonly name: string;
 ```
 
-Defined in: [server.ts:13](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/server.ts#L13)
+Defined in: [packages/mcp/src/server.ts:15](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/server.ts#L15)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [server.ts:13](https://github.com/kucukkanat/mithril/blob/2df801475c
 readonly version: string;
 ```
 
-Defined in: [server.ts:14](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/mcp/src/server.ts#L14)
+Defined in: [packages/mcp/src/server.ts:16](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/server.ts#L16)

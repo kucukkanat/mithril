@@ -4,8 +4,22 @@
  * @packageDocumentation
  */
 
-import type { AnyTool, ChatRequest, FinishReason, JsonSchemaConverter, JsonValue, ModelHandle, Provider, ProviderChunk, ProviderSpec, Transport, UsageDelta } from "@mithril/core/protocol";
-import { toJsonSchema } from "@mithril/core/protocol";
+import type { AnyTool, ChatRequest, ContentPart, FinishReason, JsonSchemaConverter, JsonValue, ModelHandle, Provider, ProviderChunk, ProviderSpec, Transport, UsageDelta } from "@mithril/core/protocol";
+import { toJsonSchema, toMediaSource } from "@mithril/core/protocol";
+
+// Map multimodal content to Gemini `parts`. Inlined bytes become `inlineData` (base64 + mimeType); a URL
+// source becomes `fileData` (a fileUri). Text is a plain `{ text }` part.
+function toGoogleParts(content: string | readonly ContentPart[]): unknown[] {
+  if (typeof content === "string") return [{ text: content }];
+  return content.map((p) => {
+    if (p.type === "text") return { text: p.text };
+    const src = p.type === "image" ? p.image : p.data;
+    const s = toMediaSource(typeof src === "string" ? src : "", p.mediaType);
+    return s.kind === "url"
+      ? { fileData: { mimeType: p.mediaType ?? "application/octet-stream", fileUri: s.url } }
+      : { inlineData: { mimeType: s.mediaType, data: s.data } };
+  });
+}
 
 // Google Gemini (generativelanguage API) streaming provider. Uses streamGenerateContent (SSE of JSON
 // candidate chunks). Text + function calls are mapped to ProviderChunks. Request/stream helpers below are internal.
@@ -36,7 +50,7 @@ function mapFinish(r: string | undefined): FinishReason {
 function toGoogleBody(req: ChatRequest, convert?: JsonSchemaConverter): string {
   const contents = req.messages.map((m) => ({
     role: m.role === "assistant" ? "model" : "user",
-    parts: [{ text: m.content }],
+    parts: toGoogleParts(m.content),
   }));
   const body: Record<string, unknown> = { contents, systemInstruction: { parts: [{ text: req.system }] } };
   const tools = req.tools as readonly AnyTool<unknown>[];

@@ -11,7 +11,7 @@ function devtoolsPlugin(inspector?): Plugin<unknown, readonly AnyTool<unknown>[]
 };
 ```
 
-Defined in: [packages/devtools/src/index.ts:133](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/devtools/src/index.ts#L133)
+Defined in: [packages/devtools/src/index.ts:133](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/devtools/src/index.ts#L133)
 
 Bundle an [Inspector](/mithril/reference/devtools/index/interfaces/inspector/) as a Plugin for an agent's `use:` array.
 

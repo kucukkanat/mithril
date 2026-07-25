@@ -211,6 +211,9 @@ function makeAgent<Tools extends readonly AnyTool<Deps>[], Deps, Out extends Jso
       ...(config.outputSchema !== undefined ? { outputSchema: config.outputSchema } : {}),
       ...(o?.maxTokens ?? config.maxTokens ? { maxTokens: o?.maxTokens ?? config.maxTokens } : {}),
       ...(o?.maxCostMicroUsd ?? config.maxCostMicroUsd ? { maxCostMicroUsd: o?.maxCostMicroUsd ?? config.maxCostMicroUsd } : {}),
+      ...((o?.maxConcurrentTools ?? config.maxConcurrentTools) !== undefined
+        ? { maxConcurrentTools: o?.maxConcurrentTools ?? config.maxConcurrentTools }
+        : {}),
       ...((o?.healing ?? config.healing) !== undefined ? { healing: o?.healing ?? config.healing } : {}),
       ...(flat.middlewares.length > 0 ? { middlewares: flat.middlewares } : {}),
       ...(flat.consumers.length > 0 ? { consumers: flat.consumers } : {}),

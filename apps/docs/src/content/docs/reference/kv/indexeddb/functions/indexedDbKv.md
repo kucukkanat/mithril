@@ -9,7 +9,7 @@ title: "indexedDbKv"
 function indexedDbKv(opts?): KeyValue;
 ```
 
-Defined in: [indexeddb.ts:34](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/kv/src/indexeddb.ts#L34)
+Defined in: [indexeddb.ts:34](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/kv/src/indexeddb.ts#L34)
 
 Create a [KeyValue](/mithril/reference/kv/index/interfaces/keyvalue/) backed by the browser's IndexedDB.
 

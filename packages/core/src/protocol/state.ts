@@ -1,3 +1,4 @@
+import type { ContentPart } from "./content.ts";
 import type { MithrilEvent } from "./events.ts";
 import { addUsage, type JsonValue, type UsageTotals, ZERO_USAGE } from "./primitives.ts";
 import type { SuspensionDescriptor } from "./suspension.ts";
@@ -27,6 +28,17 @@ export interface ToolCallRecord {
 export interface Message {
   readonly role: string;
   readonly content: string;
+  readonly toolCalls: readonly ToolCallRecord[];
+}
+
+/**
+ * A message at the model-call boundary — like {@link Message}, but `content` may carry multimodal
+ * {@link ContentPart}s (images/files) in addition to plain text. The loop threads these to providers; the
+ * reducer's {@link Message} keeps a flattened `string` content for state/observability.
+ */
+export interface ModelMessage {
+  readonly role: string;
+  readonly content: string | readonly ContentPart[];
   readonly toolCalls: readonly ToolCallRecord[];
 }
 
@@ -71,14 +83,33 @@ function seedMessages(input: JsonValue): readonly Message[] {
       if (m !== null && typeof m === "object" && !Array.isArray(m)) {
         const role = m["role"];
         const content = m["content"];
-        if (typeof role === "string" && typeof content === "string") {
-          out.push({ role, content, toolCalls: [] });
-        }
+        if (typeof role !== "string") continue;
+        // Multimodal content arrives as a parts array; flatten it to text so the reducer's state stays a
+        // readable string (the loop still threads the real parts to the model — see ModelMessage).
+        if (typeof content === "string") out.push({ role, content, toolCalls: [] });
+        else if (Array.isArray(content)) out.push({ role, content: flattenParts(content), toolCalls: [] });
       }
     }
     return out;
   }
   return [];
+}
+
+// Flatten a run-input parts array (JSON, from the run.start event) into a text summary for the reducer state.
+function flattenParts(parts: readonly JsonValue[]): string {
+  return parts
+    .map((p) => {
+      if (p === null || typeof p !== "object" || Array.isArray(p)) return "";
+      const obj = p as { readonly [k: string]: JsonValue };
+      const type = obj["type"];
+      const text = obj["text"];
+      if (type === "text" && typeof text === "string") return text;
+      if (type === "image") return "[image]";
+      if (type === "file") return `[file: ${typeof obj["filename"] === "string" ? obj["filename"] : String(obj["mediaType"] ?? "")}]`;
+      return "";
+    })
+    .filter((s) => s !== "")
+    .join(" ");
 }
 
 function mapLast(messages: readonly Message[], fn: (m: Message) => Message): readonly Message[] {

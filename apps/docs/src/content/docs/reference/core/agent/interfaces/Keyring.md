@@ -5,7 +5,7 @@ prev: false
 title: "Keyring"
 ---
 
-Defined in: [packages/core/src/agent/seal.ts:14](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/seal.ts#L14)
+Defined in: [packages/core/src/agent/seal.ts:14](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/seal.ts#L14)
 
 A source of signing/verification keys for sealed tokens, indexed by key id (`kid`).
 
@@ -26,7 +26,7 @@ current(): Promise<{
 }>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:15](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/seal.ts#L15)
+Defined in: [packages/core/src/agent/seal.ts:15](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/seal.ts#L15)
 
 #### Returns
 
@@ -43,7 +43,7 @@ Defined in: [packages/core/src/agent/seal.ts:15](https://github.com/kucukkanat/m
 resolve(kid): Promise<CryptoKey | undefined>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:16](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/seal.ts#L16)
+Defined in: [packages/core/src/agent/seal.ts:16](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/seal.ts#L16)
 
 #### Parameters
 

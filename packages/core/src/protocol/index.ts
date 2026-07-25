@@ -57,8 +57,10 @@ export type {
 } from "./suspension.ts";
 export { isSuspend, schemaRegistry, SUSPEND, suspend } from "./suspension.ts";
 export type { CustomEventOf, EventMeta, EventOf, EventType, MithrilEvent, SpanRef } from "./events.ts";
-export type { Message, RunState, RunStatus, ToolCallRecord } from "./state.ts";
+export type { Message, ModelMessage, RunState, RunStatus, ToolCallRecord } from "./state.ts";
 export { INITIAL, reduce, replay } from "./state.ts";
+export type { ContentPart, MediaSource } from "./content.ts";
+export { contentToJson, contentToText, normalizeContent, normalizeContentPart, toMediaSource } from "./content.ts";
 export type { ToolCallFor } from "./narrow.ts";
 export { narrow } from "./narrow.ts";
 export type { ContiguityResult, EventTransport } from "./transport.ts";

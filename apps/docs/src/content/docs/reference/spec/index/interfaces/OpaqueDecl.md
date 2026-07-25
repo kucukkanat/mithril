@@ -5,7 +5,7 @@ prev: false
 title: "OpaqueDecl"
 ---
 
-Defined in: [packages/spec/src/types.ts:18](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L18)
+Defined in: [packages/spec/src/types.ts:18](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L18)
 
 A top-level statement the parser did not recognize as a framework-shaped declaration. Kept
 byte-identical (including leading comments) so hand-written code survives round-trips — the
@@ -19,7 +19,7 @@ safe default is always "preserve verbatim", never "drop or rewrite".
 readonly code: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:23](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L23)
+Defined in: [packages/spec/src/types.ts:23](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L23)
 
 The full original statement text.
 
@@ -31,7 +31,7 @@ The full original statement text.
 readonly id: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:21](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L21)
+Defined in: [packages/spec/src/types.ts:21](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L21)
 
 Stable synthetic id (`o1`, `o2`, …) — usable as a canvas node id.
 
@@ -43,4 +43,4 @@ Stable synthetic id (`o1`, `o2`, …) — usable as a canvas node id.
 readonly kind: "opaque";
 ```
 
-Defined in: [packages/spec/src/types.ts:19](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/spec/src/types.ts#L19)
+Defined in: [packages/spec/src/types.ts:19](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L19)

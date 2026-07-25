@@ -12,7 +12,7 @@ function splitToolCalls(
 reasoning?): AsyncGenerator<EngineChunk>;
 ```
 
-Defined in: [transformers/tool-formats.ts:217](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/providers/src/transformers/tool-formats.ts#L217)
+Defined in: [transformers/tool-formats.ts:217](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/providers/src/transformers/tool-formats.ts#L217)
 
 Transform a raw token stream into [EngineChunk](/mithril/reference/providers/transformers/type-aliases/enginechunk/)s, suppressing tool-call and reasoning sentinels from
 visible text.

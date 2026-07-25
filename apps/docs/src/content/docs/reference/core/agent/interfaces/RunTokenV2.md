@@ -5,7 +5,7 @@ prev: false
 title: "RunTokenV2"
 ---
 
-Defined in: [packages/core/src/agent/loop.ts:134](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/loop.ts#L134)
+Defined in: [packages/core/src/agent/loop.ts:154](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L154)
 
 The versioned, serializable run token carried by a `suspended` [RunResult](/mithril/reference/core/agent/type-aliases/runresult/).
 
@@ -17,7 +17,7 @@ The versioned, serializable run token carried by a `suspended` [RunResult](/mith
 readonly messages: readonly LoopMessage[];
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:138](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/loop.ts#L138)
+Defined in: [packages/core/src/agent/loop.ts:158](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L158)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/agent/loop.ts:138](https://github.com/kucukkanat/
 readonly model: string;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:137](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/loop.ts#L137)
+Defined in: [packages/core/src/agent/loop.ts:157](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L157)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/core/src/agent/loop.ts:137](https://github.com/kucukkanat/
 readonly pending: PendingSuspension;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:141](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/loop.ts#L141)
+Defined in: [packages/core/src/agent/loop.ts:161](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L161)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: [packages/core/src/agent/loop.ts:141](https://github.com/kucukkanat/
 readonly runId: string;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:136](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/loop.ts#L136)
+Defined in: [packages/core/src/agent/loop.ts:156](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L156)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: [packages/core/src/agent/loop.ts:136](https://github.com/kucukkanat/
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:140](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/loop.ts#L140)
+Defined in: [packages/core/src/agent/loop.ts:160](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L160)
 
 ***
 
@@ -67,7 +67,7 @@ Defined in: [packages/core/src/agent/loop.ts:140](https://github.com/kucukkanat/
 readonly usage: UsageTotals;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:139](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/loop.ts#L139)
+Defined in: [packages/core/src/agent/loop.ts:159](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L159)
 
 ***
 
@@ -77,4 +77,4 @@ Defined in: [packages/core/src/agent/loop.ts:139](https://github.com/kucukkanat/
 readonly v: 2;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:135](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/loop.ts#L135)
+Defined in: [packages/core/src/agent/loop.ts:155](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L155)

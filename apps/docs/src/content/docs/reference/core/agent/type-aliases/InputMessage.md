@@ -8,7 +8,8 @@ title: "InputMessage"
 ```ts
 type InputMessage = 
   | {
-  content: string;
+  content:   | string
+     | readonly ContentPart[];
   role: "user";
 }
   | {
@@ -17,7 +18,7 @@ type InputMessage =
 };
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:28](https://github.com/kucukkanat/mithril/blob/2df801475cbdd25602ef403525023cdfaa912ecc/packages/core/src/agent/agent-types.ts#L28)
+Defined in: [packages/core/src/agent/agent-types.ts:30](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/agent-types.ts#L30)
 
 A single conversation turn supplied as run input — either a `user` or `assistant` message.
 
