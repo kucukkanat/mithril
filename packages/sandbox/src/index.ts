@@ -33,6 +33,18 @@ export interface RunOptions {
  */
 export interface CodeRunner {
   run(code: string, opts?: RunOptions): Promise<CodeResult>;
+  /**
+   * What kind of boundary this backend provides.
+   *
+   * @remarks
+   * `"scope"` keeps code out of the host's scope but is **not** a security boundary against hostile code —
+   * {@link nodeVmRunner} and `workerRunner` are both `"scope"`. `"remote"` executes elsewhere, so the host
+   * never evaluates the code at all ({@link remoteRunner}).
+   *
+   * Optional so no existing adapter breaks, and machine-readable on purpose: a caller that must refuse
+   * local execution can check this instead of pattern-matching on which factory built the runner.
+   */
+  readonly isolation?: "scope" | "remote";
 }
 
 /**
@@ -56,6 +68,7 @@ export function remoteRunner(opts: {
 }): CodeRunner {
   const doFetch = opts.fetch ?? fetch;
   return {
+    isolation: "remote",
     async run(code, o): Promise<CodeResult> {
       const res = await doFetch(opts.endpoint, {
         method: "POST",

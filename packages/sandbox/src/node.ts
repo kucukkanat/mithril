@@ -40,6 +40,7 @@ const NODE_CONSOLE = (logs: string[]): { log: (...a: unknown[]) => void; error: 
  */
 export function nodeVmRunner(): CodeRunner {
   return {
+    isolation: "scope",
     async run(code, opts): Promise<CodeResult> {
       const logs: string[] = [];
       const context = vm.createContext({ console: NODE_CONSOLE(logs), ...(opts?.globals ?? {}) });
