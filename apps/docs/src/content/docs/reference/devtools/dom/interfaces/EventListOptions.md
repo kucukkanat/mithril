@@ -5,7 +5,7 @@ prev: false
 title: "EventListOptions"
 ---
 
-Defined in: [packages/devtools/src/dom.ts:161](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/devtools/src/dom.ts#L161)
+Defined in: [packages/devtools/src/dom.ts:161](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/devtools/src/dom.ts#L161)
 
 Options for [mountEventList](/mithril/reference/devtools/dom/functions/mounteventlist/).
 
@@ -17,7 +17,7 @@ Options for [mountEventList](/mithril/reference/devtools/dom/functions/mounteven
 readonly cursor: number;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:163](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/devtools/src/dom.ts#L163)
+Defined in: [packages/devtools/src/dom.ts:163](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/devtools/src/dom.ts#L163)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/devtools/src/dom.ts:163](https://github.com/kucukkanat/mit
 readonly events: readonly MithrilEvent[];
 ```
 
-Defined in: [packages/devtools/src/dom.ts:162](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/devtools/src/dom.ts#L162)
+Defined in: [packages/devtools/src/dom.ts:162](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/devtools/src/dom.ts#L162)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/devtools/src/dom.ts:162](https://github.com/kucukkanat/mit
 readonly follow: boolean;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:165](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/devtools/src/dom.ts#L165)
+Defined in: [packages/devtools/src/dom.ts:165](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/devtools/src/dom.ts#L165)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: [packages/devtools/src/dom.ts:165](https://github.com/kucukkanat/mit
 readonly onSelect: (cursor) => void;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:164](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/devtools/src/dom.ts#L164)
+Defined in: [packages/devtools/src/dom.ts:164](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/devtools/src/dom.ts#L164)
 
 #### Parameters
 

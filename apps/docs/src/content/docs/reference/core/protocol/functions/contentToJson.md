@@ -9,7 +9,7 @@ title: "contentToJson"
 function contentToJson(content): JsonValue;
 ```
 
-Defined in: packages/core/src/protocol/content.ts:79
+Defined in: [packages/core/src/protocol/content.ts:79](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/content.ts#L79)
 
 Project content into a JSON-safe value (for the `run.start` event). Assumes sources are already normalized.
 

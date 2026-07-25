@@ -5,7 +5,7 @@ prev: false
 title: "DevtoolsHandle"
 ---
 
-Defined in: [packages/devtools/src/dom.ts:13](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/devtools/src/dom.ts#L13)
+Defined in: [packages/devtools/src/dom.ts:13](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/devtools/src/dom.ts#L13)
 
 The handle returned by every mount function: push new options in, or tear the view down.
 
@@ -23,7 +23,7 @@ The handle returned by every mount function: push new options in, or tear the vi
 destroy(): void;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:15](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/devtools/src/dom.ts#L15)
+Defined in: [packages/devtools/src/dom.ts:15](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/devtools/src/dom.ts#L15)
 
 #### Returns
 
@@ -37,7 +37,7 @@ Defined in: [packages/devtools/src/dom.ts:15](https://github.com/kucukkanat/mith
 update(options): void;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:14](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/devtools/src/dom.ts#L14)
+Defined in: [packages/devtools/src/dom.ts:14](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/devtools/src/dom.ts#L14)
 
 #### Parameters
 

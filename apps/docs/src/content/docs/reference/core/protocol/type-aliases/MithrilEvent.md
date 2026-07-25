@@ -157,12 +157,25 @@ type MithrilEvent =
   value: JsonValue;
 }
   | EventMeta & {
+  callId?: string;
+  definition: ToolDefinition;
+  name: string;
+  provenance: ToolProvenance;
+  type: "tool.registered";
+}
+  | EventMeta & {
+  callId?: string;
+  name: string;
+  reason: "revoked";
+  type: "tool.revoked";
+}
+  | EventMeta & {
   payload: JsonValue;
   type: `custom.${string}`;
 };
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:55](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/events.ts#L55)
+Defined in: [packages/core/src/protocol/events.ts:56](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/events.ts#L56)
 
 The discriminated union of every event on the wire — the core product type.
 

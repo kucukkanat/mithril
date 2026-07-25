@@ -9,7 +9,7 @@ title: "openai"
 function openai(model, opts?): ModelHandle;
 ```
 
-Defined in: [openai/index.ts:112](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/providers/src/openai/index.ts#L112)
+Defined in: [openai/index.ts:112](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/providers/src/openai/index.ts#L112)
 
 Self-wiring model handle: `agent({ model: openai("gpt-4o"), … })` needs no provider registry.
 

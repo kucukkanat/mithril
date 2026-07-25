@@ -292,6 +292,69 @@ const lead = agent({
 await run(lead, "How does HTTP/3 differ from HTTP/2?");`,
 };
 
+// The agent builds a tool it wasn't given, out of two it was. Tier-1 composition only, so it runs with zero
+// network in scripted mode — and the two turns show the timing rule: defined on turn 0, called on turn 1.
+const selfAuthored: ExampleParts = {
+  bodyImports: `import { agent, tool } from "mithril";
+import { toolAuthoring } from "@mithril/authoring";
+import { z } from "zod";`,
+  scriptedTurns: `[
+  [
+    {
+      type: "tool.call",
+      callId: "c1",
+      name: "define_tool",
+      input: {
+        name: "weather_f",
+        description: "Weather for a city, in Fahrenheit.",
+        inputSchema: { type: "object", properties: { city: { type: "string" } }, required: ["city"] },
+        body: {
+          kind: "composition",
+          steps: [
+            { id: "w", tool: "weather", args: { city: { from: "input", path: "city" } } },
+            { id: "f", tool: "c_to_f", args: { celsius: { from: "step", id: "w", path: "tempC" } } },
+          ],
+        },
+      },
+    },
+    { type: "message.end", finishReason: "tool_calls", usage },
+  ],
+  [
+    { type: "tool.call", callId: "c2", name: "weather_f", input: { city: "Istanbul" } },
+    { type: "message.end", finishReason: "tool_calls", usage },
+  ],
+  [
+    { type: "text.delta", delta: "It's 69.8°F in Istanbul." },
+    { type: "message.end", finishReason: "stop", usage },
+  ],
+],`,
+  body: `const weather = tool({
+  name: "weather",
+  description: "Current weather for a city, in Celsius.",
+  inputSchema: z.object({ city: z.string() }),
+  execute: async ({ city }) => ({ city, tempC: 21 }),
+});
+
+const cToF = tool({
+  name: "c_to_f",
+  description: "Convert Celsius to Fahrenheit.",
+  inputSchema: z.object({ celsius: z.number() }),
+  execute: async ({ celsius }) => ({ f: celsius * 1.8 + 32 }),
+});
+
+const assistant = agent({
+  model,
+  instructions: "Build the tools you need from the ones you have.",
+  tools: [weather, cToF],
+  // Approval is the default; turned off here so the example runs end to end in one go.
+  use: [toolAuthoring({ requireApprovalToDefine: false })],
+});
+
+// Watch for tool.registered: the agent composes weather + c_to_f into a tool it did not start with.
+// It is defined on turn 0 and callable on turn 1 — the loop snapshots the tool set once per step.
+await run(assistant, "What's the weather in Istanbul, in Fahrenheit?");`,
+};
+
 export const PRESETS: readonly Preset[] = [
   { id: "tool-call", label: "Tool call", blurb: "Model calls a tool, then answers.", parts: toolCall },
   { id: "multi-agent", label: "Multi-agent", blurb: "One agent calls another via asTool.", parts: multiAgent },
@@ -301,6 +364,7 @@ export const PRESETS: readonly Preset[] = [
   { id: "structured", label: "Structured output", blurb: "Typed JSON via an output schema.", parts: structured },
   { id: "middleware", label: "Middleware", blurb: "Emit a custom event around a tool.", parts: middleware },
   { id: "hitl", label: "Human-in-the-loop", blurb: "Approve before a tool runs.", parts: hitl },
+  { id: "self-authored", label: "Self-authored tool", blurb: "The agent composes a tool it wasn't given.", parts: selfAuthored },
 ];
 
 export const DEFAULT_PRESET = PRESETS[0]!;

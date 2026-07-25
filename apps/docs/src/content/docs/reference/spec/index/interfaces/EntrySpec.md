@@ -5,7 +5,7 @@ prev: false
 title: "EntrySpec"
 ---
 
-Defined in: [packages/spec/src/types.ts:138](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L138)
+Defined in: [packages/spec/src/types.ts:138](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/spec/src/types.ts#L138)
 
 What the generated file executes: `await run(<target>, <input>)`.
 
@@ -17,7 +17,7 @@ What the generated file executes: `await run(<target>, <input>)`.
 readonly optional initialState?: CodeRegion;
 ```
 
-Defined in: [packages/spec/src/types.ts:143](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L143)
+Defined in: [packages/spec/src/types.ts:143](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/spec/src/types.ts#L143)
 
 Initial state expression for workflow entries, stored verbatim.
 
@@ -31,7 +31,7 @@ readonly input:
   | readonly EntryMessage[];
 ```
 
-Defined in: [packages/spec/src/types.ts:141](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L141)
+Defined in: [packages/spec/src/types.ts:141](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/spec/src/types.ts#L141)
 
 ***
 
@@ -41,6 +41,6 @@ Defined in: [packages/spec/src/types.ts:141](https://github.com/kucukkanat/mithr
 readonly target: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:140](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L140)
+Defined in: [packages/spec/src/types.ts:140](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/spec/src/types.ts#L140)
 
 Id of an AgentSpec (or, M3+, a WorkflowSpec).

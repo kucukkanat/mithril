@@ -5,7 +5,7 @@ prev: false
 title: "ProtocolVersionError"
 ---
 
-Defined in: [packages/core/src/protocol/migrate.ts:52](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/migrate.ts#L52)
+Defined in: [packages/core/src/protocol/migrate.ts:54](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/migrate.ts#L54)
 
 Thrown by [migrate](/mithril/reference/core/protocol/functions/migrate/) when an event's protocol MAJOR version is unsupported.
 
@@ -21,7 +21,7 @@ Thrown by [migrate](/mithril/reference/core/protocol/functions/migrate/) when an
 new ProtocolVersionError(found): ProtocolVersionError;
 ```
 
-Defined in: [packages/core/src/protocol/migrate.ts:54](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/migrate.ts#L54)
+Defined in: [packages/core/src/protocol/migrate.ts:56](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/migrate.ts#L56)
 
 #### Parameters
 
@@ -63,7 +63,7 @@ Error.cause
 readonly found: number;
 ```
 
-Defined in: [packages/core/src/protocol/migrate.ts:54](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/migrate.ts#L54)
+Defined in: [packages/core/src/protocol/migrate.ts:56](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/migrate.ts#L56)
 
 The unsupported `v` encountered on the event.
 

@@ -5,7 +5,7 @@ prev: false
 title: "McpClientInfo"
 ---
 
-Defined in: [packages/mcp/src/index.ts:100](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L100)
+Defined in: [packages/mcp/src/index.ts:101](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L101)
 
 Identifies this client to a server on `initialize`.
 
@@ -17,7 +17,7 @@ Identifies this client to a server on `initialize`.
 readonly name: string;
 ```
 
-Defined in: [packages/mcp/src/index.ts:101](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L101)
+Defined in: [packages/mcp/src/index.ts:102](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L102)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [packages/mcp/src/index.ts:101](https://github.com/kucukkanat/mithri
 readonly version: string;
 ```
 
-Defined in: [packages/mcp/src/index.ts:102](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L102)
+Defined in: [packages/mcp/src/index.ts:103](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L103)

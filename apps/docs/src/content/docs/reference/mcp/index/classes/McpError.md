@@ -5,7 +5,7 @@ prev: false
 title: "McpError"
 ---
 
-Defined in: [packages/mcp/src/index.ts:45](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L45)
+Defined in: [packages/mcp/src/index.ts:46](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L46)
 
 A typed MCP failure. Thrown for a JSON-RPC `error` response and for a `tools/call` result flagged
 `isError: true` (a server-reported tool failure), so a hidden failure never masquerades as success.
@@ -28,7 +28,7 @@ agent run the loop turns a thrown `McpError` into a model-visible `tool.error`.
 new McpError(message, opts?): McpError;
 ```
 
-Defined in: [packages/mcp/src/index.ts:51](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L51)
+Defined in: [packages/mcp/src/index.ts:52](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L52)
 
 #### Parameters
 
@@ -73,7 +73,7 @@ Error.cause
 readonly optional code?: number;
 ```
 
-Defined in: [packages/mcp/src/index.ts:48](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L48)
+Defined in: [packages/mcp/src/index.ts:49](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L49)
 
 JSON-RPC error code, when the failure originated as a JSON-RPC `error`.
 
@@ -85,7 +85,7 @@ JSON-RPC error code, when the failure originated as a JSON-RPC `error`.
 readonly optional data?: JsonValue;
 ```
 
-Defined in: [packages/mcp/src/index.ts:50](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L50)
+Defined in: [packages/mcp/src/index.ts:51](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L51)
 
 Server-supplied error payload (structured content or flattened text), when present.
 
@@ -113,7 +113,7 @@ Error.message
 readonly name: "McpError" = "McpError";
 ```
 
-Defined in: [packages/mcp/src/index.ts:46](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L46)
+Defined in: [packages/mcp/src/index.ts:47](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L47)
 
 #### Overrides
 

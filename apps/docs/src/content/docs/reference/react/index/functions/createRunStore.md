@@ -9,7 +9,7 @@ title: "createRunStore"
 function createRunStore(source): RunStore;
 ```
 
-Defined in: [index.ts:70](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/react/src/index.ts#L70)
+Defined in: [index.ts:70](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/react/src/index.ts#L70)
 
 Build a framework-agnostic [RunStore](/mithril/reference/react/index/interfaces/runstore/) that folds an event stream into a live [RunSnapshot](/mithril/reference/react/index/interfaces/runsnapshot/).
 

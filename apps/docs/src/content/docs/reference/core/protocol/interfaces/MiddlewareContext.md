@@ -5,7 +5,7 @@ prev: false
 title: "MiddlewareContext"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:46](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L46)
+Defined in: [packages/core/src/protocol/middleware.ts:47](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L47)
 
 The context handed to a [Middleware](/mithril/reference/core/protocol/interfaces/middleware/) — a subset of [RunContext](/mithril/reference/core/protocol/interfaces/runcontext/)
 without the tool-facing `deps.suspend` seam.
@@ -24,7 +24,7 @@ without the tool-facing `deps.suspend` seam.
 readonly deps: Deps;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:47](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L47)
+Defined in: [packages/core/src/protocol/middleware.ts:48](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L48)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:47](https://github.com/kuc
 readonly halted: boolean;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:68](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L68)
+Defined in: [packages/core/src/protocol/middleware.ts:69](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L69)
 
 `true` once any middleware has [halt](/mithril/reference/core/protocol/interfaces/middlewarecontext/#halt)ed this run; a later middleware should no-op on its own guard.
 
@@ -46,7 +46,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:68](https://github.com/kuc
 readonly runId: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:48](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L48)
+Defined in: [packages/core/src/protocol/middleware.ts:49](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L49)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:48](https://github.com/kuc
 readonly runtime: RuntimeAdapter;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:51](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L51)
+Defined in: [packages/core/src/protocol/middleware.ts:52](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L52)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:51](https://github.com/kuc
 readonly signal: AbortSignal;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:50](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L50)
+Defined in: [packages/core/src/protocol/middleware.ts:51](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L51)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:50](https://github.com/kuc
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:49](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L49)
+Defined in: [packages/core/src/protocol/middleware.ts:50](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L50)
 
 ## Methods
 
@@ -86,7 +86,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:49](https://github.com/kuc
 emit(event): void;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:54](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L54)
+Defined in: [packages/core/src/protocol/middleware.ts:55](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L55)
 
 #### Parameters
 
@@ -106,7 +106,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:54](https://github.com/kuc
 halt(error): void;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:66](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L66)
+Defined in: [packages/core/src/protocol/middleware.ts:67](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L67)
 
 End the run now with a typed terminal error — a healing middleware's halt decision (budget exhausted,
 an unbreakable loop). The **first** halt of a run wins; later calls are ignored, and [halted](/mithril/reference/core/protocol/interfaces/middlewarecontext/#halted)
@@ -130,7 +130,7 @@ flips to `true` so a middleware composed further out can bow out rather than pil
 journal<T>(key, fn): Promise<T>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:53](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L53)
+Defined in: [packages/core/src/protocol/middleware.ts:54](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L54)
 
 Journaled effect — the sanctioned store for a caching middleware (replayable, not a hidden closure).
 
@@ -159,7 +159,7 @@ Journaled effect — the sanctioned store for a caching middleware (replayable, 
 scope<T>(key, init): T;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:74](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L74)
+Defined in: [packages/core/src/protocol/middleware.ts:75](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L75)
 
 Run-scoped mutable state, created once per `key` and shared across every step of the run (never across
 runs, so a reused agent's runs stay isolated). The sanctioned place for a healing middleware to keep its
@@ -190,7 +190,7 @@ per-run counters (repair budgets, loop signatures, retry attempts).
 steer(message): void;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:60](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L60)
+Defined in: [packages/core/src/protocol/middleware.ts:61](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L61)
 
 Inject a `user` steering turn into the transcript and let the loop take another step (a re-ask). Used
 by a healing middleware that wants the model to try again — e.g. loop-detection's nudge or structured

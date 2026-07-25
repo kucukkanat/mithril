@@ -5,7 +5,7 @@ prev: false
 title: "SealCodec"
 ---
 
-Defined in: [packages/core/src/agent/seal.ts:56](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/seal.ts#L56)
+Defined in: [packages/core/src/agent/seal.ts:56](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/seal.ts#L56)
 
 A payload transform applied before signing (encode) and after verifying (decode) in the seal envelope.
 
@@ -23,7 +23,7 @@ Built-ins: [hmacCodec](/mithril/reference/core/agent/functions/hmaccodec/) (iden
 readonly id: string;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:57](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/seal.ts#L57)
+Defined in: [packages/core/src/agent/seal.ts:57](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/seal.ts#L57)
 
 ## Methods
 
@@ -33,7 +33,7 @@ Defined in: [packages/core/src/agent/seal.ts:57](https://github.com/kucukkanat/m
 decode(bytes, rt?): Promise<Uint8Array<ArrayBufferLike>>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:59](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/seal.ts#L59)
+Defined in: [packages/core/src/agent/seal.ts:59](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/seal.ts#L59)
 
 #### Parameters
 
@@ -54,7 +54,7 @@ Defined in: [packages/core/src/agent/seal.ts:59](https://github.com/kucukkanat/m
 encode(bytes, rt?): Promise<Uint8Array<ArrayBufferLike>>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:58](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/seal.ts#L58)
+Defined in: [packages/core/src/agent/seal.ts:58](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/seal.ts#L58)
 
 #### Parameters
 

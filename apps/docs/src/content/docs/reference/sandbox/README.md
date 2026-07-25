@@ -9,3 +9,4 @@ title: "@mithril/sandbox"
 
 - [index](/mithril/reference/sandbox/index/readme/)
 - [node](/mithril/reference/sandbox/node/readme/)
+- [worker](/mithril/reference/sandbox/worker/readme/)

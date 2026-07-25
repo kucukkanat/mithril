@@ -9,7 +9,7 @@ title: "globalConsumers"
 function globalConsumers(): readonly EventConsumer[];
 ```
 
-Defined in: [packages/core/src/agent/global-consumers.ts:36](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/global-consumers.ts#L36)
+Defined in: [packages/core/src/agent/global-consumers.ts:36](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/global-consumers.ts#L36)
 
 The currently-registered global consumers (empty array when none — a cheap no-op fast path).
 

@@ -5,7 +5,7 @@ prev: false
 title: "McpTransport"
 ---
 
-Defined in: [packages/mcp/src/index.ts:68](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L68)
+Defined in: [packages/mcp/src/index.ts:69](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L69)
 
 The transport you implement to carry MCP JSON-RPC traffic to a server.
 
@@ -25,7 +25,7 @@ post-handshake notification). Passed to [mcpClient](/mithril/reference/mcp/index
 optional close(): Promise<void>;
 ```
 
-Defined in: [packages/mcp/src/index.ts:74](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L74)
+Defined in: [packages/mcp/src/index.ts:75](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L75)
 
 Optional teardown, invoked by [McpClient.close](/mithril/reference/mcp/index/interfaces/mcpclient/#close).
 
@@ -41,7 +41,7 @@ Optional teardown, invoked by [McpClient.close](/mithril/reference/mcp/index/int
 optional notify(method, params): Promise<void>;
 ```
 
-Defined in: [packages/mcp/src/index.ts:72](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L72)
+Defined in: [packages/mcp/src/index.ts:73](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L73)
 
 Send a JSON-RPC notification (no id, no reply expected), e.g. `"notifications/initialized"`.
 
@@ -64,7 +64,7 @@ Send a JSON-RPC notification (no id, no reply expected), e.g. `"notifications/in
 request(method, params): Promise<JsonValue>;
 ```
 
-Defined in: [packages/mcp/src/index.ts:70](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L70)
+Defined in: [packages/mcp/src/index.ts:71](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L71)
 
 Send an MCP JSON-RPC request (e.g. `"tools/list"`, `"tools/call"`) and resolve its result.
 

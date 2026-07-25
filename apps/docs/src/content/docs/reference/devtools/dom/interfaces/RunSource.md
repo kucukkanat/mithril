@@ -5,7 +5,7 @@ prev: false
 title: "RunSource"
 ---
 
-Defined in: [packages/devtools/src/dom.ts:19](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/devtools/src/dom.ts#L19)
+Defined in: [packages/devtools/src/dom.ts:19](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/devtools/src/dom.ts#L19)
 
 Anything carrying a live event stream — a `RunHandle` satisfies this.
 
@@ -17,4 +17,4 @@ Anything carrying a live event stream — a `RunHandle` satisfies this.
 readonly events: AsyncIterable<MithrilEvent>;
 ```
 
-Defined in: [packages/devtools/src/dom.ts:20](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/devtools/src/dom.ts#L20)
+Defined in: [packages/devtools/src/dom.ts:20](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/devtools/src/dom.ts#L20)

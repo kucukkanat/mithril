@@ -18,6 +18,6 @@ type EventKind =
   | "custom";
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:10](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/devtools/src/selectors.ts#L10)
+Defined in: [packages/devtools/src/selectors.ts:10](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/devtools/src/selectors.ts#L10)
 
 Colour-coded families the MithrilEvent union groups into for an inspector row.

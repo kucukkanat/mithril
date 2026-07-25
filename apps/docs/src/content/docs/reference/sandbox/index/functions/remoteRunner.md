@@ -9,7 +9,7 @@ title: "remoteRunner"
 function remoteRunner(opts): CodeRunner;
 ```
 
-Defined in: [index.ts:52](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/sandbox/src/index.ts#L52)
+Defined in: [index.ts:64](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/sandbox/src/index.ts#L64)
 
 Build a [CodeRunner](/mithril/reference/sandbox/index/interfaces/coderunner/) that proxies execution to a trusted remote sandbox service (the secure option).
 

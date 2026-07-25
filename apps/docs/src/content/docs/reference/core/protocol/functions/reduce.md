@@ -9,7 +9,7 @@ title: "reduce"
 function reduce(state, e): RunState;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:207](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L207)
+Defined in: [packages/core/src/protocol/state.ts:225](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L225)
 
 Apply one [MithrilEvent](/mithril/reference/core/protocol/type-aliases/mithrilevent/) to a [RunState](/mithril/reference/core/protocol/interfaces/runstate/), returning the next state.
 

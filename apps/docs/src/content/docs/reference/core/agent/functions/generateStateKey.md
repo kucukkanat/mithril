@@ -9,7 +9,7 @@ title: "generateStateKey"
 function generateStateKey(rt?): Promise<CryptoKey>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:43](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/seal.ts#L43)
+Defined in: [packages/core/src/agent/seal.ts:43](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/seal.ts#L43)
 
 Generate an extractable HMAC-SHA-256 signing key for sealing tokens.
 

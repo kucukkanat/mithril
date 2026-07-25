@@ -1,0 +1,205 @@
+---
+title: Self-authored tools
+description: Let the agent define its own tools mid-run — composed from the tools it already has, gated by approval.
+sidebar:
+  order: 7
+  label: Self-authored tools
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+An agent's capabilities are normally fixed when you call `agent()`. With `@mithril/authoring`, a run can
+gain a new tool while it is running: the model defines it, a human approves it once, and it is callable for
+the rest of the run.
+
+```ts
+import { agent } from "@mithril/core/agent";
+import { toolAuthoring } from "@mithril/authoring";
+
+const a = agent({
+  model: "anthropic/claude-sonnet-5",
+  instructions: "Build the tools you need from the ones you have.",
+  tools: [getWeather, celsiusToFahrenheit],
+  use: [toolAuthoring()],
+});
+```
+
+The agent gains three meta-tools: `define_tool`, `list_tools` and `revoke_tool`.
+
+## There is no code-generation step
+
+`define_tool` is an ordinary tool. The model emits an ordinary tool call whose **arguments are the tool
+definition** — same turn budget, same streaming, same self-correction. No second inference pass, no
+compiler.
+
+It learns the format from three things that already exist:
+
+<Steps>
+
+1. **`define_tool`'s own input schema**, advertised as JSON Schema like any other tool. The schema *is* the
+   specification.
+
+2. **Its `examples`**, which the loop folds into the wire description for every provider (see
+   [`Tool.examples`](/reference/core/protocol/interfaces/tool/)) — free few-shot, no prompt engineering.
+
+3. **`list_tools`**, so it knows what it can build from.
+
+</Steps>
+
+The model never sees Mithril's API — no `tool()`, no `StandardSchemaV1`, no `RunContext`. It emits JSON.
+
+## Tier 1 — composition
+
+A composed tool is a **linear pipeline over tools the agent already has**:
+
+```json
+{
+  "name": "weather_f",
+  "description": "Look up a city's weather in Fahrenheit.",
+  "inputSchema": { "type": "object", "properties": { "city": { "type": "string" } }, "required": ["city"] },
+  "body": {
+    "kind": "composition",
+    "steps": [
+      { "id": "w", "tool": "get_weather", "args": { "city": { "from": "input", "path": "city" } } },
+      { "id": "f", "tool": "c_to_f", "args": { "celsius": { "from": "step", "id": "w", "path": "tempC" } } }
+    ]
+  }
+}
+```
+
+An argument is `{ from: "input", path }`, `{ from: "step", id, path }`, or `{ value }`. `path` is dotted,
+with numeric segments for array indices (`"results.0.id"`). `returns` defaults to the last step's output.
+
+Each step emits a `tool.progress` event, and sub-calls share the parent's `RunContext` — so a composed tool
+gets human-in-the-loop and cancellation for free, and `ctx.journal` makes a mid-composition suspension
+exactly-once.
+
+**Deliberate limits:** linear only. No branching, loops, arithmetic or string manipulation. The moment
+`args` accepts `{"$concat": […]}` you own an interpreter and its security surface. When a pipeline is not
+enough, the answer is Tier 2 — not a richer JSON dialect.
+
+<Aside type="note" title="Sub-calls bypass tool middleware">
+A composition's steps are visible as `tool.progress`, but they do not produce their own `tool.call` /
+`tool.result` events and are not wrapped by `Middleware.tool`. Routing them through the chain is on the
+[roadmap](/roadmap/).
+</Aside>
+
+## Tier 2 — sandboxed scripts
+
+When composition is not expressive enough, a body can be a function body executed through a
+[`CodeRunner`](/reference/sandbox/index/interfaces/coderunner/). It is opt-in: you supply the runner.
+
+```ts
+import { workerRunner } from "@mithril/sandbox/worker";
+
+toolAuthoring({ script: { runner: workerRunner(), allowLocalRunner: true } });
+```
+
+The body reads an ambient `input` and returns a JSON-safe value:
+
+```js
+return input.a + input.b;
+```
+
+**The ambient world is closed by default: `input` and `console`, nothing else.** No `fetch`, no `deps`, no
+`ctx`, no `process`. A script tool with no `fetch` has no exfiltration channel — that is a mechanical
+property, not a policy. Widen it explicitly if you must:
+
+```ts
+toolAuthoring({ script: { runner, globals: () => ({ fetch: scopedFetch(allowlist) }) } });
+```
+
+`language` defaults to `"js"`, so most bodies need no transpiler. `"ts"` requires an injected `transpile`
+(sucrase is a dependency and lives in the playground, not in this package).
+
+<Aside type="caution" title="Isolation, not security">
+`workerRunner` and `nodeVmRunner` both report `isolation: "scope"`. They give code a clean global scope,
+which is a boundary against **accidents** — not against hostile code. Both require an explicit
+`allowLocalRunner: true`. For untrusted code use `remoteRunner`, which executes elsewhere so your process
+never evaluates it.
+
+`workerRunner` is the only local backend that runs in a **browser**, and the only one with a real deadline
+on async code: it terminates the worker, whereas `node:vm`'s `timeout` bounds synchronous execution only.
+</Aside>
+
+## Defined now, callable next turn
+
+The loop takes **one snapshot of the tool registry per step** and hands the identical array to both the
+model call and tool dispatch — so the tools the model is offered are exactly the tools that can dispatch.
+A tool defined during step N therefore becomes callable at step N+1, and `define_tool` returns
+`availableFromStep` so the model knows.
+
+Calling a tool in the same turn it was defined is an ordinary `unknown_tool` error, not a race.
+
+## Approval
+
+`define_tool` is `needsApproval: true` by default: one gate at definition, where a human sees the name, the
+schema and the whole body. Once approved, the generated tool runs like any other.
+
+```ts
+const r = await a.run("What's the weather in Oslo, in Fahrenheit?");
+if (r.status === "suspended") {
+  console.log(r.request.payload); // { name: "define_tool", input: { …the whole definition… } }
+  await a.resume(r.token, { kind: "approve" }); // or { kind: "reject", message } / { kind: "edit", input }
+}
+```
+
+**Approval is inherited.** A composition over a gated tool is itself gated. Without that, composition would
+be an approval-laundering machine: wrap `deploy` in `do_the_thing` and the gate would evaporate.
+
+## Persistence
+
+Authored tools are ephemeral by default — one run, and they ride the suspension token so a cross-process
+`resume()` rebuilds them. Pass a store to keep them:
+
+```ts
+import { memoryKv } from "@mithril/kv";
+import { kvToolStore } from "@mithril/authoring/persistence";
+
+toolAuthoring({ store: kvToolStore(memoryKv()), scope: "team-a" });
+```
+
+Persisted tools are loaded by the plugin's `setup`, so they are advertised from the **first** model call.
+`scope` is required — a silent shared namespace across agents is a footgun. Scope per agent or per tenant,
+never per run. A `(ctx) => …` form receives `{ deps, runId }` for multi-tenant hosts.
+
+A stored tool that no longer builds — typically a composition whose target tool was removed between
+deploys — is skipped with a `custom.mithril.authoring.skipped` event. A stale cache entry never stops a run.
+
+## What this does not protect you from
+
+Stated plainly, because the guarantees only hold where they hold.
+
+- An operator who sets `requireApprovalToDefine: false`, or an approver who rubber-stamps a definition.
+- An operator who injects an unscoped `fetch` into script globals.
+- **Novel combinations of existing authorities.** Composition is authority-*preserving*, not
+  authority-*reducing*. If the agent already has `read_customer_record` and `post_to_slack` — both
+  individually ungated — it can compose `leak_customer`. The only real mitigation is gating the dangerous
+  primitives themselves, which is a property of your tool set, not something authoring can add.
+
+What *is* mechanical: a composition can only reference tools already registered, so it cannot exceed the
+agent's existing authority; approval inheritance blocks laundering; names are never shadowed (redefining
+`send_email` is refused, not silently accepted); a tool the agent authored can be revoked, one its author
+declared cannot; and a script with no `fetch` has no network.
+
+## Budget
+
+Every registered tool costs tokens on **every** step, so `maxTools` defaults to 16 and `revoke_tool` is how
+the agent makes room.
+
+```ts
+toolAuthoring({ maxTools: 8 });
+```
+
+<Aside type="note">
+Narrowing a large registry per step (the spec's `ToolSearchPolicy`) is on the [roadmap](/roadmap/). The
+per-step snapshot is deliberately the hook for it: because both the model call and dispatch read the same
+snapshot, narrowing what is advertised automatically narrows what can dispatch.
+</Aside>
+
+## Model capability
+
+Authoring needs a nested-object tool call, which is harder than a flat one — Mithril's own evals show some
+small local models failing even plain tool use. Tier 1 is JSON rather than code precisely to keep the bar
+as low as possible, and `define_tool` ships few-shot examples. Treat capable-model-only as the default
+assumption, and measure with the `tool-authoring` eval suite before relying on a small local model.

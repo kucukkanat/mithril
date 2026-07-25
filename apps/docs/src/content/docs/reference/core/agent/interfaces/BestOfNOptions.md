@@ -5,7 +5,7 @@ prev: false
 title: "BestOfNOptions"
 ---
 
-Defined in: [packages/core/src/agent/test-time.ts:72](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/test-time.ts#L72)
+Defined in: [packages/core/src/agent/test-time.ts:72](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/test-time.ts#L72)
 
 Options for [bestOfN](/mithril/reference/core/agent/functions/bestofn/).
 
@@ -17,7 +17,7 @@ Options for [bestOfN](/mithril/reference/core/agent/functions/bestofn/).
 readonly n: number;
 ```
 
-Defined in: [packages/core/src/agent/test-time.ts:74](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/test-time.ts#L74)
+Defined in: [packages/core/src/agent/test-time.ts:74](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/test-time.ts#L74)
 
 How many candidates to draw.
 
@@ -29,7 +29,7 @@ How many candidates to draw.
 readonly score: (r) => number | Promise<number>;
 ```
 
-Defined in: [packages/core/src/agent/test-time.ts:76](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/test-time.ts#L76)
+Defined in: [packages/core/src/agent/test-time.ts:76](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/test-time.ts#L76)
 
 Score a candidate; higher wins. A deterministic verifier (parse/execute success) is the ideal scorer.
 
@@ -51,6 +51,6 @@ Score a candidate; higher wins. A deterministic verifier (parse/execute success)
 readonly optional threshold?: number;
 ```
 
-Defined in: [packages/core/src/agent/test-time.ts:78](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/test-time.ts#L78)
+Defined in: [packages/core/src/agent/test-time.ts:78](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/test-time.ts#L78)
 
 Stop early and take the first candidate scoring at least this. Omit to always draw all `n`.

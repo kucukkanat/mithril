@@ -9,7 +9,7 @@ title: "modelBackends"
 function modelBackends(model): readonly Backend[];
 ```
 
-Defined in: [runner-web/src/catalog.ts:121](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/runner-web/src/catalog.ts#L121)
+Defined in: [runner-web/src/catalog.ts:121](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/runner-web/src/catalog.ts#L121)
 
 The backends a model may run on: its declared [LocalModel.backends](/mithril/reference/runner-web/index/interfaces/localmodel/#backends), or [ALL\_BACKENDS](/mithril/reference/runner-web/index/variables/all_backends/) when
 unrestricted. Accepts a [LocalModel](/mithril/reference/runner-web/index/interfaces/localmodel/) or a bare repo id (unknown/free-text ids ⇒ all backends).

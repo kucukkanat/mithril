@@ -5,7 +5,7 @@ prev: false
 title: "ToolDef"
 ---
 
-Defined in: [packages/core/src/agent/factory.ts:64](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/factory.ts#L64)
+Defined in: [packages/core/src/agent/factory.ts:66](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L66)
 
 The definition object passed to [tool](/mithril/reference/core/agent/functions/tool/) to declare a single tool.
 
@@ -35,7 +35,7 @@ The definition object passed to [tool](/mithril/reference/core/agent/functions/t
 description: string;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:66](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/factory.ts#L66)
+Defined in: [packages/core/src/agent/factory.ts:68](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L68)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [packages/core/src/agent/factory.ts:66](https://github.com/kucukkana
 optional examples?: readonly JsonValue[];
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:69](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/factory.ts#L69)
+Defined in: [packages/core/src/agent/factory.ts:71](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L71)
 
 Optional few-shot example inputs, surfaced into the tool's wire description to steer small models.
 
@@ -63,7 +63,7 @@ execute: (input, ctx) =>
 | Suspend<NoInfer<Out>>, any>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:78](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/factory.ts#L78)
+Defined in: [packages/core/src/agent/factory.ts:82](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L82)
 
 #### Parameters
 
@@ -89,7 +89,7 @@ Defined in: [packages/core/src/agent/factory.ts:78](https://github.com/kucukkana
 inputSchema: SIn;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:70](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/factory.ts#L70)
+Defined in: [packages/core/src/agent/factory.ts:72](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L72)
 
 ***
 
@@ -99,7 +99,7 @@ Defined in: [packages/core/src/agent/factory.ts:70](https://github.com/kucukkana
 name: Name;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:65](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/factory.ts#L65)
+Defined in: [packages/core/src/agent/factory.ts:67](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L67)
 
 ***
 
@@ -109,7 +109,7 @@ Defined in: [packages/core/src/agent/factory.ts:65](https://github.com/kucukkana
 optional needsApproval?: boolean | ((input, ctx) => boolean | Promise<boolean>);
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:72](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/factory.ts#L72)
+Defined in: [packages/core/src/agent/factory.ts:74](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L74)
 
 ***
 
@@ -119,7 +119,19 @@ Defined in: [packages/core/src/agent/factory.ts:72](https://github.com/kucukkana
 optional outputSchema?: StandardSchemaV1<unknown, Out>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:71](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/factory.ts#L71)
+Defined in: [packages/core/src/agent/factory.ts:73](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L73)
+
+***
+
+### timeoutMs?
+
+```ts
+optional timeoutMs?: number;
+```
+
+Defined in: [packages/core/src/agent/factory.ts:81](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L81)
+
+Wall-clock budget for one `execute`, in ms; exceeding it yields a `"timeout"`-classified `tool.error`.
 
 ***
 
@@ -129,4 +141,4 @@ Defined in: [packages/core/src/agent/factory.ts:71](https://github.com/kucukkana
 optional version?: string;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:67](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/factory.ts#L67)
+Defined in: [packages/core/src/agent/factory.ts:69](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L69)

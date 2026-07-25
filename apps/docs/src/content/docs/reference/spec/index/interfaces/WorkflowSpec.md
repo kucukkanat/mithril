@@ -5,7 +5,7 @@ prev: false
 title: "WorkflowSpec"
 ---
 
-Defined in: [packages/spec/src/types.ts:121](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L121)
+Defined in: [packages/spec/src/types.ts:121](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/spec/src/types.ts#L121)
 
 A `const <id> = defineWorkflow({ … }, { start })` declaration.
 
@@ -17,7 +17,7 @@ A `const <id> = defineWorkflow({ … }, { start })` declaration.
 readonly id: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:123](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L123)
+Defined in: [packages/spec/src/types.ts:123](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/spec/src/types.ts#L123)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/spec/src/types.ts:123](https://github.com/kucukkanat/mithr
 readonly kind: "workflow";
 ```
 
-Defined in: [packages/spec/src/types.ts:122](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L122)
+Defined in: [packages/spec/src/types.ts:122](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/spec/src/types.ts#L122)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/spec/src/types.ts:122](https://github.com/kucukkanat/mithr
 readonly optional maxSteps?: number;
 ```
 
-Defined in: [packages/spec/src/types.ts:128](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L128)
+Defined in: [packages/spec/src/types.ts:128](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/spec/src/types.ts#L128)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: [packages/spec/src/types.ts:128](https://github.com/kucukkanat/mithr
 readonly start: string;
 ```
 
-Defined in: [packages/spec/src/types.ts:127](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L127)
+Defined in: [packages/spec/src/types.ts:127](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/spec/src/types.ts#L127)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: [packages/spec/src/types.ts:127](https://github.com/kucukkanat/mithr
 readonly optional stateType?: CodeRegion;
 ```
 
-Defined in: [packages/spec/src/types.ts:125](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L125)
+Defined in: [packages/spec/src/types.ts:125](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/spec/src/types.ts#L125)
 
 An adjacent `interface`/`type` declaration for the state shape, stored verbatim.
 
@@ -69,4 +69,4 @@ An adjacent `interface`/`type` declaration for the state shape, stored verbatim.
 readonly steps: readonly WorkflowStepSpec[];
 ```
 
-Defined in: [packages/spec/src/types.ts:126](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/spec/src/types.ts#L126)
+Defined in: [packages/spec/src/types.ts:126](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/spec/src/types.ts#L126)

@@ -9,7 +9,7 @@ title: "narrow"
 function narrow<Tools>(e, tools): e is EventMeta & { callId: string; input: JsonValue; name: string; type: "tool.call"; version?: string } & ToolCallFor<Tools>;
 ```
 
-Defined in: [packages/core/src/protocol/narrow.ts:44](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/narrow.ts#L44)
+Defined in: [packages/core/src/protocol/narrow.ts:44](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/narrow.ts#L44)
 
 Type-predicate that narrows an event to a `tool.call` for one of `tools`.
 

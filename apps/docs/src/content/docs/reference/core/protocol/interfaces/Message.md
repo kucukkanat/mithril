@@ -5,7 +5,7 @@ prev: false
 title: "Message"
 ---
 
-Defined in: [packages/core/src/protocol/state.ts:28](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L28)
+Defined in: [packages/core/src/protocol/state.ts:29](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L29)
 
 One conversation message with any tool calls it issued.
 
@@ -17,7 +17,7 @@ One conversation message with any tool calls it issued.
 readonly content: string;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:30](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L30)
+Defined in: [packages/core/src/protocol/state.ts:31](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L31)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/protocol/state.ts:30](https://github.com/kucukkan
 readonly role: string;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:29](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L29)
+Defined in: [packages/core/src/protocol/state.ts:30](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L30)
 
 ***
 
@@ -37,4 +37,4 @@ Defined in: [packages/core/src/protocol/state.ts:29](https://github.com/kucukkan
 readonly toolCalls: readonly ToolCallRecord[];
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:31](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L31)
+Defined in: [packages/core/src/protocol/state.ts:32](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L32)

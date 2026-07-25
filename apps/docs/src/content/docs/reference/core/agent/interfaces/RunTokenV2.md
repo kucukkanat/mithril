@@ -5,9 +5,13 @@ prev: false
 title: "RunTokenV2"
 ---
 
-Defined in: [packages/core/src/agent/loop.ts:154](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L154)
+Defined in: [packages/core/src/agent/loop.ts:167](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/loop.ts#L167)
 
 The versioned, serializable run token carried by a `suspended` [RunResult](/mithril/reference/core/agent/type-aliases/runresult/).
+
+## Remarks
+
+Still exported so an older stored token can be read; [RunTokenV3](/mithril/reference/core/agent/interfaces/runtokenv3/) is what the loop emits.
 
 ## Properties
 
@@ -17,7 +21,7 @@ The versioned, serializable run token carried by a `suspended` [RunResult](/mith
 readonly messages: readonly LoopMessage[];
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:158](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L158)
+Defined in: [packages/core/src/agent/loop.ts:171](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/loop.ts#L171)
 
 ***
 
@@ -27,7 +31,7 @@ Defined in: [packages/core/src/agent/loop.ts:158](https://github.com/kucukkanat/
 readonly model: string;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:157](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L157)
+Defined in: [packages/core/src/agent/loop.ts:170](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/loop.ts#L170)
 
 ***
 
@@ -37,7 +41,7 @@ Defined in: [packages/core/src/agent/loop.ts:157](https://github.com/kucukkanat/
 readonly pending: PendingSuspension;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:161](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L161)
+Defined in: [packages/core/src/agent/loop.ts:174](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/loop.ts#L174)
 
 ***
 
@@ -47,7 +51,7 @@ Defined in: [packages/core/src/agent/loop.ts:161](https://github.com/kucukkanat/
 readonly runId: string;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:156](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L156)
+Defined in: [packages/core/src/agent/loop.ts:169](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/loop.ts#L169)
 
 ***
 
@@ -57,7 +61,7 @@ Defined in: [packages/core/src/agent/loop.ts:156](https://github.com/kucukkanat/
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:160](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L160)
+Defined in: [packages/core/src/agent/loop.ts:173](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/loop.ts#L173)
 
 ***
 
@@ -67,7 +71,7 @@ Defined in: [packages/core/src/agent/loop.ts:160](https://github.com/kucukkanat/
 readonly usage: UsageTotals;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:159](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L159)
+Defined in: [packages/core/src/agent/loop.ts:172](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/loop.ts#L172)
 
 ***
 
@@ -77,4 +81,4 @@ Defined in: [packages/core/src/agent/loop.ts:159](https://github.com/kucukkanat/
 readonly v: 2;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:155](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/loop.ts#L155)
+Defined in: [packages/core/src/agent/loop.ts:168](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/loop.ts#L168)

@@ -9,7 +9,7 @@ title: "mcpTools"
 function mcpTools(client): Promise<readonly Tool<string, JsonValue, JsonValue, unknown>[]>;
 ```
 
-Defined in: [packages/mcp/src/index.ts:276](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L276)
+Defined in: [packages/mcp/src/index.ts:301](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L301)
 
 Fetch an MCP server's tools and wrap each as a Mithril Tool that calls it.
 
@@ -27,7 +27,13 @@ One Mithril tool per advertised MCP tool, ready to hand to an agent.
 
 ## Remarks
 
-Runs the lifecycle handshake (via [McpClient.listTools](/mithril/reference/mcp/index/interfaces/mcpclient/#listtools)) if it has not happened yet. Each wrapped
-tool uses a **passthrough, non-validating** schema: the server's JSON Schema is not enforced client-side,
-so inputs are forwarded to the server as-is. Execution routes through [McpClient.callTool](/mithril/reference/mcp/index/interfaces/mcpclient/#calltool), so a
-server-reported `isError` result throws [McpError](/mithril/reference/mcp/index/classes/mcperror/) and the agent loop surfaces it as a `tool.error`.
+Runs the lifecycle handshake (via [McpClient.listTools](/mithril/reference/mcp/index/interfaces/mcpclient/#listtools)) if it has not happened yet. Execution
+routes through [McpClient.callTool](/mithril/reference/mcp/index/interfaces/mcpclient/#calltool), so a server-reported `isError` result throws [McpError](/mithril/reference/mcp/index/classes/mcperror/)
+and the agent loop surfaces it as a `tool.error`.
+
+The server's `inputSchema` is compiled with `fromJsonSchema` where possible, so the model is offered the
+tool's **real** parameters and obviously-invalid arguments fail locally instead of costing a round-trip.
+Compilation is lenient: keywords outside the supported subset (`$ref`, `oneOf`, …) are dropped rather
+than enforced, and a schema that cannot be compiled at all falls back to passthrough — so a server is
+never unusable merely because of a keyword we cannot check. What is *not* validated is simply forwarded,
+as before.

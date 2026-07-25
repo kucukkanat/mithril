@@ -9,7 +9,7 @@ title: "google"
 function google(model): ModelHandle;
 ```
 
-Defined in: [google/index.ts:161](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/providers/src/google/index.ts#L161)
+Defined in: [google/index.ts:161](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/providers/src/google/index.ts#L161)
 
 Self-wiring model handle: `agent({ model: google("gemini-1.5-pro"), … })` needs no provider registry.
 

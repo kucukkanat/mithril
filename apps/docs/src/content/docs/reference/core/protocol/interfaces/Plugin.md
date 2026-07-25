@@ -5,7 +5,7 @@ prev: false
 title: "Plugin"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:217](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L217)
+Defined in: [packages/core/src/protocol/middleware.ts:249](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L249)
 
 A bundle of tools, middleware, and event consumers registered as a unit.
 
@@ -30,7 +30,7 @@ call signature, not here — it is invalid on an interface type parameter.
 readonly optional __tools?: Tools;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:224](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L224)
+Defined in: [packages/core/src/protocol/middleware.ts:272](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L272)
 
 Phantom carrier for `Tools` inference; erased at build.
 
@@ -42,7 +42,34 @@ Phantom carrier for `Tools` inference; erased at build.
 readonly optional consumers?: readonly EventConsumer[];
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:221](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L221)
+Defined in: [packages/core/src/protocol/middleware.ts:253](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L253)
+
+***
+
+### materialize?
+
+```ts
+readonly optional materialize?: (def) => AnyTool<Deps>;
+```
+
+Defined in: [packages/core/src/protocol/middleware.ts:270](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L270)
+
+Rebuilds a runtime tool from its replayable [ToolDefinition](/mithril/reference/core/protocol/interfaces/tooldefinition/), on resume.
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `def` | [`ToolDefinition`](/mithril/reference/core/protocol/interfaces/tooldefinition/) |
+
+#### Returns
+
+[`AnyTool`](/mithril/reference/core/protocol/type-aliases/anytool/)\<`Deps`\>
+
+#### Remarks
+
+Core stores definitions but never interprets their `body`; the package that defines a body
+format supplies this. At most one plugin in an agent may declare it.
 
 ***
 
@@ -52,7 +79,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:221](https://github.com/ku
 readonly optional middleware?: readonly Middleware<Deps>[];
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:220](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L220)
+Defined in: [packages/core/src/protocol/middleware.ts:252](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L252)
 
 ***
 
@@ -62,7 +89,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:220](https://github.com/ku
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:218](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L218)
+Defined in: [packages/core/src/protocol/middleware.ts:250](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L250)
 
 ***
 
@@ -72,17 +99,27 @@ Defined in: [packages/core/src/protocol/middleware.ts:218](https://github.com/ku
 readonly optional setup?: (host) => void | Promise<void>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:222](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L222)
+Defined in: [packages/core/src/protocol/middleware.ts:263](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L263)
+
+Run-time contribution hook, invoked once per run before step 0 (and again on each `resume`, so it must
+be idempotent). Use it for capabilities that cannot be known statically — tools loaded from a store,
+discovered from a server, or derived from `deps`.
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `host` | [`PluginHost`](/mithril/reference/core/protocol/interfaces/pluginhost/) |
+| `host` | [`PluginHost`](/mithril/reference/core/protocol/interfaces/pluginhost/)\<`Deps`\> |
 
 #### Returns
 
 `void` \| `Promise`\<`void`\>
+
+#### Remarks
+
+Setups run sequentially in `use` order, so a later plugin may build on an earlier one's tools.
+A setup that throws fails the run: a plugin that cannot install its capabilities has not "partly"
+worked, and continuing would silently run an agent with fewer tools than its author declared.
 
 ***
 
@@ -92,4 +129,4 @@ Defined in: [packages/core/src/protocol/middleware.ts:222](https://github.com/ku
 readonly optional tools?: Tools;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:219](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/middleware.ts#L219)
+Defined in: [packages/core/src/protocol/middleware.ts:251](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L251)

@@ -5,7 +5,7 @@ prev: false
 title: "McpServerDescription"
 ---
 
-Defined in: [packages/mcp/src/index.ts:90](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L90)
+Defined in: [packages/mcp/src/index.ts:91](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L91)
 
 The result of the MCP lifecycle handshake — what the server negotiated on `initialize`.
 
@@ -17,7 +17,7 @@ The result of the MCP lifecycle handshake — what the server negotiated on `ini
 readonly capabilities: JsonValue;
 ```
 
-Defined in: [packages/mcp/src/index.ts:94](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L94)
+Defined in: [packages/mcp/src/index.ts:95](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L95)
 
 The server's advertised capabilities (`tools`, `resources`, `prompts`, …), kept opaque.
 
@@ -29,7 +29,7 @@ The server's advertised capabilities (`tools`, `resources`, `prompts`, …), kep
 readonly protocolVersion: string;
 ```
 
-Defined in: [packages/mcp/src/index.ts:92](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L92)
+Defined in: [packages/mcp/src/index.ts:93](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L93)
 
 Protocol revision the server agreed to (may differ from [MCP\_PROTOCOL\_VERSION](/mithril/reference/mcp/index/variables/mcp_protocol_version/)).
 
@@ -44,7 +44,7 @@ readonly serverInfo: {
 };
 ```
 
-Defined in: [packages/mcp/src/index.ts:96](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/mcp/src/index.ts#L96)
+Defined in: [packages/mcp/src/index.ts:97](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L97)
 
 The server's self-identification.
 

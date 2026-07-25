@@ -34,7 +34,8 @@ const TD_PACKAGES = [
   { name: "workflows", label: "@mithril/workflows", entryPoints: ["workflows/src/index.ts"] },
   { name: "mcp", label: "@mithril/mcp", entryPoints: ["mcp/src/index.ts", "mcp/src/http.ts", "mcp/src/server.ts"] },
   { name: "vectors", label: "@mithril/vectors", entryPoints: ["vectors/src/index.ts", "vectors/src/sqlite-bun.ts", "vectors/src/sqlite-node.ts"] },
-  { name: "sandbox", label: "@mithril/sandbox", entryPoints: ["sandbox/src/index.ts", "sandbox/src/node.ts"] },
+  { name: "sandbox", label: "@mithril/sandbox", entryPoints: ["sandbox/src/index.ts", "sandbox/src/node.ts", "sandbox/src/worker.ts"] },
+  { name: "authoring", label: "@mithril/authoring", entryPoints: ["authoring/src/index.ts", "authoring/src/persistence.ts"] },
   { name: "react", label: "@mithril/react", entryPoints: ["react/src/index.ts", "react/src/hooks.ts"] },
   { name: "runner-web", label: "@mithril/runner-web", entryPoints: ["runner-web/src/index.ts", "runner-web/src/worker.ts"] },
   { name: "spec", label: "@mithril/spec", entryPoints: ["spec/src/index.ts", "spec/src/parse.ts"] },
@@ -125,6 +126,7 @@ export default defineConfig({
               label: "Extending the loop",
               items: [
                 "guides/middleware-and-plugins",
+                "guides/self-authored-tools",
                 "guides/mcp",
                 "guides/workflows",
                 "guides/rag-and-vectors",

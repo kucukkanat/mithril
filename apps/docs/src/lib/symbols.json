@@ -99,6 +99,11 @@
     "kind": "fn",
     "sig": "function attachDevtools(): () => void;"
   },
+  "AuthoringOptions": {
+    "href": "/reference/authoring/index/interfaces/authoringoptions/",
+    "kind": "type",
+    "sig": "Options for toolAuthoring."
+  },
   "Backend": {
     "href": "/reference/runner-web/index/type-aliases/backend/",
     "kind": "type",
@@ -119,10 +124,20 @@
     "kind": "fn",
     "sig": "function browserEngine(opts?): TransformersEngine;"
   },
+  "buildDefinition": {
+    "href": "/reference/authoring/index/functions/builddefinition/",
+    "kind": "fn",
+    "sig": "function buildDefinition(input, ctx): ToolDefinition;"
+  },
   "buildSpanTree": {
     "href": "/reference/devtools/index/functions/buildspantree/",
     "kind": "fn",
     "sig": "function buildSpanTree(events): readonly SpanNode[];"
+  },
+  "canonicalJson": {
+    "href": "/reference/core/protocol/functions/canonicaljson/",
+    "kind": "fn",
+    "sig": "function canonicalJson(v): string;"
   },
   "ChatAgent": {
     "href": "/reference/react/index/interfaces/chatagent/",
@@ -198,6 +213,11 @@
     "href": "/reference/devtools/index/functions/compactionsavings/",
     "kind": "fn",
     "sig": "function compactionSavings(events): number;"
+  },
+  "CompositionStep": {
+    "href": "/reference/authoring/index/interfaces/compositionstep/",
+    "kind": "type",
+    "sig": "One step: call a registered tool with an object assembled from ValueRefs."
   },
   "ContentPart": {
     "href": "/reference/core/protocol/type-aliases/contentpart/",
@@ -294,6 +314,16 @@
     "kind": "fn",
     "sig": "function defineDevtoolsElements(options?): void;"
   },
+  "DefineToolInput": {
+    "href": "/reference/authoring/index/interfaces/definetoolinput/",
+    "kind": "type",
+    "sig": "The arguments define_tool accepts — the shape a model fills in."
+  },
+  "defineToolSchema": {
+    "href": "/reference/authoring/index/functions/definetoolschema/",
+    "kind": "fn",
+    "sig": "function defineToolSchema(): StandardSchemaV1<unknown, DefineToolInput>;"
+  },
   "defineWorkflow": {
     "href": "/reference/workflows/functions/defineworkflow/",
     "kind": "fn",
@@ -333,6 +363,11 @@
     "href": "/reference/devtools/index/functions/devtoolsplugin/",
     "kind": "fn",
     "sig": "function devtoolsPlugin(inspector?): Plugin<unknown, readonly AnyTool<unknown>[]> & { inspector: Inspector; };"
+  },
+  "digestOf": {
+    "href": "/reference/core/protocol/functions/digestof/",
+    "kind": "fn",
+    "sig": "function digestOf(def): string;"
   },
   "DownloadReport": {
     "href": "/reference/runner-web/index/interfaces/downloadreport/",
@@ -449,6 +484,16 @@
     "kind": "fn",
     "sig": "function formatForModel(modelId): ToolFormat;"
   },
+  "fromJsonSchema": {
+    "href": "/reference/core/protocol/functions/fromjsonschema/",
+    "kind": "fn",
+    "sig": "function fromJsonSchema(doc, opts?): StandardSchemaV1<unknown, JsonValue>;"
+  },
+  "FromJsonSchemaOptions": {
+    "href": "/reference/core/protocol/interfaces/fromjsonschemaoptions/",
+    "kind": "type",
+    "sig": "Options for fromJsonSchema."
+  },
   "FsError": {
     "href": "/reference/fs/index/classes/fserror/",
     "kind": "class",
@@ -458,6 +503,11 @@
     "href": "/reference/fs/index/interfaces/fstestadapter/",
     "kind": "type",
     "sig": "Test-runner adapter that lets fileSystemConformance run under any framework."
+  },
+  "fsToolStore": {
+    "href": "/reference/authoring/persistence/functions/fstoolstore/",
+    "kind": "fn",
+    "sig": "function fsToolStore(fs, opts?): ToolStore;"
   },
   "gemmaToolCall": {
     "href": "/reference/providers/transformers/variables/gemmatoolcall/",
@@ -584,6 +634,11 @@
     "kind": "type",
     "sig": "type InferPluginTools<P> = P extends (...args) => infer R ? InferPluginTools<R> : P extends Plugin<infer _D, infer T> ? { [E in T[number] a…"
   },
+  "inheritsApproval": {
+    "href": "/reference/authoring/index/functions/inheritsapproval/",
+    "kind": "fn",
+    "sig": "function inheritsApproval(comp, needsApproval): boolean;"
+  },
   "INITIAL": {
     "href": "/reference/core/protocol/variables/initial/",
     "kind": "const",
@@ -629,10 +684,20 @@
     "kind": "type",
     "sig": "Options for installRunner."
   },
+  "isComposition": {
+    "href": "/reference/authoring/index/functions/iscomposition/",
+    "kind": "fn",
+    "sig": "function isComposition(body): body is ToolComposition & JsonValue;"
+  },
   "isKnownEvent": {
     "href": "/reference/core/protocol/functions/isknownevent/",
     "kind": "fn",
     "sig": "function isKnownEvent(e): boolean;"
+  },
+  "isScript": {
+    "href": "/reference/authoring/index/functions/isscript/",
+    "kind": "fn",
+    "sig": "function isScript(body): body is ToolScript & JsonValue;"
   },
   "Issue": {
     "href": "/reference/core/protocol/namespaces/standardschemav1/interfaces/issue/",
@@ -688,6 +753,11 @@
     "href": "/reference/kv/index/interfaces/kvtestadapter/",
     "kind": "type",
     "sig": "Minimal test-runner shim that lets kvConformance register cases against bun:test / vitest without"
+  },
+  "kvToolStore": {
+    "href": "/reference/authoring/persistence/functions/kvtoolstore/",
+    "kind": "fn",
+    "sig": "function kvToolStore(kv, opts?): ToolStore;"
   },
   "LIVE_PROVIDERS": {
     "href": "/reference/runner-web/index/variables/live_providers/",
@@ -753,6 +823,16 @@
     "href": "/reference/core/agent/functions/makerunhandle/",
     "kind": "fn",
     "sig": "function makeRunHandle<Out>( gen, runId, controls): RunHandle<Out>;"
+  },
+  "materialize": {
+    "href": "/reference/authoring/index/functions/materialize/",
+    "kind": "fn",
+    "sig": "function materialize(def, extra?): AnyTool<unknown>;"
+  },
+  "Materializers": {
+    "href": "/reference/authoring/index/interfaces/materializers/",
+    "kind": "type",
+    "sig": "Optional hooks for body kinds beyond Tier-1 composition (Tier-2 scripts register through this)."
   },
   "MCP_PROTOCOL_VERSION": {
     "href": "/reference/mcp/index/variables/mcp_protocol_version/",
@@ -1077,7 +1157,12 @@
   "PluginHost": {
     "href": "/reference/core/protocol/interfaces/pluginhost/",
     "kind": "type",
-    "sig": "The registration surface passed to a Plugin.setup, for contributing plugin fragments."
+    "sig": "The registration surface passed to Plugin.setup, once per run, before step 0."
+  },
+  "PluginSetup": {
+    "href": "/reference/core/protocol/interfaces/pluginsetup/",
+    "kind": "type",
+    "sig": "A Plugin.setup paired with its plugin's name, as collected from an agent's use array."
   },
   "preload": {
     "href": "/reference/providers/transformers/functions/preload/",
@@ -1199,6 +1284,11 @@
     "kind": "fn",
     "sig": "function requiresWebGPU(model): boolean;"
   },
+  "RESERVED_NAMES": {
+    "href": "/reference/authoring/index/variables/reserved_names/",
+    "kind": "const",
+    "sig": "const RESERVED_NAMES: ReadonlySet<string>;"
+  },
   "ResolutionOf": {
     "href": "/reference/core/protocol/type-aliases/resolutionof/",
     "kind": "type",
@@ -1208,6 +1298,11 @@
     "href": "/reference/core/agent/functions/resolvemodel/",
     "kind": "fn",
     "sig": "function resolveModel(model, registry?): { id: `${string}/${string}`; provider: Provider; };"
+  },
+  "resolveRef": {
+    "href": "/reference/authoring/index/functions/resolveref/",
+    "kind": "fn",
+    "sig": "function resolveRef( ref, input, outputs): JsonValue | undefined;"
   },
   "resolveTransport": {
     "href": "/reference/core/agent/functions/resolvetransport/",
@@ -1339,6 +1434,16 @@
     "kind": "type",
     "sig": "The versioned, serializable run token carried by a suspended RunResult."
   },
+  "RunTokenV3": {
+    "href": "/reference/core/agent/interfaces/runtokenv3/",
+    "kind": "type",
+    "sig": "The current run token: RunTokenV2 plus the tools the run created."
+  },
+  "RunToolRegistry": {
+    "href": "/reference/core/protocol/interfaces/runtoolregistry/",
+    "kind": "type",
+    "sig": "The narrowed registry view handed to a tool's execute as ctx.tools."
+  },
   "scaffold": {
     "href": "/reference/create-mithril/functions/scaffold/",
     "kind": "fn",
@@ -1363,6 +1468,16 @@
     "href": "/reference/core/testkit/functions/scriptedprovider/",
     "kind": "fn",
     "sig": "function scriptedProvider(turns): Provider;"
+  },
+  "scriptMaterializer": {
+    "href": "/reference/authoring/index/functions/scriptmaterializer/",
+    "kind": "fn",
+    "sig": "function scriptMaterializer(opts): (def) => AnyTool<unknown>;"
+  },
+  "ScriptOptions": {
+    "href": "/reference/authoring/index/interfaces/scriptoptions/",
+    "kind": "type",
+    "sig": "Configuration for Tier-2 script bodies."
   },
   "seal": {
     "href": "/reference/core/agent/functions/seal/",
@@ -1494,6 +1609,16 @@
     "kind": "type",
     "sig": "A per-step view yielded by Agent.iterate: the step index, the events emitted during it, and a"
   },
+  "StoreContext": {
+    "href": "/reference/authoring/index/interfaces/storecontext/",
+    "kind": "type",
+    "sig": "What a StoreSelector is given to choose a store or scope."
+  },
+  "StoreSelector": {
+    "href": "/reference/authoring/index/type-aliases/storeselector/",
+    "kind": "type",
+    "sig": "type StoreSelector = | ToolStore | ((ctx) => ToolStore);"
+  },
   "SubAgentToolSpec": {
     "href": "/reference/spec/index/interfaces/subagenttoolspec/",
     "kind": "type",
@@ -1589,6 +1714,16 @@
     "kind": "type",
     "sig": "A typed tool: Standard Schema in/out plus typed dependency injection."
   },
+  "TOOL_NAME_PATTERN": {
+    "href": "/reference/authoring/index/variables/tool_name_pattern/",
+    "kind": "const",
+    "sig": "const TOOL_NAME_PATTERN: RegExp;"
+  },
+  "toolAuthoring": {
+    "href": "/reference/authoring/index/functions/toolauthoring/",
+    "kind": "fn",
+    "sig": "function toolAuthoring(opts?): Plugin<unknown>;"
+  },
   "ToolCallFor": {
     "href": "/reference/core/protocol/type-aliases/toolcallfor/",
     "kind": "type",
@@ -1604,10 +1739,20 @@
     "kind": "fn",
     "sig": "function toolCallTurn( name, input, callId?): readonly ProviderChunk[];"
   },
+  "ToolComposition": {
+    "href": "/reference/authoring/index/interfaces/toolcomposition/",
+    "kind": "type",
+    "sig": "The declarative body of a Tier-1 composed tool."
+  },
   "ToolDef": {
     "href": "/reference/core/agent/interfaces/tooldef/",
     "kind": "type",
     "sig": "The definition object passed to tool to declare a single tool."
+  },
+  "ToolDefinition": {
+    "href": "/reference/core/protocol/interfaces/tooldefinition/",
+    "kind": "type",
+    "sig": "A JSON-safe, replayable description of a tool — everything needed to rebuild it."
   },
   "toolErrorClass": {
     "href": "/reference/core/protocol/functions/toolerrorclass/",
@@ -1654,6 +1799,26 @@
     "kind": "type",
     "sig": "An intermediate value yielded by a streaming tool's execute generator, surfaced as tool.progress."
   },
+  "ToolProvenance": {
+    "href": "/reference/core/protocol/type-aliases/toolprovenance/",
+    "kind": "type",
+    "sig": "type ToolProvenance = | { kind: \"static\"; } | { kind: \"plugin\"; plugin: string; } | { kind: \"setup\"; plugin: string; } | { by: string; call…"
+  },
+  "toolRegistry": {
+    "href": "/reference/core/agent/functions/toolregistry/",
+    "kind": "fn",
+    "sig": "function toolRegistry<Deps>(seed): ToolRegistry<Deps>;"
+  },
+  "ToolRegistry": {
+    "href": "/reference/core/protocol/interfaces/toolregistry/",
+    "kind": "type",
+    "sig": "The live, per-run set of tools the loop resolves against."
+  },
+  "ToolScript": {
+    "href": "/reference/authoring/index/interfaces/toolscript/",
+    "kind": "type",
+    "sig": "A free JavaScript/TypeScript function body, executed through a CodeRunner."
+  },
   "ToolSpec": {
     "href": "/reference/spec/index/interfaces/toolspec/",
     "kind": "type",
@@ -1663,6 +1828,26 @@
     "href": "/reference/core/protocol/interfaces/toolstepoutcome/",
     "kind": "type",
     "sig": "A per-tool result summary surfaced on StepOutcome.toolOutcomes, so a step-altitude healing"
+  },
+  "ToolStore": {
+    "href": "/reference/authoring/persistence/interfaces/toolstore/",
+    "kind": "type",
+    "sig": "Durable storage for authored ToolDefinitions, partitioned by scope."
+  },
+  "toolStoreConformance": {
+    "href": "/reference/authoring/persistence/functions/toolstoreconformance/",
+    "kind": "fn",
+    "sig": "function toolStoreConformance(make, t): void;"
+  },
+  "ToolStoreTestAdapter": {
+    "href": "/reference/authoring/persistence/interfaces/toolstoretestadapter/",
+    "kind": "type",
+    "sig": "Bridges toolStoreConformance to a host test runner."
+  },
+  "ToolSummary": {
+    "href": "/reference/core/protocol/interfaces/toolsummary/",
+    "kind": "type",
+    "sig": "The non-executable view of a registered tool — safe to hand to an observer or back to the model."
   },
   "toSerializedError": {
     "href": "/reference/core/agent/functions/toserializederror/",
@@ -1704,6 +1889,16 @@
     "kind": "type",
     "sig": "readonly input: Input;"
   },
+  "UndigestedToolDefinition": {
+    "href": "/reference/core/protocol/type-aliases/undigestedtooldefinition/",
+    "kind": "type",
+    "sig": "type UndigestedToolDefinition = Omit<ToolDefinition, \"digest\">;"
+  },
+  "UnsupportedJsonSchemaError": {
+    "href": "/reference/core/protocol/classes/unsupportedjsonschemaerror/",
+    "kind": "class",
+    "sig": "new UnsupportedJsonSchemaError(keyword, location): UnsupportedJsonSchemaError;"
+  },
   "UsageDelta": {
     "href": "/reference/core/protocol/interfaces/usagedelta/",
     "kind": "type",
@@ -1734,6 +1929,16 @@
     "kind": "fn",
     "sig": "function useRun(source): RunSnapshot;"
   },
+  "validateComposition": {
+    "href": "/reference/authoring/index/functions/validatecomposition/",
+    "kind": "fn",
+    "sig": "function validateComposition(comp, known): void;"
+  },
+  "ValueRef": {
+    "href": "/reference/authoring/index/type-aliases/valueref/",
+    "kind": "type",
+    "sig": "type ValueRef = | { from: \"input\"; path?: string; } | { from: \"step\"; id: string; path?: string; } | { value: JsonValue; };"
+  },
   "VectorMatch": {
     "href": "/reference/vectors/index/interfaces/vectormatch/",
     "kind": "type",
@@ -1759,10 +1964,20 @@
     "kind": "type",
     "sig": "A runtime-agnostic vector store (§10.4) — the portable core of retrieval-augmented generation."
   },
+  "withDigest": {
+    "href": "/reference/core/protocol/functions/withdigest/",
+    "kind": "fn",
+    "sig": "function withDigest(def): ToolDefinition;"
+  },
   "withJsonSchema": {
     "href": "/reference/core/protocol/functions/withjsonschema/",
     "kind": "fn",
     "sig": "function withJsonSchema<In, Out>(schema, jsonSchema): StandardSchemaV1<In, Out>;"
+  },
+  "workerRunner": {
+    "href": "/reference/sandbox/worker/functions/workerrunner/",
+    "kind": "fn",
+    "sig": "function workerRunner(opts?): CodeRunner;"
   },
   "Workflow": {
     "href": "/reference/workflows/interfaces/workflow/",

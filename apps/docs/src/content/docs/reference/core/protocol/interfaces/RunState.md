@@ -5,7 +5,7 @@ prev: false
 title: "RunState"
 ---
 
-Defined in: [packages/core/src/protocol/state.ts:54](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L54)
+Defined in: [packages/core/src/protocol/state.ts:55](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L55)
 
 The materialized state of a run — always the pure fold of its event log.
 
@@ -26,7 +26,7 @@ always the result of [replay](/mithril/reference/core/protocol/functions/replay/
 readonly optional __owners?: Readonly<Record<string, string>>;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:68](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L68)
+Defined in: [packages/core/src/protocol/state.ts:79](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L79)
 
 internal bookkeeping for span→owning-run routing; not part of the public contract, always JSON-safe.
  `""` = the root run; any other value = the sub-run rooted at that span id.
@@ -39,7 +39,7 @@ internal bookkeeping for span→owning-run routing; not part of the public contr
 readonly cursor: number;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:60](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L60)
+Defined in: [packages/core/src/protocol/state.ts:61](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L61)
 
 The last applied event `seq`; `-1` before any event is reduced.
 
@@ -51,7 +51,7 @@ The last applied event `seq`; `-1` before any event is reduced.
 readonly messages: readonly Message[];
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:57](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L57)
+Defined in: [packages/core/src/protocol/state.ts:58](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L58)
 
 ***
 
@@ -61,7 +61,7 @@ Defined in: [packages/core/src/protocol/state.ts:57](https://github.com/kucukkan
 readonly optional pending?: SuspensionDescriptor;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:62](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L62)
+Defined in: [packages/core/src/protocol/state.ts:63](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L63)
 
 The suspension this run is waiting on, when `status` is `'suspended'`.
 
@@ -73,7 +73,7 @@ The suspension this run is waiting on, when `status` is `'suspended'`.
 readonly runId: string;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:55](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L55)
+Defined in: [packages/core/src/protocol/state.ts:56](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L56)
 
 ***
 
@@ -83,7 +83,7 @@ Defined in: [packages/core/src/protocol/state.ts:55](https://github.com/kucukkan
 readonly status: RunStatus;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:56](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L56)
+Defined in: [packages/core/src/protocol/state.ts:57](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L57)
 
 ***
 
@@ -93,10 +93,29 @@ Defined in: [packages/core/src/protocol/state.ts:56](https://github.com/kucukkan
 readonly optional subruns?: Readonly<Record<string, RunState>>;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:65](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L65)
+Defined in: [packages/core/src/protocol/state.ts:76](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L76)
 
 Sub-run state keyed by sub-span id. `reduce` routes each event by `span` so a sub-agent's
  lifecycle accrues HERE, not into root (closes the span-blind-reducer corruption).
+
+***
+
+### tools?
+
+```ts
+readonly optional tools?: Readonly<Record<string, ToolDefinition>>;
+```
+
+Defined in: [packages/core/src/protocol/state.ts:73](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L73)
+
+Tools this run gained after step 0, keyed by name — the fold of `tool.registered`/`tool.revoked`.
+
+#### Remarks
+
+Absent (not `{}`) until the first registration. Holds only tools that arrived *during* the run
+(plugin `setup` and runtime definitions); an agent's statically declared tools are configuration, not
+log content, and never appear here. Reconstructs which tools existed, not what they returned —
+outputs come from the recorded `tool.result` events, as for every other tool.
 
 ***
 
@@ -106,4 +125,4 @@ Sub-run state keyed by sub-span id. `reduce` routes each event by `span` so a su
 readonly usage: UsageTotals;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:58](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/state.ts#L58)
+Defined in: [packages/core/src/protocol/state.ts:59](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/state.ts#L59)

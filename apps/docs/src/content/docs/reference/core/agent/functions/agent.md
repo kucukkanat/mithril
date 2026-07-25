@@ -11,7 +11,7 @@ title: "agent"
 function agent<Deps>(): AgentFactory<Deps>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:388](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/factory.ts#L388)
+Defined in: [packages/core/src/agent/factory.ts:426](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L426)
 
 Build a runnable [Agent](/mithril/reference/core/agent/interfaces/agent/) from an [AgentConfig](/mithril/reference/core/agent/interfaces/agentconfig/), or curry over `Deps` first.
 
@@ -67,7 +67,7 @@ if (result.status === "completed") console.log(result.output);
 function agent<Tools, Out>(config): Agent<Tools, void, Out>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:389](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/factory.ts#L389)
+Defined in: [packages/core/src/agent/factory.ts:427](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L427)
 
 Build a runnable [Agent](/mithril/reference/core/agent/interfaces/agent/) from an [AgentConfig](/mithril/reference/core/agent/interfaces/agentconfig/), or curry over `Deps` first.
 

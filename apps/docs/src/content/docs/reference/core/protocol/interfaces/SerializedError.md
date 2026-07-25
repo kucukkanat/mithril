@@ -5,7 +5,7 @@ prev: false
 title: "SerializedError"
 ---
 
-Defined in: [packages/core/src/protocol/primitives.ts:63](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/primitives.ts#L63)
+Defined in: [packages/core/src/protocol/primitives.ts:63](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/primitives.ts#L63)
 
 A JSON-safe serialized form of a thrown error, suitable for the wire.
 
@@ -17,7 +17,7 @@ A JSON-safe serialized form of a thrown error, suitable for the wire.
 readonly optional data?: JsonValue;
 ```
 
-Defined in: [packages/core/src/protocol/primitives.ts:69](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/primitives.ts#L69)
+Defined in: [packages/core/src/protocol/primitives.ts:69](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/primitives.ts#L69)
 
 Optional structured error detail.
 
@@ -29,7 +29,7 @@ Optional structured error detail.
 readonly message: string;
 ```
 
-Defined in: [packages/core/src/protocol/primitives.ts:65](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/primitives.ts#L65)
+Defined in: [packages/core/src/protocol/primitives.ts:65](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/primitives.ts#L65)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [packages/core/src/protocol/primitives.ts:65](https://github.com/kuc
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/protocol/primitives.ts:64](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/primitives.ts#L64)
+Defined in: [packages/core/src/protocol/primitives.ts:64](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/primitives.ts#L64)
 
 ***
 
@@ -49,6 +49,6 @@ Defined in: [packages/core/src/protocol/primitives.ts:64](https://github.com/kuc
 readonly optional retryable?: boolean;
 ```
 
-Defined in: [packages/core/src/protocol/primitives.ts:67](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/protocol/primitives.ts#L67)
+Defined in: [packages/core/src/protocol/primitives.ts:67](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/primitives.ts#L67)
 
 Whether the operation may be retried; absent means unknown.

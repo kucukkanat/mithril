@@ -9,7 +9,7 @@ title: "asTool"
 function asTool<In, ChildDeps, COut>(child, opts): Tool<string, In, COut, unknown>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:505](https://github.com/kucukkanat/mithril/blob/a73570ce8bac19f4274cb0c8e4f6d2ec07331281/packages/core/src/agent/factory.ts#L505)
+Defined in: [packages/core/src/agent/factory.ts:543](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L543)
 
 Wrap an [Agent](/mithril/reference/core/agent/interfaces/agent/) as a [Tool](/mithril/reference/core/protocol/interfaces/tool/), so one agent can call another as a sub-agent.
 

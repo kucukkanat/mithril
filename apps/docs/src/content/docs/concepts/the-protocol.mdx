@@ -24,6 +24,7 @@ Every run is a monotonic sequence of dot-namespaced events, grouped by concern:
 - **Structured output** — `object.delta`, `object.invalid`, `object.final`
 - **Accounting** — `usage`, `compaction`
 - **Control flow** — `handoff`, `tool.approval.requested`, `suspend`, `resume`
+- **Registry** — `tool.registered`, `tool.revoked` (the run's tool set changed)
 - **Escape hatch** — `custom.${string}`
 
 Every event carries `EventMeta`: a protocol version `v`, the `runId`, a gap-free `seq`, a

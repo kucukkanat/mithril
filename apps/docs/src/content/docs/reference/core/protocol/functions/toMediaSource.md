@@ -9,7 +9,7 @@ title: "toMediaSource"
 function toMediaSource(source, fallbackMediaType?): MediaSource;
 ```
 
-Defined in: packages/core/src/protocol/content.ts:62
+Defined in: [packages/core/src/protocol/content.ts:62](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/content.ts#L62)
 
 Resolve a normalized source string into a provider-ready form: a `data:` URL splits into `{ base64,
 mediaType }`; an `http(s):` URL stays a URL. Providers that inline bytes (Anthropic, Google) use the base64

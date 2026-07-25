@@ -71,6 +71,39 @@ const model = testModel(scriptedProvider([textTurn("Done.")]));
 await run(agent({ model, instructions: "Be brief.", use: [observability] }), "Hi");
 console.log("plugin saw", seen.length, "events");`} />
 
+## `setup` — contributing at run time
+
+`tools` covers what a plugin knows statically. `setup` covers what it can only know per run — tools loaded
+from a store, discovered from a server, or derived from `deps`:
+
+```ts
+const fromStore = plugin({
+  name: "from-store",
+  setup: async (host) => {
+    // `host.deps` is the point: a multi-tenant host picks its store or scope per run, which a static
+    // `tools` array cannot express.
+    for (const t of await loadFor(host.deps)) {
+      host.register({ tools: [t] });
+    }
+  },
+});
+```
+
+Setups run **once per run, sequentially in `use` order, after `run.start` and before step 0** — so a later
+plugin can build on an earlier one's tools, and the first model call already sees everything. They run
+again on every `resume`, so they must be idempotent. A setup that throws fails the run: a plugin that could
+not install its capabilities has not "partly" worked.
+
+The host is **sealed** once `setup` resolves — calling it afterwards throws `HOST_SEALED`, because the
+middleware chain and the step-0 tool snapshot are both built the moment setups finish.
+
+<Aside type="note">
+A *tool* can also register tools, through `ctx.tools` — that is what
+[self-authored tools](/guides/self-authored-tools/) are built on. Neither surface can add middleware:
+middleware wraps every tool call and can rewrite inputs and outputs, which is far more authority than a
+tool, with no per-call approval gate.
+</Aside>
+
 ## See it in the stream
 
 This middleware emits a `custom.audit` event around each tool call — watch it land in the inspector,
