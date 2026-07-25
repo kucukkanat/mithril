@@ -16,6 +16,7 @@
  */
 
 import type { JsonValue, StandardSchemaV1, Tool } from "@mithril/core/protocol";
+import { fromJsonSchema, withJsonSchema } from "@mithril/core/protocol";
 
 // MCP client: connect to an MCP server over a transport, run the lifecycle handshake, list its tools, and
 // expose them as Mithril tools. The transport is abstracted (HTTP/SSE or stdio) so the client is testable
@@ -255,20 +256,44 @@ export function mcpClient(transport: McpTransport, opts?: McpClientOptions): Mcp
   };
 }
 
-// A permissive Standard Schema (MCP tools carry a JSON Schema we don't validate against here — a real
-// JSON-Schema→Standard-Schema bridge is a follow-up, same gap as provider tool params).
+// A permissive Standard Schema, used when the server advertises no schema or one we cannot compile.
 function passthroughSchema(): StandardSchemaV1<unknown, JsonValue> {
   return { "~standard": { version: 1, vendor: "mcp", validate: (v) => ({ value: v as JsonValue }) } };
+}
+
+// Compile the server's JSON Schema when we can, fall back to passthrough when we cannot.
+//
+// Two deliberate choices. `onUnsupported: "ignore"` rather than "throw", and a try/catch around it:
+// real-world MCP servers ship schemas using `$ref`/`oneOf`, and refusing to connect to a server over a
+// keyword we merely cannot *enforce* would trade a working integration for a purity point. Whatever we can
+// check, we check; the rest passes through, exactly as before.
+//
+// The win is twofold: the model now sees the server's real parameter shape instead of a permissive
+// `{ type: "object" }`, and obviously-wrong arguments fail locally with a specific message the loop's
+// self-correction can act on, instead of costing a network round-trip to be rejected server-side.
+function schemaFor(doc: JsonValue | undefined): StandardSchemaV1<unknown, JsonValue> {
+  if (doc === undefined || doc === null) return passthroughSchema();
+  try {
+    return fromJsonSchema(doc, { onUnsupported: "ignore" });
+  } catch {
+    return withJsonSchema(passthroughSchema(), doc);
+  }
 }
 
 /**
  * Fetch an MCP server's tools and wrap each as a Mithril {@link Tool} that calls it.
  *
  * @remarks
- * Runs the lifecycle handshake (via {@link McpClient.listTools}) if it has not happened yet. Each wrapped
- * tool uses a **passthrough, non-validating** schema: the server's JSON Schema is not enforced client-side,
- * so inputs are forwarded to the server as-is. Execution routes through {@link McpClient.callTool}, so a
- * server-reported `isError` result throws {@link McpError} and the agent loop surfaces it as a `tool.error`.
+ * Runs the lifecycle handshake (via {@link McpClient.listTools}) if it has not happened yet. Execution
+ * routes through {@link McpClient.callTool}, so a server-reported `isError` result throws {@link McpError}
+ * and the agent loop surfaces it as a `tool.error`.
+ *
+ * The server's `inputSchema` is compiled with `fromJsonSchema` where possible, so the model is offered the
+ * tool's **real** parameters and obviously-invalid arguments fail locally instead of costing a round-trip.
+ * Compilation is lenient: keywords outside the supported subset (`$ref`, `oneOf`, …) are dropped rather
+ * than enforced, and a schema that cannot be compiled at all falls back to passthrough — so a server is
+ * never unusable merely because of a keyword we cannot check. What is *not* validated is simply forwarded,
+ * as before.
  *
  * @param client - A connected {@link McpClient} (see {@link mcpClient}).
  * @returns One Mithril tool per advertised MCP tool, ready to hand to an agent.
@@ -278,7 +303,7 @@ export async function mcpTools(client: McpClient): Promise<readonly Tool<string,
   return defs.map((def) => ({
     name: def.name,
     description: def.description ?? def.name,
-    inputSchema: passthroughSchema(),
+    inputSchema: schemaFor(def.inputSchema),
     execute: (input: JsonValue) => client.callTool(def.name, input),
   }));
 }

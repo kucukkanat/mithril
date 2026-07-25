@@ -1,8 +1,9 @@
 import { expect, test } from "bun:test";
 import { agent } from "@mithril/core/agent";
 import type { JsonValue, ProviderChunk, UsageDelta } from "@mithril/core/protocol";
+import { toJsonSchema } from "@mithril/core/protocol";
 import { scriptedProvider, testModel } from "@mithril/core/testkit";
-import { McpError, mcpClient, type McpTransport, mcpTools } from "../src/index.ts";
+import { MCP_PROTOCOL_VERSION, McpError, mcpClient, type McpTransport, mcpTools } from "../src/index.ts";
 
 const NO: UsageDelta = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, costMicroUsd: 0 };
 
@@ -130,4 +131,54 @@ test("an MCP tool's isError surfaces to the agent as a model-visible tool.error"
   for await (const e of a.stream("go")) events.push(e.type);
   // The failure is not swallowed: the loop emits a tool.error (not a plain tool.result).
   expect(events).toContain("tool.error");
+});
+
+// ── client-side input validation (fromJsonSchema) ─────────────────────────────────────────────────────
+
+function toolServer(inputSchema: unknown): McpTransport {
+  return {
+    async request(method) {
+      if (method === "initialize") {
+        return { protocolVersion: MCP_PROTOCOL_VERSION, capabilities: {}, serverInfo: { name: "s", version: "1" } };
+      }
+      if (method === "tools/list") return { tools: [{ name: "echo", description: "echoes", inputSchema }] };
+      return { content: [{ type: "text", text: "ok" }] };
+    },
+  };
+}
+
+test("a server's inputSchema is compiled, so the model sees the real parameters", async () => {
+  const doc = { type: "object", properties: { city: { type: "string" } }, required: ["city"] };
+  const [tool] = await mcpTools(mcpClient(toolServer(doc)));
+  // Previously this was a permissive `{ type: "object" }` — the model was told nothing about the tool.
+  expect(toJsonSchema(tool!.inputSchema)).toEqual(doc);
+  expect((await tool!.inputSchema["~standard"].validate({ city: "Oslo" })).issues).toBeUndefined();
+});
+
+test("invalid arguments now fail locally instead of costing a round-trip", async () => {
+  const doc = { type: "object", properties: { city: { type: "string" } }, required: ["city"] };
+  const [tool] = await mcpTools(mcpClient(toolServer(doc)));
+  const r = await tool!.inputSchema["~standard"].validate({});
+  expect(r.issues?.[0]?.message).toContain('missing required property "city"');
+});
+
+test("an unsupported keyword is dropped rather than making the server unusable", async () => {
+  // Real servers ship $ref/oneOf; refusing to connect over a keyword we merely cannot enforce would trade
+  // a working integration for a purity point.
+  const doc = { type: "object", properties: { a: { type: "string" } }, required: ["a"], oneOf: [{ type: "object" }] };
+  const [tool] = await mcpTools(mcpClient(toolServer(doc)));
+  expect((await tool!.inputSchema["~standard"].validate({ a: "x" })).issues).toBeUndefined();
+  expect((await tool!.inputSchema["~standard"].validate({})).issues?.length).toBe(1); // the rest is still enforced
+});
+
+test("a server advertising no schema still yields a usable tool", async () => {
+  const [tool] = await mcpTools(mcpClient(toolServer(undefined)));
+  expect((await tool!.inputSchema["~standard"].validate({ anything: 1 })).issues).toBeUndefined();
+});
+
+test("an uncompilable schema falls back to passthrough but still advertises the document", async () => {
+  const doc = { type: "not-a-real-type" };
+  const [tool] = await mcpTools(mcpClient(toolServer(doc)));
+  expect((await tool!.inputSchema["~standard"].validate({ anything: 1 })).issues).toBeUndefined();
+  expect(toJsonSchema(tool!.inputSchema)).toEqual(doc);
 });
