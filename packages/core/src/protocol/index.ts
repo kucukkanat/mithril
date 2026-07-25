@@ -43,8 +43,18 @@ export type {
   ProviderSpec,
 } from "./provider.ts";
 export type { AnyTool, Tool, ToolInputOf, ToolOutputOf, ToolProgress } from "./tool.ts";
-export type { JsonSchema, JsonSchemaConverter } from "./json-schema.ts";
-export { PERMISSIVE_OBJECT, toJsonSchema, withJsonSchema } from "./json-schema.ts";
+export type { PluginSetup } from "./middleware.ts";
+export type {
+  RunToolRegistry,
+  ToolDefinition,
+  ToolProvenance,
+  ToolRegistry,
+  ToolSummary,
+  UndigestedToolDefinition,
+} from "./tool-registry.ts";
+export { canonicalJson, digestOf, withDigest } from "./tool-registry.ts";
+export type { FromJsonSchemaOptions, JsonSchema, JsonSchemaConverter } from "./json-schema.ts";
+export { fromJsonSchema, PERMISSIVE_OBJECT, toJsonSchema, UnsupportedJsonSchemaError, withJsonSchema } from "./json-schema.ts";
 export type {
   ApprovalDecision,
   ApprovalRequest,

@@ -22,8 +22,11 @@ import {
   type ModelInput,
   type ModelResult,
   type Persistence,
+  type PluginHost,
+  type PluginSetup,
   type ProviderChunk,
   type ProviderRegistry,
+  type RunToolRegistry,
   PERMISSIVE_OBJECT,
   extractJson,
   repairPartialJson,
@@ -37,9 +40,12 @@ import {
   type StepOutcome,
   type SuspensionDescriptor,
   type SuspensionRequest,
+  type ToolDefinition,
   type ToolErrorClass,
   type ToolInvocation,
   type ToolOutcome,
+  type ToolProvenance,
+  type ToolRegistry,
   type ToolStepOutcome,
   type Transport,
   type UsageDelta,
@@ -51,6 +57,7 @@ import { globalConsumers } from "./global-consumers.ts";
 import { healing as healingStack } from "./healing.ts";
 import { MithrilError, resolveModel, resolveTransport } from "./registry.ts";
 import { defaultRuntime } from "./runtime.ts";
+import { toolRegistry } from "./tool-registry.ts";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // INTERNAL FUNCTION INDEX
@@ -148,9 +155,15 @@ export interface ResumeState {
   readonly step: number;
   readonly pending: PendingSuspension;
   readonly resolution: ResumeValue;
+  /** Tools the suspended run had created; rebuilt via `LoopOptions.materialize`. See {@link RunTokenV3}. */
+  readonly tools?: readonly ToolDefinition[];
 }
 
-/** The versioned, serializable run token carried by a `suspended` {@link RunResult}. */
+/**
+ * The versioned, serializable run token carried by a `suspended` {@link RunResult}.
+ *
+ * @remarks Still exported so an older stored token can be read; {@link RunTokenV3} is what the loop emits.
+ */
 export interface RunTokenV2 {
   readonly v: 2;
   readonly runId: string;
@@ -159,6 +172,27 @@ export interface RunTokenV2 {
   readonly usage: UsageTotals;
   readonly step: number;
   readonly pending: PendingSuspension;
+}
+
+/**
+ * The current run token: {@link RunTokenV2} plus the tools the run created.
+ *
+ * @remarks
+ * The definitions ride the token *as well as* the `tool.registered` events, and both are needed. The
+ * events are what let `replay(log)` reconstruct the registry; the token is what lets `resume()` work in a
+ * process that never saw the log — the loop is handed only the token string on that path. Neither alone
+ * covers both cases, and the duplication is one JSON record per authored tool.
+ */
+export interface RunTokenV3 {
+  readonly v: 3;
+  readonly runId: string;
+  readonly model: string;
+  readonly messages: readonly LoopMessage[];
+  readonly usage: UsageTotals;
+  readonly step: number;
+  readonly pending: PendingSuspension;
+  /** Every non-static tool the run held at suspend time, in registration order. */
+  readonly tools?: readonly ToolDefinition[];
 }
 
 // Tier-1 HITL resumption: approval/rejection/edit decision from human (ApprovalDecision is from protocol).
@@ -242,6 +276,16 @@ export interface LoopOptions<Deps> {
   readonly healing?: false | readonly Middleware<Deps>[];
   readonly middlewares?: readonly Middleware<Deps>[];
   readonly consumers?: readonly EventConsumer[];
+  /**
+   * Plugin `setup` hooks, run sequentially in `use` order once per run before step 0 (and again on
+   * resume). `tools` is the registry's seed; a setup adds to it.
+   */
+  readonly setups?: readonly PluginSetup<Deps>[];
+  /**
+   * Rebuilds a runtime tool from its {@link ToolDefinition} when resuming. Supplied by whichever plugin
+   * owns the definition `body` format; core never interprets a body itself.
+   */
+  readonly materialize?: (def: ToolDefinition) => AnyTool<Deps>;
 }
 
 const OUTPUT_HINT = "\n\nRespond with ONLY a single JSON object that matches the required schema.";
@@ -326,7 +370,13 @@ function checkBudget(
 function classifyToolError(err: unknown): SerializedError {
   if (err instanceof MithrilError) {
     const cls: ToolErrorClass =
-      err.code === "INVALID_TOOL_INPUT" ? "invalid_args" : err.code === "INVALID_TOOL_OUTPUT" ? "invalid_output" : "handler_error";
+      err.code === "INVALID_TOOL_INPUT"
+        ? "invalid_args"
+        : err.code === "INVALID_TOOL_OUTPUT"
+          ? "invalid_output"
+          : err.code === "TOOL_TIMEOUT"
+            ? "timeout"
+            : "handler_error";
     return classifiedError(err.name, err.message, cls, { code: err.code, ...(cls === "invalid_args" ? { retryable: true } : {}) });
   }
   const message = err instanceof Error ? err.message : String(err);
@@ -461,6 +511,14 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
   const transport = resolveTransport(opts.transport, modelId);
 
   const runId = opts.runId ?? rt.randomUUID();
+  // The run's live tool set, seeded with the statically declared tools. Always fresh per run — a shared
+  // registry would break run isolation and make replay non-reproducible.
+  const registry = toolRegistry<Deps>(opts.tools);
+  // Names claimed by an in-flight `ctx.tools.register()` whose call has not committed. Reserving at
+  // register() time is what lets a tool learn about a collision *synchronously* (it can catch and rename)
+  // while the mutation itself still lands atomically at commit — and it is why the commit-time
+  // `registry.register` below cannot collide.
+  const reservedNames = new Set<string>();
   const traceId = rt.randomUUID();
   const rootSpan: SpanRef = { id: rt.randomUUID(), parentId: null, traceId, kind: "invoke_agent" };
   let seq = 0;
@@ -487,6 +545,23 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
     for (const c of consumers) c.onEvent(e); // §3.8 consumers see every event (pure subscribers)
     return e;
   }
+  // The registry view for every context that is NOT a tool's execute(): reads pass through, writes reject.
+  // Mutating from an instructions function or a needsApproval predicate has no call to commit against, so
+  // there is no honest deferred-commit semantics to give it — mirroring how ctx.suspend() is treated here.
+  const readOnlyTools = (where: string): RunToolRegistry<Deps> => ({
+    summaries: () => registry.summaries(),
+    has: (name) => registry.has(name),
+    // Erasing Deps at the `get` boundary is what keeps RunContext covariant in Deps; see the @remarks on
+    // RunToolRegistry.get. Safe: the loop only ever invokes these tools with this run's own RunContext<Deps>.
+    get: (name) => registry.get(name) as AnyTool<unknown> | undefined,
+    register() {
+      throw new MithrilError("NOT_IMPLEMENTED", `ctx.tools.register() is only available inside a tool's execute() (called from ${where}).`);
+    },
+    revoke() {
+      throw new MithrilError("NOT_IMPLEMENTED", `ctx.tools.revoke() is only available inside a tool's execute() (called from ${where}).`);
+    },
+  });
+
   // Context for instructions/needsApproval predicates: no tool-execution replay state (suspend/journal are
   // inert here — an instruction function that suspends is not a supported shape).
   const makeCtx = (step: number, span: SpanRef, emitted: MithrilEvent[]): RunContext<Deps> => ({
@@ -497,6 +572,7 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
     usage,
     runtime: rt,
     transport,
+    tools: readOnlyTools("an instructions function"),
     ...(opts.providers !== undefined ? { providers: opts.providers } : {}),
     emit(payload, type) {
       emitted.push(stamp(span, { type: type ?? "custom.emit", payload }));
@@ -508,32 +584,7 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
       return fn();
     },
   });
-  // Context for a tool's execute(): suspend()/journal() are wired to the replay state so Tier-2 works.
-  const makeExecCtx = (step: number, span: SpanRef, emitted: MithrilEvent[], exec: ExecState): RunContext<Deps> => ({
-    deps: opts.deps,
-    runId,
-    step,
-    signal,
-    usage,
-    runtime: rt,
-    transport,
-    ...(opts.providers !== undefined ? { providers: opts.providers } : {}),
-    emit(payload, type) {
-      emitted.push(stamp(span, { type: type ?? "custom.emit", payload }));
-    },
-    async suspend<Req extends SuspensionRequest>(req: Req) {
-      const ord = exec.ordinal++;
-      if (ord < exec.priorResolutions.length) return exec.priorResolutions[ord] as never;
-      throw new SuspendSignal("midtool", req, exec.journal, exec.priorResolutions);
-    },
-    async journal(key, fn) {
-      if (Object.hasOwn(exec.journal, key)) return exec.journal[key] as never;
-      const v = await fn();
-      exec.journal[key] = v as JsonValue; // journaled values must be JSON-safe (validated by the optional schema)
-      return v;
-    },
-  });
-  const makeMwContext = (step: number, span: SpanRef, emitted: MithrilEvent[]): MiddlewareContext<Deps> => ({
+  const makeMwContext =(step: number, span: SpanRef, emitted: MithrilEvent[]): MiddlewareContext<Deps> => ({
     deps: opts.deps,
     runId,
     step,
@@ -559,8 +610,123 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
     },
   });
 
+  // Run each plugin's `setup` once, sequentially in `use` order, after run.start and before step 0 — so the
+  // first model call already sees every contributed tool. Sequential rather than concurrent because a later
+  // plugin may legitimately build on an earlier one's tools, and that is the only ordering that is
+  // explainable. A setup that throws fails the run: a plugin that could not install its capabilities has
+  // not "partly" worked, and continuing would silently run an agent with fewer tools than its author declared.
+  // Returns a terminal error result when a setup throws, rather than propagating: a throwing extension
+  // degrades to a typed `run.error` on the stream, never a crash, exactly as at every other altitude.
+  async function* runSetups(): AsyncGenerator<MithrilEvent, RunResult<JsonValue> | undefined> {
+    for (const s of opts.setups ?? []) {
+      if (signal.aborted) return undefined;
+      const drafts: EventBody[] = [];
+      let sealed = false;
+      const checkOpen = (member: string): void => {
+        if (sealed) {
+          throw new MithrilError(
+            "HOST_SEALED",
+            `plugin "${s.plugin}" called host.${member} after its setup() resolved. The middleware chain and the ` +
+              `step-0 tool snapshot are both built the moment setups finish, so later contributions would be silently lost.`,
+          );
+        }
+      };
+      // A registration carrying a ToolDefinition is logged; one without is not, and does not need to be —
+      // `setup` is deterministic and re-runs on every resume, so its tools rebuild themselves. Only a
+      // definition-carrying tool needs the log/token to come back.
+      const hostTools: ToolRegistry<Deps> = {
+        list: () => registry.list(),
+        summaries: () => registry.summaries(),
+        get: (name) => registry.get(name),
+        has: (name) => registry.has(name),
+        register: (t, provenance, definition) => {
+          checkOpen("tools.register");
+          const before = registry.revision;
+          registry.register(t, provenance, definition);
+          if (definition !== undefined && registry.revision !== before) {
+            drafts.push({ type: "tool.registered", name: t.name, provenance, definition });
+          }
+        },
+        revoke: (name) => {
+          checkOpen("tools.revoke");
+          const removed = registry.revoke(name);
+          if (removed) drafts.push({ type: "tool.revoked", name, reason: "revoked" });
+          return removed;
+        },
+        get revision() {
+          return registry.revision;
+        },
+      };
+      const host: PluginHost<Deps> = {
+        tools: hostTools,
+        deps: opts.deps,
+        runId,
+        runtime: rt,
+        signal,
+        register: (fragment) => {
+          checkOpen("register");
+          for (const t of fragment.tools ?? []) hostTools.register(t, { kind: "setup", plugin: s.plugin });
+          // Middleware and consumers are appended to the live arrays; both are read after setups finish
+          // (the chain is composed per step, `stamp` iterates consumers per event). A consumer added here
+          // necessarily misses `run.start`, which has already been emitted.
+          middlewares.push(...(fragment.middleware ?? []));
+          consumers.push(...(fragment.consumers ?? []));
+        },
+        emit: (e) => {
+          checkOpen("emit");
+          drafts.push(e as EventBody);
+        },
+      };
+      try {
+        await s.run(host);
+      } catch (err) {
+        sealed = true;
+        const error = toSerializedError(err);
+        yield stamp(rootSpan, {
+          type: "run.error",
+          error: { ...error, message: `plugin "${s.plugin}" failed during setup: ${error.message}` },
+        });
+        return { status: "error", error, usage };
+      }
+      sealed = true;
+      for (const body of drafts) yield stamp(rootSpan, body);
+    }
+    return undefined;
+  }
+
+  // Rebuild the tool set a suspended run held, from the definitions its token carried. Runs after setups,
+  // and wins over them.
+  async function* rehydrate(defs: readonly ToolDefinition[]): AsyncGenerator<MithrilEvent, void> {
+    // Drop whatever the setups just installed from definitions — the token is authoritative.
+    for (const s of registry.summaries()) {
+      if (s.definition !== undefined) registry.revoke(s.name);
+    }
+    if (defs.length === 0) return;
+    const materialize = opts.materialize;
+    if (materialize === undefined) {
+      // Failing loudly beats letting the model call a tool that silently no longer exists: `unknown_tool`
+      // would send it hunting for a prompt bug that is really a missing plugin.
+      throw new MithrilError(
+        "NO_MATERIALIZER",
+        `this run's token carries ${defs.length} runtime-defined tool(s) (${defs.map((d) => d.name).join(", ")}) but no plugin ` +
+          `declares materialize(). Add the plugin that defined them to the agent's \`use\` array before resuming.`,
+      );
+    }
+    for (const def of defs) {
+      const provenance: ToolProvenance = { kind: "runtime", by: "resume", callId: "" };
+      registry.register(materialize(def), provenance, def);
+      yield stamp(rootSpan, { type: "tool.registered", name: def.name, provenance, definition: def });
+    }
+  }
+
   const serialize = (step: number, pending: PendingSuspension): string => {
-    const token: RunTokenV2 = { v: 2, runId, model: modelId, messages, usage, step, pending };
+    // Only definition-carrying entries are serialized. A tool a `setup` contributed without a definition
+    // rebuilds itself when setups re-run on resume, so carrying it here would be dead weight.
+    const created = registry
+      .summaries()
+      .filter((s) => s.definition !== undefined)
+      .map((s) => s.definition as ToolDefinition);
+    const token: RunTokenV3 = { v: 3, runId, model: modelId, messages, usage, step, pending, ...(created.length > 0 ? { tools: created } : {}) };
     return JSON.stringify(token);
   };
   const suspendedResult = (pending: PendingSuspension, step: number): RunResult<JsonValue> => ({
@@ -582,6 +748,7 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
     firstDirective: Directive | undefined,
     chatSpan: SpanRef,
     step: number,
+    stepTools: readonly AnyTool<Deps>[],
   ): AsyncGenerator<MithrilEvent, { readonly suspend?: PendingSuspension; readonly outcomes: readonly ToolStepOutcome[] }> {
     const outcomes: ToolStepOutcome[] = [];
     const concurrency = opts.maxConcurrentTools ?? DEFAULT_TOOL_CONCURRENCY;
@@ -604,6 +771,75 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
       readonly run?: () => Promise<Settled>;
     }
 
+    // A queued registry mutation: the event to emit and the mutation to apply, both at commit. `name` is
+    // kept so an abandoned call can release its reservation.
+    interface RegistryOp {
+      readonly name: string;
+      readonly event: EventBody;
+      readonly apply: () => void;
+    }
+    // Release the names an abandoned call had reserved. Called on the error and suspension paths — a call
+    // that did not commit must leave no trace in the registry, including its reservations.
+    const releaseOps = (ops: readonly RegistryOp[]): void => {
+      for (const op of ops) reservedNames.delete(op.name);
+    };
+
+    // `ctx.tools` for a tool's execute(). Validates eagerly (so the tool gets a synchronous, catchable
+    // error) but mutates lazily (so the change lands with the call's result, or not at all).
+    const deferredTools = (ops: RegistryOp[], callId: string, toolName: string): RunToolRegistry<Deps> => ({
+      summaries: () => registry.summaries(),
+      has: (name) => registry.has(name) || reservedNames.has(name),
+      get: (name) => registry.get(name) as AnyTool<unknown> | undefined,
+      register(t, definition) {
+        if (t.name !== definition.name) {
+          throw new MithrilError("TOOL_NAME_MISMATCH", `tool.name "${t.name}" does not match definition.name "${definition.name}".`);
+        }
+        if (reservedNames.has(t.name)) {
+          throw new MithrilError(
+            "TOOL_NAME_TAKEN",
+            `cannot register "${t.name}": another tool call in this step already claimed the name.`,
+          );
+        }
+        // Probe the real registry now so a collision with a static/plugin tool surfaces here, where the
+        // caller can catch it — not at commit, where nothing could handle it.
+        const existing = registry.summaries().find((s) => s.name === t.name);
+        if (existing !== undefined && existing.definition?.digest !== definition.digest) {
+          throw new MithrilError(
+            "TOOL_NAME_TAKEN",
+            `cannot register "${t.name}": the name is already taken. Names are never shadowed — revoke it first, or choose another.`,
+          );
+        }
+        reservedNames.add(t.name);
+        const provenance: ToolProvenance = { kind: "runtime", by: toolName, callId };
+        ops.push({
+          name: t.name,
+          event: { type: "tool.registered", name: t.name, provenance, definition, callId },
+          apply: () => {
+            reservedNames.delete(t.name);
+            registry.register(t, provenance, definition);
+          },
+        });
+      },
+      revoke(name) {
+        const entry = registry.summaries().find((s) => s.name === name);
+        if (entry === undefined) return false;
+        if (entry.provenance.kind === "static" || entry.provenance.kind === "plugin") {
+          throw new MithrilError("TOOL_NOT_REVOCABLE", `cannot revoke "${name}": it was declared by the agent's author, not created by this run.`);
+        }
+        if (reservedNames.has(name)) return false; // already queued for removal by an earlier call this step
+        reservedNames.add(name);
+        ops.push({
+          name,
+          event: { type: "tool.revoked", name, reason: "revoked", callId },
+          apply: () => {
+            reservedNames.delete(name);
+            registry.revoke(name);
+          },
+        });
+        return true;
+      },
+    });
+
     // Raw-collecting contexts: they buffer event BODIES rather than stamping, so concurrent tools can still be
     // emitted in deterministic call order — the loop stamps (assigning seq + notifying consumers) at flush.
     const approvalContext = (sink: EventBody[]): RunContext<Deps> => ({
@@ -614,6 +850,7 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
       usage,
       runtime: rt,
       transport,
+      tools: readOnlyTools("a needsApproval predicate"),
       ...(opts.providers !== undefined ? { providers: opts.providers } : {}),
       emit(payload, type) {
         sink.push({ type: type ?? "custom.emit", payload });
@@ -625,14 +862,24 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
         return fn();
       },
     });
-    const execContext = (exec: ExecState, sink: EventBody[]): RunContext<Deps> => ({
+    // `callSignal` defaults to the run's signal; a tool with `timeoutMs` gets a per-call signal that also
+    // aborts on expiry, so `ctx.signal` is always the narrowest deadline in scope.
+    const execContext = (
+      exec: ExecState,
+      sink: EventBody[],
+      ops: RegistryOp[],
+      callId: string,
+      toolName: string,
+      callSignal: AbortSignal = signal,
+    ): RunContext<Deps> => ({
       deps: opts.deps,
       runId,
       step,
-      signal,
+      signal: callSignal,
       usage,
       runtime: rt,
       transport,
+      tools: deferredTools(ops, callId, toolName),
       ...(opts.providers !== undefined ? { providers: opts.providers } : {}),
       emit(payload, type) {
         sink.push({ type: type ?? "custom.emit", payload });
@@ -675,10 +922,23 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
       },
     });
 
-    const okSettled = (call: Call, span: SpanRef, output: JsonValue, ms: number, pre: readonly EventBody[]): Settled => ({
+    // Registry mutations ride this exact path: their events are emitted, and the mutations applied, only
+    // when the call commits — so the live registry and `replay(log)` agree by construction, and a call that
+    // errors or suspends leaves the tool set untouched. They sit just before `tool.result` because that is
+    // when they take effect; reporting them at the moment `register()` was *called* would imply a change
+    // that a later throw would silently undo.
+    const okSettled = (
+      call: Call,
+      span: SpanRef,
+      output: JsonValue,
+      ms: number,
+      pre: readonly EventBody[],
+      ops: readonly RegistryOp[] = [],
+    ): Settled => ({
       span,
-      events: [...pre, { type: "tool.result", callId: call.callId, output, ms }],
+      events: [...pre, ...ops.map((o) => o.event), { type: "tool.result", callId: call.callId, output, ms }],
       commit: () => {
+        for (const op of ops) op.apply();
         messages.push({ role: "tool", content: JSON.stringify(output), toolCalls: [] });
         outcomes.push({ callId: call.callId, name: call.name, input: call.input, ok: true });
       },
@@ -693,14 +953,22 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
             : { journal: {}, priorResolutions: [], ordinal: 0 };
         const rawInput = directive?.kind === "edit" ? directive.input : call.input;
         const started = rt.now();
-        const ctx = execContext(exec, sink);
         const mwCtx = execMwContext(sink);
+        const ops: RegistryOp[] = [];
         const core = async (inv: ToolInvocation): Promise<ToolOutcome> => {
           try {
             const parsed = await resolveInput(tool.inputSchema, inv.input);
-            const raw = await runExecute(tool, parsed, ctx, (payload) => {
+            const onProgress = (payload: JsonValue): void => {
               sink.push({ type: "tool.progress", callId: inv.callId, payload });
-            });
+            };
+            // Bounding execute() rather than the middleware chain keeps the budget at tool altitude: a
+            // middleware that retries gets a fresh budget per attempt.
+            const raw =
+              tool.timeoutMs === undefined
+                ? await runExecute(tool, parsed, execContext(exec, sink, ops, inv.callId, inv.name), onProgress)
+                : await runWithTimeout(tool.timeoutMs, inv.name, signal, (s) =>
+                    runExecute(tool, parsed, execContext(exec, sink, ops, inv.callId, inv.name, s), onProgress),
+                  );
             if (isSuspend(raw)) throw new SuspendSignal("return", raw.request, {}, []);
             const output = raw as JsonValue;
             // A declared outputSchema is enforced: a violating tool result is a classified tool.error the model
@@ -740,13 +1008,20 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
               err.kind === "midtool"
                 ? { kind: "midtool", callId: call.callId, descriptor, journal: err.journal, resolutions: err.resolutions }
                 : { kind: "return", callId: call.callId, descriptor };
+            // A suspended call has not committed: anything it registered is abandoned, reservations included.
+            // On resume the tool re-runs (Tier-2 replays from the journal) and registers again — idempotently,
+            // since re-registering an identical digest is a no-op.
+            releaseOps(ops);
             return { span, events: [...sink, { type: "suspend", descriptor }], pending };
           }
           // A tool-altitude middleware threw (not a suspension). Degrade to a model-visible tool.error rather
           // than crashing the whole run — a buggy guardrail must not take the run down with it.
           outcome = { callId: call.callId, status: "error", error: classifyToolError(err) };
         }
-        if (outcome.status === "ok") return okSettled(call, span, outcome.output, rt.now() - started, sink);
+        if (outcome.status === "ok") return okSettled(call, span, outcome.output, rt.now() - started, sink, ops);
+        // A failed call registers nothing — and its queued events are dropped rather than emitted, so the log
+        // never reports a registration that did not happen.
+        releaseOps(ops);
         const error = outcome.error;
         return {
           span,
@@ -763,9 +1038,11 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
     const plan = async (call: Call | undefined, directive: Directive | undefined): Promise<Plan> => {
       const span: SpanRef = { id: rt.randomUUID(), parentId: chatSpan.id, traceId, kind: "execute_tool" };
       if (call === undefined) return { span, settled: { span, events: [], commit: () => {} } };
-      const tool = opts.tools.find((t) => t.name === call.name);
+      // Resolved against the step's snapshot — the identical array the model was offered — so what was
+      // advertised is exactly what dispatches. A tool registered during this step lands in the next one.
+      const tool = stepTools.find((t) => t.name === call.name);
       if (tool === undefined) {
-        const known = opts.tools.map((t) => t.name).join(", ");
+        const known = stepTools.map((t) => t.name).join(", ");
         const error = classifiedError("UnknownTool", `No tool "${call.name}". Available tools: ${known}.`, "unknown_tool", { retryable: true });
         return {
           span,
@@ -868,9 +1145,13 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
   if (opts.resume === undefined) {
     if (typeof opts.input === "string") messages.push({ role: "user", content: opts.input, toolCalls: [] });
     else for (const m of opts.input) messages.push({ role: m.role, content: normalizeContent(m.content), toolCalls: [] });
+    yield stamp(rootSpan, { type: "run.start", input: inputToJson(opts.input), model: modelId, depsDigest: "" });
+    // Setups run after run.start (so their events have a valid position in the log) and before instructions
+    // are computed (so a dynamic instructions function can describe the tools the run actually has).
+    const setupFailure = yield* runSetups();
+    if (setupFailure !== undefined) return setupFailure;
     const preCtx = makeCtx(-1, rootSpan, []);
     const instructions = typeof opts.instructions === "string" ? opts.instructions : await opts.instructions(preCtx);
-    yield stamp(rootSpan, { type: "run.start", input: inputToJson(opts.input), model: modelId, depsDigest: "" });
     return yield* stepLoop(instructions, 0);
   }
 
@@ -882,13 +1163,26 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
   if (remaining.length === 0 || remaining[0]?.callId !== resume.pending.callId) {
     return { status: "unresumable", request: resume.pending.descriptor, reason: "no matching pending tool call in token" };
   }
-  const preCtx = makeCtx(-1, rootSpan, []);
-  const instructions = typeof opts.instructions === "string" ? opts.instructions : await opts.instructions(preCtx);
   const resumeSpan: SpanRef = { id: rt.randomUUID(), parentId: rootSpan.id, traceId, kind: "chat" };
   const directive = resumeDirective(resume);
   const resolutionValue: JsonValue = "value" in directive ? directive.value : (directive as JsonValue);
   yield stamp(rootSpan, { type: "resume", resolutionFor: resume.pending.callId, value: resolutionValue });
-  const outcome = yield* runToolCalls(remaining, directive, resumeSpan, resume.step);
+  // Setups run on resume too — which is why they must be idempotent.
+  const resumeSetupFailure = yield* runSetups();
+  if (resumeSetupFailure !== undefined) return resumeSetupFailure;
+  // …then the token REPLACES every definition-carrying entry. Replace, not merge: the token is the
+  // authority on what this run held, so a tool revoked mid-run stays revoked instead of being resurrected
+  // by a setup that reloads it from a store.
+  try {
+    yield* rehydrate(resume.tools ?? []);
+  } catch (err) {
+    const error = toSerializedError(err);
+    yield stamp(rootSpan, { type: "run.error", error });
+    return { status: "error", error, usage };
+  }
+  const preCtx = makeCtx(-1, rootSpan, []);
+  const instructions = typeof opts.instructions === "string" ? opts.instructions : await opts.instructions(preCtx);
+  const outcome = yield* runToolCalls(remaining, directive, resumeSpan, resume.step, registry.list());
   if (outcome.suspend !== undefined) return suspendedResult(outcome.suspend, resume.step);
   yield stamp(resumeSpan, { type: "step.finish", step: resume.step, stop: "tool", usage: ZERO_DELTA });
   return yield* stepLoop(instructions, resume.step + 1);
@@ -911,6 +1205,10 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
     setNext: (n: StepNext) => void,
   ): Promise<StepOutcome> {
     sink.push(stamp(chatSpan, { type: "step.start", step }));
+    // THE snapshot. Taken once per step and handed — as the identical array object — to both the model call
+    // and tool dispatch, so the set the model is offered and the set that can dispatch cannot drift apart.
+    // A registration that commits during this step is therefore invisible until step + 1.
+    const stepTools = registry.list();
     const system = opts.output !== undefined ? instructions + outputHint : instructions;
 
     // The model call as a middleware-wrappable unit: streams the provider into the sink + aggregates a
@@ -963,7 +1261,7 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
       return wrap === undefined ? next : (c) => wrap(mwCtx, c, next);
     }, coreModel);
 
-    const result = await modelChain({ model: modelId, system, messages, tools: opts.tools as readonly AnyTool<unknown>[] });
+    const result = await modelChain({ model: modelId, system, messages, tools: stepTools as readonly AnyTool<unknown>[] });
     const calls: Call[] = [...result.calls];
     usage = { ...addUsage(usage, result.usage), steps: usage.steps + 1 };
     messages.push({ role: "assistant", content: result.text, toolCalls: calls });
@@ -1005,7 +1303,7 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
     }
 
     // Tools: drain the runToolCalls generator into the sink; a suspension short-circuits the step.
-    const toolGen = runToolCalls(calls, undefined, chatSpan, step);
+    const toolGen = runToolCalls(calls, undefined, chatSpan, step, stepTools);
     let toolResult: { readonly suspend?: PendingSuspension; readonly outcomes: readonly ToolStepOutcome[] } = { outcomes: [] };
     for (;;) {
       const r = await toolGen.next();
@@ -1134,6 +1432,40 @@ function resumeDirective(resume: ResumeState): Directive {
   }
   if (pending.kind === "return") return { kind: "return", value: resolution.value };
   return { kind: "midtool", journal: pending.journal ?? {}, resolutions: pending.resolutions ?? [], value: resolution.value };
+}
+
+// Bound one execute() by a tool's declared timeoutMs. Two halves, because they are different guarantees:
+// the signal handed to `body` lets a well-behaved tool unwind cooperatively, while the race lets the loop
+// stop *waiting* on one that does not. The loop cannot force a tool to stop — an ignored signal leaves the
+// work running detached, it just no longer affects the run. The run's own signal is forwarded through, so a
+// cancelled run still aborts a timed tool.
+async function runWithTimeout<T>(
+  ms: number,
+  name: string,
+  runSignal: AbortSignal,
+  body: (signal: AbortSignal) => Promise<T>,
+): Promise<T> {
+  const ctrl = new AbortController();
+  const onAbort = (): void => ctrl.abort(runSignal.reason);
+  if (runSignal.aborted) ctrl.abort(runSignal.reason);
+  else runSignal.addEventListener("abort", onAbort, { once: true });
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const expiry = new Promise<never>((_resolve, reject) => {
+    timer = setTimeout(() => {
+      const err = new MithrilError("TOOL_TIMEOUT", `tool "${name}" exceeded its ${ms}ms timeout`);
+      ctrl.abort(err);
+      reject(err);
+    }, ms);
+  });
+  const work = body(ctrl.signal);
+  // The race's loser still settles; without a handler a late rejection surfaces as an unhandled rejection.
+  work.catch(() => {});
+  try {
+    return await Promise.race([work, expiry]);
+  } finally {
+    clearTimeout(timer);
+    runSignal.removeEventListener("abort", onAbort);
+  }
 }
 
 async function runExecute<Deps>(

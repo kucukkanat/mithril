@@ -1,6 +1,7 @@
 import type { ToolErrorClass } from "./errors.ts";
 import type { FinishReason, JsonValue, SerializedError, UsageDelta, UsageTotals } from "./primitives.ts";
 import type { SuspensionDescriptor } from "./suspension.ts";
+import type { ToolDefinition, ToolProvenance } from "./tool-registry.ts";
 
 // §4 — THE PRODUCT. Monomorphic (`input`/`output` are JsonValue) so the global union never indexes over a
 // tool record — the structural defense against type-instantiation collapse. Every event is JSON-safe.
@@ -88,6 +89,24 @@ export type MithrilEvent =
   | (EventMeta & { readonly type: "tool.approval.requested"; readonly callId: string; readonly name: string; readonly input: JsonValue; readonly version?: string })
   | (EventMeta & { readonly type: "suspend"; readonly descriptor: SuspensionDescriptor })
   | (EventMeta & { readonly type: "resume"; readonly resolutionFor: string; readonly value: JsonValue })
+  // ── registry: the run's tool set changed (plugin setup, or a tool defined at runtime) ─────────────
+  // Carrying the full definition is what makes `replay(log)` reconstruct the registry: a `tool.call` to a
+  // tool that appeared from nowhere would otherwise be unexplainable from the log alone.
+  | (EventMeta & {
+      readonly type: "tool.registered";
+      readonly name: string;
+      readonly provenance: ToolProvenance;
+      readonly definition: ToolDefinition;
+      readonly callId?: string;
+    })
+  | (EventMeta & {
+      readonly type: "tool.revoked";
+      readonly name: string;
+      // One member today, because one is all the loop emits. Adding another is additive (a MINOR); leaving
+      // unreachable members here would be the same quiet lie as an error class nothing ever produces.
+      readonly reason: "revoked";
+      readonly callId?: string;
+    })
   // ── escape hatch ──────────────────────────────────────────────────
   | (EventMeta & { readonly type: `custom.${string}`; readonly payload: JsonValue });
 

@@ -71,6 +71,26 @@ export function mcpServer(
     signal: new AbortController().signal,
     usage: ZERO_USAGE,
     runtime: rt,
+    // The served tool set is fixed at mcpServer() construction: there is no run to scope a registration
+    // to, and MCP has no way to tell a connected client that the tool list changed mid-call. So reads
+    // reflect the served tools and writes are refused, rather than silently doing nothing.
+    tools: {
+      summaries: () =>
+        tools.map((t) => ({
+          name: t.name,
+          description: t.description,
+          ...(t.version !== undefined ? { version: t.version } : {}),
+          provenance: { kind: "static" } as const,
+        })),
+      has: (name) => byName.has(name),
+      get: (name) => byName.get(name),
+      register() {
+        throw new Error("ctx.tools.register() is not supported when a tool is served over MCP");
+      },
+      revoke() {
+        throw new Error("ctx.tools.revoke() is not supported when a tool is served over MCP");
+      },
+    },
     emit() {
       /* no event stream in a standalone server context */
     },

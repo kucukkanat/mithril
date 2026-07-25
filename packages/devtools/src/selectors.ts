@@ -51,6 +51,10 @@ export function previewEvent(e: MithrilEvent): string {
       return compact(r["output"]);
     case "tool.error":
       return compact(r["error"]);
+    case "tool.registered":
+      return `+${String(r["name"])}`;
+    case "tool.revoked":
+      return `−${String(r["name"])} (${String(r["reason"])})`;
     case "message.end": {
       const u = r["usage"] as { input?: number; output?: number } | undefined;
       const tok = (u?.input ?? 0) + (u?.output ?? 0);

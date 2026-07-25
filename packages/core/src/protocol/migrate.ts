@@ -32,6 +32,8 @@ const KNOWN_TYPES: ReadonlySet<string> = new Set<EventType>([
   "tool.approval.requested",
   "suspend",
   "resume",
+  "tool.registered",
+  "tool.revoked",
 ]);
 
 /**

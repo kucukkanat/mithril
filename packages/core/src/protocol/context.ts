@@ -2,6 +2,7 @@ import type { JsonValue, UsageTotals } from "./primitives.ts";
 import type { ProviderRegistry } from "./provider.ts";
 import type { StandardSchemaV1 } from "./standard-schema.ts";
 import type { ResolutionOf, SuspensionRequest } from "./suspension.ts";
+import type { RunToolRegistry } from "./tool-registry.ts";
 
 // §3.2 — the only ambient-capability seam. Built from globalThis by default; injectable for deterministic
 // replay and workerd safety. `subtle` is OPTIONAL: getRandomValues is available in insecure browser
@@ -58,6 +59,19 @@ export interface RunContext<Deps> {
   readonly runId: string;
   readonly step: number;
   readonly signal: AbortSignal;
+  /**
+   * The run's live tool set — inspect it, and (inside `execute`) define new tools.
+   *
+   * @remarks
+   * Mutations are **deferred**: they land when this call commits, so a call that throws or suspends
+   * registers nothing, and concurrent calls in one step commit in call order. A tool registered during
+   * step N becomes callable at step N+1 — the loop snapshots the registry once per step so the model is
+   * offered exactly the tools that will dispatch.
+   *
+   * `register`/`revoke` are available only inside a tool's `execute`; on the contexts used for dynamic
+   * instructions and `needsApproval` predicates they reject with `NOT_IMPLEMENTED`, as `suspend` does.
+   */
+  readonly tools: RunToolRegistry<Deps>;
   readonly usage: Readonly<UsageTotals>;
   readonly runtime: RuntimeAdapter;
   /**

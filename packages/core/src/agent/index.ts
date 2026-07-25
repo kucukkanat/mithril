@@ -30,6 +30,7 @@ export type {
   ResumeState,
   ResumeValue,
   RunTokenV2,
+  RunTokenV3,
 } from "./loop.ts";
 export { agentLoop } from "./loop.ts";
 
@@ -76,6 +77,7 @@ export { makeRunHandle } from "./handle.ts";
 
 // ── Registry & Resolution ──────────────────────────────────────────────────────────────────────
 export { MithrilError, providerRegistry, resolveModel, resolveTransport } from "./registry.ts";
+export { toolRegistry } from "./tool-registry.ts";
 
 // ── Runtime & Global Observability ────────────────────────────────────────────────────────────
 export { defaultRuntime } from "./runtime.ts";

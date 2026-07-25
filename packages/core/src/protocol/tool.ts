@@ -38,6 +38,18 @@ export interface Tool<Name extends string, In, Out, Deps> {
   readonly outputSchema?: StandardSchemaV1<unknown, JsonSafe<Out>>;
   /** Whether the call requires human approval; a predicate can decide per-input. */
   readonly needsApproval?: boolean | ((input: In, ctx: RunContext<Deps>) => boolean | Promise<boolean>);
+  /**
+   * Wall-clock budget for a single `execute`, in milliseconds. Exceeding it produces a `tool.error`
+   * classified `"timeout"`.
+   *
+   * @remarks
+   * Bounds `execute` only — not the surrounding tool middleware — so a middleware that retries gets a
+   * fresh budget per attempt. While it runs, `ctx.signal` is a *per-call* signal that aborts on expiry
+   * (and still forwards the run's own abort), so a well-behaved tool can unwind cooperatively. The loop
+   * can stop **waiting** on a tool but cannot force one to stop: a tool that ignores `ctx.signal` keeps
+   * running detached, it merely no longer affects the run. Omit for no budget.
+   */
+  readonly timeoutMs?: number;
   execute(
     input: In,
     ctx: RunContext<Deps>,
@@ -71,6 +83,7 @@ export type AnyTool<Deps> = {
   readonly inputSchema: StandardSchemaV1<unknown, unknown>;
   readonly outputSchema?: StandardSchemaV1<unknown, JsonValue>;
   readonly needsApproval?: boolean | ((input: never, ctx: RunContext<Deps>) => boolean | Promise<boolean>);
+  readonly timeoutMs?: number;
   execute(input: never, ctx: RunContext<Deps>): unknown;
 };
 

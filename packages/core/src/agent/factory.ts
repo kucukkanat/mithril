@@ -5,17 +5,19 @@ import type {
   Middleware,
   MithrilEvent,
   Plugin,
+  PluginSetup,
   RunContext,
   RuntimeAdapter,
   StandardSchemaV1,
   Suspend,
   Tool,
+  ToolDefinition,
   ToolProgress,
 } from "../protocol/index.ts";
 import { replay } from "../protocol/index.ts";
 import type { Agent, AgentConfig, AgentFactory, Input, RunHandle, RunOptions, RunResult, StepSnapshot } from "./agent-types.ts";
 import { makeRunHandle } from "./handle.ts";
-import { agentLoop, type ResumeState, type ResumeValue, type RunTokenV2 } from "./loop.ts";
+import { agentLoop, type ResumeState, type ResumeValue, type RunTokenV2, type RunTokenV3 } from "./loop.ts";
 import { MithrilError } from "./registry.ts";
 import { defaultRuntime } from "./runtime.ts";
 
@@ -75,6 +77,8 @@ export interface ToolDef<Name extends string, SIn extends StandardSchemaV1, Deps
         input: Infer<SIn>,
         ctx: RunContext<Deps>,
       ) => boolean | Promise<boolean>);
+  /** Wall-clock budget for one `execute`, in ms; exceeding it yields a `"timeout"`-classified `tool.error`. */
+  timeoutMs?: number;
   execute: (
     input: Infer<SIn>,
     ctx: RunContext<Deps>,
@@ -133,24 +137,46 @@ export function tool(def?: unknown): unknown {
 
 // ── §3.8 plugins & middleware assembly ────────────────────────────────────────────────────────────────
 function isPlugin<Deps>(x: Plugin<Deps> | Middleware<Deps>): x is Plugin<Deps> {
-  return "tools" in x || "middleware" in x || "consumers" in x || "setup" in x;
+  return "tools" in x || "middleware" in x || "consumers" in x || "setup" in x || "materialize" in x;
 }
 function flattenUse<Deps>(
   use: readonly (Plugin<Deps> | Middleware<Deps>)[] | undefined,
-): { readonly middlewares: Middleware<Deps>[]; readonly consumers: EventConsumer[]; readonly tools: AnyTool<Deps>[] } {
+): {
+  readonly middlewares: Middleware<Deps>[];
+  readonly consumers: EventConsumer[];
+  readonly tools: AnyTool<Deps>[];
+  readonly setups: PluginSetup<Deps>[];
+  readonly materialize?: (def: ToolDefinition) => AnyTool<Deps>;
+} {
   const middlewares: Middleware<Deps>[] = [];
   const consumers: EventConsumer[] = [];
   const tools: AnyTool<Deps>[] = [];
+  const setups: PluginSetup<Deps>[] = [];
+  let materialize: ((def: ToolDefinition) => AnyTool<Deps>) | undefined;
+  let materializeOwner: string | undefined;
   for (const item of use ?? []) {
     if (isPlugin(item)) {
       if (item.tools !== undefined) tools.push(...item.tools);
       if (item.middleware !== undefined) middlewares.push(...item.middleware);
       if (item.consumers !== undefined) consumers.push(...item.consumers);
+      if (item.setup !== undefined) setups.push({ plugin: item.name, run: item.setup });
+      if (item.materialize !== undefined) {
+        // Two materializers would make rebuilding a tool on resume depend on plugin order — and silently
+        // pick one. There is exactly one right answer per body format, so demand exactly one declaration.
+        if (materialize !== undefined) {
+          throw new MithrilError(
+            "DUPLICATE_MATERIALIZER",
+            `plugins "${materializeOwner}" and "${item.name}" both declare materialize(); an agent may have at most one.`,
+          );
+        }
+        materialize = item.materialize;
+        materializeOwner = item.name;
+      }
     } else {
       middlewares.push(item); // depth-first, plugin middleware at the plugin's position
     }
   }
-  return { middlewares, consumers, tools };
+  return { middlewares, consumers, tools, setups, ...(materialize !== undefined ? { materialize } : {}) };
 }
 
 /**
@@ -217,25 +243,37 @@ function makeAgent<Tools extends readonly AnyTool<Deps>[], Deps, Out extends Jso
       ...((o?.healing ?? config.healing) !== undefined ? { healing: o?.healing ?? config.healing } : {}),
       ...(flat.middlewares.length > 0 ? { middlewares: flat.middlewares } : {}),
       ...(flat.consumers.length > 0 ? { consumers: flat.consumers } : {}),
+      ...(flat.setups.length > 0 ? { setups: flat.setups } : {}),
+      ...(flat.materialize !== undefined ? { materialize: flat.materialize } : {}),
       ...(extra?.runId !== undefined ? { runId: extra.runId } : {}),
       ...(extra?.resume !== undefined ? { resume: extra.resume } : {}),
       // agentLoop returns RunResult<JsonValue>; the validated output IS Out at runtime — typed at the boundary.
     }) as AsyncGenerator<MithrilEvent, RunResult<Out>>;
   };
 
+  // v2 and v3 are read; v3 is what the loop emits. v2 differs only by carrying no runtime-defined tools,
+  // so an older stored token still resumes — it simply has none to rebuild.
+  const parseToken = (token: string): RunTokenV2 | RunTokenV3 => {
+    const parsed = JSON.parse(token) as RunTokenV2 | RunTokenV3;
+    if (parsed.v !== 2 && parsed.v !== 3) throw new MithrilError("BAD_TOKEN", "Unsupported run-token version.");
+    return parsed;
+  };
   const toResumeState = (token: string, resolution: ResumeValue): ResumeState => {
-    const parsed = JSON.parse(token) as RunTokenV2;
-    if (parsed.v !== 2) throw new MithrilError("BAD_TOKEN", "Unsupported run-token version.");
-    return { messages: parsed.messages, usage: parsed.usage, step: parsed.step, pending: parsed.pending, resolution };
+    const parsed = parseToken(token);
+    const tools = parsed.v === 3 ? parsed.tools : undefined;
+    return {
+      messages: parsed.messages,
+      usage: parsed.usage,
+      step: parsed.step,
+      pending: parsed.pending,
+      resolution,
+      ...(tools !== undefined ? { tools } : {}),
+    };
   };
 
   // The runId embedded in a run token, so a token-driven resume continues under the SAME id — keeping the
   // checkpoint chain (and any persistence) contiguous across processes rather than forking a new run.
-  const tokenRunId = (token: string): string => {
-    const parsed = JSON.parse(token) as RunTokenV2;
-    if (parsed.v !== 2) throw new MithrilError("BAD_TOKEN", "Unsupported run-token version.");
-    return parsed.runId;
-  };
+  const tokenRunId = (token: string): string => parseToken(token).runId;
 
   const drain = async (gen: AsyncGenerator<MithrilEvent, RunResult<Out>>): Promise<RunResult<Out>> => {
     for (;;) {

@@ -2,6 +2,7 @@ import type { ContentPart } from "./content.ts";
 import type { MithrilEvent } from "./events.ts";
 import { addUsage, type JsonValue, type UsageTotals, ZERO_USAGE } from "./primitives.ts";
 import type { SuspensionDescriptor } from "./suspension.ts";
+import type { ToolDefinition } from "./tool-registry.ts";
 
 // §4.1 — the reducer / time-travel. State is ALWAYS `replay(log, cursor)`, a pure total fold; never a
 // separately-stored mutable checkpoint that can desync.
@@ -60,6 +61,16 @@ export interface RunState {
   readonly cursor: number;
   /** The suspension this run is waiting on, when `status` is `'suspended'`. */
   readonly pending?: SuspensionDescriptor;
+  /**
+   * Tools this run gained after step 0, keyed by name — the fold of `tool.registered`/`tool.revoked`.
+   *
+   * @remarks
+   * Absent (not `{}`) until the first registration. Holds only tools that arrived *during* the run
+   * (plugin `setup` and runtime definitions); an agent's statically declared tools are configuration, not
+   * log content, and never appear here. Reconstructs which tools existed, not what they returned —
+   * outputs come from the recorded `tool.result` events, as for every other tool.
+   */
+  readonly tools?: Readonly<Record<string, ToolDefinition>>;
   /** Sub-run state keyed by sub-span id. `reduce` routes each event by `span` so a sub-agent's
    *  lifecycle accrues HERE, not into root (closes the span-blind-reducer corruption). */
   readonly subruns?: Readonly<Record<string, RunState>>;
@@ -176,6 +187,13 @@ function applyToRun(run: RunState, e: MithrilEvent): RunState {
       return { ...run, status: "suspended", pending: e.descriptor };
     case "resume":
       return withoutPending(run, "running");
+    case "tool.registered":
+      return { ...run, tools: { ...(run.tools ?? {}), [e.name]: e.definition } };
+    case "tool.revoked": {
+      if (run.tools === undefined || !Object.hasOwn(run.tools, e.name)) return run;
+      const { [e.name]: _removed, ...rest } = run.tools;
+      return { ...run, tools: rest };
+    }
     default:
       // tool.input.delta, tool.progress, tool.error, message.end, object.*, compaction, handoff*,
       // tool.approval.requested, custom.*, and any future additive member: inert (state = the log).

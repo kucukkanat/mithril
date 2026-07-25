@@ -3,6 +3,7 @@ import type { EventMeta, EventOf, MithrilEvent } from "./events.ts";
 import type { FinishReason, JsonValue, ModelId, SerializedError, UsageDelta } from "./primitives.ts";
 import type { ModelMessage } from "./state.ts";
 import type { AnyTool, Tool, ToolInputOf } from "./tool.ts";
+import type { ToolDefinition, ToolRegistry } from "./tool-registry.ts";
 
 // §3.8 — producer-side composability. Middleware observes/transforms ONLY by reading & emitting events
 // (no private side channel), so every extension stays replayable and inspectable. All four altitudes are
@@ -198,9 +199,40 @@ export interface EventConsumer {
   onEvent(e: MithrilEvent): void;
 }
 
-/** The registration surface passed to a {@link Plugin.setup}, for contributing plugin fragments. */
-export interface PluginHost {
-  register<Deps>(fragment: Partial<Plugin<Deps>>): void;
+/**
+ * The registration surface passed to {@link Plugin.setup}, once per run, before step 0.
+ *
+ * @typeParam Deps - the dependency bag this run's tools and middleware receive.
+ *
+ * @remarks
+ * `setup` is how a plugin contributes capabilities it can only know at run time — tools loaded from a
+ * store, discovered from a remote server, or derived from `deps`. That is why `deps` is exposed here: a
+ * multi-tenant host needs to pick a store or a scope per run, which is impossible from a static
+ * `Plugin.tools` array.
+ *
+ * The host is **sealed** once `setup` resolves: calling any method afterwards throws `HOST_SEALED`,
+ * because the middleware chain and the step-0 tool snapshot are both built the moment setups finish.
+ *
+ * A tool can never reach this surface. Middleware wraps *every* tool call and can rewrite inputs and
+ * outputs — far more authority than a tool, with no per-call approval gate — so it is registrable only
+ * here, by the agent's author, and never by the agent.
+ */
+export interface PluginHost<Deps = unknown> {
+  /** Contribute a plugin fragment: tools, middleware, and/or consumers. */
+  register(fragment: Partial<Plugin<Deps>>): void;
+  /** The run's live registry, for registering a tool with an explicit {@link ToolDefinition}. */
+  readonly tools: ToolRegistry<Deps>;
+  readonly deps: Deps;
+  readonly runId: string;
+  readonly runtime: RuntimeAdapter;
+  readonly signal: AbortSignal;
+  emit(event: DraftEvent): void;
+}
+
+/** A {@link Plugin.setup} paired with its plugin's name, as collected from an agent's `use` array. */
+export interface PluginSetup<Deps = unknown> {
+  readonly plugin: string;
+  readonly run: (host: PluginHost<Deps>) => void | Promise<void>;
 }
 
 /**
@@ -219,7 +251,23 @@ export interface Plugin<Deps = unknown, Tools extends readonly AnyTool<Deps>[] =
   readonly tools?: Tools;
   readonly middleware?: readonly Middleware<Deps>[];
   readonly consumers?: readonly EventConsumer[];
-  readonly setup?: (host: PluginHost) => void | Promise<void>;
+  /**
+   * Run-time contribution hook, invoked once per run before step 0 (and again on each `resume`, so it must
+   * be idempotent). Use it for capabilities that cannot be known statically — tools loaded from a store,
+   * discovered from a server, or derived from `deps`.
+   *
+   * @remarks Setups run sequentially in `use` order, so a later plugin may build on an earlier one's tools.
+   * A setup that throws fails the run: a plugin that cannot install its capabilities has not "partly"
+   * worked, and continuing would silently run an agent with fewer tools than its author declared.
+   */
+  readonly setup?: (host: PluginHost<Deps>) => void | Promise<void>;
+  /**
+   * Rebuilds a runtime tool from its replayable {@link ToolDefinition}, on resume.
+   *
+   * @remarks Core stores definitions but never interprets their `body`; the package that defines a body
+   * format supplies this. At most one plugin in an agent may declare it.
+   */
+  readonly materialize?: (def: ToolDefinition) => AnyTool<Deps>;
   /** Phantom carrier for `Tools` inference; erased at build. */
   readonly __tools?: Tools;
 }
