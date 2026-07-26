@@ -9,7 +9,7 @@ title: "toolRegistry"
 function toolRegistry<Deps>(seed): ToolRegistry<Deps>;
 ```
 
-Defined in: packages/core/src/agent/tool-registry.ts:50
+Defined in: [packages/core/src/agent/tool-registry.ts:50](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/tool-registry.ts#L50)
 
 Build a fresh [ToolRegistry](/mithril/reference/core/protocol/interfaces/toolregistry/) seeded with an agent's statically declared tools.
 

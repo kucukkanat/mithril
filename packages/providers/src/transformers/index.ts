@@ -20,8 +20,8 @@ import type { TransformersEngine } from "./core.ts";
 
 export { TRANSFORMERS_SPEC, transformersProvider } from "./core.ts";
 export type { EngineChunk, EngineRequest, TransformersEngine } from "./core.ts";
-export { angleToolCall, formatForModel, gemmaToolCall, splitToolCalls } from "./tool-formats.ts";
-export type { ToolFormat } from "./tool-formats.ts";
+export { angleToolCall, formatForModel, gemmaToolCall, liquidToolCall, splitToolCalls, toTemplateMessages } from "./tool-formats.ts";
+export type { TemplateMessage, ToolFormat } from "./tool-formats.ts";
 export { browserEngine, preload } from "./edge.ts";
 export type { EdgeOptions, ProgressReport } from "./edge.ts";
 

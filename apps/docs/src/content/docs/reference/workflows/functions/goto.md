@@ -9,7 +9,7 @@ title: "goto"
 function goto<S>(next, state): StepResult<S>;
 ```
 
-Defined in: [packages/workflows/src/index.ts:87](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/workflows/src/index.ts#L87)
+Defined in: [packages/workflows/src/index.ts:87](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/workflows/src/index.ts#L87)
 
 Build a [StepResult](/mithril/reference/workflows/type-aliases/stepresult/) that routes to another step, carrying `state` forward.
 

@@ -5,7 +5,7 @@ prev: false
 title: "McpServer"
 ---
 
-Defined in: [packages/mcp/src/server.ts:20](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/server.ts#L20)
+Defined in: [packages/mcp/src/server.ts:20](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/server.ts#L20)
 
 A Mithril-tools-backed MCP server. Create one with [mcpServer](/mithril/reference/mcp/server/functions/mcpserver/).
 
@@ -14,18 +14,19 @@ A Mithril-tools-backed MCP server. Create one with [mcpServer](/mithril/referenc
 ### handle()
 
 ```ts
-handle(request): Promise<JsonValue>;
+handle(request, signal?): Promise<JsonValue>;
 ```
 
-Defined in: [packages/mcp/src/server.ts:22](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/server.ts#L22)
+Defined in: [packages/mcp/src/server.ts:27](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/server.ts#L27)
 
 Dispatch one JSON-RPC request object and resolve its JSON-RPC response.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `request` | `JsonValue` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `request` | `JsonValue` | - |
+| `signal?` | `AbortSignal` | aborts the tool invocation this request triggers; `serve` passes the HTTP request's own signal, so a client that disconnects cancels the work it asked for. |
 
 #### Returns
 
@@ -39,7 +40,7 @@ Dispatch one JSON-RPC request object and resolve its JSON-RPC response.
 serve(request): Promise<Response>;
 ```
 
-Defined in: [packages/mcp/src/server.ts:24](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/server.ts#L24)
+Defined in: [packages/mcp/src/server.ts:29](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/server.ts#L29)
 
 Fetch-style handler: read a JSON-RPC request from `request`, dispatch it, and reply with JSON.
 

@@ -229,6 +229,64 @@ describe("degradation & diagnostics", () => {
     expect(regenerated).toContain(`// my helper\nfunction shout(s: string) { return s.toUpperCase(); }`);
   });
 
+  test("a mixed import is split so regeneration never redeclares an absorbed name", () => {
+    // `asTool` round-trips as opaque (M1), so it is never in codegen's import plan while `agent` and
+    // `tool` are. Preserving the statement whole would emit it beside the regenerated import and
+    // redeclare both — source that no longer compiles.
+    const code = `import { agent, asTool, tool } from "mithril";
+import { transformers } from "mithril/transformers";
+import { z } from "zod";
+
+const t = tool({
+  name: "t",
+  description: "d",
+  inputSchema: z.object({ a: z.string() }),
+  execute: async ({ a }) => ({ a }),
+});
+
+const child = agent({
+  model: transformers("m"),
+  instructions: "child",
+  tools: [t],
+});
+
+const asked = asTool(child, {
+  name: "asked",
+  description: "ask the child",
+});
+
+const parent = agent({
+  model: transformers("m"),
+  instructions: "parent",
+  tools: [asked],
+});
+
+await run(parent, "hi");
+`;
+    const result = parseProject(code, ts);
+    expect(result.spec).toBeDefined();
+    const regenerated = generateProject(result.spec as ProjectSpec);
+
+    // The preserved import carries ONLY the unplanned name.
+    expect(regenerated).toContain(`import { asTool } from "mithril";`);
+    expect(regenerated).not.toContain(`import { agent, asTool, tool } from "mithril";`);
+
+    // No binding is declared twice — the property that makes the regenerated file compile.
+    const sf = ts.createSourceFile("p.ts", regenerated, ts.ScriptTarget.ES2022, true);
+    const seen = new Map<string, number>();
+    for (const stmt of sf.statements) {
+      if (!ts.isImportDeclaration(stmt)) continue;
+      const bindings = stmt.importClause?.namedBindings;
+      if (bindings === undefined || !ts.isNamedImports(bindings)) continue;
+      for (const el of bindings.elements) seen.set(el.name.text, (seen.get(el.name.text) ?? 0) + 1);
+    }
+    expect([...seen].filter(([, n]) => n > 1)).toEqual([]);
+
+    // And it has settled: a second round-trip is a fixed point.
+    const second = generateProject(parseProject(regenerated, ts, result.spec).spec as ProjectSpec);
+    expect(second).toBe(regenerated);
+  });
+
   test("an unrecognized agent property degrades the WHOLE statement to opaque (nothing dropped)", () => {
     const code = `import { agent } from "mithril";
 

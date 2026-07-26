@@ -5,7 +5,7 @@ prev: false
 title: "RunOptions"
 ---
 
-Defined in: [index.ts:19](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/sandbox/src/index.ts#L19)
+Defined in: [index.ts:19](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/sandbox/src/index.ts#L19)
 
 Options for a single [CodeRunner.run](/mithril/reference/sandbox/index/interfaces/coderunner/#run).
 
@@ -17,7 +17,7 @@ Options for a single [CodeRunner.run](/mithril/reference/sandbox/index/interface
 readonly optional globals?: Readonly<Record<string, unknown>>;
 ```
 
-Defined in: [index.ts:23](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/sandbox/src/index.ts#L23)
+Defined in: [index.ts:23](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/sandbox/src/index.ts#L23)
 
 Extra values injected as globals into the execution scope (e.g. inputs the code may read).
 
@@ -29,6 +29,6 @@ Extra values injected as globals into the execution scope (e.g. inputs the code 
 readonly optional timeoutMs?: number;
 ```
 
-Defined in: [index.ts:21](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/sandbox/src/index.ts#L21)
+Defined in: [index.ts:21](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/sandbox/src/index.ts#L21)
 
 Wall-clock budget for synchronous execution, in milliseconds (default 1000).

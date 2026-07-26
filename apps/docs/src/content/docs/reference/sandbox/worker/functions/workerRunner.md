@@ -9,7 +9,7 @@ title: "workerRunner"
 function workerRunner(opts?): CodeRunner;
 ```
 
-Defined in: worker.ts:122
+Defined in: [worker.ts:122](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/sandbox/src/worker.ts#L122)
 
 Build a [CodeRunner](/mithril/reference/sandbox/index/interfaces/coderunner/) that evaluates code in a dedicated worker — the local backend that works in
 **browsers, Node and Bun** alike.

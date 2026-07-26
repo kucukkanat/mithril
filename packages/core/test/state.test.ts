@@ -91,3 +91,29 @@ describe("reduce / replay", () => {
     expect(INITIAL.cursor).toBe(-1);
   });
 });
+
+describe("call ids that repeat across steps", () => {
+  // Several providers mint ids from a per-request counter (google's `call_N`, the local provider's
+  // fallback), so step 2 legitimately reuses step 1's ids. Each result must bind to its OWN call.
+  const log: MithrilEvent[] = [
+    { ...meta(0), type: "run.start", input: "go", model: "google/gemini", depsDigest: "" },
+    { ...meta(1, STEP), type: "step.start", step: 0 },
+    { ...meta(2, STEP), type: "tool.call", callId: "call_1", name: "weather", input: { city: "NYC" } },
+    { ...meta(3, STEP), type: "tool.result", callId: "call_1", output: { tempC: 21 }, ms: 1 },
+    { ...meta(4, STEP), type: "step.start", step: 1 },
+    { ...meta(5, STEP), type: "tool.call", callId: "call_1", name: "weather", input: { city: "Paris" } },
+    { ...meta(6, STEP), type: "tool.result", callId: "call_1", output: { tempC: 14 }, ms: 1 },
+  ];
+
+  test("each result lands on the call it belongs to", () => {
+    const calls = replay(log).messages.flatMap((m) => m.toolCalls);
+    expect(calls.map((c) => c.input)).toEqual([{ city: "NYC" }, { city: "Paris" }]);
+    expect(calls.map((c) => c.output)).toEqual([{ tempC: 21 }, { tempC: 14 }]);
+  });
+
+  test("a result for an unknown id is inert", () => {
+    const before = replay(log);
+    const after = reduce(before, { ...meta(7, STEP), type: "tool.result", callId: "nope", output: 1, ms: 1 });
+    expect(after.messages).toEqual(before.messages);
+  });
+});

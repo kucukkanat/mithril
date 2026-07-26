@@ -5,7 +5,7 @@ prev: false
 title: "ToolSummary"
 ---
 
-Defined in: packages/core/src/protocol/tool-registry.ts:57
+Defined in: [packages/core/src/protocol/tool-registry.ts:57](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L57)
 
 The non-executable view of a registered tool — safe to hand to an observer or back to the model.
 
@@ -17,7 +17,7 @@ The non-executable view of a registered tool — safe to hand to an observer or 
 readonly optional definition?: ToolDefinition;
 ```
 
-Defined in: packages/core/src/protocol/tool-registry.ts:63
+Defined in: [packages/core/src/protocol/tool-registry.ts:63](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L63)
 
 Present only for tools registered from a definition (`setup` and `runtime` provenance).
 
@@ -29,7 +29,7 @@ Present only for tools registered from a definition (`setup` and `runtime` prove
 readonly description: string;
 ```
 
-Defined in: packages/core/src/protocol/tool-registry.ts:59
+Defined in: [packages/core/src/protocol/tool-registry.ts:59](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L59)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: packages/core/src/protocol/tool-registry.ts:59
 readonly name: string;
 ```
 
-Defined in: packages/core/src/protocol/tool-registry.ts:58
+Defined in: [packages/core/src/protocol/tool-registry.ts:58](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L58)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: packages/core/src/protocol/tool-registry.ts:58
 readonly provenance: ToolProvenance;
 ```
 
-Defined in: packages/core/src/protocol/tool-registry.ts:61
+Defined in: [packages/core/src/protocol/tool-registry.ts:61](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L61)
 
 ***
 
@@ -59,4 +59,4 @@ Defined in: packages/core/src/protocol/tool-registry.ts:61
 readonly optional version?: string;
 ```
 
-Defined in: packages/core/src/protocol/tool-registry.ts:60
+Defined in: [packages/core/src/protocol/tool-registry.ts:60](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L60)

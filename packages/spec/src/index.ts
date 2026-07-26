@@ -32,5 +32,5 @@ export {
   type WorkflowSpec,
   type WorkflowStepSpec,
 } from "./types.ts";
-export { generateProject, GROQ_PROVIDER_DECL, modelExpr, providerImportEntries, providerOf, type CodegenMode, type GenerateOptions } from "./codegen.ts";
+export { generateProject, GROQ_PROVIDER_DECL, modelExpr, providerImportEntries, providerOf, toolDeclSource, type CodegenMode, type GenerateOptions } from "./codegen.ts";
 export { migrateProject, SpecFormatError } from "./migrate.ts";

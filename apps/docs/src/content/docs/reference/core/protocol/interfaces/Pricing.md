@@ -5,7 +5,7 @@ prev: false
 title: "Pricing"
 ---
 
-Defined in: [packages/core/src/protocol/provider.ts:35](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/provider.ts#L35)
+Defined in: [packages/core/src/protocol/provider.ts:35](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/provider.ts#L35)
 
 Per-token pricing for a model, in integer micro-USD, matching [UsageDelta](/mithril/reference/core/protocol/interfaces/usagedelta/)'s cost fields.
 
@@ -17,7 +17,7 @@ Per-token pricing for a model, in integer micro-USD, matching [UsageDelta](/mith
 readonly cacheReadMicroUsdPerToken: number;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:38](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/provider.ts#L38)
+Defined in: [packages/core/src/protocol/provider.ts:38](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/provider.ts#L38)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/core/src/protocol/provider.ts:38](https://github.com/kucuk
 readonly cacheWriteMicroUsdPerToken: number;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:39](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/provider.ts#L39)
+Defined in: [packages/core/src/protocol/provider.ts:39](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/provider.ts#L39)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [packages/core/src/protocol/provider.ts:39](https://github.com/kucuk
 readonly inputMicroUsdPerToken: number;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:36](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/provider.ts#L36)
+Defined in: [packages/core/src/protocol/provider.ts:36](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/provider.ts#L36)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: [packages/core/src/protocol/provider.ts:36](https://github.com/kucuk
 readonly outputMicroUsdPerToken: number;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:37](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/provider.ts#L37)
+Defined in: [packages/core/src/protocol/provider.ts:37](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/provider.ts#L37)
 
 ***
 
@@ -57,4 +57,4 @@ Defined in: [packages/core/src/protocol/provider.ts:37](https://github.com/kucuk
 readonly reasoningMicroUsdPerToken: number;
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:40](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/provider.ts#L40)
+Defined in: [packages/core/src/protocol/provider.ts:40](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/provider.ts#L40)

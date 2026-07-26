@@ -9,7 +9,7 @@ title: "toolStoreConformance"
 function toolStoreConformance(make, t): void;
 ```
 
-Defined in: persistence.ts:147
+Defined in: [persistence.ts:147](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/persistence.ts#L147)
 
 The shared conformance suite every [ToolStore](/mithril/reference/authoring/persistence/interfaces/toolstore/) implementation must pass.
 

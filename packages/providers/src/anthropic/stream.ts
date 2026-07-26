@@ -108,7 +108,9 @@ export async function* parseAnthropicStream(body: ReadableStream<Uint8Array>): A
   } finally {
     reader.releaseLock();
   }
-  for (const t of tools.values()) yield { type: "tool.call", callId: t.id, name: t.name, input: safeJson(t.args) };
+  // Index fallback mirrors the OpenAI adapter: an id is always present on the real API, but this adapter is
+  // also reachable against a custom baseUrl, and colliding ids would mis-bind results to calls.
+  for (const [index, t] of tools) yield { type: "tool.call", callId: t.id !== "" ? t.id : `call_${index}`, name: t.name, input: safeJson(t.args) };
   const usage: UsageDelta = { input: inputTokens, output: outputTokens, cacheRead: 0, cacheWrite: 0, reasoning: 0, costMicroUsd: 0 };
   yield { type: "message.end", usage, finishReason };
 }

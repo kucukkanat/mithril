@@ -176,7 +176,7 @@
   color: var(--text-muted);
 }
 .s-running {
-  color: var(--mth-accent);
+  color: var(--mth-ember-500);
   border-color: var(--border-accent);
 }
 .s-completed {
@@ -510,7 +510,7 @@
   color: var(--text-muted);
 }
 .pg-mode-chip.mode-live {
-  color: var(--mth-accent);
+  color: var(--mth-ember-500);
   border-color: var(--border-accent);
 }
 .pg-mode-chip.mode-local {

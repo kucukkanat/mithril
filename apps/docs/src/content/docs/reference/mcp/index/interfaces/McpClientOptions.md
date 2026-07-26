@@ -5,7 +5,7 @@ prev: false
 title: "McpClientOptions"
 ---
 
-Defined in: [packages/mcp/src/index.ts:130](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L130)
+Defined in: [packages/mcp/src/index.ts:139](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/index.ts#L139)
 
 The client capabilities and identity advertised on `initialize`.
 
@@ -17,7 +17,7 @@ The client capabilities and identity advertised on `initialize`.
 readonly optional capabilities?: JsonValue;
 ```
 
-Defined in: [packages/mcp/src/index.ts:134](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L134)
+Defined in: [packages/mcp/src/index.ts:143](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/index.ts#L143)
 
 Client capabilities advertised on `initialize` (default `{}`).
 
@@ -29,6 +29,6 @@ Client capabilities advertised on `initialize` (default `{}`).
 readonly optional clientInfo?: McpClientInfo;
 ```
 
-Defined in: [packages/mcp/src/index.ts:132](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L132)
+Defined in: [packages/mcp/src/index.ts:141](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/index.ts#L141)
 
 Client identity sent on `initialize` (default `{ name: "mithril", version: "0.0.0" }`).

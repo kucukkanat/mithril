@@ -572,14 +572,25 @@ export function asTool<In, ChildDeps, COut extends JsonValue>(
       // Cast to RunOptions<ChildDeps>: DepsOption's conditional can't resolve against a free `ChildDeps`.
       // The child automatically inherits the parent run's transport/providers/runtime so a sub-agent
       // authenticates and resolves models without the caller re-threading them through asTool.
+      // `signal` rides along too: without it a cancelled parent returns while the child keeps streaming,
+      // so cancel() would stop the run it can see and leak the work it delegated.
       const runOpts = {
         deps: (opts.deps?.(ctx) ?? undefined) as ChildDeps,
         runtime: ctx.runtime,
+        signal: ctx.signal,
         ...(ctx.transport !== undefined ? { transport: ctx.transport } : {}),
         ...(ctx.providers !== undefined ? { providers: ctx.providers } : {}),
       } as RunOptions<ChildDeps>;
+      // Delegated tokens are still the parent's tokens: charge them, or a sub-agent's spend is invisible to
+      // the parent's totals AND to the maxTokens/maxCostMicroUsd budgets meant to bound the whole run.
+      // A `suspended` result carries no usage (it is not a terminal state), so its spend is charged on the
+      // hop that finally settles it.
+      const charge = (r: RunResult<COut>): void => {
+        if ("usage" in r) ctx.reportUsage(r.usage);
+      };
       // Journaled so a Tier-2 replay of THIS execute never re-runs the child (exactly-once).
       let res = await ctx.journal<RunResult<COut>>("child.run", () => runChild(toInput(input), runOpts));
+      charge(res);
       let hop = 0;
       while (res.status === "suspended") {
         // Ask the parent's caller for the child's resolution, then resume the child with it.
@@ -590,6 +601,7 @@ export function asTool<In, ChildDeps, COut extends JsonValue>(
           resolutionSchemaId: "mithril.handoff",
         })) as ResumeValue;
         res = await ctx.journal<RunResult<COut>>(`child.resume.${hop}`, () => resumeChild(token, resolution, runOpts));
+        charge(res);
         hop++;
       }
       return settle(res);

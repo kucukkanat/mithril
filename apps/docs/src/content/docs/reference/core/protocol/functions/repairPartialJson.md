@@ -11,7 +11,7 @@ function repairPartialJson(s):
   | undefined;
 ```
 
-Defined in: [packages/core/src/protocol/json-repair.ts:150](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/json-repair.ts#L150)
+Defined in: [packages/core/src/protocol/json-repair.ts:150](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/json-repair.ts#L150)
 
 Best-effort parse of an IN-PROGRESS structured-output stream into a deep-partial [JsonValue](/mithril/reference/core/protocol/type-aliases/jsonvalue/), for
 `object.delta` streaming.

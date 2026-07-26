@@ -5,7 +5,7 @@ prev: false
 title: "PluginSetup"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:233](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L233)
+Defined in: [packages/core/src/protocol/middleware.ts:233](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/middleware.ts#L233)
 
 A [Plugin.setup](/mithril/reference/core/protocol/interfaces/plugin/#setup) paired with its plugin's name, as collected from an agent's `use` array.
 
@@ -23,7 +23,7 @@ A [Plugin.setup](/mithril/reference/core/protocol/interfaces/plugin/#setup) pair
 readonly plugin: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:234](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L234)
+Defined in: [packages/core/src/protocol/middleware.ts:234](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/middleware.ts#L234)
 
 ***
 
@@ -33,7 +33,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:234](https://github.com/ku
 readonly run: (host) => void | Promise<void>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:235](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/middleware.ts#L235)
+Defined in: [packages/core/src/protocol/middleware.ts:235](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/middleware.ts#L235)
 
 #### Parameters
 

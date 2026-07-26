@@ -6,6 +6,7 @@ import { RunPage } from "./pages/RunPage.tsx";
 import { SettingsPage } from "./pages/SettingsPage.tsx";
 import { CommandPalette } from "./components/CommandPalette.tsx";
 import { ShortcutCheatsheet } from "./components/ShortcutCheatsheet.tsx";
+import { DraftGate } from "./components/DraftGate.tsx";
 import { installShortcuts } from "./lib/shortcuts.ts";
 
 // Hash routing keeps the app deployable on any static host with zero rewrite rules — and leaves
@@ -26,6 +27,8 @@ export function App() {
       <RouterProvider router={router} />
       <CommandPalette router={router} />
       <ShortcutCheatsheet />
+      {/* The drafting gate is global: a draft can be requested from the first-run form or the Designer. */}
+      <DraftGate />
     </>
   );
 }

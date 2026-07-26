@@ -4,7 +4,8 @@
     {
       "name": "studio",
       "runtimeExecutable": "bun",
-      "runtimeArgs": ["run", "--cwd", "apps/studio", "dev", "--port", "5199", "--strictPort"],
+      "runtimeArgs": ["run", "--cwd", "apps/studio", "dev"],
+      "autoPort": true,
       "port": 5199
     },
     {

@@ -121,8 +121,11 @@ export async function* parseOpenAIStream(body: ReadableStream<Uint8Array>): Asyn
   } finally {
     reader.releaseLock();
   }
-  for (const t of tools.values()) {
-    yield { type: "tool.call", callId: t.id, name: t.name, input: safeJson(t.args) };
+  // Fall back to the block index when the server omits `id`: OpenAI always sends one, but compatible
+  // servers (groq, vLLM, llama.cpp) often don't, and two parallel calls sharing "" would be indistinguishable
+  // to anything that keys results by callId.
+  for (const [index, t] of tools) {
+    yield { type: "tool.call", callId: t.id !== "" ? t.id : `call_${index}`, name: t.name, input: safeJson(t.args) };
   }
   yield { type: "message.end", usage, finishReason };
 }

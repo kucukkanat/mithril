@@ -5,7 +5,7 @@
  */
 
 import type { AnyTool, ChatRequest, ContentPart, FinishReason, JsonSchemaConverter, JsonValue, ModelHandle, Provider, ProviderChunk, ProviderSpec, Transport, UsageDelta } from "@mithril/core/protocol";
-import { toJsonSchema, toMediaSource } from "@mithril/core/protocol";
+import { contentToText, toJsonSchema, toMediaSource } from "@mithril/core/protocol";
 
 // Map multimodal content to Gemini `parts`. Inlined bytes become `inlineData` (base64 + mimeType); a URL
 // source becomes `fileData` (a fileUri). Text is a plain `{ text }` part.
@@ -47,11 +47,40 @@ function mapFinish(r: string | undefined): FinishReason {
   }
 }
 
+// Gemini requires `functionResponse.response` to be an OBJECT. Tool output reaches us as the JSON text the
+// loop recorded, which may legitimately be a scalar or an array — wrap those rather than send an invalid body.
+function toFunctionResponse(content: string): Record<string, unknown> {
+  try {
+    const v: unknown = JSON.parse(content);
+    return typeof v === "object" && v !== null && !Array.isArray(v) ? (v as Record<string, unknown>) : { result: v };
+  } catch {
+    return { result: content };
+  }
+}
+
 function toGoogleBody(req: ChatRequest, convert?: JsonSchemaConverter): string {
-  const contents = req.messages.map((m) => ({
-    role: m.role === "assistant" ? "model" : "user",
-    parts: toGoogleParts(m.content),
-  }));
+  // A tool turn must come back as a `functionResponse` part naming the function that produced it — pairing
+  // to the originating `functionCall` BY ORDER, exactly as the OpenAI/Anthropic adapters pair by id. Sending
+  // it as plain user text (what this did before) leaves the model with a result and no record of the call.
+  const contents: unknown[] = [];
+  const pendingNames: string[] = [];
+  for (const m of req.messages) {
+    if (m.role === "assistant" && m.toolCalls.length > 0) {
+      contents.push({
+        role: "model",
+        parts: [
+          ...(m.content === "" ? [] : [{ text: contentToText(m.content) }]),
+          ...m.toolCalls.map((tc) => ({ functionCall: { name: tc.name, args: tc.input } })),
+        ],
+      });
+      for (const tc of m.toolCalls) pendingNames.push(tc.name);
+    } else if (m.role === "tool") {
+      const name = pendingNames.shift() ?? "";
+      contents.push({ role: "user", parts: [{ functionResponse: { name, response: toFunctionResponse(contentToText(m.content)) } }] });
+    } else {
+      contents.push({ role: m.role === "assistant" ? "model" : "user", parts: toGoogleParts(m.content) });
+    }
+  }
   const body: Record<string, unknown> = { contents, systemInstruction: { parts: [{ text: req.system }] } };
   const tools = req.tools as readonly AnyTool<unknown>[];
   if (tools.length > 0) {

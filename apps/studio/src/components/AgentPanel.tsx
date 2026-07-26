@@ -1,187 +1,184 @@
-import { useState } from "react";
-import type { AgentSpec, ProjectSpec } from "@mithril/spec";
+import { useState, type CSSProperties } from "react";
+import type { AgentSpec, ProjectSpec, ToolSpec } from "@mithril/spec";
+import { hasConcern, pickScore, weakestReason } from "../lib/pick-score.ts";
 import { ModelPicker } from "./ModelPicker.tsx";
+import { TOOL_DRAG_TYPE } from "../lib/attach.ts";
 
 /*
- * Structured editor for one agent decl. Every change is a pure spec mutation — the store
- * regenerates the code view. Field order mirrors core's AgentConfig.
+ * Structured editor for one agent decl: the job it does, the model it runs on, and the tools it can
+ * call. Every change is a pure spec mutation — the store regenerates the code view.
+ *
+ * Three fields, deliberately. The spec supports budgets and middleware, but they are not what makes
+ * a first agent work or fail; the Code tab is the honest place for them until they earn a panel.
  */
 
 export interface AgentPanelProps {
   readonly spec: ProjectSpec;
   readonly agent: AgentSpec;
   readonly onChange: (next: AgentSpec) => void;
+  /** Rename the decl (its const identifier), which the parent must apply across references. */
+  readonly onRename: (nextId: string) => void;
+  readonly onMakeEntry: () => void;
+  readonly onOpenTool: (toolId: string) => void;
+  readonly onDetachTool: (toolId: string) => void;
+  /** Attach the tool dropped onto this agent. */
+  readonly onDropTool: (toolId: string) => void;
+  readonly dragging: boolean;
+  /** Ask the drafting model to rewrite a tool's description. */
+  readonly onFixTool: ((tool: ToolSpec) => void) | null;
+  /** Which field the cursor is in, so the generated pane can highlight its line. */
+  readonly focus: string | null;
+  readonly onFocus: (field: string) => void;
 }
 
-function numField(
-  label: string,
-  value: number | undefined,
-  set: (v: number | undefined) => void,
-  placeholder?: string,
-) {
-  return (
-    <label data-testid={`agent-field-${label}`}>
-      {label}
-      <input
-        type="number"
-        data-testid={`agent-input-${label}`}
-        value={value ?? ""}
-        placeholder={placeholder}
-        onChange={(e) => set(e.target.value === "" ? undefined : Number(e.target.value))}
-      />
-    </label>
-  );
-}
+const scoreColor = (score: number): string => (score >= 75 ? "var(--good)" : score >= 45 ? "var(--warn)" : "var(--bad)");
 
-function triToggle(label: string, value: boolean | undefined, set: (v: boolean | undefined) => void, defaultLabel: string) {
-  return (
-    <label data-testid={`agent-field-${label}`}>
-      {label}
-      <select
-        data-testid={`agent-select-${label}`}
-        value={value === undefined ? "default" : String(value)}
-        onChange={(e) => set(e.target.value === "default" ? undefined : e.target.value === "true")}
-      >
-        <option value="default">default ({defaultLabel})</option>
-        <option value="true">on</option>
-        <option value="false">off</option>
-      </select>
-    </label>
-  );
-}
-
-export function AgentPanel({ spec, agent, onChange }: AgentPanelProps) {
-  const attachable = spec.decls.filter((d) => (d.kind === "tool" || d.kind === "subAgentTool") && d.id !== agent.id);
-  // `undefined` in a patch means "remove the key" (exactOptionalPropertyTypes-safe).
-  const patch = (p: { [K in keyof AgentSpec]?: AgentSpec[K] | undefined }): void => {
-    // exactOptionalPropertyTypes: drop keys explicitly set to undefined instead of storing them.
-    const merged = { ...agent, ...p };
-    const clean = Object.fromEntries(Object.entries(merged).filter(([, v]) => v !== undefined));
-    onChange(clean as unknown as AgentSpec);
-  };
-
-  const instructionsIsCode = typeof agent.instructions !== "string";
-  const staticText = typeof agent.instructions === "string" ? agent.instructions : "";
-  const dynamicCode = typeof agent.instructions === "string" ? "" : agent.instructions.code;
-  // Remember the other mode's last value so toggling Static⇄Dynamic never discards typed content.
-  const [stash, setStash] = useState<{ readonly static: string; readonly dynamic: string }>({ static: staticText, dynamic: dynamicCode });
+export function AgentPanel({
+  spec,
+  agent,
+  onChange,
+  onRename,
+  onMakeEntry,
+  onOpenTool,
+  onDetachTool,
+  onDropTool,
+  dragging,
+  onFixTool,
+  focus,
+  onFocus,
+}: AgentPanelProps) {
+  const [over, setOver] = useState(false);
+  const isEntry = spec.entry.target === agent.id;
+  const instructions = typeof agent.instructions === "string" ? agent.instructions : null;
+  const tools = agent.tools.flatMap((id) => {
+    const d = spec.decls.find((x) => x.id === id);
+    return d !== undefined && (d.kind === "tool" || d.kind === "subAgentTool") ? [d] : [];
+  });
 
   return (
     <div className="panel" data-testid="agent-panel">
-      <h3>
-        agent <code>{agent.id}</code>
-      </h3>
-
-      <section data-testid="agent-section-model">
-        <h4>Model</h4>
-        <ModelPicker value={agent.model} onChange={(model) => patch({ model })} />
-      </section>
-
-      <section data-testid="agent-section-instructions">
-        <h4>Instructions</h4>
-        <div className="seg">
-          <button
-            className={instructionsIsCode ? "" : "seg-on"}
-            data-testid="agent-instructions-static"
-            onClick={() => {
-              if (!instructionsIsCode) return;
-              setStash((s) => ({ ...s, dynamic: dynamicCode }));
-              patch({ instructions: stash.static });
-            }}
-          >
-            Static
-          </button>
-          <button
-            className={instructionsIsCode ? "seg-on" : ""}
-            data-testid="agent-instructions-dynamic"
-            onClick={() => {
-              if (instructionsIsCode) return;
-              setStash((s) => ({ ...s, static: staticText }));
-              patch({ instructions: { code: stash.dynamic.length > 0 ? stash.dynamic : `(ctx) => ${JSON.stringify(staticText)}` } });
-            }}
-          >
-            Dynamic (ctx)
-          </button>
-        </div>
-        <textarea
-          rows={4}
-          data-testid="agent-instructions-input"
-          value={instructionsIsCode ? dynamicCode : staticText}
-          onChange={(e) => {
-            const val = e.target.value;
-            setStash((s) => (instructionsIsCode ? { ...s, dynamic: val } : { ...s, static: val }));
-            patch({ instructions: instructionsIsCode ? { code: val } : val });
-          }}
+      <div className="panel-head">
+        <h3>agent</h3>
+        <input
+          className="name-input"
+          value={agent.id}
+          onChange={(e) => onRename(e.target.value)}
+          spellCheck={false}
+          aria-label="Agent name"
+          data-testid="agent-name"
         />
-      </section>
+        {isEntry ? (
+          <span className="pill push">entry point</span>
+        ) : (
+          <button className="ghost push" onClick={onMakeEntry} title="The run starts here instead" style={{ fontSize: "var(--mth-fs-2xs)" }} data-testid="agent-make-entry">
+            Make entry point
+          </button>
+        )}
+      </div>
 
-      <section data-testid="agent-section-tools">
-        <h4>Tools</h4>
-        {attachable.length === 0 && <p className="hint">No tools yet. Add one with <strong>+ tool</strong> in the left rail, then check it here to attach it.</p>}
-        {attachable.map((d) => (
-          <label key={d.id} className="check" data-testid={`agent-tool-${d.id}`}>
-            <input
-              type="checkbox"
-              data-testid={`agent-tool-checkbox-${d.id}`}
-              checked={agent.tools.includes(d.id)}
-              onChange={(e) =>
-                patch({
-                  tools: e.target.checked ? [...agent.tools, d.id] : agent.tools.filter((t) => t !== d.id),
-                })
-              }
-            />
-            <code>{d.id}</code>
-          </label>
-        ))}
-      </section>
+      <div className="panel-grid">
+        <div className={`field${focus === "job" ? " field-linked" : ""}`} onClick={() => onFocus("job")}>
+          <h4 style={{ marginTop: 0 }}>Job</h4>
+          {instructions === null ? (
+            <p className="hint" data-testid="agent-job-code">
+              These instructions are a function of <code>ctx</code>, not a static string — edit them in the Code tab.
+            </p>
+          ) : (
+            <>
+              {/* A system prompt is paragraphs, not a name — a single-line input hid all but the
+                  first few words of every real one. */}
+              <textarea
+                className="agent-job"
+                rows={Math.min(14, Math.max(4, instructions.split("\n").length + 1))}
+                value={instructions}
+                onChange={(e) => onChange({ ...agent, instructions: e.target.value })}
+                onFocus={() => onFocus("job")}
+                placeholder="Answer questions about current weather, and cite sources when asked"
+                data-testid="agent-job"
+              />
+              <p className="hint">Becomes the agent&rsquo;s instructions, verbatim.</p>
+            </>
+          )}
+        </div>
 
-      <section data-testid="agent-section-output">
-        <h4>Structured output</h4>
-        <label data-testid="agent-field-output-zod">
-          zod schema (empty = plain text)
-          <input
-            data-testid="agent-input-output-zod"
-            value={agent.output?.zod ?? ""}
-            placeholder="z.object({ … })"
-            onChange={(e) => patch({ output: e.target.value === "" ? undefined : { zod: e.target.value } })}
-          />
-        </label>
-        {agent.output !== undefined && numField("outputRetries", agent.outputRetries, (v) => patch({ outputRetries: v }), "2")}
-      </section>
+        <div className={`field${focus === "model" ? " field-linked" : ""}`} onClick={() => onFocus("model")}>
+          <h4 style={{ marginTop: 0 }}>Model</h4>
+          <ModelPicker value={agent.model} onChange={(model) => onChange({ ...agent, model })} />
+        </div>
 
-      <section data-testid="agent-section-limits">
-        <h4>Limits & behavior</h4>
-        {numField("maxSteps", agent.maxSteps, (v) => patch({ maxSteps: v }), "16")}
-        {numField("maxTokens", agent.maxTokens, (v) => patch({ maxTokens: v }))}
-        {numField("maxCostMicroUsd", agent.maxCostMicroUsd, (v) => patch({ maxCostMicroUsd: v }))}
-        {numField("toolRetries", agent.toolRetries, (v) => patch({ toolRetries: v }), "2")}
-        {triToggle("loopDetection", agent.loopDetection, (v) => patch({ loopDetection: v }), "on")}
-        {triToggle("selfCorrection", agent.selfCorrection, (v) => patch({ selfCorrection: v }), "on")}
-        {triToggle("repair", agent.repair, (v) => patch({ repair: v }), "auto")}
-      </section>
-
-      <section data-testid="agent-section-middleware">
-        <h4>Middleware (use)</h4>
-        {(agent.use ?? []).map((u, i) => (
-          <div key={i} className="row" data-testid={`agent-middleware-row-${i}`}>
-            <input
-              data-testid={`agent-middleware-input-${i}`}
-              value={u.code}
-              onChange={(e) =>
-                patch({ use: (agent.use ?? []).map((x, j) => (j === i ? { code: e.target.value } : x)) })
-              }
-            />
-            <button data-testid={`agent-middleware-remove-${i}`} onClick={() => patch({ use: (agent.use ?? []).filter((_, j) => j !== i) })}>×</button>
+        <div className="field span-all">
+          <div className="field-head">
+            <h4>Tools</h4>
+            <span className="count">{tools.length}</span>
           </div>
-        ))}
-        <button
-          className="ghost"
-          data-testid="agent-middleware-add"
-          onClick={() => patch({ use: [...(agent.use ?? []), { code: `bestOfN({ n: 3, score: (r) => r.text.length })` }] })}
-        >
-          + middleware
-        </button>
-      </section>
+          <div
+            // The empty state has its own dropzone; outlining the container too would double it up.
+            className={`tool-rows${dragging && tools.length > 0 ? " droppable" : ""}${over ? " over" : ""}`}
+            onDragOver={(e) => {
+              if (!dragging) return;
+              e.preventDefault();
+              e.dataTransfer.dropEffect = "move";
+              setOver(true);
+            }}
+            onDragLeave={() => setOver(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setOver(false);
+              const toolId = e.dataTransfer.getData(TOOL_DRAG_TYPE) || e.dataTransfer.getData("text/plain");
+              if (toolId.length > 0) onDropTool(toolId);
+            }}
+            data-testid="agent-tool-rows"
+          >
+            {tools.map((t) => {
+              // An asTool wrapper has no description of its own to lint — the child agent is the thing.
+              const score = t.kind === "tool" ? pickScore(t) : null;
+              // Flagged by whether anything is actually wrong, NOT by the number. A tool at 90 with a live
+              // finding used to render clean, which is exactly how a broken tool read as fine.
+              const weak = score !== null && hasConcern(score);
+              return (
+                <div key={t.id} className={`tool-row${weak ? " weak" : ""}`} data-testid={`agent-tool-${t.id}`}>
+                  <div className="tool-row-top">
+                    <button className="ghost tool-row-name" onClick={() => onOpenTool(t.id)} data-testid={`agent-tool-open-${t.id}`}>
+                      {t.name}
+                    </button>
+                    <span className={t.kind === "tool" ? "decl-kind k-tool" : "decl-kind k-workflow"}>{t.kind === "tool" ? "tool" : "asTool"}</span>
+                    <span className="tool-row-right">
+                      {score !== null && (
+                        <>
+                          <span className="meter" style={{ "--pct": `${score.score}%`, "--tone": scoreColor(score.score) } as CSSProperties}>
+                            <i />
+                          </span>
+                          <span className="meter-label" style={{ color: scoreColor(score.score) }}>
+                            {score.score} / 100
+                          </span>
+                        </>
+                      )}
+                      <button className="ghost detach" onClick={() => onDetachTool(t.id)} data-testid={`agent-tool-detach-${t.id}`}>
+                        Detach
+                      </button>
+                    </span>
+                  </div>
+                  {score !== null && weak && (
+                    <div className="tool-row-why">
+                      <span className="hint">{weakestReason(score) ?? "Could be sharper."}</span>
+                      {onFixTool !== null && t.kind === "tool" && (
+                        <button className="primary" onClick={() => onFixTool(t)} data-testid={`agent-tool-fix-${t.id}`}>
+                          Fix the description
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            {tools.length === 0 && (
+              <div className={`dropzone${dragging ? " over" : ""}`} data-testid="agent-tools-empty">
+                <span className="hint">Drag a tool here from the rail.</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -9,7 +9,7 @@ title: "kvToolStore"
 function kvToolStore(kv, opts?): ToolStore;
 ```
 
-Defined in: persistence.ts:52
+Defined in: [persistence.ts:52](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/persistence.ts#L52)
 
 A [ToolStore](/mithril/reference/authoring/persistence/interfaces/toolstore/) over any KeyValue.
 

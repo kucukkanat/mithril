@@ -9,7 +9,7 @@ title: "installRunner"
 function installRunner(scope, opts?): void;
 ```
 
-Defined in: [runner-web/src/worker.ts:79](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/runner-web/src/worker.ts#L79)
+Defined in: [runner-web/src/worker.ts:79](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/worker.ts#L79)
 
 Wire the runner protocol onto a dedicated worker scope: listens for [RunnerRequest](/mithril/reference/runner-web/index/type-aliases/runnerrequest/)
 messages, executes snippets, and posts [RunnerMessage](/mithril/reference/runner-web/index/type-aliases/runnermessage/)s back. Call once from the host

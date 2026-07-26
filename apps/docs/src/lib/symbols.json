@@ -759,6 +759,11 @@
     "kind": "fn",
     "sig": "function kvToolStore(kv, opts?): ToolStore;"
   },
+  "liquidToolCall": {
+    "href": "/reference/providers/transformers/variables/liquidtoolcall/",
+    "kind": "const",
+    "sig": "const liquidToolCall: ToolFormat;"
+  },
   "LIVE_PROVIDERS": {
     "href": "/reference/runner-web/index/variables/live_providers/",
     "kind": "const",
@@ -1664,6 +1669,11 @@
     "kind": "type",
     "sig": "type Template = \"node-cli\" | \"bun-server\" | \"react-chat\";"
   },
+  "TemplateMessage": {
+    "href": "/reference/providers/transformers/interfaces/templatemessage/",
+    "kind": "type",
+    "sig": "One { role, content } turn as a chat template consumes it."
+  },
   "TEMPLATES": {
     "href": "/reference/create-mithril/variables/templates/",
     "kind": "const",
@@ -1743,6 +1753,11 @@
     "href": "/reference/authoring/index/interfaces/toolcomposition/",
     "kind": "type",
     "sig": "The declarative body of a Tier-1 composed tool."
+  },
+  "toolDeclSource": {
+    "href": "/reference/spec/index/functions/tooldeclsource/",
+    "kind": "fn",
+    "sig": "function toolDeclSource(t, omitApproval?): string;"
   },
   "ToolDef": {
     "href": "/reference/core/agent/interfaces/tooldef/",
@@ -1853,6 +1868,11 @@
     "href": "/reference/core/agent/functions/toserializederror/",
     "kind": "fn",
     "sig": "function toSerializedError(err): SerializedError;"
+  },
+  "toTemplateMessages": {
+    "href": "/reference/providers/transformers/functions/totemplatemessages/",
+    "kind": "fn",
+    "sig": "function toTemplateMessages( system, messages, format): TemplateMessage[];"
   },
   "transformers": {
     "href": "/reference/providers/transformers/functions/transformers/",

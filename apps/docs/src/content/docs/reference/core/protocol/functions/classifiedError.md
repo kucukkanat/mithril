@@ -13,7 +13,7 @@ function classifiedError(
    opts?): SerializedError;
 ```
 
-Defined in: [packages/core/src/protocol/errors.ts:48](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/errors.ts#L48)
+Defined in: [packages/core/src/protocol/errors.ts:48](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/errors.ts#L48)
 
 Build a classified [SerializedError](/mithril/reference/core/protocol/interfaces/serializederror/) for a tool failure.
 

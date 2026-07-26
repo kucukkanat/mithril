@@ -3,7 +3,8 @@ import { MithrilError } from "@mithril/core/agent";
 import type { AnyTool } from "@mithril/core/protocol";
 import { toJsonSchema } from "@mithril/core/protocol";
 import type { EngineChunk, EngineRequest, TransformersEngine } from "./core.ts";
-import { formatForModel, reasoningForModel, splitToolCalls } from "./tool-formats.ts";
+import type { ToolFormat } from "./tool-formats.ts";
+import { formatForModel, reasoningForModel, splitToolCalls, toTemplateMessages } from "./tool-formats.ts";
 
 // The heavy BROWSER edge — the sole place `@huggingface/transformers` is imported (dynamically, so this module
 // still loads in Node and type-checks with the peer uninstalled). It builds a `TransformersEngine`: chat
@@ -184,13 +185,8 @@ export function preload(modelId: string, opts?: EdgeOptions): Promise<void> {
   return loadModel(modelId, opts).then(() => undefined);
 }
 
-function toChatMessages(req: EngineRequest): ChatMessage[] {
-  const out: ChatMessage[] = [];
-  if (req.system !== "") out.push({ role: "system", content: req.system });
-  // v1: role + content (tool-result turns are role "tool" with JSON content). Structured assistant tool_calls
-  // are not re-projected into the template yet — a faithful multi-turn tool history is a follow-up.
-  for (const m of req.messages) out.push({ role: m.role, content: m.content });
-  return out;
+function toChatMessages(req: EngineRequest, format: ToolFormat | undefined): ChatMessage[] {
+  return toTemplateMessages(req.system, req.messages, format);
 }
 
 function toToolDefs(tools: readonly AnyTool<unknown>[]): readonly unknown[] {
@@ -261,7 +257,10 @@ export function browserEngine(opts?: EdgeOptions): TransformersEngine {
     async *generate(req: EngineRequest): AsyncGenerator<EngineChunk> {
       const hf = await import("@huggingface/transformers");
       const { tokenizer, model, device } = await loadModel(req.model, opts);
-      const inputs = tokenizer.apply_chat_template(toChatMessages(req), {
+      // One format drives BOTH directions: the history is re-rendered in the same grammar the stream is
+      // parsed with, so a replayed turn is byte-identical to what this model would have generated.
+      const format = req.tools.length > 0 ? formatForModel(req.model) : undefined;
+      const inputs = tokenizer.apply_chat_template(toChatMessages(req, format), {
         ...(req.tools.length > 0 ? { tools: toToolDefs(req.tools) } : {}),
         add_generation_prompt: true,
         return_dict: true,
@@ -289,7 +288,7 @@ export function browserEngine(opts?: EdgeOptions): TransformersEngine {
         );
 
       try {
-        yield* splitToolCalls(q.stream(), req.tools.length > 0 ? formatForModel(req.model) : undefined, reasoningForModel(req.model));
+        yield* splitToolCalls(q.stream(), format, reasoningForModel(req.model));
         await genDone;
       } finally {
         req.signal.removeEventListener("abort", onAbort);

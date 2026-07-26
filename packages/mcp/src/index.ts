@@ -67,8 +67,14 @@ export class McpError extends Error {
  * post-handshake notification). Passed to {@link mcpClient}.
  */
 export interface McpTransport {
-  /** Send an MCP JSON-RPC request (e.g. `"tools/list"`, `"tools/call"`) and resolve its result. */
-  request(method: string, params: JsonValue): Promise<JsonValue>;
+  /**
+   * Send an MCP JSON-RPC request (e.g. `"tools/list"`, `"tools/call"`) and resolve its result.
+   *
+   * @param signal - aborts the in-flight request when the calling run is cancelled. Optional so existing
+   * two-parameter transports still satisfy this interface; a transport that ignores it simply cannot be
+   * cancelled, and a long `tools/call` will outlive the run that started it.
+   */
+  request(method: string, params: JsonValue, signal?: AbortSignal): Promise<JsonValue>;
   /** Send a JSON-RPC notification (no id, no reply expected), e.g. `"notifications/initialized"`. */
   notify?(method: string, params: JsonValue): Promise<void>;
   /** Optional teardown, invoked by {@link McpClient.close}. */
@@ -118,8 +124,11 @@ export interface McpClient {
   /**
    * Invoke a tool by name. Prefers the result's `structuredContent`; otherwise flattens text content
    * (JSON-parsed when possible). **Throws {@link McpError} when the result is flagged `isError`.**
+   *
+   * @param signal - aborts the call when the run that issued it is cancelled. {@link mcpTools} passes the
+   * run's `ctx.signal` automatically, so a cancelled run does not leave a remote tool executing.
    */
-  callTool(name: string, args: JsonValue): Promise<JsonValue>;
+  callTool(name: string, args: JsonValue, signal?: AbortSignal): Promise<JsonValue>;
   /** Liveness check — resolves when the server answers an MCP `ping`. */
   ping(): Promise<void>;
   /** Close the underlying transport (if it defines {@link McpTransport.close}). */
@@ -215,9 +224,9 @@ export function mcpClient(transport: McpTransport, opts?: McpClientOptions): Mcp
       } while (cursor !== undefined && cursor !== "");
       return out;
     },
-    async callTool(name, args) {
+    async callTool(name, args, signal) {
       await ensureConnected();
-      const r = (await transport.request("tools/call", { name, arguments: args })) as {
+      const r = (await transport.request("tools/call", { name, arguments: args }, signal)) as {
         readonly content?: readonly { readonly type: string; readonly text?: string }[];
         readonly structuredContent?: JsonValue;
         readonly isError?: boolean;
@@ -304,6 +313,7 @@ export async function mcpTools(client: McpClient): Promise<readonly Tool<string,
     name: def.name,
     description: def.description ?? def.name,
     inputSchema: schemaFor(def.inputSchema),
-    execute: (input: JsonValue) => client.callTool(def.name, input),
+    // Thread the run's signal so cancelling a run also aborts the remote call it is waiting on.
+    execute: (input: JsonValue, ctx) => client.callTool(def.name, input, ctx.signal),
   }));
 }

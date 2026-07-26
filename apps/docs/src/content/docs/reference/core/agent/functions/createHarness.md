@@ -13,7 +13,7 @@ function createHarness<Deps>(): {
 };
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:461](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/factory.ts#L461)
+Defined in: [packages/core/src/agent/factory.ts:461](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/factory.ts#L461)
 
 Bind `Deps` once for a whole app and get back `Deps`-typed [agent](/mithril/reference/core/agent/functions/agent/) and [tool](/mithril/reference/core/agent/functions/tool/) factories.
 

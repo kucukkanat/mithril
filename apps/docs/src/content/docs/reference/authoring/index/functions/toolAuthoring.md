@@ -9,7 +9,7 @@ title: "toolAuthoring"
 function toolAuthoring(opts?): Plugin<unknown>;
 ```
 
-Defined in: index.ts:161
+Defined in: [index.ts:161](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/index.ts#L161)
 
 The tool-authoring plugin: adds `define_tool`, `list_tools` and `revoke_tool`, and teaches the loop how
 to rebuild authored tools when a suspended run resumes.

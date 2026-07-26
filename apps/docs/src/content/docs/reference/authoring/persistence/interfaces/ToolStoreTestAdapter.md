@@ -5,7 +5,7 @@ prev: false
 title: "ToolStoreTestAdapter"
 ---
 
-Defined in: persistence.ts:127
+Defined in: [persistence.ts:127](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/persistence.ts#L127)
 
 Bridges [toolStoreConformance](/mithril/reference/authoring/persistence/functions/toolstoreconformance/) to a host test runner.
 
@@ -17,7 +17,7 @@ Bridges [toolStoreConformance](/mithril/reference/authoring/persistence/function
 assertEqual(actual, expected): void;
 ```
 
-Defined in: persistence.ts:129
+Defined in: [persistence.ts:129](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/persistence.ts#L129)
 
 #### Parameters
 
@@ -38,7 +38,7 @@ Defined in: persistence.ts:129
 test(name, fn): void;
 ```
 
-Defined in: persistence.ts:128
+Defined in: [persistence.ts:128](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/persistence.ts#L128)
 
 #### Parameters
 

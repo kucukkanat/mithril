@@ -5,7 +5,7 @@ prev: false
 title: "UseChatResult"
 ---
 
-Defined in: [hooks.ts:57](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/react/src/hooks.ts#L57)
+Defined in: [hooks.ts:57](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/react/src/hooks.ts#L57)
 
 The value returned by [useChat](/mithril/reference/react/hooks/functions/usechat/): the current [ChatSnapshot](/mithril/reference/react/index/interfaces/chatsnapshot/) plus a `send` action.
 
@@ -21,7 +21,7 @@ The value returned by [useChat](/mithril/reference/react/hooks/functions/usechat
 readonly messages: readonly ChatMessage[];
 ```
 
-Defined in: [index.ts:121](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/react/src/index.ts#L121)
+Defined in: [index.ts:121](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/react/src/index.ts#L121)
 
 #### Inherited from
 
@@ -35,7 +35,7 @@ Defined in: [index.ts:121](https://github.com/kucukkanat/mithril/blob/1e1588b814
 readonly status: "error" | "streaming" | "idle";
 ```
 
-Defined in: [index.ts:123](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/react/src/index.ts#L123)
+Defined in: [index.ts:123](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/react/src/index.ts#L123)
 
 #### Inherited from
 
@@ -49,7 +49,7 @@ Defined in: [index.ts:123](https://github.com/kucukkanat/mithril/blob/1e1588b814
 readonly streaming: string;
 ```
 
-Defined in: [index.ts:122](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/react/src/index.ts#L122)
+Defined in: [index.ts:122](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/react/src/index.ts#L122)
 
 #### Inherited from
 
@@ -63,7 +63,7 @@ Defined in: [index.ts:122](https://github.com/kucukkanat/mithril/blob/1e1588b814
 send(input): void;
 ```
 
-Defined in: [hooks.ts:59](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/react/src/hooks.ts#L59)
+Defined in: [hooks.ts:59](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/react/src/hooks.ts#L59)
 
 Append a user message and stream the assistant's reply. Ignored while a reply is streaming.
 

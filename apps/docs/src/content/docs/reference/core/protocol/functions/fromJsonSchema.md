@@ -9,7 +9,7 @@ title: "fromJsonSchema"
 function fromJsonSchema(doc, opts?): StandardSchemaV1<unknown, JsonValue>;
 ```
 
-Defined in: [packages/core/src/protocol/json-schema.ts:446](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/json-schema.ts#L446)
+Defined in: [packages/core/src/protocol/json-schema.ts:446](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/json-schema.ts#L446)
 
 Compile a JSON Schema (draft 2020-12 subset) into a [StandardSchemaV1](/mithril/reference/core/protocol/interfaces/standardschemav1/) validator.
 

@@ -9,7 +9,7 @@ title: "inputToJson"
 function inputToJson(input): JsonValue;
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:264](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/agent-types.ts#L264)
+Defined in: [packages/core/src/agent/agent-types.ts:264](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/agent-types.ts#L264)
 
 Project run [Input](/mithril/reference/core/agent/type-aliases/input/) into its JSON-safe form for the `run.start` event.
 

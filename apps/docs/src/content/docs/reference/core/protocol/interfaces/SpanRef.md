@@ -5,7 +5,7 @@ prev: false
 title: "SpanRef"
 ---
 
-Defined in: [packages/core/src/protocol/events.ts:13](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/events.ts#L13)
+Defined in: [packages/core/src/protocol/events.ts:13](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/events.ts#L13)
 
 Identifies the tracing span an event belongs to, forming the parent/child
 tree used to route events to their owning (sub-)run.
@@ -18,7 +18,7 @@ tree used to route events to their owning (sub-)run.
 readonly id: string;
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:14](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/events.ts#L14)
+Defined in: [packages/core/src/protocol/events.ts:14](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/events.ts#L14)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/core/src/protocol/events.ts:14](https://github.com/kucukka
 readonly kind: "handoff" | "invoke_agent" | "chat" | "execute_tool" | "workflow";
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:19](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/events.ts#L19)
+Defined in: [packages/core/src/protocol/events.ts:19](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/events.ts#L19)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/core/src/protocol/events.ts:19](https://github.com/kucukka
 readonly parentId: string | null;
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:16](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/events.ts#L16)
+Defined in: [packages/core/src/protocol/events.ts:16](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/events.ts#L16)
 
 Parent span id, or `null` for a root span.
 
@@ -50,6 +50,6 @@ Parent span id, or `null` for a root span.
 readonly traceId: string;
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:18](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/events.ts#L18)
+Defined in: [packages/core/src/protocol/events.ts:18](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/events.ts#L18)
 
 Trace id shared by every span in one logical run tree.

@@ -15,9 +15,9 @@
 /* ── Dark (Starlight default) ── */
 :root,
 :root[data-theme="dark"] {
-  --sl-color-accent-low: color-mix(in srgb, var(--mth-accent) 20%, var(--mth-ink-900));
-  --sl-color-accent: var(--mth-accent);
-  --sl-color-accent-high: var(--mth-accent-bright);
+  --sl-color-accent-low: color-mix(in srgb, var(--mth-ember-500) 20%, var(--mth-ink-900));
+  --sl-color-accent: var(--mth-ember-500);
+  --sl-color-accent-high: var(--mth-ember-400);
   --sl-color-white: var(--text-strong);
   --sl-color-gray-1: var(--text);
   --sl-color-gray-2: var(--mth-ink-100);
@@ -72,13 +72,13 @@
   --cm-string: var(--mth-mint);
   --cm-number: var(--mth-amber);
   --cm-comment: var(--text-faint);
-  --cm-func: var(--mth-accent-bright);
-  --cm-type: var(--mth-silver-300);
-  --cm-prop: var(--mth-accent);
+  --cm-func: var(--mth-ember-400);
+  --cm-type: var(--mth-ink-100);
+  --cm-prop: var(--mth-ember-500);
   --cm-variable: var(--text);
   --cm-punct: var(--text-muted);
-  --cm-cursor: var(--mth-accent-bright);
-  --cm-selection: color-mix(in srgb, var(--mth-accent) 26%, transparent);
+  --cm-cursor: var(--mth-ember-400);
+  --cm-selection: color-mix(in srgb, var(--mth-ember-500) 26%, transparent);
   --cm-active-line: color-mix(in srgb, var(--mth-ink-100) 5%, transparent);
   --cm-gutter: var(--text-faint);
 }
@@ -114,7 +114,7 @@ body {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--mth-accent) 32%, transparent);
+  background: color-mix(in srgb, var(--mth-ember-500) 32%, transparent);
   color: var(--text-strong);
 }
 

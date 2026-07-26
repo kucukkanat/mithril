@@ -1,7 +1,8 @@
 {
   "extends": "astro/tsconfigs/strict",
+  "//": "Tests are validated by running them (bun test), as in every package tsconfig — type-checking them here would need bun-types.",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"],
+  "exclude": ["dist", "**/*.test.ts"],
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "react",

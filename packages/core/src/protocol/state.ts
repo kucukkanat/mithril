@@ -144,11 +144,16 @@ function addToolCall(messages: readonly Message[], rec: ToolCallRecord): readonl
   return [...messages, { role: "assistant", content: "", toolCalls: [rec] }];
 }
 
+// Bind the result to the MOST RECENT call bearing this id, not every one of them. Several providers mint
+// call ids from a counter that restarts each request (`call_0`, `call_1`, …), so ids are unique within a
+// step but repeat across steps; matching globally would let step 2's result overwrite step 1's record.
 function setToolOutput(messages: readonly Message[], callId: string, output: JsonValue): readonly Message[] {
-  return messages.map((m) => ({
-    ...m,
-    toolCalls: m.toolCalls.map((tc) => (tc.callId === callId ? { ...tc, output } : tc)),
-  }));
+  const mi = messages.findLastIndex((m) => m.toolCalls.some((tc) => tc.callId === callId));
+  if (mi === -1) return messages;
+  const target = messages[mi];
+  if (target === undefined) return messages;
+  const ci = target.toolCalls.findLastIndex((tc) => tc.callId === callId);
+  return messages.map((m, i) => (i === mi ? { ...m, toolCalls: m.toolCalls.map((tc, j) => (j === ci ? { ...tc, output } : tc)) } : m));
 }
 
 function withoutPending(run: RunState, status: RunStatus): RunState {

@@ -5,7 +5,7 @@ prev: false
 title: "DownloadReport"
 ---
 
-Defined in: [runner-web/src/protocol.ts:29](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/runner-web/src/protocol.ts#L29)
+Defined in: [runner-web/src/protocol.ts:29](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/protocol.ts#L29)
 
 A model-download progress report, mirrored from `@mithril/providers/transformers`'s
 `ProgressReport` (structured-clone safe). Reported for local (in-browser) runs while
@@ -19,7 +19,7 @@ weights download or load; `progress` is an overall `0..1` fraction across files.
 readonly optional file?: string;
 ```
 
-Defined in: [runner-web/src/protocol.ts:31](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/runner-web/src/protocol.ts#L31)
+Defined in: [runner-web/src/protocol.ts:31](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/protocol.ts#L31)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [runner-web/src/protocol.ts:31](https://github.com/kucukkanat/mithri
 readonly loaded: number;
 ```
 
-Defined in: [runner-web/src/protocol.ts:33](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/runner-web/src/protocol.ts#L33)
+Defined in: [runner-web/src/protocol.ts:33](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/protocol.ts#L33)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [runner-web/src/protocol.ts:33](https://github.com/kucukkanat/mithri
 readonly progress: number;
 ```
 
-Defined in: [runner-web/src/protocol.ts:32](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/runner-web/src/protocol.ts#L32)
+Defined in: [runner-web/src/protocol.ts:32](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/protocol.ts#L32)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [runner-web/src/protocol.ts:32](https://github.com/kucukkanat/mithri
 readonly status: string;
 ```
 
-Defined in: [runner-web/src/protocol.ts:30](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/runner-web/src/protocol.ts#L30)
+Defined in: [runner-web/src/protocol.ts:30](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/protocol.ts#L30)
 
 ***
 
@@ -59,4 +59,4 @@ Defined in: [runner-web/src/protocol.ts:30](https://github.com/kucukkanat/mithri
 readonly total: number;
 ```
 
-Defined in: [runner-web/src/protocol.ts:34](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/runner-web/src/protocol.ts#L34)
+Defined in: [runner-web/src/protocol.ts:34](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/protocol.ts#L34)

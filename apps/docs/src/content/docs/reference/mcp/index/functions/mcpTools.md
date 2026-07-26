@@ -9,7 +9,7 @@ title: "mcpTools"
 function mcpTools(client): Promise<readonly Tool<string, JsonValue, JsonValue, unknown>[]>;
 ```
 
-Defined in: [packages/mcp/src/index.ts:301](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L301)
+Defined in: [packages/mcp/src/index.ts:310](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/index.ts#L310)
 
 Fetch an MCP server's tools and wrap each as a Mithril Tool that calls it.
 

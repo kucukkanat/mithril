@@ -1,4 +1,4 @@
-import type { JsonValue, UsageTotals } from "./primitives.ts";
+import type { JsonValue, UsageDelta, UsageTotals } from "./primitives.ts";
 import type { ProviderRegistry } from "./provider.ts";
 import type { StandardSchemaV1 } from "./standard-schema.ts";
 import type { ResolutionOf, SuspensionRequest } from "./suspension.ts";
@@ -73,6 +73,24 @@ export interface RunContext<Deps> {
    */
   readonly tools: RunToolRegistry<Deps>;
   readonly usage: Readonly<UsageTotals>;
+  /**
+   * Charge tokens/cost spent *inside* a tool to the run that called it.
+   *
+   * @param delta - the usage to add to the run's running totals.
+   *
+   * @remarks Without this, spend that does not flow through the loop's own model call is invisible: a tool
+   * that runs a sub-agent (see {@link asTool}), calls a provider directly, or proxies an LLM over MCP would
+   * report zero. That matters beyond reporting — `maxTokens`/`maxCostMicroUsd` are checked against these
+   * totals, so unreported spend is spend no budget can stop. Emits a `usage` event so the run's event log
+   * and any consumer see it too.
+   *
+   * @example
+   * ```ts
+   * const res = await child.run(task, opts);
+   * ctx.reportUsage(res.usage); // the delegated tokens now count against the parent's budget
+   * ```
+   */
+  reportUsage(delta: UsageDelta): void;
   readonly runtime: RuntimeAdapter;
   /**
    * The run's resolved {@link Transport} (after the env-BYOK default is applied). Present so a sub-agent

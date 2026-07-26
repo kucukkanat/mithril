@@ -13,7 +13,7 @@ function open(
 opts?): Promise<string>;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:216](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/seal.ts#L216)
+Defined in: [packages/core/src/agent/seal.ts:216](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/seal.ts#L216)
 
 Verify a sealed token and recover its original body.
 

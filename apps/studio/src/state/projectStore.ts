@@ -9,16 +9,19 @@
  * re-enter the parser. On parse errors the LAST-GOOD spec is kept (panels freeze, diagnostics show
  * in the gutter) — the spec never regresses to a guess. Accepted spec changes autosave (500ms).
  *
- * On load, a spec is normalized: if its generated code is inconsistent (uses a framework symbol it
- * doesn't import — e.g. a spec persisted by an older parser that dropped an import), it is reparsed
- * once through the current parser, which restores the import and re-structures the decl. This
- * self-heals stale specs so a project can never load into un-runnable code.
+ * Every spec entering the store is normalized so the code it generates can actually run: decls are
+ * reordered so nothing is referenced before its `const` initializes (see `lib/order.ts`), and on
+ * load, if the generated code is inconsistent (uses a framework symbol it doesn't import — e.g. a
+ * spec persisted by an older parser that dropped an import), it is reparsed once through the current
+ * parser, which restores the import and re-structures the decl. A project can never load, or be
+ * edited, into un-runnable code.
  */
 import { create } from "zustand";
 import { generateProject, type ProjectSpec } from "@mithril/spec";
 import type { ParseDiagnostic, ParseResult } from "@mithril/spec/parse";
 import type { TsParseRequest, TsParseResponse } from "../ts/ts-worker.ts";
 import { loadProject, saveProject } from "../lib/db.ts";
+import { orderDecls } from "../lib/order.ts";
 
 export interface ProjectState {
   readonly projectId: string | null;
@@ -128,14 +131,16 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     savedAt: null,
 
     async open(id) {
-      set({ loading: true, projectId: id, spec: null, code: "", diagnostics: [], codeDirty: false, handEdited: false });
+      set({ loading: true, projectId: id, spec: null, code: "", diagnostics: [], codeDirty: false, handEdited: false, savedAt: null });
       const rec = await loadProject(id);
       if (rec === undefined) {
         set({ loading: false, projectId: null });
         return;
       }
       if (get().projectId !== id) return; // opened another project while loading
-      let spec = rec.spec;
+      // Reorder on load too, so a project already saved with an agent above its tools opens runnable
+      // instead of waiting for the next design edit to heal it.
+      let spec = orderDecls(rec.spec);
       let code = generateProject(spec);
       // Self-heal a stale/inconsistent spec (e.g. one an older parser saved with a dropped import)
       // by reparsing its code through the current parser before the project becomes runnable.
@@ -148,7 +153,10 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
           void saveProject(id, spec);
         }
       }
-      set({ loading: false, spec, code, diagnostics: [], opaqueCount: opaqueCountOf(spec) });
+      // Seeded from the PERSISTED timestamp, not left null. `savedAt` is what case staleness is measured
+      // against (`specChangedAt = savedAt ?? 0`), so a fresh page load used to reset it to 0 and make every
+      // stored verdict look current — "it passed" surviving edits made in a previous session.
+      set({ loading: false, spec, code, diagnostics: [], opaqueCount: opaqueCountOf(spec), savedAt: rec.updatedAt });
     },
 
     close() {
@@ -160,7 +168,11 @@ export const useProjectStore = create<ProjectState>()((set, get) => {
     updateSpec(mutate) {
       const { spec } = get();
       if (spec === null) return;
-      const next = mutate(spec);
+      // Ordering is normalized HERE, not in each mutation: the Designer appends new decls and the
+      // rail groups rows by owner, so no panel is in a position to know that the tool it just
+      // attached now has to sit above its agent. Codegen emits `decls` verbatim, so getting this
+      // wrong is a run-time TDZ crash ("Cannot access 'tool1' before initialization").
+      const next = orderDecls(mutate(spec));
       // Spec is truth: regenerate the code view (origin: spec — never re-parsed).
       set({ spec: next, code: generateProject(next), codeDirty: false, diagnostics: [], opaqueCount: opaqueCountOf(next) });
       scheduleSave();

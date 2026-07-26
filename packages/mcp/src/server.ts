@@ -18,8 +18,13 @@ export interface McpServerInfo {
 
 /** A Mithril-tools-backed MCP server. Create one with {@link mcpServer}. */
 export interface McpServer {
-  /** Dispatch one JSON-RPC request object and resolve its JSON-RPC response. */
-  handle(request: JsonValue): Promise<JsonValue>;
+  /**
+   * Dispatch one JSON-RPC request object and resolve its JSON-RPC response.
+   *
+   * @param signal - aborts the tool invocation this request triggers; `serve` passes the HTTP request's
+   * own signal, so a client that disconnects cancels the work it asked for.
+   */
+  handle(request: JsonValue, signal?: AbortSignal): Promise<JsonValue>;
   /** Fetch-style handler: read a JSON-RPC request from `request`, dispatch it, and reply with JSON. */
   serve(request: Request): Promise<Response>;
 }
@@ -64,12 +69,20 @@ export function mcpServer(
   const rt = opts?.runtime ?? defaultRuntime();
   const byName = new Map(tools.map((t) => [t.name, t]));
 
-  const ctx: RunContext<unknown> = {
+  // Built PER CALL. A single shared context handed every tool the same runId and a signal that never
+  // aborted, so a served tool could not observe the client going away and would run to completion after
+  // the caller had hung up.
+  const makeCtx = (signal: AbortSignal): RunContext<unknown> => ({
     deps: opts?.deps,
     runId: rt.randomUUID(),
     step: 0,
-    signal: new AbortController().signal,
+    signal,
     usage: ZERO_USAGE,
+    // No enclosing run to charge: a served tool's spend belongs to whoever called the MCP server, and this
+    // process has no view of that. Dropping it is honest; pretending to accrue it into ZERO_USAGE is not.
+    reportUsage() {
+      /* no run to charge in a standalone server context */
+    },
     runtime: rt,
     // The served tool set is fixed at mcpServer() construction: there is no run to scope a registration
     // to, and MCP has no way to tell a connected client that the tool list changed mid-call. So reads
@@ -100,14 +113,14 @@ export function mcpServer(
     journal(_key, fn) {
       return fn();
     },
-  };
+  });
 
-  const runTool = async (tool: AnyTool<unknown>, args: JsonValue): Promise<JsonValue> => {
+  const runTool = async (tool: AnyTool<unknown>, args: JsonValue, signal: AbortSignal): Promise<JsonValue> => {
     const validated = await tool.inputSchema["~standard"].validate(args);
     if (validated.issues !== undefined) {
       throw new Error(`invalid input: ${validated.issues.map((i) => i.message).join("; ")}`);
     }
-    const ret = tool.execute(validated.value as never, ctx);
+    const ret = tool.execute(validated.value as never, makeCtx(signal));
     if (isAsyncGen(ret)) {
       const it = ret[Symbol.asyncIterator]();
       for (;;) {
@@ -123,7 +136,7 @@ export function mcpServer(
 
   let sessionId: string | undefined; // assigned on `initialize`, echoed by `serve` as `Mcp-Session-Id`
 
-  const handle = async (request: JsonValue): Promise<JsonValue> => {
+  const handle = async (request: JsonValue, signal?: AbortSignal): Promise<JsonValue> => {
     const req = request as JsonRpcRequest;
     // A JSON-RPC notification carries no `id` and expects no reply (e.g. `notifications/initialized`);
     // acknowledge it with a null return that `serve` maps to a bodyless 202.
@@ -154,7 +167,7 @@ export function mcpServer(
         const tool = params.name !== undefined ? byName.get(params.name) : undefined;
         if (tool === undefined) return err(req.id, -32602, `unknown tool: ${params.name ?? "(none)"}`);
         try {
-          const output = await runTool(tool, params.arguments ?? {});
+          const output = await runTool(tool, params.arguments ?? {}, signal ?? new AbortController().signal);
           return ok(req.id, { content: [{ type: "text", text: typeof output === "string" ? output : JSON.stringify(output) }] });
         } catch (e) {
           return ok(req.id, { content: [{ type: "text", text: e instanceof Error ? e.message : String(e) }], isError: true });
@@ -180,7 +193,8 @@ export function mcpServer(
           headers: { "content-type": "application/json" },
         });
       }
-      const response = await handle(body);
+      // request.signal aborts when the HTTP client disconnects, so the tool stops with it.
+      const response = await handle(body, request.signal);
       // A notification (handle → null) has no JSON-RPC reply: acknowledge with a bodyless 202.
       if (response === null) return new Response(null, { status: 202, headers: sessionHeader() });
       return new Response(JSON.stringify(response), { status: 200, headers: { "content-type": "application/json", ...sessionHeader() } });

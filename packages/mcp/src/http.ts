@@ -53,9 +53,10 @@ export function httpTransport(opts: {
   let id = 0;
   let sessionId = opts.sessionId; // seeded by the caller or captured from the server's `initialize` reply
 
-  async function post(payload: JsonValue): Promise<Response> {
+  async function post(payload: JsonValue, signal?: AbortSignal): Promise<Response> {
     return doFetch(opts.url, {
       method: "POST",
+      ...(signal !== undefined ? { signal } : {}),
       headers: {
         "content-type": "application/json",
         accept: "application/json, text/event-stream",
@@ -73,8 +74,8 @@ export function httpTransport(opts: {
   }
 
   return {
-    async request(method, params): Promise<JsonValue> {
-      const res = await post({ jsonrpc: "2.0", id: ++id, method, params });
+    async request(method, params, signal): Promise<JsonValue> {
+      const res = await post({ jsonrpc: "2.0", id: ++id, method, params }, signal);
       captureSession(res);
       if (!res.ok) throw new McpError(`MCP HTTP ${res.status}: ${(await res.text().catch(() => "")).slice(0, 200)}`, { code: res.status });
       const text = await res.text();

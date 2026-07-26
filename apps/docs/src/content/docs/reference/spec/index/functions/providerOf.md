@@ -9,7 +9,7 @@ title: "providerOf"
 function providerOf(model): "openai" | "anthropic" | "google" | "groq" | "transformers" | undefined;
 ```
 
-Defined in: [packages/spec/src/codegen.ts:45](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/spec/src/codegen.ts#L45)
+Defined in: [packages/spec/src/codegen.ts:45](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/spec/src/codegen.ts#L45)
 
 The provider-import token a model needs (for import planning), or `undefined` for a verbatim `code` model.
 

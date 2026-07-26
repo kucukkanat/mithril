@@ -13,12 +13,16 @@ import type { EngineChunk } from "./core.ts";
  *
  * @remarks `start`/`end` are the literal sentinels the state machine watches for (`end: null` ⇒ the call runs
  * to end-of-stream). `extract` turns the raw payload between them into zero-or-more `{ name, input }` calls.
+ * `render` is its inverse: it writes calls back in this family's grammar so a multi-turn history can replay
+ * the assistant turn exactly as the model itself would have emitted it.
  */
 export interface ToolFormat {
   readonly name: string;
   readonly start: string;
   readonly end: string | null;
   extract(payload: string): { readonly name: string; readonly input: JsonValue }[];
+  /** Write calls back in this family's grammar — the inverse of {@link ToolFormat.extract}. */
+  render(calls: readonly { readonly name: string; readonly input: JsonValue }[]): string;
 }
 
 // Repair + parse a loose JSON fragment (code fences, trailing commas, unterminated strings/brackets);
@@ -69,12 +73,18 @@ function extractQwenXml(payload: string): { readonly name: string; readonly inpu
   return out;
 }
 
+// Hermes-style JSON body, shared by the `<tool_call>` and Gemma renderers.
+function jsonCallBody(call: { readonly name: string; readonly input: JsonValue }): string {
+  return JSON.stringify({ name: call.name, arguments: call.input });
+}
+
 /** `<tool_call>…</tool_call>` — JSON (Hermes) or, when the payload is nested-XML, Qwen3.5 function syntax. */
 export const angleToolCall: ToolFormat = {
   name: "angle-tool_call",
   start: "<tool_call>",
   end: "</tool_call>",
   extract: (payload) => (payload.includes("<function=") ? extractQwenXml(payload) : extractJsonCalls(payload)),
+  render: (calls) => calls.map((c) => `<tool_call>\n${jsonCallBody(c)}\n</tool_call>`).join("\n"),
 };
 
 /** Gemma 4 native token `<|tool_call|>` (call runs to end-of-turn). Payload parsed as tolerant JSON. */
@@ -87,6 +97,7 @@ export const gemmaToolCall: ToolFormat = {
     const last = payload.lastIndexOf("}");
     return first === -1 || last <= first ? [] : extractJsonCalls(payload.slice(first, last + 1));
   },
+  render: (calls) => calls.map((c) => `<|tool_call|>${jsonCallBody(c)}`).join("\n"),
 };
 
 // Split on top-level commas, respecting (), [], {} nesting and "…"/'…' string quotes — so commas inside a
@@ -153,12 +164,35 @@ function extractLiquidCalls(payload: string): { readonly name: string; readonly 
   return out;
 }
 
+// The inverse of parsePyValue: a JsonValue → the Python literal LFM2 was trained to emit.
+function toPyValue(v: JsonValue): string {
+  if (v === null) return "None";
+  if (v === true) return "True";
+  if (v === false) return "False";
+  if (typeof v === "number") return String(v);
+  if (typeof v === "string") return JSON.stringify(v);
+  return JSON.stringify(v);
+}
+
 /** Liquid LFM2 `<|tool_call_start|>[ name(k=v, …), … ]<|tool_call_end|>` — a Python-style list of calls. */
 export const liquidToolCall: ToolFormat = {
   name: "liquid-tool_call",
   start: "<|tool_call_start|>",
   end: "<|tool_call_end|>",
   extract: extractLiquidCalls,
+  render: (calls) => {
+    const body = calls
+      .map((c) => {
+        const input = c.input;
+        const kwargs =
+          input !== null && typeof input === "object" && !Array.isArray(input)
+            ? Object.entries(input).map(([k, v]) => `${k}=${toPyValue(v)}`)
+            : [];
+        return `${c.name}(${kwargs.join(", ")})`;
+      })
+      .join(", ");
+    return `<|tool_call_start|>[${body}]<|tool_call_end|>`;
+  },
 };
 
 /**
@@ -172,6 +206,49 @@ export function formatForModel(modelId: string): ToolFormat {
   if (/gemma/i.test(modelId)) return gemmaToolCall;
   if (/lfm|liquid/i.test(modelId)) return liquidToolCall;
   return angleToolCall;
+}
+
+/** One `{ role, content }` turn as a chat template consumes it. */
+export interface TemplateMessage {
+  readonly role: string;
+  readonly content: string;
+}
+
+/**
+ * Project a run's message history into the `{ role, content }` turns a local chat template consumes.
+ *
+ * @param system - the agent's instructions; omitted from the output when empty.
+ * @param messages - the loop's history, whose assistant turns carry structured `toolCalls`.
+ * @param format - the model family's grammar, or `undefined` when the run declares no tools.
+ * @returns template turns in which each tool-calling assistant turn re-states its calls in `format`'s grammar.
+ *
+ * @remarks A local chat template only ever sees `role` + `content`, so structured `toolCalls` would simply
+ * vanish — leaving step 2 with a `tool` result and no record of the call that produced it, which is what
+ * small models answer by inventing. Re-rendering the calls into the SAME grammar the model emits (and the
+ * parser reads) makes the replayed turn indistinguishable from the model's own output.
+ *
+ * @example
+ * ```ts
+ * toTemplateMessages("", [{ role: "assistant", content: "", toolCalls: [{ callId: "c0", name: "weather", input: { city: "NYC" } }] }], liquidToolCall);
+ * // → [{ role: "assistant", content: '<|tool_call_start|>[weather(city="NYC")]<|tool_call_end|>' }]
+ * ```
+ */
+export function toTemplateMessages(
+  system: string,
+  messages: readonly { readonly role: string; readonly content: string; readonly toolCalls: readonly { readonly name: string; readonly input: JsonValue }[] }[],
+  format: ToolFormat | undefined,
+): TemplateMessage[] {
+  const out: TemplateMessage[] = [];
+  if (system !== "") out.push({ role: "system", content: system });
+  for (const m of messages) {
+    if (m.role === "assistant" && m.toolCalls.length > 0 && format !== undefined) {
+      const rendered = format.render(m.toolCalls);
+      out.push({ role: "assistant", content: m.content === "" ? rendered : `${m.content}\n${rendered}` });
+    } else {
+      out.push({ role: m.role, content: m.content });
+    }
+  }
+  return out;
 }
 
 /**

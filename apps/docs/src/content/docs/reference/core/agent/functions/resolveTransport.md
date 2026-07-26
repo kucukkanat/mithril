@@ -9,7 +9,7 @@ title: "resolveTransport"
 function resolveTransport(explicit, modelId): Transport;
 ```
 
-Defined in: [packages/core/src/agent/registry.ts:96](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/registry.ts#L96)
+Defined in: [packages/core/src/agent/registry.ts:96](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/registry.ts#L96)
 
 Resolve the [Transport](/mithril/reference/core/protocol/type-aliases/transport/) for a run, defaulting to BYOK from the environment.
 

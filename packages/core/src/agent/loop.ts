@@ -570,6 +570,9 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
     step,
     signal,
     usage,
+    reportUsage() {
+      throw new MithrilError("NOT_IMPLEMENTED", "ctx.reportUsage() is only available inside a tool's execute().");
+    },
     runtime: rt,
     transport,
     tools: readOnlyTools("an instructions function"),
@@ -848,6 +851,9 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
       step,
       signal,
       usage,
+      reportUsage() {
+        throw new MithrilError("NOT_IMPLEMENTED", "ctx.reportUsage() is only available inside a tool's execute().");
+      },
       runtime: rt,
       transport,
       tools: readOnlyTools("a needsApproval predicate"),
@@ -877,6 +883,12 @@ async function* runCore<Deps>(opts: LoopOptions<Deps>): AsyncGenerator<MithrilEv
       step,
       signal: callSignal,
       usage,
+      // Spend inside a tool (a sub-agent, a direct provider call) is charged to THIS run: accrued into the
+      // running totals the budget check reads, and emitted so the log and consumers see it as well.
+      reportUsage(delta) {
+        usage = { ...addUsage(usage, delta), steps: usage.steps };
+        sink.push({ type: "usage", delta });
+      },
       runtime: rt,
       transport,
       tools: deferredTools(ops, callId, toolName),

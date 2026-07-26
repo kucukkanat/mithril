@@ -5,7 +5,7 @@ prev: false
 title: "McpTransport"
 ---
 
-Defined in: [packages/mcp/src/index.ts:69](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L69)
+Defined in: [packages/mcp/src/index.ts:69](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/index.ts#L69)
 
 The transport you implement to carry MCP JSON-RPC traffic to a server.
 
@@ -25,7 +25,7 @@ post-handshake notification). Passed to [mcpClient](/mithril/reference/mcp/index
 optional close(): Promise<void>;
 ```
 
-Defined in: [packages/mcp/src/index.ts:75](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L75)
+Defined in: [packages/mcp/src/index.ts:81](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/index.ts#L81)
 
 Optional teardown, invoked by [McpClient.close](/mithril/reference/mcp/index/interfaces/mcpclient/#close).
 
@@ -41,7 +41,7 @@ Optional teardown, invoked by [McpClient.close](/mithril/reference/mcp/index/int
 optional notify(method, params): Promise<void>;
 ```
 
-Defined in: [packages/mcp/src/index.ts:73](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L73)
+Defined in: [packages/mcp/src/index.ts:79](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/index.ts#L79)
 
 Send a JSON-RPC notification (no id, no reply expected), e.g. `"notifications/initialized"`.
 
@@ -61,19 +61,23 @@ Send a JSON-RPC notification (no id, no reply expected), e.g. `"notifications/in
 ### request()
 
 ```ts
-request(method, params): Promise<JsonValue>;
+request(
+   method, 
+   params, 
+signal?): Promise<JsonValue>;
 ```
 
-Defined in: [packages/mcp/src/index.ts:71](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/mcp/src/index.ts#L71)
+Defined in: [packages/mcp/src/index.ts:77](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/index.ts#L77)
 
 Send an MCP JSON-RPC request (e.g. `"tools/list"`, `"tools/call"`) and resolve its result.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `method` | `string` |
-| `params` | `JsonValue` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `method` | `string` | - |
+| `params` | `JsonValue` | - |
+| `signal?` | `AbortSignal` | aborts the in-flight request when the calling run is cancelled. Optional so existing two-parameter transports still satisfy this interface; a transport that ignores it simply cannot be cancelled, and a long `tools/call` will outlive the run that started it. |
 
 #### Returns
 

@@ -93,7 +93,23 @@ function region(r: CodeRegion): string {
   return r.code;
 }
 
-function toolDecl(t: ToolSpec): string {
+/**
+ * Emit the `const <id> = tool({ … })` declaration for one tool.
+ *
+ * @param t - the tool to emit.
+ * @param omitApproval - drop `needsApproval` from the emitted literal.
+ * @returns the declaration source, identical to what {@link generateProject} emits for this tool.
+ *
+ * @remarks Exported as the seam for building a program around ONE tool — a probe that executes the body
+ * offline, say — so such a program compiles the very same source the real run does instead of a lookalike
+ * that can drift from it. `omitApproval` exists for that case: a probe that inherited `needsApproval` would
+ * suspend waiting for a human decision that no probe UI is there to give.
+ * @example
+ * ```ts
+ * const src = toolDeclSource(spec.decls.find((d) => d.id === "weather") as ToolSpec, true);
+ * ```
+ */
+export function toolDeclSource(t: ToolSpec, omitApproval = false): string {
   const props: string[] = [
     `name: ${str(t.name)},`,
     `description: ${str(t.description)},`,
@@ -101,12 +117,14 @@ function toolDecl(t: ToolSpec): string {
   ];
   if (t.outputSchema !== undefined) props.push(`outputSchema: ${t.outputSchema.zod},`);
   if (t.examples !== undefined) props.push(`examples: ${jsonExpr(t.examples)},`);
-  if (t.needsApproval !== undefined) {
+  if (!omitApproval && t.needsApproval !== undefined) {
     props.push(`needsApproval: ${typeof t.needsApproval === "boolean" ? String(t.needsApproval) : region(t.needsApproval)},`);
   }
   props.push(`execute: ${region(t.execute)},`);
   return `const ${t.id} = tool({\n${props.map((p) => `  ${p}`).join("\n")}\n});`;
 }
+
+const toolDecl = (t: ToolSpec): string => toolDeclSource(t);
 
 /**
  * The property lines of an `agent({ … })` literal, in canonical order. When `modelExprOverride` is given it

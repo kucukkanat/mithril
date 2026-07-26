@@ -9,7 +9,7 @@ title: "selfConsistency"
 function selfConsistency(opts): Middleware;
 ```
 
-Defined in: [packages/core/src/agent/test-time.ts:41](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/agent/test-time.ts#L41)
+Defined in: [packages/core/src/agent/test-time.ts:41](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/test-time.ts#L41)
 
 Self-consistency: sample the model `n` times and return the majority answer (Wang et al.).
 

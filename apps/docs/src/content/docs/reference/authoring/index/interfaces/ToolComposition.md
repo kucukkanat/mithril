@@ -5,7 +5,7 @@ prev: false
 title: "ToolComposition"
 ---
 
-Defined in: compose.ts:31
+Defined in: [compose.ts:31](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/compose.ts#L31)
 
 The declarative body of a Tier-1 composed tool.
 
@@ -17,7 +17,7 @@ The declarative body of a Tier-1 composed tool.
 readonly kind: "composition";
 ```
 
-Defined in: compose.ts:32
+Defined in: [compose.ts:32](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/compose.ts#L32)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: compose.ts:32
 readonly optional returns?: ValueRef;
 ```
 
-Defined in: compose.ts:35
+Defined in: [compose.ts:35](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/compose.ts#L35)
 
 What the composed tool returns; defaults to the last step's output.
 
@@ -39,4 +39,4 @@ What the composed tool returns; defaults to the last step's output.
 readonly steps: readonly [CompositionStep, CompositionStep];
 ```
 
-Defined in: compose.ts:33
+Defined in: [compose.ts:33](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/compose.ts#L33)

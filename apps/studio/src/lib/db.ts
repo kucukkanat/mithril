@@ -4,6 +4,8 @@
  */
 import { indexedDbKv } from "@mithril/kv/indexeddb";
 import { migrateProject, type ProjectSpec } from "@mithril/spec";
+import { deleteCases } from "./casebook-db.ts";
+import { deleteRuns } from "./run-archive.ts";
 
 export interface ProjectRecord {
   readonly id: string;
@@ -62,6 +64,8 @@ export async function createProject(spec: ProjectSpec): Promise<string> {
 
 export async function deleteProject(id: string): Promise<void> {
   await kv.delete(key(id));
+  await deleteCases(id); // the casebook is a sibling record — never leave it orphaned
+  await deleteRuns(id); // …as is the run archive
   await kv.set(INDEX_KEY, (await readIndex()).filter((x) => x !== id));
 }
 

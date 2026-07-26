@@ -5,7 +5,7 @@ prev: false
 title: "RuntimeAdapter"
 ---
 
-Defined in: [packages/core/src/protocol/context.ts:20](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/context.ts#L20)
+Defined in: [packages/core/src/protocol/context.ts:20](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/context.ts#L20)
 
 The single ambient-capability seam: every non-deterministic or platform
 primitive an agent needs, injectable for deterministic replay.
@@ -28,7 +28,7 @@ readonly fetch: {
 };
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:21](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/context.ts#L21)
+Defined in: [packages/core/src/protocol/context.ts:21](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/context.ts#L21)
 
 #### Call Signature
 
@@ -76,7 +76,7 @@ Defined in: [packages/core/src/protocol/context.ts:21](https://github.com/kucukk
 readonly getRandomValues: <T>(array) => T;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:25](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/context.ts#L25)
+Defined in: [packages/core/src/protocol/context.ts:25](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/context.ts#L25)
 
 #### Type Parameters
 
@@ -102,7 +102,7 @@ Defined in: [packages/core/src/protocol/context.ts:25](https://github.com/kucukk
 readonly now: () => number;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:23](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/context.ts#L23)
+Defined in: [packages/core/src/protocol/context.ts:23](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/context.ts#L23)
 
 Current epoch time in milliseconds; the source of every event's `ts`.
 
@@ -118,7 +118,7 @@ Current epoch time in milliseconds; the source of every event's `ts`.
 readonly randomUUID: () => string;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:24](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/context.ts#L24)
+Defined in: [packages/core/src/protocol/context.ts:24](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/context.ts#L24)
 
 #### Returns
 
@@ -132,6 +132,6 @@ Defined in: [packages/core/src/protocol/context.ts:24](https://github.com/kucukk
 readonly optional subtle?: SubtleCrypto;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:27](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/context.ts#L27)
+Defined in: [packages/core/src/protocol/context.ts:27](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/context.ts#L27)
 
 Optional; required only by seal/open, absent in insecure browser contexts.

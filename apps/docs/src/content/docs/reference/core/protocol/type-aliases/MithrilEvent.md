@@ -175,7 +175,7 @@ type MithrilEvent =
 };
 ```
 
-Defined in: [packages/core/src/protocol/events.ts:56](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/core/src/protocol/events.ts#L56)
+Defined in: [packages/core/src/protocol/events.ts:56](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/events.ts#L56)
 
 The discriminated union of every event on the wire — the core product type.
 

@@ -5,6 +5,9 @@ import { mithrilAliases } from "../../scripts/mithril-aliases.mjs";
 
 export default defineConfig({
   plugins: [react()],
+  // Honour PORT so a launcher can assign one — two dev servers (e.g. two agent sessions) can then
+  // run side by side instead of one silently landing on Vite's default and serving nothing.
+  ...(process.env["PORT"] === undefined ? {} : { server: { port: Number(process.env["PORT"]) } }),
   resolve: {
     // The shared @mithril/* → source-.ts alias list (scripts/mithril-aliases.mjs) — the same
     // code that ships to npm is what the Studio bundles, and docs/studio can never drift.

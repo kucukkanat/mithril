@@ -41,9 +41,14 @@ export interface CodeEditorProps {
   readonly onChange: (value: string) => void;
   readonly diagnostics?: readonly ParseDiagnostic[];
   readonly readOnly?: boolean;
+  /**
+   * Focus on mount with the caret at the end of this 1-based line. Split's click-to-edit uses it so the
+   * line you clicked in the generated listing is the line you land on.
+   */
+  readonly focusLine?: number;
 }
 
-export function CodeEditor({ value, onChange, diagnostics, readOnly }: CodeEditorProps) {
+export function CodeEditor({ value, onChange, diagnostics, readOnly, focusLine }: CodeEditorProps) {
   const host = useRef<HTMLDivElement | null>(null);
   const view = useRef<EditorView | null>(null);
   const latestOnChange = useRef(onChange);
@@ -72,6 +77,12 @@ export function CodeEditor({ value, onChange, diagnostics, readOnly }: CodeEdito
       }),
     });
     view.current = v;
+    // Mount-time only: a later `focusLine` change must not steal the caret out from under typing.
+    if (focusLine !== undefined && readOnly !== true) {
+      const line = v.state.doc.line(Math.min(Math.max(focusLine, 1), v.state.doc.lines));
+      v.dispatch({ selection: { anchor: line.to }, scrollIntoView: true });
+      v.focus();
+    }
     return () => {
       v.destroy();
       view.current = null;

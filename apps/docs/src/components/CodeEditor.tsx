@@ -24,7 +24,7 @@ const theme = EditorView.theme({
   "&.cm-focused .cm-cursor": { borderLeftColor: "var(--cm-cursor)", borderLeftWidth: "2px" },
   "&.cm-focused .cm-selectionBackground, .cm-selectionBackground": { backgroundColor: "var(--cm-selection)" },
   ".cm-matchingBracket": {
-    backgroundColor: "color-mix(in srgb, var(--mth-accent) 18%, transparent)",
+    backgroundColor: "color-mix(in srgb, var(--mth-ember-500) 18%, transparent)",
     outline: "1px solid var(--border-accent)",
   },
   "&.cm-focused": { outline: "none" },

@@ -11,6 +11,12 @@
  *
  * M1 scope: tools, agents, entry. `asTool` / `defineWorkflow` statements round-trip as opaque
  * decls until the M3 recognizer lands.
+ *
+ * Imports are ABSORBED, name by name: codegen regenerates whatever its structured decls need, so
+ * those names are dropped here and only the leftovers are preserved verbatim. Splitting a mixed
+ * import is the point — `import { agent, asTool, tool }` becomes a preserved `import { asTool }`,
+ * because keeping the statement whole would redeclare `agent`/`tool` alongside the regenerated
+ * import and yield source that no longer compiles.
  */
 
 import type * as TS from "typescript";
@@ -459,8 +465,15 @@ export function parseProject(source: string, ts: typeof TS, prev?: ProjectSpec):
     } else if (item.kind === "opaque") {
       pushOpaque(item.code);
     } else {
+      // Import absorption: codegen regenerates the imports its structured decls need, so those names
+      // must NOT also be preserved verbatim. Only the leftovers are — and only the leftovers, never
+      // the whole statement: a mixed import like `{ agent, asTool, tool }` (asTool round-trips as
+      // opaque, so it is never planned) would otherwise be re-emitted next to the generated
+      // `{ agent, tool }`, redeclaring both and producing code that no longer compiles.
       const planned = plan.get(item.module) ?? [];
-      if (!item.names.every((n) => planned.includes(n))) pushOpaque(item.code);
+      const unplanned = item.names.filter((n) => !planned.includes(n));
+      if (unplanned.length === item.names.length) pushOpaque(item.code);
+      else if (unplanned.length > 0) pushOpaque(`import { ${unplanned.join(", ")} } from ${JSON.stringify(item.module)};`);
     }
   }
   const opaqueCount = finalDecls.filter((d) => d.kind === "opaque").length;

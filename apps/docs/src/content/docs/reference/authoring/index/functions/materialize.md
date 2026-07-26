@@ -9,7 +9,7 @@ title: "materialize"
 function materialize(def, extra?): AnyTool<unknown>;
 ```
 
-Defined in: materialize.ts:28
+Defined in: [materialize.ts:28](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/materialize.ts#L28)
 
 Rebuild a callable tool from its replayable definition.
 

@@ -27,7 +27,13 @@ export interface ToolProgress {
 export interface Tool<Name extends string, In, Out, Deps> {
   readonly name: Name;
   readonly description: string;
-  /** Optional version, stamped onto `tool.call` and diffed on durable resume for drift. */
+  /**
+   * Optional version, stamped onto every `tool.call` event this tool produces.
+   *
+   * @remarks Recorded for observability only — the loop does not compare it against anything, so a stored
+   * run resumed after a tool changed will NOT report drift. Consuming the stamped value to detect that is
+   * left to the caller.
+   */
   readonly version?: string;
   /**
    * Optional few-shot example inputs, surfaced into the tool's wire description. A handful of concrete

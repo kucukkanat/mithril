@@ -5,7 +5,7 @@ prev: false
 title: "QueryOptions"
 ---
 
-Defined in: [index.ts:28](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/vectors/src/index.ts#L28)
+Defined in: [index.ts:28](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/vectors/src/index.ts#L28)
 
 Options for a [VectorStore.query](/mithril/reference/vectors/index/interfaces/vectorstore/#query).
 
@@ -17,7 +17,7 @@ Options for a [VectorStore.query](/mithril/reference/vectors/index/interfaces/ve
 readonly optional filter?: Readonly<Record<string, unknown>>;
 ```
 
-Defined in: [index.ts:32](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/vectors/src/index.ts#L32)
+Defined in: [index.ts:32](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/vectors/src/index.ts#L32)
 
 Keep only records whose metadata matches every `key: value` pair (shallow equality).
 
@@ -29,6 +29,6 @@ Keep only records whose metadata matches every `key: value` pair (shallow equali
 readonly optional topK?: number;
 ```
 
-Defined in: [index.ts:30](https://github.com/kucukkanat/mithril/blob/1e1588b814f302666212314c3d2253f86a5155e3/packages/vectors/src/index.ts#L30)
+Defined in: [index.ts:30](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/vectors/src/index.ts#L30)
 
 Maximum matches to return (default 10).

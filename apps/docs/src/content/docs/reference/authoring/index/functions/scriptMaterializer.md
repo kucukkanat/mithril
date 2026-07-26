@@ -9,7 +9,7 @@ title: "scriptMaterializer"
 function scriptMaterializer(opts): (def) => AnyTool<unknown>;
 ```
 
-Defined in: script.ts:84
+Defined in: [script.ts:84](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/script.ts#L84)
 
 Build the `body.kind: "script"` materializer.
 
