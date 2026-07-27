@@ -39,16 +39,11 @@ describe("templates", () => {
     expect(result.diagnostics.filter((d) => d.severity === "error")).toEqual([]);
     expect(result.spec).toBeDefined();
     expect(result.spec?.entry.target).toBe(template.spec.entry.target);
-    // `asTool` is outside the parser's M1 scope (see parse.ts) so a multi-agent template keeps its
-    // asTool statement — plus its now-split import — as verbatim opaque decls. Every other template
-    // must be fully structured: an opaque decl there would mean the Designer shows a verbatim block
-    // where a panel belongs.
-    const usesAsTool = template.spec.decls.some((d) => d.kind === "subAgentTool");
-    if (usesAsTool) expect(result.opaqueCount).toBe(2);
-    else {
-      expect(result.opaqueCount).toBe(0);
-      expect(result.spec?.decls.map((d) => d.id)).toEqual(template.spec.decls.map((d) => d.id));
-    }
+    // EVERY template must be fully structured, multi-agent ones included: an opaque decl here would
+    // mean the Designer shows a verbatim block where a panel belongs. This held for `asTool` only
+    // once the parser learned to recognize it (see parse.ts).
+    expect(result.opaqueCount).toBe(0);
+    expect(result.spec?.decls.map((d) => d.id)).toEqual(template.spec.decls.map((d) => d.id));
   });
 
   test.each(TEMPLATES.map((t) => [t.id, t] as const))("%s regenerates to compilable, settled code", (_id, template) => {

@@ -84,6 +84,41 @@ const CORPUS: readonly (readonly [string, ProjectSpec])[] = [
     },
   ],
   [
+    "deepseek model (first-class handle)",
+    {
+      specVersion: SPEC_VERSION,
+      name: "deepseek-chat",
+      decls: [
+        {
+          kind: "agent",
+          id: "reasoner",
+          model: { kind: "live", provider: "deepseek", model: "deepseek-reasoner" },
+          instructions: "Think it through.",
+          tools: [],
+        },
+      ],
+      entry: { target: "reasoner", input: "Why is the sky blue?" },
+    },
+  ],
+  [
+    // The vendor-qualified id survives the round trip: the slash belongs to the model name, not the prefix.
+    "openrouter model whose id contains a slash",
+    {
+      specVersion: SPEC_VERSION,
+      name: "openrouter-chat",
+      decls: [
+        {
+          kind: "agent",
+          id: "router",
+          model: { kind: "live", provider: "openrouter", model: "anthropic/claude-sonnet-4.5" },
+          instructions: "Be brief.",
+          tools: [],
+        },
+      ],
+      entry: { target: "router", input: "hi" },
+    },
+  ],
+  [
     "groq model (shared provider const) + messages input",
     {
       specVersion: SPEC_VERSION,
@@ -190,6 +225,40 @@ const CORPUS: readonly (readonly [string, ProjectSpec])[] = [
       meta: { layout: { assistant: { x: 100, y: 40 }, weather: { x: 320, y: 40 } } },
     },
   ],
+  [
+    "sub-agents: a specialist wrapped with asTool, and one carrying an input schema",
+    {
+      specVersion: SPEC_VERSION,
+      name: "handoff",
+      decls: [
+        WEATHER_TOOL,
+        {
+          kind: "agent",
+          id: "specialist",
+          model: { kind: "local", model: "m" },
+          instructions: "You answer weather questions.",
+          tools: ["weather"],
+        },
+        { kind: "subAgentTool", id: "ask_weather", agentId: "specialist", name: "ask_weather", description: "Delegate weather questions." },
+        {
+          kind: "subAgentTool",
+          id: "ask_typed",
+          agentId: "specialist",
+          name: "ask_typed",
+          description: "Same specialist, with a declared input.",
+          input: { zod: `z.object({ city: z.string() })` },
+        },
+        {
+          kind: "agent",
+          id: "router",
+          model: { kind: "local", model: "m" },
+          instructions: "Route to the right specialist.",
+          tools: ["ask_weather", "ask_typed"],
+        },
+      ],
+      entry: { target: "router", input: "Weather in Oslo?" },
+    },
+  ],
 ];
 
 describe("spec round-trip", () => {
@@ -230,9 +299,54 @@ describe("degradation & diagnostics", () => {
   });
 
   test("a mixed import is split so regeneration never redeclares an absorbed name", () => {
-    // `asTool` round-trips as opaque (M1), so it is never in codegen's import plan while `agent` and
-    // `tool` are. Preserving the statement whole would emit it beside the regenerated import and
-    // redeclare both — source that no longer compiles.
+    // An agent's `healing` regions are stored verbatim, so `healing` is never in codegen's import
+    // plan while `agent` and `tool` are. Preserving the statement whole would emit it beside the
+    // regenerated import and redeclare both — source that no longer compiles.
+    const code = `import { agent, healing, tool } from "mithril";
+import { transformers } from "mithril/transformers";
+import { z } from "zod";
+
+const t = tool({
+  name: "t",
+  description: "d",
+  inputSchema: z.object({ a: z.string() }),
+  execute: async ({ a }) => ({ a }),
+});
+
+const parent = agent({
+  model: transformers("m"),
+  instructions: "parent",
+  tools: [t],
+  healing: [healing.retryBudget()],
+});
+
+await run(parent, "hi");
+`;
+    const result = parseProject(code, ts);
+    expect(result.spec).toBeDefined();
+    const regenerated = generateProject(result.spec as ProjectSpec);
+
+    // The preserved import carries ONLY the unplanned name.
+    expect(regenerated).toContain(`import { healing } from "mithril";`);
+    expect(regenerated).not.toContain(`import { agent, healing, tool } from "mithril";`);
+
+    // No binding is declared twice — the property that makes the regenerated file compile.
+    const sf = ts.createSourceFile("p.ts", regenerated, ts.ScriptTarget.ES2022, true);
+    const seen = new Map<string, number>();
+    for (const stmt of sf.statements) {
+      if (!ts.isImportDeclaration(stmt)) continue;
+      const bindings = stmt.importClause?.namedBindings;
+      if (bindings === undefined || !ts.isNamedImports(bindings)) continue;
+      for (const el of bindings.elements) seen.set(el.name.text, (seen.get(el.name.text) ?? 0) + 1);
+    }
+    expect([...seen].filter(([, n]) => n > 1)).toEqual([]);
+
+    // And it has settled: a second round-trip is a fixed point.
+    const second = generateProject(parseProject(regenerated, ts, result.spec).spec as ProjectSpec);
+    expect(second).toBe(regenerated);
+  });
+
+  test("asTool is recognized as a structured sub-agent, not preserved as opaque", () => {
     const code = `import { agent, asTool, tool } from "mithril";
 import { transformers } from "mithril/transformers";
 import { z } from "zod";
@@ -265,26 +379,38 @@ await run(parent, "hi");
 `;
     const result = parseProject(code, ts);
     expect(result.spec).toBeDefined();
+    expect(result.opaqueCount).toBe(0); // nothing degrades any more — the whole file is structured
+    const sub = (result.spec as ProjectSpec).decls.find((d) => d.kind === "subAgentTool");
+    expect(sub).toEqual({ kind: "subAgentTool", id: "asked", agentId: "child", name: "asked", description: "ask the child" });
+
+    // Now that asTool IS planned, the whole mixed import is absorbed and regenerated as one.
     const regenerated = generateProject(result.spec as ProjectSpec);
+    expect(regenerated).toContain(`import { agent, asTool, tool } from "mithril";`);
+    expect(generateProject(parseProject(regenerated, ts, result.spec).spec as ProjectSpec)).toBe(regenerated);
+  });
 
-    // The preserved import carries ONLY the unplanned name.
-    expect(regenerated).toContain(`import { asTool } from "mithril";`);
-    expect(regenerated).not.toContain(`import { agent, asTool, tool } from "mithril";`);
+  test("an asTool with an unrecognized property degrades the WHOLE statement to opaque", () => {
+    const code = `import { agent, asTool } from "mithril";
+import { transformers } from "mithril/transformers";
 
-    // No binding is declared twice — the property that makes the regenerated file compile.
-    const sf = ts.createSourceFile("p.ts", regenerated, ts.ScriptTarget.ES2022, true);
-    const seen = new Map<string, number>();
-    for (const stmt of sf.statements) {
-      if (!ts.isImportDeclaration(stmt)) continue;
-      const bindings = stmt.importClause?.namedBindings;
-      if (bindings === undefined || !ts.isNamedImports(bindings)) continue;
-      for (const el of bindings.elements) seen.set(el.name.text, (seen.get(el.name.text) ?? 0) + 1);
-    }
-    expect([...seen].filter(([, n]) => n > 1)).toEqual([]);
+const child = agent({
+  model: transformers("m"),
+  instructions: "child",
+});
 
-    // And it has settled: a second round-trip is a fixed point.
-    const second = generateProject(parseProject(regenerated, ts, result.spec).spec as ProjectSpec);
-    expect(second).toBe(regenerated);
+const asked = asTool(child, {
+  name: "asked",
+  description: "d",
+  totallyUnknownOption: 1,
+});
+
+await run(child, "hi");
+`;
+    const result = parseProject(code, ts);
+    expect(result.spec).toBeDefined();
+    const decls = (result.spec as ProjectSpec).decls;
+    expect(decls.some((d) => d.kind === "subAgentTool")).toBe(false);
+    expect(decls.some((d) => d.kind === "opaque" && d.code.includes("totallyUnknownOption: 1"))).toBe(true);
   });
 
   test("an unrecognized agent property degrades the WHOLE statement to opaque (nothing dropped)", () => {

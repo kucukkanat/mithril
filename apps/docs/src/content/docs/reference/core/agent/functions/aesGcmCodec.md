@@ -9,7 +9,7 @@ title: "aesGcmCodec"
 function aesGcmCodec(key): SealCodec;
 ```
 
-Defined in: [packages/core/src/agent/seal.ts:98](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/seal.ts#L98)
+Defined in: [packages/core/src/agent/seal.ts:98](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/seal.ts#L98)
 
 Build an AES-GCM [SealCodec](/mithril/reference/core/agent/interfaces/sealcodec/) (`id: "aesgcm"`) for at-rest confidentiality of sealed payloads.
 

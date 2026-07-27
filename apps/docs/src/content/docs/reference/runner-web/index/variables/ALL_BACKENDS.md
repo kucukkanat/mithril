@@ -9,6 +9,6 @@ title: "ALL_BACKENDS"
 const ALL_BACKENDS: readonly Backend[];
 ```
 
-Defined in: [runner-web/src/catalog.ts:18](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L18)
+Defined in: [runner-web/src/catalog.ts:18](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L18)
 
 Every backend — the portable default a model runs on when it declares no [LocalModel.backends](/mithril/reference/runner-web/index/interfaces/localmodel/#backends) restriction.

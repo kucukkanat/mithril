@@ -9,7 +9,7 @@ title: "digestOf"
 function digestOf(def): string;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:174](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L174)
+Defined in: [packages/core/src/protocol/tool-registry.ts:174](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L174)
 
 Content digest of a tool definition — its identity, used to make re-registration idempotent.
 

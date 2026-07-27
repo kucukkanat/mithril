@@ -4,6 +4,7 @@ import {
   DRAFT_DEFAULT_MODEL,
   DRAFT_LOCAL_MODEL,
   draftDestination,
+  draftModelLabel,
   draftProgram,
   draftToSpec,
   inputsToZod,
@@ -111,6 +112,33 @@ describe("draftDestination", () => {
 
   test("a verbatim expression makes no claim about where it goes", () => {
     expect(draftDestination({ kind: "code", expr: { code: "myModel" } })).toBe("the model expression you supplied");
+  });
+});
+
+describe("draftModelLabel", () => {
+  test("names the catalog model, not its repo id", () => {
+    expect(draftModelLabel({ kind: "local", model: "LiquidAI/LFM2.5-1.2B-Instruct-ONNX" })).toBe("LFM2.5 1.2B · on-device");
+  });
+
+  test("falls back to the raw repo id for a model outside the catalog", () => {
+    expect(draftModelLabel({ kind: "local", model: "someone/their-model-ONNX" })).toBe("someone/their-model-ONNX · on-device");
+  });
+
+  test("a cloud model reads as the model plus who runs it", () => {
+    expect(draftModelLabel(CLOUD)).toBe("claude-sonnet-4-5 · Anthropic");
+  });
+
+  test("a verbatim expression is marked custom", () => {
+    expect(draftModelLabel({ kind: "code", expr: { code: "myModel" } })).toBe("myModel · custom");
+  });
+
+  test("drafting switched off says so rather than naming a model", () => {
+    expect(draftModelLabel(null)).toBe("drafting off");
+  });
+
+  test("a half-typed custom repo reads as blank instead of an empty chip", () => {
+    expect(draftModelLabel({ kind: "local", model: "" })).toBe("no model · on-device");
+    expect(draftModelLabel({ kind: "live", provider: "openai", model: "  " })).toBe("no model · OpenAI");
   });
 });
 

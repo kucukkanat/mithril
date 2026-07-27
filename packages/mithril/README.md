@@ -37,6 +37,8 @@ plugins, sealed run tokens — all from `mithril`. Reach for the individual `@mi
 
 ## Entrypoints
 
-`mithril` (core) · `mithril/openai` · `mithril/anthropic` — `openai("gpt-4o")` / `anthropic("claude-…")`
-return self-wiring model handles. `mithril/transformers` — `transformers("…")` for on-device inference.
+`mithril` (core) · `mithril/openai` · `mithril/anthropic` · `mithril/deepseek` · `mithril/openrouter` —
+`openai("gpt-4o")` / `anthropic("claude-…")` / `deepseek("deepseek-chat")` /
+`openrouter("anthropic/claude-sonnet-4.5")` return self-wiring model handles.
+`mithril/transformers` — `transformers("…")` for on-device inference.
 `mithril/devtools/attach` — a side-effect import that zero-touch attaches the devtools inspector.

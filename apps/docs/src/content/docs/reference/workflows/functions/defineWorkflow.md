@@ -9,7 +9,7 @@ title: "defineWorkflow"
 function defineWorkflow<S>(steps, opts): Workflow<S>;
 ```
 
-Defined in: [packages/workflows/src/index.ts:59](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/workflows/src/index.ts#L59)
+Defined in: [packages/workflows/src/index.ts:59](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/workflows/src/index.ts#L59)
 
 Define a workflow: a map of named steps plus a `start` step. Each step returns [goto](/mithril/reference/workflows/functions/goto/) to
 continue or [done](/mithril/reference/workflows/functions/done/) to finish. Routing is deterministic and network-free — the ideal place

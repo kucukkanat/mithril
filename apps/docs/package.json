@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Mithril documentation website — dark, metallic, and interactive. Not published.",
+  "description": "Mithril documentation website \u2014 dark, metallic, and interactive. Not published.",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -21,6 +21,8 @@
     "@huggingface/transformers": ">=4.2",
     "@lezer/highlight": "^1.2.3",
     "@mithril-internal/design-tokens": "workspace:*",
+    "@mithril-internal/model-picker": "workspace:*",
+    "@mithril-internal/thinking-orbs": "workspace:*",
     "astro": "^7.1.3",
     "codemirror": "^6.0.2",
     "react": "^19.2.7",

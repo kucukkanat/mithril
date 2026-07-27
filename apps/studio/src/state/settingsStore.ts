@@ -1,16 +1,22 @@
 /*
- * BYOK keys + preferences. Keys live ONLY in localStorage on this device (persisted just while
- * `remember` is on) and are injected per-run into the worker's process.env — never serialized into
- * a project spec, share URL, or export.
+ * BYOK connection settings + preferences. A provider's key AND its optional base URL live ONLY in
+ * localStorage on this device (persisted just while `remember` is on) and are injected per-run into
+ * the worker's process.env — never serialized into a project spec, share URL, or export.
+ *
+ * The base URL sits beside the key on purpose: which endpoint you call is connection config, like the
+ * credential, not a design decision belonging to the agent. That keeps an exported project portable —
+ * it names a model, and the environment decides where that model is served from.
  */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { LIVE_PROVIDERS, liveProvider, type LiveProviderId } from "@mithril/runner-web";
+import { connectionEnv, type ProviderConnection, type ProviderConnections } from "@mithril-internal/model-picker";
 import type { ModelSpec, ProjectSpec } from "@mithril/spec";
 import { DRAFT_DEFAULT_MODEL } from "../lib/drafting.ts";
 
 interface SettingsState {
-  readonly keys: Partial<Record<LiveProviderId, string>>;
+  /** Per-provider key + optional endpoint override. */
+  readonly connections: ProviderConnections;
   readonly remember: boolean;
   readonly theme: "dark" | "light";
   /**
@@ -21,12 +27,24 @@ interface SettingsState {
   /** Show the exact request before sending it. On by default — the gate is the feature. */
   readonly previewFirst: boolean;
   setKey(id: LiveProviderId, key: string): void;
+  /** Merge a partial connection update (key and/or base URL) for one provider. */
+  setConnection(id: LiveProviderId, patch: ProviderConnection): void;
   clearKeys(): void;
   setRemember(remember: boolean): void;
   setTheme(theme: "dark" | "light"): void;
   setDraftModel(model: ModelSpec | null): void;
   setPreviewFirst(previewFirst: boolean): void;
 }
+
+/** The pre-v3 shape: a flat `{ [provider]: key }` map with nowhere to put an endpoint. Exported for tests. */
+export const keysToConnections = (keys: unknown): ProviderConnections =>
+  typeof keys !== "object" || keys === null
+    ? {}
+    : (Object.fromEntries(Object.entries(keys as Record<string, unknown>).filter(([, v]) => typeof v === "string").map(([id, apiKey]) => [id, { apiKey }])) as ProviderConnections);
+
+/** Drop credentials but keep endpoints — what gets persisted when `remember` is off. Exported for tests. */
+export const stripKeys = (connections: ProviderConnections): ProviderConnections =>
+  Object.fromEntries(Object.entries(connections).map(([id, c]) => [id, { ...c, apiKey: "" }])) as ProviderConnections;
 
 /** The pre-v2 shape, when drafting was a three-way mode rather than a model. */
 const migrateDraftMode = (mode: unknown): ModelSpec | null =>
@@ -35,13 +53,19 @@ const migrateDraftMode = (mode: unknown): ModelSpec | null =>
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
-      keys: {},
+      connections: {},
       remember: true,
       theme: "dark",
       draftModel: DRAFT_DEFAULT_MODEL,
       previewFirst: true,
-      setKey: (id, key) => set((s) => ({ keys: { ...s.keys, [id]: key } })),
-      clearKeys: () => set({ keys: {} }),
+      setKey: (id, apiKey) => set((s) => ({ connections: { ...s.connections, [id]: { ...s.connections[id], apiKey } } })),
+      setConnection: (id, patch) => set((s) => ({ connections: { ...s.connections, [id]: { ...s.connections[id], ...patch } } })),
+      // Clears credentials only — a base URL is not a secret, and losing a configured gateway on
+      // "clear keys" would be a surprise.
+      clearKeys: () =>
+        set((s) => ({
+          connections: Object.fromEntries(Object.entries(s.connections).map(([id, c]) => [id, { ...c, apiKey: "" }])) as ProviderConnections,
+        })),
       setRemember: (remember) => set({ remember }),
       setTheme: (theme) => {
         document.documentElement.dataset["theme"] = theme;
@@ -52,15 +76,17 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: "mithril-studio-settings",
-      version: 2,
+      version: 3,
       migrate: (state, version) => {
-        if (version >= 2) return state as SettingsState;
         const s = (state ?? {}) as Record<string, unknown>;
-        return { ...s, draftModel: migrateDraftMode(s["draftMode"]) } as SettingsState;
+        const draft = version >= 2 ? s["draftModel"] : migrateDraftMode(s["draftMode"]);
+        // v3 folded the flat `keys` map into `connections`, so a base URL can travel with its key.
+        const connections = version >= 3 ? (s["connections"] ?? {}) : keysToConnections(s["keys"]);
+        return { ...s, draftModel: draft, connections } as SettingsState;
       },
-      // Keys are only written to storage while `remember` is on; prefs always persist.
+      // Keys are only written to storage while `remember` is on; base URLs and prefs always persist.
       partialize: (s) => ({
-        keys: s.remember ? s.keys : {},
+        connections: s.remember ? s.connections : stripKeys(s.connections),
         remember: s.remember,
         theme: s.theme,
         draftModel: s.draftModel,
@@ -88,14 +114,15 @@ export function usesLocalModel(spec: ProjectSpec): boolean {
 }
 
 /**
- * The env map a run should receive: one `<PROVIDER>_API_KEY` per live provider the spec uses,
- * for those with a stored key. Returns the map plus any providers still missing a key.
+ * The env map a run should receive: `<PROVIDER>_API_KEY` (and `<PROVIDER>_BASE_URL`, when an endpoint
+ * override is configured) per live provider the spec uses. Returns the map plus any providers still
+ * missing a key.
  */
 export function envForSpec(
   spec: ProjectSpec,
-  keys: Partial<Record<LiveProviderId, string>>,
+  connections: ProviderConnections,
 ): { readonly env: Record<string, string>; readonly missing: readonly LiveProviderId[] } {
-  return envForProviders(liveProvidersIn(spec), keys);
+  return envForProviders(liveProvidersIn(spec), connections);
 }
 
 /**
@@ -104,21 +131,21 @@ export function envForSpec(
  */
 export function envForModel(
   model: ModelSpec | null,
-  keys: Partial<Record<LiveProviderId, string>>,
+  connections: ProviderConnections,
 ): { readonly env: Record<string, string>; readonly missing: readonly LiveProviderId[] } {
-  return envForProviders(model !== null && model.kind === "live" ? [model.provider] : [], keys);
+  return envForProviders(model !== null && model.kind === "live" ? [model.provider] : [], connections);
 }
 
 function envForProviders(
   ids: readonly LiveProviderId[],
-  keys: Partial<Record<LiveProviderId, string>>,
+  connections: ProviderConnections,
 ): { readonly env: Record<string, string>; readonly missing: readonly LiveProviderId[] } {
   const env: Record<string, string> = {};
   const missing: LiveProviderId[] = [];
   for (const id of ids) {
-    const key = keys[id]?.trim();
-    if (key !== undefined && key.length > 0) env[liveProvider(id).envVar] = key;
-    else missing.push(id);
+    const vars = connectionEnv(id, connections[id]);
+    Object.assign(env, vars);
+    if (vars[liveProvider(id).envVar] === undefined) missing.push(id);
   }
   return { env, missing };
 }

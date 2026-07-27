@@ -5,7 +5,7 @@ prev: false
 title: "TemplateMessage"
 ---
 
-Defined in: [transformers/tool-formats.ts:212](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/tool-formats.ts#L212)
+Defined in: [transformers/tool-formats.ts:212](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/tool-formats.ts#L212)
 
 One `{ role, content }` turn as a chat template consumes it.
 
@@ -17,7 +17,7 @@ One `{ role, content }` turn as a chat template consumes it.
 readonly content: string;
 ```
 
-Defined in: [transformers/tool-formats.ts:214](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/tool-formats.ts#L214)
+Defined in: [transformers/tool-formats.ts:214](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/tool-formats.ts#L214)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [transformers/tool-formats.ts:214](https://github.com/kucukkanat/mit
 readonly role: string;
 ```
 
-Defined in: [transformers/tool-formats.ts:213](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/tool-formats.ts#L213)
+Defined in: [transformers/tool-formats.ts:213](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/tool-formats.ts#L213)

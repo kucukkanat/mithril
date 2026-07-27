@@ -1,5 +1,8 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { ThinkingOrb } from "@mithril-internal/thinking-orbs";
 import type { ToolSpec } from "@mithril/spec";
+import { anchorStyle, type AnchorStyle } from "../lib/anchor.ts";
+import { TOKEN_CLASS } from "../lib/highlight.ts";
 import { pickScore, SCORING_RULES, TONE_AT, type Finding } from "../lib/pick-score.ts";
 import { exampleError, exampleTemplate, paramsOf, parseExample, readNames, toZod, tokenize, type Param, type ParamType } from "../lib/tool-fields.ts";
 import { CloseIcon } from "./icons.tsx";
@@ -44,28 +47,19 @@ export function ToolPanel({ tool, onChange, owner, onFix, drafting }: ToolPanelP
   /** Clicked open, so it survives the pointer leaving — the rubric is longer than a hover reads for. */
   const [pinned, setPinned] = useState(false);
   const helpRef = useRef<HTMLButtonElement>(null);
-  const [tipStyle, setTipStyle] = useState<CSSProperties | undefined>(undefined);
+  const [tipStyle, setTipStyle] = useState<AnchorStyle | undefined>(undefined);
 
   /*
-   * The rubric is positioned FIXED against the "?" rather than absolutely inside it: the lint card
-   * lives in the Designer's own scroll pane, and an absolutely positioned popover taller than the
-   * remaining pane height gets clipped by that ancestor's overflow. Fixed escapes the clip; the
-   * trade is that the anchor has to be measured, and re-measured whenever the page moves under it.
+   * The rubric is positioned FIXED against the "?" rather than absolutely inside it — see
+   * lib/anchor.ts for why. It opens downward only while there is room for a useful share of the
+   * rubric, which is most of a screen; below that it flips above the "?".
    */
   useLayoutEffect(() => {
     if (!tipOpen) return;
     const place = (): void => {
       const r = helpRef.current?.getBoundingClientRect();
       if (r === undefined) return;
-      const width = Math.min(480, window.innerWidth - 32);
-      const left = Math.max(16, Math.min(r.left + r.width / 2 - width / 2, window.innerWidth - width - 16));
-      // Open downward only when there is room for a useful share of the rubric; otherwise flip above.
-      const room = window.innerHeight - r.bottom - 24;
-      setTipStyle(
-        room > 320
-          ? { position: "fixed", top: r.bottom + 8, left, width, maxHeight: room }
-          : { position: "fixed", bottom: window.innerHeight - r.top + 8, left, width, maxHeight: r.top - 24 },
-      );
+      setTipStyle(anchorStyle(r, { width: window.innerWidth, height: window.innerHeight }, { prefer: "below", width: 480, minRoom: 320 }));
     };
     place();
     // `true` captures scrolls of the Designer's inner panes, which don't bubble to window.
@@ -200,7 +194,8 @@ export function ToolPanel({ tool, onChange, owner, onFix, drafting }: ToolPanelP
                     about the description. A name is the user's to choose; inputs are edited in Fields. */}
                 {DESCRIPTION_FINDINGS.has(f.id) && f.level !== "pass" && f.fixable && onFix !== null && (
                   <button className="ghost" onClick={onFix} disabled={drafting} data-testid={`tool-fix-${f.id}`}>
-                    {drafting ? "…" : "fix"}
+                    {/* `composing` — the drafting model is writing prose. */}
+                    {drafting ? <ThinkingOrb state="composing" size={20} aria-label="Drafting…" /> : "fix"}
                   </button>
                 )}
               </div>
@@ -452,7 +447,7 @@ export function ToolPanel({ tool, onChange, owner, onFix, drafting }: ToolPanelP
                   <code>
                     {tokenize(line, names).map((t, j) =>
                       t.name === null ? (
-                        <span key={j}>{t.text}</span>
+                        <span key={j} className={TOKEN_CLASS[t.kind]}>{t.text}</span>
                       ) : (
                         <span
                           key={j}

@@ -5,7 +5,7 @@ prev: false
 title: "ToolFormat"
 ---
 
-Defined in: [transformers/tool-formats.ts:19](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/tool-formats.ts#L19)
+Defined in: [transformers/tool-formats.ts:19](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/tool-formats.ts#L19)
 
 How one model family delimits + encodes tool calls in generated text.
 
@@ -24,7 +24,7 @@ the assistant turn exactly as the model itself would have emitted it.
 readonly end: string | null;
 ```
 
-Defined in: [transformers/tool-formats.ts:22](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/tool-formats.ts#L22)
+Defined in: [transformers/tool-formats.ts:22](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/tool-formats.ts#L22)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [transformers/tool-formats.ts:22](https://github.com/kucukkanat/mith
 readonly name: string;
 ```
 
-Defined in: [transformers/tool-formats.ts:20](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/tool-formats.ts#L20)
+Defined in: [transformers/tool-formats.ts:20](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/tool-formats.ts#L20)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [transformers/tool-formats.ts:20](https://github.com/kucukkanat/mith
 readonly start: string;
 ```
 
-Defined in: [transformers/tool-formats.ts:21](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/tool-formats.ts#L21)
+Defined in: [transformers/tool-formats.ts:21](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/tool-formats.ts#L21)
 
 ## Methods
 
@@ -57,7 +57,7 @@ extract(payload): {
 }[];
 ```
 
-Defined in: [transformers/tool-formats.ts:23](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/tool-formats.ts#L23)
+Defined in: [transformers/tool-formats.ts:23](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/tool-formats.ts#L23)
 
 #### Parameters
 
@@ -80,7 +80,7 @@ Defined in: [transformers/tool-formats.ts:23](https://github.com/kucukkanat/mith
 render(calls): string;
 ```
 
-Defined in: [transformers/tool-formats.ts:25](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/tool-formats.ts#L25)
+Defined in: [transformers/tool-formats.ts:25](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/tool-formats.ts#L25)
 
 Write calls back in this family's grammar — the inverse of [ToolFormat.extract](/mithril/reference/providers/transformers/interfaces/toolformat/#extract).
 

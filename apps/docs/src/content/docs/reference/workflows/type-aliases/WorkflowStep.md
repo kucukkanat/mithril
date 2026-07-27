@@ -11,7 +11,7 @@ type WorkflowStep<S> = (state) =>
 | Promise<StepResult<S>>;
 ```
 
-Defined in: [packages/workflows/src/index.ts:19](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/workflows/src/index.ts#L19)
+Defined in: [packages/workflows/src/index.ts:19](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/workflows/src/index.ts#L19)
 
 A single workflow step: a pure-ish function of the current state that decides where to go next.
 It may be async (e.g. it awaits an agent run) and returns a [StepResult](/mithril/reference/workflows/type-aliases/stepresult/).

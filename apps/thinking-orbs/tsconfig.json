@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": [],
+
+    // Vendored third-party source (see README "Provenance"). `strict` stays on;
+    // these two structural flags are off ONLY here. The engine is hand-tuned
+    // numeric code that indexes fixed-length arrays and reads its tuning off an
+    // index-signature options bag — satisfying them means ~100 edits to code we
+    // want to re-copy wholesale on every upstream update, trading a real risk of
+    // introducing animation bugs for no type-safety we actually gain.
+    // Mithril-authored code in this package (src/ink.ts) is written to comply
+    // with both regardless.
+    "noUncheckedIndexedAccess": false,
+    "noPropertyAccessFromIndexSignature": false
+  }
+}

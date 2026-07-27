@@ -11,6 +11,7 @@ import "@fontsource/ibm-plex-mono/latin-500.css";
 import "@fontsource/ibm-plex-mono/latin-600.css";
 import "@mithril-internal/design-tokens/tokens.css";
 import "@mithril/devtools/ui.css";
+import "@mithril-internal/model-picker/model-picker.css";
 import "./styles/app.css";
 
 const root = document.getElementById("root");

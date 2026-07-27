@@ -5,7 +5,7 @@ prev: false
 title: "ToolStepOutcome"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:104](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/middleware.ts#L104)
+Defined in: [packages/core/src/protocol/middleware.ts:104](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L104)
 
 A per-tool result summary surfaced on [StepOutcome.toolOutcomes](/mithril/reference/core/protocol/interfaces/stepoutcome/#tooloutcomes), so a step-altitude healing
 middleware (retry budgets, loop detection) can inspect what each tool call did without re-deriving it.
@@ -18,7 +18,7 @@ middleware (retry budgets, loop detection) can inspect what each tool call did w
 readonly callId: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:105](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/middleware.ts#L105)
+Defined in: [packages/core/src/protocol/middleware.ts:105](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L105)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:105](https://github.com/ku
 readonly optional error?: SerializedError;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:109](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/middleware.ts#L109)
+Defined in: [packages/core/src/protocol/middleware.ts:109](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L109)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:109](https://github.com/ku
 readonly input: JsonValue;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:107](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/middleware.ts#L107)
+Defined in: [packages/core/src/protocol/middleware.ts:107](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L107)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:107](https://github.com/ku
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:106](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/middleware.ts#L106)
+Defined in: [packages/core/src/protocol/middleware.ts:106](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L106)
 
 ***
 
@@ -58,4 +58,4 @@ Defined in: [packages/core/src/protocol/middleware.ts:106](https://github.com/ku
 readonly ok: boolean;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:108](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/middleware.ts#L108)
+Defined in: [packages/core/src/protocol/middleware.ts:108](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L108)

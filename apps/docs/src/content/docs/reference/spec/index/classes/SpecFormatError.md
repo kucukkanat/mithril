@@ -5,7 +5,7 @@ prev: false
 title: "SpecFormatError"
 ---
 
-Defined in: [packages/spec/src/migrate.ts:10](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/spec/src/migrate.ts#L10)
+Defined in: [packages/spec/src/migrate.ts:10](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/migrate.ts#L10)
 
 Thrown when a raw value cannot be understood as a [ProjectSpec](/mithril/reference/spec/index/interfaces/projectspec/).
 
@@ -21,7 +21,7 @@ Thrown when a raw value cannot be understood as a [ProjectSpec](/mithril/referen
 new SpecFormatError(message, reason): SpecFormatError;
 ```
 
-Defined in: [packages/spec/src/migrate.ts:12](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/spec/src/migrate.ts#L12)
+Defined in: [packages/spec/src/migrate.ts:12](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/migrate.ts#L12)
 
 #### Parameters
 
@@ -80,7 +80,7 @@ Error.message
 readonly name: "SpecFormatError" = "SpecFormatError";
 ```
 
-Defined in: [packages/spec/src/migrate.ts:11](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/spec/src/migrate.ts#L11)
+Defined in: [packages/spec/src/migrate.ts:11](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/migrate.ts#L11)
 
 #### Overrides
 
@@ -96,7 +96,7 @@ Error.name
 readonly reason: "newer" | "malformed";
 ```
 
-Defined in: [packages/spec/src/migrate.ts:15](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/spec/src/migrate.ts#L15)
+Defined in: [packages/spec/src/migrate.ts:15](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/migrate.ts#L15)
 
 `"newer"` when the spec was written by a newer format than this library understands.
 

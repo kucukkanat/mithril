@@ -18,7 +18,9 @@ import * as workflows from "@mithril/workflows";
 import * as otel from "@mithril/otel";
 import * as mithrilMeta from "mithril";
 import { anthropic } from "mithril/anthropic";
+import { deepseek } from "mithril/deepseek";
 import { openai, openaiProvider } from "mithril/openai";
+import { openrouter } from "mithril/openrouter";
 import { google } from "@mithril/providers/google";
 import { transformers as transformersRaw, DEFAULT_MODEL } from "mithril/transformers";
 import { z } from "zod";
@@ -49,7 +51,9 @@ export function defaultModules(opts?: DefaultModulesOptions): Record<string, unk
   return {
     mithril: mithrilMeta,
     "mithril/anthropic": { anthropic },
+    "mithril/deepseek": { deepseek },
     "mithril/openai": { openai, openaiProvider },
+    "mithril/openrouter": { openrouter },
     "mithril/transformers": { transformers, DEFAULT_MODEL },
     "@mithril/providers/google": { google },
     "@mithril/core/agent": coreAgent,

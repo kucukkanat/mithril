@@ -23,10 +23,16 @@ export interface OpaqueDecl {
   readonly code: string;
 }
 
+/**
+ * The remote providers a `live` {@link ModelSpec} can name. Mirrors `LiveProviderId` in
+ * `@mithril/runner-web` (the two packages are independent by design, so the union is stated in both).
+ */
+export type LiveProviderName = "openai" | "anthropic" | "google" | "groq" | "deepseek" | "openrouter";
+
 /** How an agent's `model` is produced in generated code. */
 export type ModelSpec =
   /** A remote BYOK provider call, e.g. `openai("gpt-4o-mini")`. */
-  | { readonly kind: "live"; readonly provider: "openai" | "anthropic" | "google" | "groq"; readonly model: string }
+  | { readonly kind: "live"; readonly provider: LiveProviderName; readonly model: string }
   /** An on-device Transformers.js model, e.g. `transformers("onnx-community/Qwen3-0.6B-ONNX")`. */
   | { readonly kind: "local"; readonly model: string; readonly dtype?: string }
   /** Escape hatch: an arbitrary `ModelInput` expression, stored verbatim. */

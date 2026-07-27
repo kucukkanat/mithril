@@ -9,7 +9,7 @@ title: "withJsonSchema"
 function withJsonSchema<In, Out>(schema, jsonSchema): StandardSchemaV1<In, Out>;
 ```
 
-Defined in: [packages/core/src/protocol/json-schema.ts:91](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/json-schema.ts#L91)
+Defined in: [packages/core/src/protocol/json-schema.ts:91](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/json-schema.ts#L91)
 
 Attach an explicit JSON Schema to a Standard Schema so [toJsonSchema](/mithril/reference/core/protocol/functions/tojsonschema/) recovers it with no converter.
 

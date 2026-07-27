@@ -45,6 +45,10 @@ function nativeParts(id: LiveProviderId, model: string): NativeParts {
       return { imp: `import { anthropic } from "mithril/anthropic";`, expr: `anthropic(${m})` };
     case "google":
       return { imp: `import { google } from "@mithril/providers/google";`, expr: `google(${m})` };
+    case "deepseek":
+      return { imp: `import { deepseek } from "mithril/deepseek";`, expr: `deepseek(${m})` };
+    case "openrouter":
+      return { imp: `import { openrouter } from "mithril/openrouter";`, expr: `openrouter(${m})` };
     case "groq":
       // openai-compat — handled by modelBlock's openai-compat branch, so nativeParts never sees it.
       return { imp: `import { openai } from "mithril/openai";`, expr: `openai(${m})` };
@@ -101,7 +105,8 @@ const model = transformers(${JSON.stringify(target.model)}${opts});`,
     return {
       imp: `import { openaiProvider } from "mithril/openai";`,
       decl: `// ${p.label} speaks the OpenAI wire format; ${p.envVar} (set in the Run against bar) is injected as process.env.
-const ${p.id} = openaiProvider({ baseUrl: ${JSON.stringify(p.baseUrl)} });
+// A ${p.baseUrlEnvVar} set there overrides this default — the transport's baseUrl wins over config.
+const ${p.id} = openaiProvider({ baseUrl: ${JSON.stringify(p.defaultBaseUrl)} });
 const model = { id: ${JSON.stringify(`${p.id}/${target.model}`)}, provider: ${p.id} };`,
     };
   }

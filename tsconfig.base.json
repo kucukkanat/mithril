@@ -12,6 +12,8 @@
       "@mithril/providers/openai": ["packages/providers/src/openai/index.ts"],
       "@mithril/providers/anthropic": ["packages/providers/src/anthropic/index.ts"],
       "@mithril/providers/google": ["packages/providers/src/google/index.ts"],
+      "@mithril/providers/deepseek": ["packages/providers/src/deepseek/index.ts"],
+      "@mithril/providers/openrouter": ["packages/providers/src/openrouter/index.ts"],
       "@mithril/providers/transformers": ["packages/providers/src/transformers/index.ts"],
       "@mithril/memory": ["packages/memory/src/index.ts"],
       "@mithril/kv/indexeddb": ["packages/kv/src/indexeddb.ts"],
@@ -41,6 +43,8 @@
       "@mithril/runner-web": ["packages/runner-web/src/index.ts"],
       "mithril/openai": ["packages/mithril/src/openai.ts"],
       "mithril/anthropic": ["packages/mithril/src/anthropic.ts"],
+      "mithril/deepseek": ["packages/mithril/src/deepseek.ts"],
+      "mithril/openrouter": ["packages/mithril/src/openrouter.ts"],
       "mithril/transformers": ["packages/mithril/src/transformers.ts"],
       "mithril": ["packages/mithril/src/index.ts"]
     },

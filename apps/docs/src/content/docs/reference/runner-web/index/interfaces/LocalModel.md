@@ -5,7 +5,7 @@ prev: false
 title: "LocalModel"
 ---
 
-Defined in: [runner-web/src/catalog.ts:62](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L62)
+Defined in: [runner-web/src/catalog.ts:236](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L236)
 
 A curated in-browser model — all `text-generation` ONNX repos. This MUST hold: the transformers
 provider loads every model with `AutoModelForCausalLM` (a text-only path), so a vision-language /
@@ -20,7 +20,7 @@ never emits tool calls in its trained shape.
 readonly optional backends?: readonly Backend[];
 ```
 
-Defined in: [runner-web/src/catalog.ts:86](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L86)
+Defined in: [runner-web/src/catalog.ts:260](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L260)
 
 Restrict which ONNX [Backend](/mithril/reference/runner-web/index/type-aliases/backend/)s this model can run on. Omit (the common case) ⇒ portable across
 all of [ALL\_BACKENDS](/mithril/reference/runner-web/index/variables/all_backends/). Set it when a model's only published build can't execute everywhere — e.g.
@@ -38,7 +38,7 @@ mid-stream ONNX failure. See [requiresWebGPU](/mithril/reference/runner-web/inde
 readonly optional dtype?: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:76](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L76)
+Defined in: [runner-web/src/catalog.ts:250](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L250)
 
 Pin a quantization dtype, overriding the provider's device default (`q4f16` on WebGPU, `q4` on CPU/WASM).
 Three reasons a model needs this: (1) fp16 instability — Granite 4.0's Mamba2 layers overflow to NaN under
@@ -56,7 +56,7 @@ generated examples AND the preload both use it, so the cached weights match.
 readonly id: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:63](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L63)
+Defined in: [runner-web/src/catalog.ts:237](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L237)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [runner-web/src/catalog.ts:63](https://github.com/kucukkanat/mithril
 readonly label: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:64](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L64)
+Defined in: [runner-web/src/catalog.ts:238](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L238)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [runner-web/src/catalog.ts:64](https://github.com/kucukkanat/mithril
 readonly size: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:65](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L65)
+Defined in: [runner-web/src/catalog.ts:239](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L239)
 
 ***
 
@@ -86,4 +86,4 @@ Defined in: [runner-web/src/catalog.ts:65](https://github.com/kucukkanat/mithril
 readonly tools: boolean;
 ```
 
-Defined in: [runner-web/src/catalog.ts:66](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L66)
+Defined in: [runner-web/src/catalog.ts:240](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L240)

@@ -5,21 +5,24 @@ prev: false
 title: "LiveProvider"
 ---
 
-Defined in: [runner-web/src/catalog.ts:24](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L24)
+Defined in: [runner-web/src/catalog.ts:46](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L46)
 
 A remote provider a browser snippet can call directly with the user's own key.
 
 ## Properties
 
-### baseUrl?
+### baseUrlEnvVar
 
 ```ts
-readonly optional baseUrl?: string;
+readonly baseUrlEnvVar: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:34](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L34)
+Defined in: [runner-web/src/catalog.ts:57](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L57)
 
-The OpenAI-wire base URL — set only for `openai-compat` providers.
+The env var an optional endpoint override is passed through as — `<PROVIDER>_BASE_URL`, read by
+core's `resolveTransport` alongside [LiveProvider.envVar](/mithril/reference/runner-web/index/interfaces/liveprovider/#envvar). Kept symmetric with the key on
+purpose: an endpoint is connection config, so it travels with the key rather than being baked
+into a project spec or a share URL.
 
 ***
 
@@ -29,9 +32,23 @@ The OpenAI-wire base URL — set only for `openai-compat` providers.
 readonly consoleUrl: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:38](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L38)
+Defined in: [runner-web/src/catalog.ts:79](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L79)
 
 Where a visitor creates a key (linked from the panel).
+
+***
+
+### defaultBaseUrl
+
+```ts
+readonly defaultBaseUrl: string;
+```
+
+Defined in: [runner-web/src/catalog.ts:67](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L67)
+
+The endpoint requests go to when nothing overrides it. Every provider declares one (it is what the
+baseUrl field is prefilled/placeheld with); for `openai-compat` providers it is also the `baseUrl`
+their generated `openaiProvider({ … })` call pins.
 
 ***
 
@@ -41,7 +58,7 @@ Where a visitor creates a key (linked from the panel).
 readonly defaultModel: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:30](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L30)
+Defined in: [runner-web/src/catalog.ts:59](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L59)
 
 A cheap, sensible default model, prefilled in the panel.
 
@@ -53,7 +70,7 @@ A cheap, sensible default model, prefilled in the panel.
 readonly envVar: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:28](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L28)
+Defined in: [runner-web/src/catalog.ts:50](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L50)
 
 The env var the BYOK fallback reads — `<PROVIDER>_API_KEY`, keyed off the model id's prefix.
 
@@ -65,7 +82,7 @@ The env var the BYOK fallback reads — `<PROVIDER>_API_KEY`, keyed off the mode
 readonly host: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:36](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L36)
+Defined in: [runner-web/src/catalog.ts:77](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L77)
 
 The host the BYOK key is sent to (shown in the security-confirm gate).
 
@@ -77,7 +94,7 @@ The host the BYOK key is sent to (shown in the security-confirm gate).
 readonly id: LiveProviderId;
 ```
 
-Defined in: [runner-web/src/catalog.ts:25](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L25)
+Defined in: [runner-web/src/catalog.ts:47](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L47)
 
 ***
 
@@ -87,7 +104,7 @@ Defined in: [runner-web/src/catalog.ts:25](https://github.com/kucukkanat/mithril
 readonly kind: "native" | "openai-compat";
 ```
 
-Defined in: [runner-web/src/catalog.ts:32](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L32)
+Defined in: [runner-web/src/catalog.ts:61](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L61)
 
 `native` adapters ship first-class; `openai-compat` reuse the OpenAI adapter + a `baseUrl`.
 
@@ -99,4 +116,42 @@ Defined in: [runner-web/src/catalog.ts:32](https://github.com/kucukkanat/mithril
 readonly label: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:26](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L26)
+Defined in: [runner-web/src/catalog.ts:48](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L48)
+
+***
+
+### models
+
+```ts
+readonly models: readonly CatalogModel[];
+```
+
+Defined in: [runner-web/src/catalog.ts:81](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L81)
+
+Well-known current models, newest/most capable first. Free text is always still allowed.
+
+***
+
+### supportsBaseUrl
+
+```ts
+readonly supportsBaseUrl: boolean;
+```
+
+Defined in: [runner-web/src/catalog.ts:73](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L73)
+
+True when pointing this provider at a different, wire-compatible endpoint is supported — an
+OpenAI-compatible gateway, an Anthropic-compatible proxy, a local server. False for providers
+whose adapter hard-codes its own URL shape.
+
+***
+
+### wire
+
+```ts
+readonly wire: ProviderWire;
+```
+
+Defined in: [runner-web/src/catalog.ts:75](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L75)
+
+The wire dialect, used by the connection probe and live model listing.

@@ -6,10 +6,13 @@ title: "providerOf"
 ---
 
 ```ts
-function providerOf(model): "openai" | "anthropic" | "google" | "groq" | "transformers" | undefined;
+function providerOf(model): 
+  | LiveProviderName
+  | "transformers"
+  | undefined;
 ```
 
-Defined in: [packages/spec/src/codegen.ts:45](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/spec/src/codegen.ts#L45)
+Defined in: [packages/spec/src/codegen.ts:46](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/codegen.ts#L46)
 
 The provider-import token a model needs (for import planning), or `undefined` for a verbatim `code` model.
 
@@ -21,4 +24,6 @@ The provider-import token a model needs (for import planning), or `undefined` fo
 
 ## Returns
 
-`"openai"` \| `"anthropic"` \| `"google"` \| `"groq"` \| `"transformers"` \| `undefined`
+  \| [`LiveProviderName`](/mithril/reference/spec/index/type-aliases/liveprovidername/)
+  \| `"transformers"`
+  \| `undefined`

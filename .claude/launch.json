@@ -4,7 +4,7 @@
     {
       "name": "studio",
       "runtimeExecutable": "bun",
-      "runtimeArgs": ["run", "--cwd", "apps/studio", "dev"],
+      "runtimeArgs": ["run", "--cwd", "apps/studio", "dev", "--host"],
       "autoPort": true,
       "port": 5199
     },
@@ -12,7 +12,15 @@
       "name": "docs",
       "runtimeExecutable": "bun",
       "runtimeArgs": ["run", "--cwd", "apps/docs", "dev", "--host"],
+      "autoPort": true,
       "port": 4321
+    },
+    {
+      "name": "docs-preview",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": ["run", "--cwd", "apps/docs", "preview", "--port", "4399"],
+      "autoPort": true,
+      "port": 4399
     }
   ]
 }

@@ -8,6 +8,7 @@
     "jsxImportSource": "react",
     "baseUrl": ".",
     "paths": {
+      "@mithril-internal/model-picker": ["../model-picker/src/index.ts"],
       "@mithril/core/protocol": ["../../packages/core/src/protocol/index.ts"],
       "@mithril/core/agent": ["../../packages/core/src/agent/index.ts"],
       "@mithril/core/testkit": ["../../packages/core/src/testkit/index.ts"],
@@ -22,6 +23,8 @@
       "@mithril/mcp": ["../../packages/mcp/src/index.ts"],
       "@mithril/mcp/server": ["../../packages/mcp/src/server.ts"],
       "@mithril/providers/google": ["../../packages/providers/src/google/index.ts"],
+      "@mithril/providers/deepseek": ["../../packages/providers/src/deepseek/index.ts"],
+      "@mithril/providers/openrouter": ["../../packages/providers/src/openrouter/index.ts"],
       "@mithril/providers/transformers": ["../../packages/providers/src/transformers/index.ts"],
       "@mithril/react": ["../../packages/react/src/index.ts"],
       "@mithril/react/hooks": ["../../packages/react/src/hooks.ts"],
@@ -37,6 +40,8 @@
       "mithril": ["../../packages/mithril/src/index.ts"],
       "mithril/openai": ["../../packages/mithril/src/openai.ts"],
       "mithril/anthropic": ["../../packages/mithril/src/anthropic.ts"],
+      "mithril/deepseek": ["../../packages/mithril/src/deepseek.ts"],
+      "mithril/openrouter": ["../../packages/mithril/src/openrouter.ts"],
       "mithril/transformers": ["../../packages/mithril/src/transformers.ts"]
     }
   }

@@ -1,0 +1,23 @@
+{
+  "name": "@mithril-internal/model-picker",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The one model picker — provider setup, fuzzy model search, and the connection test — shared by the docs playground and the Studio so the two can never drift.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./model-picker.css": "./model-picker.css"
+  },
+  "dependencies": {
+    "@mithril/runner-web": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "scripts": {
+    "check": "tsc --noEmit -p tsconfig.json"
+  }
+}

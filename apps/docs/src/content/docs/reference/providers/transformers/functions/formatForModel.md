@@ -9,7 +9,7 @@ title: "formatForModel"
 function formatForModel(modelId): ToolFormat;
 ```
 
-Defined in: [transformers/tool-formats.ts:205](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/tool-formats.ts#L205)
+Defined in: [transformers/tool-formats.ts:205](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/tool-formats.ts#L205)
 
 Pick the [ToolFormat](/mithril/reference/providers/transformers/interfaces/toolformat/) for a model repo id: Gemma → native tokens, LFM2/Liquid → its Python-call
 grammar, everything else → the `<tool_call>` grammar shared by Qwen/Granite.

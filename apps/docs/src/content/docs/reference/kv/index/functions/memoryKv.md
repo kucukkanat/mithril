@@ -9,7 +9,7 @@ title: "memoryKv"
 function memoryKv(now?): KeyValue;
 ```
 
-Defined in: [index.ts:62](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/kv/src/index.ts#L62)
+Defined in: [index.ts:62](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/kv/src/index.ts#L62)
 
 Creates an in-memory [KeyValue](/mithril/reference/kv/index/interfaces/keyvalue/) store backed by a `Map`, with lazy TTL expiry on read.
 

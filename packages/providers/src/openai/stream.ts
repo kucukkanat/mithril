@@ -9,17 +9,41 @@ interface OAToolCallDelta {
   readonly id?: string;
   readonly function?: { readonly name?: string; readonly arguments?: string };
 }
+/*
+ * Every field is nullable on the wire. A vendor streaming one channel nulls the others rather than
+ * omitting them — DeepSeek sends `content: null` throughout a reasoning burst, and `tool_calls: null`
+ * on plain text frames — so these are `?: T | null`, not `?: T`.
+ */
 interface OADelta {
-  readonly content?: string;
-  readonly tool_calls?: readonly OAToolCallDelta[];
+  readonly content?: string | null;
+  /** DeepSeek's reasoning channel (`deepseek-reasoner`, and the V4 line). */
+  readonly reasoning_content?: string | null;
+  /** OpenRouter's reasoning channel (any model it exposes reasoning for). */
+  readonly reasoning?: string | null;
+  readonly tool_calls?: readonly OAToolCallDelta[] | null;
 }
 interface OAChoice {
   readonly delta?: OADelta;
   readonly finish_reason?: string | null;
 }
+interface OAUsage {
+  readonly prompt_tokens?: number;
+  readonly completion_tokens?: number;
+  /** OpenAI/OpenRouter shape for prompt tokens served from cache. */
+  readonly prompt_tokens_details?: { readonly cached_tokens?: number };
+  /** DeepSeek's flat equivalent of `prompt_tokens_details.cached_tokens`. */
+  readonly prompt_cache_hit_tokens?: number;
+  readonly completion_tokens_details?: { readonly reasoning_tokens?: number };
+  /** OpenRouter only: the generation's cost in credits, where 1 credit is 1 USD. */
+  readonly cost?: number;
+}
 interface OAChunk {
   readonly choices?: readonly OAChoice[];
-  readonly usage?: { readonly prompt_tokens?: number; readonly completion_tokens?: number };
+  /*
+   * Explicitly nullable: with `stream_options.include_usage` DeepSeek stamps `"usage": null` on
+   * every non-final chunk (OpenAI omits the key entirely), so a presence check is not enough.
+   */
+  readonly usage?: OAUsage | null;
 }
 
 const ZERO: UsageDelta = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, reasoning: 0, costMicroUsd: 0 };
@@ -36,6 +60,19 @@ function mapFinish(reason: string | null | undefined): FinishReason {
     default:
       return "stop";
   }
+}
+
+// `prompt_tokens` already counts cached tokens on every vendor here, so cacheRead is reported as a
+// breakdown of `input`, not an addition to it. Cost is only ever present on OpenRouter.
+function mapUsage(u: OAUsage): UsageDelta {
+  return {
+    ...ZERO,
+    input: u.prompt_tokens ?? 0,
+    output: u.completion_tokens ?? 0,
+    cacheRead: u.prompt_tokens_details?.cached_tokens ?? u.prompt_cache_hit_tokens ?? 0,
+    reasoning: u.completion_tokens_details?.reasoning_tokens ?? 0,
+    costMicroUsd: typeof u.cost === "number" ? Math.round(u.cost * 1e6) : 0,
+  };
 }
 
 function safeJson(s: string): JsonValue {
@@ -65,6 +102,8 @@ function parseFrame<T>(s: string): T | undefined {
  * @remarks
  * - Handles malformed frames gracefully (skips without crashing).
  * - Accumulates streamed tool-call argument fragments per index and emits a single `tool.call` once the stream ends.
+ * - Emits `reasoning.delta` for vendors that stream a reasoning channel — DeepSeek's `reasoning_content`
+ *   and OpenRouter's `reasoning` (OpenAI's own chat-completions endpoint streams neither).
  * - The loop stamps {@link EventMeta}; this translates wire format only.
  * - Provider-agnostic: works with OpenAI, compatible gateways, and local SSE sources.
  */
@@ -94,10 +133,16 @@ export async function* parseOpenAIStream(body: ReadableStream<Uint8Array>): Asyn
         if (json === undefined) continue;
         const choice = json.choices?.[0];
         const delta = choice?.delta;
-        if (delta?.content !== undefined && delta.content !== "") {
+        // Reasoning arrives before the answer and under a different key per vendor; both map to the
+        // one protocol chunk so consumers never branch on which service produced the stream.
+        const reasoning = delta?.reasoning_content ?? delta?.reasoning;
+        if (typeof reasoning === "string" && reasoning !== "") {
+          yield { type: "reasoning.delta", delta: reasoning };
+        }
+        if (typeof delta?.content === "string" && delta.content !== "") {
           yield { type: "text.delta", delta: delta.content };
         }
-        if (delta?.tool_calls !== undefined) {
+        if (delta?.tool_calls != null) {
           for (const tc of delta.tool_calls) {
             const cur = tools.get(tc.index) ?? { id: "", name: "", args: "" };
             if (tc.id !== undefined) cur.id = tc.id;
@@ -113,9 +158,7 @@ export async function* parseOpenAIStream(body: ReadableStream<Uint8Array>): Asyn
         if (choice?.finish_reason !== undefined && choice.finish_reason !== null) {
           finishReason = mapFinish(choice.finish_reason);
         }
-        if (json.usage !== undefined) {
-          usage = { ...ZERO, input: json.usage.prompt_tokens ?? 0, output: json.usage.completion_tokens ?? 0 };
-        }
+        if (json.usage != null) usage = mapUsage(json.usage);
       }
     }
   } finally {

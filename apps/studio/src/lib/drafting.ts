@@ -20,7 +20,7 @@ import {
   type ProjectSpec,
   type ToolSpec,
 } from "@mithril/spec";
-import { liveProvider } from "@mithril/runner-web";
+import { liveProvider, localModel } from "@mithril/runner-web";
 import type { JsonValue } from "@mithril/core/protocol";
 import { stubBody } from "./tool-fields.ts";
 
@@ -181,6 +181,21 @@ export function draftDestination(model: ModelSpec): string {
   if (model.kind === "code") return "the model expression you supplied";
   return `${model.model} at ${liveProvider(model.provider).host}, with your key`;
 }
+
+/**
+ * The short label the Designer's drafting chip wears — the model and, more importantly, where it
+ * sends things. A catalog model shows its friendly name; anything free-text shows what was typed,
+ * because an id nobody recognizes is exactly when the raw string is the useful thing to read.
+ */
+export function draftModelLabel(model: ModelSpec | null): string {
+  if (model === null) return "drafting off";
+  if (model.kind === "code") return `${named(model.expr.code)} · custom`;
+  if (model.kind === "local") return `${localModel(model.model)?.label ?? named(model.model)} · on-device`;
+  return `${named(model.model)} · ${liveProvider(model.provider).label}`;
+}
+
+/** A half-configured model — a blank custom repo id — must read as blank, not as an empty chip. */
+const named = (id: string): string => (id.trim().length === 0 ? "no model" : id);
 
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v);
 const str = (v: unknown): string => (typeof v === "string" ? v.trim() : "");

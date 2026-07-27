@@ -6,6 +6,7 @@
  * offers both views precisely because the field editor is a convenience, not the schema.
  */
 import type { JsonValue } from "@mithril/core/protocol";
+import { highlight, type TokenKind } from "./highlight.ts";
 import { parseInputs } from "./pick-score.ts";
 
 export type ParamType = "text" | "number" | "boolean";
@@ -111,26 +112,23 @@ export function readNames(code: string, names: readonly string[]): BodyUse {
   return { read, unbound };
 }
 
-/** A token of a code line: either plain text, or an input name that links back to its field. */
+/** A token of a code line: syntax-coloured, and carrying an input name when it links back to a field. */
 export interface CodeToken {
   readonly text: string;
   readonly name: string | null;
+  readonly kind: TokenKind;
 }
 
-/** Split a line into input-name tokens and everything else. */
+/**
+ * Split a line into syntax-coloured tokens, marking those that are input names.
+ *
+ * Colouring runs first, so a name is only ever linked where the scanner saw a bare identifier — an
+ * occurrence inside a string literal or comment stays one uncut, uncoloured-as-code token, which is
+ * both correct (it isn't a read) and what keeps the string's colour intact.
+ */
 export function tokenize(line: string, names: readonly string[]): readonly CodeToken[] {
-  if (names.length === 0) return [{ text: line, name: null }];
-  // Longest-first so `cityName` is never matched as `city`.
-  const pattern = new RegExp(`\\b(${[...names].sort((a, b) => b.length - a.length).join("|")})\\b`, "g");
-  const out: CodeToken[] = [];
-  let last = 0;
-  for (const m of line.matchAll(pattern)) {
-    if (m.index > last) out.push({ text: line.slice(last, m.index), name: null });
-    out.push({ text: m[0], name: m[0] });
-    last = m.index + m[0].length;
-  }
-  if (last < line.length) out.push({ text: line.slice(last), name: null });
-  return out;
+  const bound = new Set(names);
+  return highlight(line).map((t) => ({ text: t.text, kind: t.kind, name: t.kind === "plain" && bound.has(t.text) ? t.text : null }));
 }
 
 /**

@@ -4,13 +4,16 @@ import { replay, type MithrilEvent } from "@mithril/core/protocol";
 // truth); the playground keeps only its bespoke editor, runner, and HITL flow.
 import { EventList, StateTree } from "@mithril/devtools/ui";
 import "@mithril/devtools/ui.css";
+import { ThinkingOrb } from "@mithril-internal/thinking-orbs";
 import { CodeEditor } from "./CodeEditor.tsx";
+import type { ModelSelection } from "@mithril-internal/model-picker";
 import { ModelBar } from "./ModelBar.tsx";
 import { useRunner } from "../playground/useRunner.ts";
 import { useProviderSettings } from "../playground/useProviderSettings.ts";
 import { DEFAULT_PRESET, PRESETS, type Preset } from "../playground/presets.ts";
 import { LOCAL_MODELS, assembleExample, liveProvider, type LiveProviderId, type ProviderMode, type Target } from "../playground/providers.ts";
 import { codeFromHash, presetFromHash, shareUrl } from "../playground/share.ts";
+import "@mithril-internal/model-picker/model-picker.css";
 import "./playground.css";
 
 type Tab = "events" | "output" | "state";
@@ -129,28 +132,32 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
     runner.reset();
   };
 
-  // The one "Run against" dropdown: pick scripted / a cloud provider / a local model. Re-assembles the
-  // current example for the new target (pristine-guarded, so edits survive); local models auto-download.
-  const selectTarget = (value: string) => {
-    if (value.startsWith("live:")) {
-      const id = value.slice(5) as LiveProviderId;
+  /*
+   * The shared picker hands back one `ModelSelection`; this maps it onto the playground's own state
+   * (mode + active provider + per-provider model) and re-assembles the current example for the new
+   * target — pristine-guarded, so edits survive. A CHANGE OF TARGET resets the run; merely retyping a
+   * model id for the provider already selected does not, or every keystroke would clear the output.
+   */
+  const onSelectionChange = (next: ModelSelection) => {
+    if (next.kind === "live") {
+      const changedTarget = settings.mode !== "live" || settings.activeProvider !== next.provider;
       settings.setMode("live");
-      settings.setProvider(id);
-      reassemble(targetFor("live", id, settings.modelFor(id), settings.localModel), { reset: true });
-    } else if (value.startsWith("local:")) {
-      const m = value.slice(6);
-      settings.setMode("local");
-      settings.setLocalModel(m);
-      reassemble(targetFor("local", settings.activeProvider, settings.activeModel, m), { reset: true });
-      void settings.preloadLocal(m); // auto-load the weights the moment you pick it
-    } else {
-      settings.setMode("scripted");
-      reassemble(targetFor("scripted", settings.activeProvider, settings.activeModel, settings.localModel), { reset: true });
+      settings.setProvider(next.provider);
+      settings.setModel(next.provider, next.model);
+      reassemble(targetFor("live", next.provider, next.model, settings.localModel), { reset: changedTarget });
+      return;
     }
-  };
-  const onModelChange = (id: LiveProviderId, m: string) => {
-    settings.setModel(id, m);
-    reassemble(targetFor("live", id, m, settings.localModel));
+    if (next.kind === "local") {
+      const changedTarget = settings.mode !== "local" || settings.localModel !== next.model;
+      settings.setLocalModel(next.model);
+      settings.setMode("local");
+      reassemble(targetFor("local", settings.activeProvider, settings.activeModel, next.model), { reset: changedTarget });
+      // Auto-load the weights the moment you pick it — but not for a half-typed custom repo id.
+      if (changedTarget && next.model.length > 0) void settings.preloadLocal(next.model);
+      return;
+    }
+    settings.setMode("scripted");
+    reassemble(targetFor("scripted", settings.activeProvider, settings.activeModel, settings.localModel), { reset: settings.mode !== "scripted" });
   };
 
   const scrub = (c: number) => {
@@ -190,8 +197,13 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
         ? `local · ${localModelLabel(settings.localModel)}`
         : "scripted · offline";
   const activeProvider = liveProvider(settings.activeProvider);
-  const targetValue =
-    effectiveMode === "live" ? `live:${settings.activeProvider}` : effectiveMode === "local" ? `local:${settings.localModel}` : "scripted";
+  // The playground's mode + per-provider model, expressed in the shared picker's vocabulary.
+  const selection: ModelSelection =
+    effectiveMode === "live"
+      ? { kind: "live", provider: settings.activeProvider, model: settings.activeModel }
+      : effectiveMode === "local"
+        ? { kind: "local", model: settings.localModel }
+        : { kind: "scripted" };
 
   return (
     <div className={`pg${embedded ? " pg-embedded" : ""}`} data-testid="playground">
@@ -226,7 +238,7 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
       </div>
 
       {showProviderUI && (
-        <ModelBar settings={settings} targetValue={targetValue} onSelectTarget={selectTarget} onModelChange={onModelChange} />
+        <ModelBar settings={settings} selection={selection} onSelectionChange={onSelectionChange} />
       )}
 
       {pendingRun && (
@@ -288,6 +300,14 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
             >
               <div className="pg-progress-fill" style={{ width: `${Math.round(runner.download.progress * 100)}%` }} />
             </div>
+          )}
+
+          {running && (
+            <p className="pg-thinking" data-testid="playground-thinking">
+              {/* `working` — a generic agent turn; the run may be doing anything. */}
+              <ThinkingOrb state="working" size={20} aria-label="Running…" />
+              <span>Running…</span>
+            </p>
           )}
 
           {approval && (

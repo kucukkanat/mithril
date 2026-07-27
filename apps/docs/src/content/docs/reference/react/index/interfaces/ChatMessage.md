@@ -5,7 +5,7 @@ prev: false
 title: "ChatMessage"
 ---
 
-Defined in: [index.ts:114](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/react/src/index.ts#L114)
+Defined in: [index.ts:114](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/react/src/index.ts#L114)
 
 A single chat turn — structurally an `InputMessage`, so the history feeds straight back into a run.
 
@@ -17,7 +17,7 @@ A single chat turn — structurally an `InputMessage`, so the history feeds stra
 readonly content: string;
 ```
 
-Defined in: [index.ts:116](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/react/src/index.ts#L116)
+Defined in: [index.ts:116](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/react/src/index.ts#L116)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [index.ts:116](https://github.com/kucukkanat/mithril/blob/11fd4315eb
 readonly role: "user" | "assistant";
 ```
 
-Defined in: [index.ts:115](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/react/src/index.ts#L115)
+Defined in: [index.ts:115](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/react/src/index.ts#L115)

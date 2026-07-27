@@ -5,7 +5,7 @@ prev: false
 title: "ResumeDirective"
 ---
 
-Defined in: [runner-web/src/protocol.ts:43](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/protocol.ts#L43)
+Defined in: [runner-web/src/protocol.ts:43](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/protocol.ts#L43)
 
 Resume a previously suspended run from a persisted token instead of starting fresh.
 When present on a `run` request, the injected `run()` global ignores its `input` and calls
@@ -20,7 +20,7 @@ resume-across-page-reload possible: the code re-provides the behavior, the token
 readonly decision: ResumeValue;
 ```
 
-Defined in: [runner-web/src/protocol.ts:45](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/protocol.ts#L45)
+Defined in: [runner-web/src/protocol.ts:45](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/protocol.ts#L45)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [runner-web/src/protocol.ts:45](https://github.com/kucukkanat/mithri
 readonly token: string;
 ```
 
-Defined in: [runner-web/src/protocol.ts:44](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/protocol.ts#L44)
+Defined in: [runner-web/src/protocol.ts:44](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/protocol.ts#L44)

@@ -15,6 +15,12 @@ from the code.**
   published ESM, strict `exports` maps, zero runtime deps in core.
 - **`apps/docs`** — the documentation website (Astro + Starlight + React). A private, unpublished
   workspace; its toolchain never leaks into the libraries.
+- **`apps/model-picker`** (`@mithril-internal/model-picker`) — the ONE model picker, mounted by both
+  the playground and the Studio: segments, fuzzy model search, provider key + optional base URL, and
+  Test connection. Private and unpublished, like `@mithril-internal/design-tokens`. **Never fork a
+  second picker** — add a `kinds` entry or a prop instead. Its headless half (catalog, fuzzy search,
+  `testConnection`, `fetchProviderModels`) lives in `@mithril/runner-web` so non-React callers and
+  tests can use it without the UI.
 - **`docs/design/*`** — the locked v1 spec, validation report, and DX roast. The spec is the design
   source of truth; **the source code is the API source of truth.**
 
@@ -146,10 +152,13 @@ enforces this over every browser-declared entrypoint.
   (Starlight adds copy buttons). Cross-link with root-absolute hrefs (`/guides/…`, `/concepts/…`).
 - **Playground** (`src/playground/`): CodeMirror editor → sucrase transpile in a **Web Worker** →
   a `require` shim injects the real `@mithril/*` + `zod` → an injected `run(agent, input, opts?)`
-  streams events; `usage` is an injected default UsageDelta. It has **three run targets** (the
-  ModelBar picker): **scripted** (offline test double — zero network, zero keys, the default),
-  **live** (BYOK — the user's key is injected as `process.env.<PROVIDER>_API_KEY` and sent straight
-  to the real provider), and **local** (an on-device Transformers.js model — one-time weight
+  streams events; `usage` is an injected default UsageDelta. It has **three run targets** (`ModelBar`,
+  a thin wrapper over the shared `@mithril-internal/model-picker`): **scripted** (offline test double
+  — zero network, zero keys, the default), **live** (BYOK — the user's key is injected as
+  `process.env.<PROVIDER>_API_KEY` and sent straight to the real provider; an optional **base URL** is
+  stored beside the key and injected as `process.env.<PROVIDER>_BASE_URL`, which core's
+  `resolveTransport` reads — so an endpoint override never enters an example, a project spec, or a
+  share URL), and **local** (an on-device Transformers.js model — one-time weight
   download, then no network). Presets in `presets.ts` are provider-agnostic `ExampleParts`
   (`bodyImports` + `scriptedTurns` + `body`); `providers.ts`'s `assembleExample(parts, target)` slots
   in the model line per target, so one preset runs against all three. "Zero network, zero keys" holds

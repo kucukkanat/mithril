@@ -5,7 +5,7 @@ prev: false
 title: "McpServerDescription"
 ---
 
-Defined in: [packages/mcp/src/index.ts:97](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/index.ts#L97)
+Defined in: [packages/mcp/src/index.ts:97](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/mcp/src/index.ts#L97)
 
 The result of the MCP lifecycle handshake — what the server negotiated on `initialize`.
 
@@ -17,7 +17,7 @@ The result of the MCP lifecycle handshake — what the server negotiated on `ini
 readonly capabilities: JsonValue;
 ```
 
-Defined in: [packages/mcp/src/index.ts:101](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/index.ts#L101)
+Defined in: [packages/mcp/src/index.ts:101](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/mcp/src/index.ts#L101)
 
 The server's advertised capabilities (`tools`, `resources`, `prompts`, …), kept opaque.
 
@@ -29,7 +29,7 @@ The server's advertised capabilities (`tools`, `resources`, `prompts`, …), kep
 readonly protocolVersion: string;
 ```
 
-Defined in: [packages/mcp/src/index.ts:99](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/index.ts#L99)
+Defined in: [packages/mcp/src/index.ts:99](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/mcp/src/index.ts#L99)
 
 Protocol revision the server agreed to (may differ from [MCP\_PROTOCOL\_VERSION](/mithril/reference/mcp/index/variables/mcp_protocol_version/)).
 
@@ -44,7 +44,7 @@ readonly serverInfo: {
 };
 ```
 
-Defined in: [packages/mcp/src/index.ts:103](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/mcp/src/index.ts#L103)
+Defined in: [packages/mcp/src/index.ts:103](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/mcp/src/index.ts#L103)
 
 The server's self-identification.
 

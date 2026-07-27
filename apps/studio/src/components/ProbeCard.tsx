@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { ThinkingOrb } from "@mithril-internal/thinking-orbs";
 import type { ToolSpec } from "@mithril/spec";
 import type { ProbeState } from "../lib/probe.ts";
 import { useProbeStore } from "../state/probeStore.ts";
@@ -48,7 +49,9 @@ export function ProbeCard({ tool }: ProbeCardProps) {
       </div>
 
       {entry.status === "running" && (
-        <p className="hint" style={{ margin: 0 }} data-testid="tool-probe-running">
+        <p className="hint probe-running" data-testid="tool-probe-running">
+          {/* `solving` — a probe runs the body twice and compares, which is what that state reads as. */}
+          <ThinkingOrb state="solving" size={20} aria-label="Probing…" />
           Running the body twice…
         </p>
       )}

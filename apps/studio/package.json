@@ -2,7 +2,7 @@
   "name": "@mithril/studio",
   "version": "0.0.0",
   "private": true,
-  "description": "Mithril Studio — design and run agents entirely in the browser.",
+  "description": "Mithril Studio \u2014 design and run agents entirely in the browser.",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -20,6 +20,8 @@
     "@huggingface/transformers": ">=4.2",
     "@lezer/highlight": "^1.2.3",
     "@mithril-internal/design-tokens": "workspace:*",
+    "@mithril-internal/model-picker": "workspace:*",
+    "@mithril-internal/thinking-orbs": "workspace:*",
     "@xyflow/react": "^12.8.6",
     "codemirror": "^6.0.2",
     "react": "^19.2.7",

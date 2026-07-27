@@ -83,7 +83,9 @@ Every event is dot-namespaced and carries `EventMeta` (`v`, `runId`, `seq`, `ts`
 
 - **Lifecycle** — `run.start`, `run.finish`, `run.error`, `run.cancel`, `step.start`, `step.finish`
 - **Assistant body** — `text.delta`, `reasoning.delta`, `tool.input.delta`, `tool.call`,
-  `tool.progress`, `tool.result`, `tool.error`, `message.end`
+  `tool.progress`, `tool.result`, `tool.error`, `message.end` — `reasoning.delta` carries a model's
+  chain of thought where the provider streams one (today: `deepseek("deepseek-reasoner")` and
+  reasoning models through `openrouter(…)`)
 - **Structured output** — `object.delta`, `object.invalid`, `object.final`
 - **Accounting** — `usage`, `compaction`
 - **Control flow** — `handoff`, `tool.approval.requested`, `suspend`, `resume`

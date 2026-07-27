@@ -4,40 +4,12 @@
  * @packageDocumentation
  */
 
-import type { JsonSchemaConverter, ModelHandle, Provider, ProviderSpec, Transport } from "@mithril/core/protocol";
-// request.ts / stream.ts are internal: request serialization and SSE parsing for the `/chat/completions` endpoint.
-import { toOpenAIBody } from "./request.ts";
-import { parseOpenAIStream } from "./stream.ts";
+import type { JsonSchemaConverter, ModelHandle, Provider } from "@mithril/core/protocol";
+// compat.ts / request.ts / stream.ts are internal: the shared OpenAI-wire-format transport, request
+// serialization, and SSE parsing for the `/chat/completions` endpoint.
+import { compatProvider, type CompatVendor } from "./compat.ts";
 
-const OPENAI_SPEC: ProviderSpec = { id: "openai", models: {} };
-const DEFAULT_BASE = "https://api.openai.com/v1";
-
-function headersToRecord(init: HeadersInit | undefined): Record<string, string> {
-  const out: Record<string, string> = {};
-  new Headers(init).forEach((v, k) => {
-    out[k] = v;
-  });
-  return out;
-}
-
-async function resolveAuth(
-  transport: Transport,
-  configBase: string | undefined,
-): Promise<{ readonly base: string; readonly headers: Record<string, string> }> {
-  switch (transport.kind) {
-    case "byok":
-      // OpenAI serves CORS unconditionally, so byok works directly from a browser (key is exposed — fine
-      // for a user's own key / dev, use a proxy transport in production).
-      return {
-        base: transport.baseUrl ?? configBase ?? DEFAULT_BASE,
-        headers: { authorization: `Bearer ${transport.apiKey}`, ...headersToRecord(transport.headers) },
-      };
-    case "proxy":
-      return { base: transport.baseUrl, headers: headersToRecord(transport.headers) };
-    case "ephemeral":
-      return { base: transport.baseUrl, headers: { authorization: `Bearer ${await transport.token()}` } };
-  }
-}
+const OPENAI: CompatVendor = { id: "openai", label: "OpenAI", defaultBaseUrl: "https://api.openai.com/v1" };
 
 /**
  * Creates an OpenAI {@link Provider} whose `chat` method streams `/chat/completions` responses.
@@ -60,31 +32,7 @@ async function resolveAuth(
  * key or local development; use a `proxy` transport in production.
  */
 export function openaiProvider(config?: { readonly baseUrl?: string; readonly toolSchema?: JsonSchemaConverter }): Provider {
-  return {
-    spec: OPENAI_SPEC,
-    async *chat(req, rt, transport, signal) {
-      // A missing key resolves to an empty byok key upstream; catch it here with an actionable message
-      // instead of letting the request go out and come back as a bare HTTP 401.
-      if (transport.kind === "byok" && transport.apiKey === "") {
-        throw new Error(
-          'No OpenAI API key found. Set OPENAI_API_KEY in the environment, or pass transport: { kind: "byok", apiKey } (or a proxy transport).',
-        );
-      }
-      const auth = await resolveAuth(transport, config?.baseUrl);
-      const res = await rt.fetch(`${auth.base}/chat/completions`, {
-        method: "POST",
-        signal,
-        headers: { "content-type": "application/json", ...auth.headers },
-        body: toOpenAIBody(req, config?.toolSchema),
-      });
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        throw new Error(`OpenAI HTTP ${res.status}: ${text.slice(0, 200)}`);
-      }
-      if (res.body === null) throw new Error("OpenAI response had no body");
-      yield* parseOpenAIStream(res.body);
-    },
-  };
+  return compatProvider(OPENAI, config);
 }
 
 const shared = openaiProvider();

@@ -13,15 +13,23 @@ import { fileURLToPath } from "node:url";
 /** @param {string} p path under `packages/` */
 const pkg = (p) => fileURLToPath(new URL(`../packages/${p}`, import.meta.url));
 
+/** @param {string} p path under `apps/` — the private, unpublished workspaces both apps share. */
+const app = (p) => fileURLToPath(new URL(`../apps/${p}`, import.meta.url));
+
 /** @returns {{ find: string, replacement: string }[]} */
 export function mithrilAliases() {
   return [
+    // Shared app-level UI: the one model picker mounted by both the docs playground and the Studio.
+    { find: "@mithril-internal/model-picker/model-picker.css", replacement: app("model-picker/model-picker.css") },
+    { find: "@mithril-internal/model-picker", replacement: app("model-picker/src/index.ts") },
     { find: "@mithril/core/protocol", replacement: pkg("core/src/protocol/index.ts") },
     { find: "@mithril/core/agent", replacement: pkg("core/src/agent/index.ts") },
     { find: "@mithril/core/testkit", replacement: pkg("core/src/testkit/index.ts") },
     { find: "@mithril/providers/openai", replacement: pkg("providers/src/openai/index.ts") },
     { find: "@mithril/providers/anthropic", replacement: pkg("providers/src/anthropic/index.ts") },
     { find: "@mithril/providers/google", replacement: pkg("providers/src/google/index.ts") },
+    { find: "@mithril/providers/deepseek", replacement: pkg("providers/src/deepseek/index.ts") },
+    { find: "@mithril/providers/openrouter", replacement: pkg("providers/src/openrouter/index.ts") },
     { find: "@mithril/providers/transformers", replacement: pkg("providers/src/transformers/index.ts") },
     { find: "@mithril/memory/indexeddb", replacement: pkg("memory/src/indexeddb.ts") },
     { find: "@mithril/memory", replacement: pkg("memory/src/index.ts") },
@@ -52,6 +60,8 @@ export function mithrilAliases() {
     { find: "@mithril/runner-web", replacement: pkg("runner-web/src/index.ts") },
     { find: "mithril/openai", replacement: pkg("mithril/src/openai.ts") },
     { find: "mithril/anthropic", replacement: pkg("mithril/src/anthropic.ts") },
+    { find: "mithril/deepseek", replacement: pkg("mithril/src/deepseek.ts") },
+    { find: "mithril/openrouter", replacement: pkg("mithril/src/openrouter.ts") },
     { find: "mithril/transformers", replacement: pkg("mithril/src/transformers.ts") },
     { find: "mithril", replacement: pkg("mithril/src/index.ts") },
   ];

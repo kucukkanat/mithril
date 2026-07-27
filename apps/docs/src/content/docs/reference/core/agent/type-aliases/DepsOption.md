@@ -13,7 +13,7 @@ type DepsOption<Deps> = [Deps] extends [void] ? {
 };
 ```
 
-Defined in: [packages/core/src/agent/agent-types.ts:45](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/agent-types.ts#L45)
+Defined in: [packages/core/src/agent/agent-types.ts:45](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/agent-types.ts#L45)
 
 The `Deps` slot of [RunOptions](/mithril/reference/core/agent/type-aliases/runoptions/): required when the agent has dependencies, and optional (may be
 omitted, or given as `undefined`) when `Deps` is `void`. This is what lets a no-deps agent pass a bare

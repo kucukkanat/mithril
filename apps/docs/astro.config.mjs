@@ -26,7 +26,7 @@ const genSymbolsIntegration = {
  */
 const TD_PACKAGES = [
   { name: "core", label: "@mithril/core", entryPoints: ["core/src/protocol/index.ts", "core/src/agent/index.ts", "core/src/testkit/index.ts"] },
-  { name: "providers", label: "@mithril/providers", entryPoints: ["providers/src/openai/index.ts", "providers/src/anthropic/index.ts", "providers/src/google/index.ts", "providers/src/transformers/index.ts"] },
+  { name: "providers", label: "@mithril/providers", entryPoints: ["providers/src/openai/index.ts", "providers/src/anthropic/index.ts", "providers/src/google/index.ts", "providers/src/deepseek/index.ts", "providers/src/openrouter/index.ts", "providers/src/transformers/index.ts"] },
   { name: "memory", label: "@mithril/memory", entryPoints: ["memory/src/index.ts", "memory/src/sqlite-bun.ts", "memory/src/sqlite-node.ts"] },
   { name: "kv", label: "@mithril/kv", entryPoints: ["kv/src/index.ts", "kv/src/indexeddb.ts", "kv/src/sqlite-node.ts"] },
   { name: "fs", label: "@mithril/fs", entryPoints: ["fs/src/index.ts", "fs/src/node.ts", "fs/src/opfs.ts"] },
@@ -76,6 +76,10 @@ const BASE = "/mithril";
 export default defineConfig({
   site: "https://kucukkanat.github.io",
   base: BASE,
+  // Honour PORT so a launcher can assign one — two dev servers (e.g. two agent sessions, or docs
+  // alongside the Studio) can then run side by side instead of colliding on Astro's default 4321.
+  // Mirrors apps/studio/vite.config.ts.
+  ...(process.env["PORT"] === undefined ? {} : { server: { port: Number(process.env["PORT"]) } }),
   integrations: [
     starlight({
       title: "Mithril",

@@ -5,7 +5,7 @@ prev: false
 title: "DefineToolInput"
 ---
 
-Defined in: [definition.ts:16](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/definition.ts#L16)
+Defined in: [definition.ts:16](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/definition.ts#L16)
 
 The arguments `define_tool` accepts — the shape a model fills in.
 
@@ -17,7 +17,7 @@ The arguments `define_tool` accepts — the shape a model fills in.
 readonly body: JsonValue;
 ```
 
-Defined in: [definition.ts:23](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/definition.ts#L23)
+Defined in: [definition.ts:23](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/definition.ts#L23)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [definition.ts:23](https://github.com/kucukkanat/mithril/blob/11fd43
 readonly description: string;
 ```
 
-Defined in: [definition.ts:18](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/definition.ts#L18)
+Defined in: [definition.ts:18](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/definition.ts#L18)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [definition.ts:18](https://github.com/kucukkanat/mithril/blob/11fd43
 readonly optional examples?: readonly JsonValue[];
 ```
 
-Defined in: [definition.ts:21](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/definition.ts#L21)
+Defined in: [definition.ts:21](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/definition.ts#L21)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: [definition.ts:21](https://github.com/kucukkanat/mithril/blob/11fd43
 readonly inputSchema: JsonValue;
 ```
 
-Defined in: [definition.ts:19](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/definition.ts#L19)
+Defined in: [definition.ts:19](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/definition.ts#L19)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: [definition.ts:19](https://github.com/kucukkanat/mithril/blob/11fd43
 readonly name: string;
 ```
 
-Defined in: [definition.ts:17](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/definition.ts#L17)
+Defined in: [definition.ts:17](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/definition.ts#L17)
 
 ***
 
@@ -67,7 +67,7 @@ Defined in: [definition.ts:17](https://github.com/kucukkanat/mithril/blob/11fd43
 readonly optional needsApproval?: boolean;
 ```
 
-Defined in: [definition.ts:22](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/definition.ts#L22)
+Defined in: [definition.ts:22](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/definition.ts#L22)
 
 ***
 
@@ -77,4 +77,4 @@ Defined in: [definition.ts:22](https://github.com/kucukkanat/mithril/blob/11fd43
 readonly optional outputSchema?: JsonValue;
 ```
 
-Defined in: [definition.ts:20](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/definition.ts#L20)
+Defined in: [definition.ts:20](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/definition.ts#L20)

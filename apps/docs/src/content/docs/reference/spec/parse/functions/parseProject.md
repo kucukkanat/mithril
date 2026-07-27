@@ -12,13 +12,14 @@ function parseProject(
    prev?): ParseResult;
 ```
 
-Defined in: [packages/spec/src/parse.ts:364](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/spec/src/parse.ts#L364)
+Defined in: [packages/spec/src/parse.ts:405](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/parse.ts#L405)
 
 Parse a whole source file into a [ProjectSpec](/mithril/reference/spec/index/interfaces/projectspec/). `prev` carries what code cannot express —
 the project `name` and canvas `meta` — forward across reparses.
 
 The round-trip invariant: for any spec `s`, `parseProject(generateProject(s), ts, s).spec`
-deep-equals `s` (M1: for tool/agent/entry/opaque decls).
+deep-equals `s` — for tool, agent, sub-agent (`asTool`), entry and opaque decls. A workflow decl
+still degrades to opaque, which is lossless in code but not yet structured.
 
 ## Parameters
 

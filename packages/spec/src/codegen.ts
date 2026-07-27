@@ -13,6 +13,7 @@ import type {
   CodeRegion,
   EntryMessage,
   EntrySpec,
+  LiveProviderName,
   ModelSpec,
   ProjectSpec,
   SubAgentToolSpec,
@@ -42,7 +43,7 @@ export const GROQ_PROVIDER_DECL = `const groq = openaiProvider({ baseUrl: ${JSON
 export const str = (s: string): string => JSON.stringify(s);
 
 /** The provider-import token a model needs (for import planning), or `undefined` for a verbatim `code` model. */
-export function providerOf(model: ModelSpec): "openai" | "anthropic" | "google" | "groq" | "transformers" | undefined {
+export function providerOf(model: ModelSpec): LiveProviderName | "transformers" | undefined {
   if (model.kind === "live") return model.provider;
   if (model.kind === "local") return "transformers";
   return undefined;
@@ -55,6 +56,8 @@ export function providerImportEntries(providers: ReadonlySet<string>): Map<strin
   if (providers.has("openai") || providers.has("groq")) {
     out.set("mithril/openai", [...(providers.has("openai") ? ["openai"] : []), ...(providers.has("groq") ? ["openaiProvider"] : [])]);
   }
+  if (providers.has("deepseek")) out.set("mithril/deepseek", ["deepseek"]);
+  if (providers.has("openrouter")) out.set("mithril/openrouter", ["openrouter"]);
   if (providers.has("google")) out.set("@mithril/providers/google", ["google"]);
   if (providers.has("transformers")) out.set("mithril/transformers", ["transformers"]);
   return out;
@@ -71,6 +74,10 @@ export function modelExpr(model: ModelSpec): string {
           return `anthropic(${str(model.model)})`;
         case "google":
           return `google(${str(model.model)})`;
+        case "deepseek":
+          return `deepseek(${str(model.model)})`;
+        case "openrouter":
+          return `openrouter(${str(model.model)})`;
         case "groq":
           return `{ id: ${str(`groq/${model.model}`)}, provider: groq }`;
       }
@@ -240,7 +247,7 @@ export function plannedImports(spec: ProjectSpec): ReadonlyMap<string, readonly 
   return out;
 }
 
-const IMPORT_ORDER = ["mithril", "mithril/anthropic", "mithril/openai", "@mithril/providers/google", "mithril/transformers", "@mithril/workflows", "zod"];
+const IMPORT_ORDER = ["mithril", "mithril/anthropic", "mithril/deepseek", "mithril/openai", "mithril/openrouter", "@mithril/providers/google", "mithril/transformers", "@mithril/workflows", "zod"];
 
 function importLines(spec: ProjectSpec): string[] {
   const plan = plannedImports(spec);

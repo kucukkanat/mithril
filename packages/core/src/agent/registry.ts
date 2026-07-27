@@ -90,15 +90,32 @@ export function resolveModel(
  * Resolve the {@link Transport} for a run, defaulting to BYOK from the environment.
  *
  * @param explicit - a caller-supplied transport; returned unchanged when present.
- * @param modelId - the resolved model id; its `provider` segment selects the `<PROVIDER>_API_KEY` env var.
- * @returns the explicit transport, or a `byok` transport reading `<PROVIDER>_API_KEY` (empty string if unset).
+ * @param modelId - the resolved model id; its `provider` segment selects the `<PROVIDER>_API_KEY` and
+ *   `<PROVIDER>_BASE_URL` env vars.
+ * @returns the explicit transport, or a `byok` transport reading `<PROVIDER>_API_KEY` (empty string if
+ *   unset) and, when set, `<PROVIDER>_BASE_URL`.
+ *
+ * @remarks `<PROVIDER>_BASE_URL` points a provider at a wire-compatible endpoint — a gateway, a proxy,
+ * a local server — without touching the code. It is the environment half of the same override
+ * `openaiProvider({ baseUrl })` / `anthropicProvider({ baseUrl })` take in code; an explicit
+ * `transport` still wins, since it is the more specific instruction.
+ *
+ * @example
+ * ```sh
+ * OPENAI_API_KEY=… OPENAI_BASE_URL=https://my-gateway.internal/v1 bun run start
+ * ```
  */
 export function resolveTransport(explicit: Transport | undefined, modelId: ModelId): Transport {
   if (explicit !== undefined) return explicit;
   const providerId = modelId.split("/")[0] ?? "";
-  const envVar = `${providerId.toUpperCase()}_API_KEY`;
-  const apiKey = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env?.[
-    envVar
-  ];
-  return { kind: "byok", apiKey: apiKey ?? "" };
+  const env = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env;
+  const apiKey = env?.[`${providerId.toUpperCase()}_API_KEY`];
+  const baseUrl = env?.[`${providerId.toUpperCase()}_BASE_URL`]?.trim();
+  return {
+    kind: "byok",
+    apiKey: apiKey ?? "",
+    // Omitted rather than `undefined` so the provider's `transport.baseUrl ?? config ?? default`
+    // chain falls through to the next-most-specific source.
+    ...(baseUrl === undefined || baseUrl.length === 0 ? {} : { baseUrl }),
+  };
 }

@@ -21,6 +21,6 @@ type ValueRef =
 };
 ```
 
-Defined in: [compose.ts:16](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/compose.ts#L16)
+Defined in: [compose.ts:16](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/compose.ts#L16)
 
 A value a composition step can pass: the tool's own input, an earlier step's output, or a literal.

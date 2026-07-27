@@ -1,4 +1,7 @@
 import { useEffect, useState, type CSSProperties } from "react";
+import { highlight, TOKEN_CLASS as CLASS, type TokenKind } from "../lib/highlight.ts";
+
+export { highlight, type TokenKind };
 
 /*
  * The generated-code pane for Split view: a token-rendered listing rather than an editor.
@@ -12,9 +15,6 @@ import { useEffect, useState, type CSSProperties } from "react";
  * that escape hatch the pane looks like an editor and swallows the click, which reads as broken.
  */
 
-/** A syntax class for one token of generated code. */
-export type TokenKind = "plain" | "key" | "str" | "num" | "com" | "fn";
-
 export interface CodeLine {
   /** Tokens making up the line, in order. */
   readonly tokens: readonly { readonly kind: TokenKind; readonly text: string }[];
@@ -22,45 +22,6 @@ export interface CodeLine {
   readonly field?: string;
   /** When set, the line's single string literal is editable and writes back through this. */
   readonly edit?: { readonly value: string; readonly onChange: (next: string) => void };
-}
-
-const CLASS: Record<TokenKind, string> = {
-  plain: "",
-  key: "tok-key",
-  str: "tok-str",
-  num: "tok-num",
-  com: "tok-com",
-  fn: "tok-fn",
-};
-
-const KEYWORDS = new Set(["const", "let", "var", "await", "return", "async", "function", "new", "throw", "import", "from", "export", "if", "else"]);
-
-/**
- * Split one line of generated TypeScript into coloured tokens.
- *
- * A hand-rolled scanner, not a real tokenizer: this pane only ever renders output from
- * `generateProject`, whose shape is known and narrow. The Code tab owns real syntax highlighting.
- */
-export function highlight(line: string): readonly { readonly kind: TokenKind; readonly text: string }[] {
-  const trimmed = line.trimStart();
-  if (trimmed.startsWith("//")) return [{ kind: "com", text: line }];
-
-  const out: { kind: TokenKind; text: string }[] = [];
-  // Strings first — their contents must never be scanned for keywords.
-  const pattern = /("(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*`|\b\d+(?:\.\d+)?\b|\b[A-Za-z_$][\w$]*\b)/g;
-  let last = 0;
-  for (const m of line.matchAll(pattern)) {
-    if (m.index > last) out.push({ kind: "plain", text: line.slice(last, m.index) });
-    const text = m[0];
-    if (text.startsWith('"') || text.startsWith("`")) out.push({ kind: "str", text });
-    else if (/^\d/.test(text)) out.push({ kind: "num", text });
-    else if (KEYWORDS.has(text)) out.push({ kind: "key", text });
-    else if (line[m.index + text.length] === "(") out.push({ kind: "fn", text });
-    else out.push({ kind: "plain", text });
-    last = m.index + text.length;
-  }
-  if (last < line.length) out.push({ kind: "plain", text: line.slice(last) });
-  return out;
 }
 
 export interface CodeViewProps {

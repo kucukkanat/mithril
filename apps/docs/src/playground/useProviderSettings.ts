@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { connectionEnv, type ProviderConnection, type ProviderConnections } from "@mithril-internal/model-picker";
 import { DEFAULT_LOCAL_MODEL, LIVE_PROVIDERS, liveProvider, localModel, type LiveProviderId, type ProviderMode } from "./providers.ts";
 
 /*
@@ -13,7 +14,6 @@ import { DEFAULT_LOCAL_MODEL, LIVE_PROVIDERS, liveProvider, localModel, type Liv
 
 const STORAGE_KEY = "mithril-playground-settings";
 
-type KeyMap = Partial<Record<LiveProviderId, string>>;
 type ModelMap = Partial<Record<LiveProviderId, string>>;
 
 interface Settings {
@@ -22,7 +22,8 @@ interface Settings {
   readonly models: ModelMap;
   readonly localModel: string;
   readonly remember: boolean;
-  readonly keys: KeyMap;
+  /** Per-provider key + optional endpoint override — the same shape the Studio stores. */
+  readonly connections: ProviderConnections;
 }
 
 const DEFAULTS: Settings = {
@@ -31,8 +32,22 @@ const DEFAULTS: Settings = {
   models: {},
   localModel: DEFAULT_LOCAL_MODEL,
   remember: true,
-  keys: {},
+  connections: {},
 };
+
+/** The pre-unification shape: a flat `{ [provider]: key }` map with nowhere to put an endpoint. */
+const keysToConnections = (keys: unknown): ProviderConnections =>
+  typeof keys !== "object" || keys === null
+    ? {}
+    : (Object.fromEntries(
+        Object.entries(keys as Record<string, unknown>)
+          .filter(([, v]) => typeof v === "string")
+          .map(([id, apiKey]) => [id, { apiKey }]),
+      ) as ProviderConnections);
+
+/** Drop credentials but keep endpoints — what gets persisted when `remember` is off. */
+const stripKeys = (connections: ProviderConnections): ProviderConnections =>
+  Object.fromEntries(Object.entries(connections).map(([id, c]) => [id, { ...c, apiKey: "" }])) as ProviderConnections;
 
 export interface DownloadState {
   readonly status: "idle" | "loading" | "ready" | "error";
@@ -56,17 +71,24 @@ function loadSettings(): Settings {
       models: typeof p.models === "object" && p.models !== null ? p.models : {},
       localModel: typeof p.localModel === "string" ? p.localModel : DEFAULTS.localModel,
       remember: p.remember !== false,
-      // Keys are only trusted from storage when the user opted to remember them.
-      keys: p.remember !== false && typeof p.keys === "object" && p.keys !== null ? p.keys : {},
+      // Keys are only trusted from storage when the user opted to remember them; endpoints are not
+      // secrets, so a configured gateway survives `remember: false`.
+      connections: readConnections(p, p.remember !== false),
     };
   } catch {
     return DEFAULTS;
   }
 }
 
+/** Read connections from a stored blob, migrating the pre-unification `keys` map when present. */
+function readConnections(p: Partial<Settings> & { readonly keys?: unknown }, trustKeys: boolean): ProviderConnections {
+  const stored = typeof p.connections === "object" && p.connections !== null ? p.connections : keysToConnections(p.keys);
+  return trustKeys ? stored : stripKeys(stored);
+}
+
 function persist(s: Settings): void {
   if (typeof localStorage === "undefined") return;
-  const toStore: Settings = s.remember ? s : { ...s, keys: {} };
+  const toStore: Settings = s.remember ? s : { ...s, connections: stripKeys(s.connections) };
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
   } catch {
@@ -95,19 +117,30 @@ export function useProviderSettings() {
   const setProvider = useCallback((activeProvider: LiveProviderId) => update({ activeProvider }), [update]);
   const setModel = useCallback((id: LiveProviderId, model: string) => setSettings((s) => ({ ...s, models: { ...s.models, [id]: model } })), []);
   const setLocalModel = useCallback((localModel: string) => update({ localModel }), [update]);
-  const setKey = useCallback((id: LiveProviderId, key: string) => setSettings((s) => ({ ...s, keys: { ...s.keys, [id]: key } })), []);
+  const setKey = useCallback(
+    (id: LiveProviderId, apiKey: string) => setSettings((s) => ({ ...s, connections: { ...s.connections, [id]: { ...s.connections[id], apiKey } } })),
+    [],
+  );
+  const setConnection = useCallback(
+    (id: LiveProviderId, patch: ProviderConnection) => setSettings((s) => ({ ...s, connections: { ...s.connections, [id]: { ...s.connections[id], ...patch } } })),
+    [],
+  );
   const setRemember = useCallback((remember: boolean) => update({ remember }), [update]);
-  const clearKeys = useCallback(() => setSettings((s) => ({ ...s, keys: {} })), []);
+  // Clears credentials only — a base URL is not a secret, and losing a configured gateway to a
+  // "clear key" button would be a surprise.
+  const clearKeys = useCallback(() => setSettings((s) => ({ ...s, connections: stripKeys(s.connections) })), []);
 
   const modelFor = useCallback((id: LiveProviderId): string => settings.models[id] ?? liveProvider(id).defaultModel, [settings.models]);
 
-  /** The env map a run should receive: only the active provider's key, only in Live mode. */
+  /**
+   * The env map a run should receive: only the ACTIVE provider's connection, and only in Live mode.
+   * That is the key plus, when configured, `<PROVIDER>_BASE_URL` — which is how an endpoint override
+   * reaches the real request without the example code having to mention it.
+   */
   const envForRun = useCallback((): Record<string, string> => {
     if (settings.mode !== "live") return {};
-    const p = liveProvider(settings.activeProvider);
-    const key = settings.keys[settings.activeProvider]?.trim();
-    return key ? { [p.envVar]: key } : {};
-  }, [settings.mode, settings.activeProvider, settings.keys]);
+    return connectionEnv(settings.activeProvider, settings.connections[settings.activeProvider]);
+  }, [settings.mode, settings.activeProvider, settings.connections]);
 
   /** Warm the weight cache for a local model (runs on the main thread) and drive the progress bar. */
   const preloadLocal = useCallback(async (model: string): Promise<void> => {
@@ -138,6 +171,7 @@ export function useProviderSettings() {
     setModel,
     setLocalModel,
     setKey,
+    setConnection,
     setRemember,
     clearKeys,
     envForRun,

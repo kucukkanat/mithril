@@ -54,7 +54,9 @@ if (result.status === "completed") console.log(result.output);`} />
 ## Model handles vs. registry strings
 
 A provider handle self-wires — `anthropic("claude-fable-5")`, `openai("gpt-4o")`,
-`google("gemini-2.0-flash")` — so no registry is needed. Prefer a bare `"provider/model"` string
+`google("gemini-2.0-flash")`, `deepseek("deepseek-chat")`,
+`openrouter("anthropic/claude-sonnet-4.5")` — so no registry is needed. Prefer a bare
+`"provider/model"` string
 (for config-driven routing)? Pass a `providers:` registry at run time and the string resolves over
 it. A string with no registry throws `NO_PROVIDER` — an [error that tells you the
 fix](/concepts/errors/).

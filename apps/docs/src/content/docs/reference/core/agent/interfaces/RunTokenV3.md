@@ -5,7 +5,7 @@ prev: false
 title: "RunTokenV3"
 ---
 
-Defined in: [packages/core/src/agent/loop.ts:186](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L186)
+Defined in: [packages/core/src/agent/loop.ts:186](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L186)
 
 The current run token: [RunTokenV2](/mithril/reference/core/agent/interfaces/runtokenv2/) plus the tools the run created.
 
@@ -24,7 +24,7 @@ covers both cases, and the duplication is one JSON record per authored tool.
 readonly messages: readonly LoopMessage[];
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:190](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L190)
+Defined in: [packages/core/src/agent/loop.ts:190](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L190)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [packages/core/src/agent/loop.ts:190](https://github.com/kucukkanat/
 readonly model: string;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:189](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L189)
+Defined in: [packages/core/src/agent/loop.ts:189](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L189)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [packages/core/src/agent/loop.ts:189](https://github.com/kucukkanat/
 readonly pending: PendingSuspension;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:193](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L193)
+Defined in: [packages/core/src/agent/loop.ts:193](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L193)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [packages/core/src/agent/loop.ts:193](https://github.com/kucukkanat/
 readonly runId: string;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:188](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L188)
+Defined in: [packages/core/src/agent/loop.ts:188](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L188)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [packages/core/src/agent/loop.ts:188](https://github.com/kucukkanat/
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:192](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L192)
+Defined in: [packages/core/src/agent/loop.ts:192](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L192)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [packages/core/src/agent/loop.ts:192](https://github.com/kucukkanat/
 readonly optional tools?: readonly ToolDefinition[];
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:195](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L195)
+Defined in: [packages/core/src/agent/loop.ts:195](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L195)
 
 Every non-static tool the run held at suspend time, in registration order.
 
@@ -86,7 +86,7 @@ Every non-static tool the run held at suspend time, in registration order.
 readonly usage: UsageTotals;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:191](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L191)
+Defined in: [packages/core/src/agent/loop.ts:191](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L191)
 
 ***
 
@@ -96,4 +96,4 @@ Defined in: [packages/core/src/agent/loop.ts:191](https://github.com/kucukkanat/
 readonly v: 3;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:187](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L187)
+Defined in: [packages/core/src/agent/loop.ts:187](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L187)

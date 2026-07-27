@@ -9,7 +9,7 @@ title: "ToolCallFor"
 type ToolCallFor<Tools> = { [T in Tools[number] as ToolNameOf<T> & string]: T extends Tool<infer N, infer In, infer _O, infer _D> ? { callId: string; input: In; name: N } : never }[ToolNameOf<Tools[number]> & string];
 ```
 
-Defined in: [packages/core/src/protocol/narrow.ts:19](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/narrow.ts#L19)
+Defined in: [packages/core/src/protocol/narrow.ts:19](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/narrow.ts#L19)
 
 The union of name-correlated `tool.call` shapes for a concrete tool tuple.
 

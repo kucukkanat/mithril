@@ -5,7 +5,7 @@ prev: false
 title: "ModelMessage"
 ---
 
-Defined in: [packages/core/src/protocol/state.ts:40](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/state.ts#L40)
+Defined in: [packages/core/src/protocol/state.ts:40](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/state.ts#L40)
 
 A message at the model-call boundary — like [Message](/mithril/reference/core/protocol/interfaces/message/), but `content` may carry multimodal
 [ContentPart](/mithril/reference/core/protocol/type-aliases/contentpart/)s (images/files) in addition to plain text. The loop threads these to providers; the
@@ -21,7 +21,7 @@ readonly content:
   | readonly ContentPart[];
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:42](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/state.ts#L42)
+Defined in: [packages/core/src/protocol/state.ts:42](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/state.ts#L42)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [packages/core/src/protocol/state.ts:42](https://github.com/kucukkan
 readonly role: string;
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:41](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/state.ts#L41)
+Defined in: [packages/core/src/protocol/state.ts:41](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/state.ts#L41)
 
 ***
 
@@ -41,4 +41,4 @@ Defined in: [packages/core/src/protocol/state.ts:41](https://github.com/kucukkan
 readonly toolCalls: readonly ToolCallRecord[];
 ```
 
-Defined in: [packages/core/src/protocol/state.ts:43](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/state.ts#L43)
+Defined in: [packages/core/src/protocol/state.ts:43](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/state.ts#L43)

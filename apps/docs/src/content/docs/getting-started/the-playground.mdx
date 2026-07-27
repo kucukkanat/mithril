@@ -88,7 +88,8 @@ the browser.
 
 The playground's `require` shim resolves only the real Mithril entrypoints and `zod`:
 
-`mithril`, `mithril/anthropic`, `mithril/openai`, `mithril/transformers`, `@mithril/providers/google`,
+`mithril`, `mithril/anthropic`, `mithril/deepseek`, `mithril/openai`, `mithril/openrouter`,
+`mithril/transformers`, `@mithril/providers/google`,
 `@mithril/core/agent`, `@mithril/core/protocol`, `@mithril/core/testkit`,
 `@mithril/memory`, `@mithril/kv`, `@mithril/fs`, `@mithril/vectors`, `@mithril/workflows`,
 `@mithril/otel`, and `zod`. Importing anything else throws with the list of what's available.
@@ -99,4 +100,31 @@ zero network, model turns come from `scriptedProvider`), **live** (BYOK — your
 `process.env.<PROVIDER>_API_KEY` and sent straight to the real provider), and **local** (an on-device
 Transformers.js model). The injected globals behave identically across all three; only the model
 source changes.
+
+It is the *same* picker the [Studio](/mithril/guides/studio/) uses — so the model search, the optional
+base URL, and **Test connection** work identically in both.
+</Aside>
+
+## Picking a model
+
+Choosing **Cloud** gives you a searchable model field, a key field, and an optional endpoint:
+
+- **Fuzzy model search.** Type any part of a model id — `haiku`, `4omini`, `s45` — and the list
+  narrows. Once a key is set and **Test connection** succeeds, the list is replaced by the models
+  your *account* can actually call, fetched from the provider itself.
+- **Custom model ids are first-class.** Anything you type is the model id. If it isn't in the known
+  list the field says so in one line and sends it verbatim — which is how you reach a model newer
+  than this page, or a gateway's own naming.
+- **Base URL (optional).** OpenAI, Anthropic, Groq, DeepSeek and OpenRouter can be pointed at any
+  wire-compatible endpoint. Leave it blank for the provider's own API (the placeholder shows which
+  that is). It is injected as `process.env.<PROVIDER>_BASE_URL`, which core's BYOK fallback reads —
+  so the example code stays portable and never mentions your gateway. Gemini has no base-URL field:
+  its adapter builds a URL shape no third-party gateway mimics.
+- **Test connection** sends one minimal completion through the exact path a run takes, then reports
+  which of the three things is wrong — the key, the endpoint, or the model id.
+
+<Aside type="caution" title="Test connection makes a real request">
+It is a real, billable one-token completion (a fraction of a cent), sent only when you press the
+button. That is deliberate: a listing endpoint would validate the key but tell you nothing about
+whether the *model id* works, which is the failure that actually bites.
 </Aside>

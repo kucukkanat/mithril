@@ -5,7 +5,7 @@ prev: false
 title: "CompositionStep"
 ---
 
-Defined in: [compose.ts:22](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/compose.ts#L22)
+Defined in: [compose.ts:22](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/compose.ts#L22)
 
 One step: call a registered tool with an object assembled from [ValueRef](/mithril/reference/authoring/index/type-aliases/valueref/)s.
 
@@ -17,7 +17,7 @@ One step: call a registered tool with an object assembled from [ValueRef](/mithr
 readonly args: Readonly<Record<string, ValueRef>>;
 ```
 
-Defined in: [compose.ts:27](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/compose.ts#L27)
+Defined in: [compose.ts:27](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/compose.ts#L27)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [compose.ts:27](https://github.com/kucukkanat/mithril/blob/11fd4315e
 readonly id: string;
 ```
 
-Defined in: [compose.ts:24](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/compose.ts#L24)
+Defined in: [compose.ts:24](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/compose.ts#L24)
 
 Unique within the composition; later steps reference this step's output by it.
 
@@ -39,6 +39,6 @@ Unique within the composition; later steps reference this step's output by it.
 readonly tool: string;
 ```
 
-Defined in: [compose.ts:26](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/compose.ts#L26)
+Defined in: [compose.ts:26](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/compose.ts#L26)
 
 The name of a tool that must already exist when the composition is defined.

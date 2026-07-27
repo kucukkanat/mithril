@@ -139,6 +139,11 @@
     "kind": "fn",
     "sig": "function canonicalJson(v): string;"
   },
+  "CatalogModel": {
+    "href": "/reference/runner-web/index/interfaces/catalogmodel/",
+    "kind": "type",
+    "sig": "One entry in a provider's curated model list — what the picker's fuzzy search matches against."
+  },
   "ChatAgent": {
     "href": "/reference/react/index/interfaces/chatagent/",
     "kind": "type",
@@ -219,6 +224,21 @@
     "kind": "type",
     "sig": "One step: call a registered tool with an object assembled from ValueRefs."
   },
+  "ConnectionFault": {
+    "href": "/reference/runner-web/index/type-aliases/connectionfault/",
+    "kind": "type",
+    "sig": "type ConnectionFault = \"key\" | \"baseUrl\" | \"model\" | \"network\" | \"unknown\";"
+  },
+  "ConnectionProbe": {
+    "href": "/reference/runner-web/index/interfaces/connectionprobe/",
+    "kind": "type",
+    "sig": "What to probe. baseUrl and apiKey are exactly what a run would use."
+  },
+  "ConnectionResult": {
+    "href": "/reference/runner-web/index/type-aliases/connectionresult/",
+    "kind": "type",
+    "sig": "type ConnectionResult = | { endpoint: string; latencyMs: number; ok: true; } | { endpoint: string; fault: ConnectionFault; message: string;…"
+  },
   "ContentPart": {
     "href": "/reference/core/protocol/type-aliases/contentpart/",
     "kind": "type",
@@ -288,6 +308,16 @@
     "href": "/reference/core/protocol/type-aliases/customeventof/",
     "kind": "type",
     "sig": "type CustomEventOf<Id, P> = EventMeta & { payload: P; type: `custom.${Id}`; };"
+  },
+  "deepseek": {
+    "href": "/reference/providers/deepseek/functions/deepseek/",
+    "kind": "fn",
+    "sig": "function deepseek(model, opts?): ModelHandle;"
+  },
+  "deepseekProvider": {
+    "href": "/reference/providers/deepseek/functions/deepseekprovider/",
+    "kind": "fn",
+    "sig": "function deepseekProvider(config?): Provider;"
   },
   "DEFAULT_LOCAL_MODEL": {
     "href": "/reference/runner-web/index/variables/default_local_model/",
@@ -449,6 +479,11 @@
     "kind": "type",
     "sig": "readonly issues: readonly Issue[];"
   },
+  "fetchProviderModels": {
+    "href": "/reference/runner-web/index/functions/fetchprovidermodels/",
+    "kind": "fn",
+    "sig": "function fetchProviderModels(probe): Promise<readonly string[] | undefined>;"
+  },
   "FileKind": {
     "href": "/reference/fs/index/type-aliases/filekind/",
     "kind": "type",
@@ -508,6 +543,16 @@
     "href": "/reference/authoring/persistence/functions/fstoolstore/",
     "kind": "fn",
     "sig": "function fsToolStore(fs, opts?): ToolStore;"
+  },
+  "fuzzyPositions": {
+    "href": "/reference/runner-web/index/functions/fuzzypositions/",
+    "kind": "fn",
+    "sig": "function fuzzyPositions(query, haystack): readonly number[];"
+  },
+  "fuzzyScore": {
+    "href": "/reference/runner-web/index/functions/fuzzyscore/",
+    "kind": "fn",
+    "sig": "function fuzzyScore(query, haystack): number | undefined;"
   },
   "gemmaToolCall": {
     "href": "/reference/providers/transformers/variables/gemmatoolcall/",
@@ -689,6 +734,11 @@
     "kind": "fn",
     "sig": "function isComposition(body): body is ToolComposition & JsonValue;"
   },
+  "isCustomModel": {
+    "href": "/reference/runner-web/index/functions/iscustommodel/",
+    "kind": "fn",
+    "sig": "function isCustomModel( provider, model, known?): boolean;"
+  },
   "isKnownEvent": {
     "href": "/reference/core/protocol/functions/isknownevent/",
     "kind": "fn",
@@ -782,7 +832,12 @@
   "LiveProviderId": {
     "href": "/reference/runner-web/index/type-aliases/liveproviderid/",
     "kind": "type",
-    "sig": "type LiveProviderId = \"openai\" | \"anthropic\" | \"google\" | \"groq\";"
+    "sig": "type LiveProviderId = \"openai\" | \"anthropic\" | \"google\" | \"groq\" | \"deepseek\" | \"openrouter\";"
+  },
+  "LiveProviderName": {
+    "href": "/reference/spec/index/type-aliases/liveprovidername/",
+    "kind": "type",
+    "sig": "type LiveProviderName = \"openai\" | \"anthropic\" | \"google\" | \"groq\" | \"deepseek\" | \"openrouter\";"
   },
   "LOCAL_MODELS": {
     "href": "/reference/runner-web/index/variables/local_models/",
@@ -1009,6 +1064,11 @@
     "kind": "type",
     "sig": "type ModelInput = | ModelId | ModelHandle;"
   },
+  "ModelMatch": {
+    "href": "/reference/runner-web/index/interfaces/modelmatch/",
+    "kind": "type",
+    "sig": "A catalog model plus why it ranked where it did."
+  },
   "ModelMessage": {
     "href": "/reference/core/protocol/interfaces/modelmessage/",
     "kind": "type",
@@ -1088,6 +1148,21 @@
     "href": "/reference/providers/openai/functions/openaiprovider/",
     "kind": "fn",
     "sig": "function openaiProvider(config?): Provider;"
+  },
+  "openrouter": {
+    "href": "/reference/providers/openrouter/functions/openrouter/",
+    "kind": "fn",
+    "sig": "function openrouter(model, opts?): ModelHandle;"
+  },
+  "OpenRouterAttribution": {
+    "href": "/reference/providers/openrouter/interfaces/openrouterattribution/",
+    "kind": "type",
+    "sig": "Optional attribution shown on OpenRouter's public leaderboards; both fields are sent as headers."
+  },
+  "openrouterProvider": {
+    "href": "/reference/providers/openrouter/functions/openrouterprovider/",
+    "kind": "fn",
+    "sig": "function openrouterProvider(config?): Provider;"
   },
   "opfsFileSystem": {
     "href": "/reference/fs/opfs/functions/opfsfilesystem/",
@@ -1232,7 +1307,7 @@
   "providerOf": {
     "href": "/reference/spec/index/functions/providerof/",
     "kind": "fn",
-    "sig": "function providerOf(model): \"openai\" | \"anthropic\" | \"google\" | \"groq\" | \"transformers\" | undefined;"
+    "sig": "function providerOf(model): | LiveProviderName | \"transformers\" | undefined;"
   },
   "providerRegistry": {
     "href": "/reference/core/agent/functions/providerregistry/",
@@ -1248,6 +1323,11 @@
     "href": "/reference/core/protocol/interfaces/providerspec/",
     "kind": "type",
     "sig": "A provider's published spec: its id and the models it offers keyed by name."
+  },
+  "ProviderWire": {
+    "href": "/reference/runner-web/index/type-aliases/providerwire/",
+    "kind": "type",
+    "sig": "type ProviderWire = \"openai\" | \"anthropic\" | \"google\";"
   },
   "QueryOptions": {
     "href": "/reference/vectors/index/interfaces/queryoptions/",
@@ -1298,6 +1378,11 @@
     "href": "/reference/core/protocol/type-aliases/resolutionof/",
     "kind": "type",
     "sig": "type ResolutionOf<R> = R extends SuspensionRequest<string, JsonValue, infer T> ? T : never;"
+  },
+  "resolveBaseUrl": {
+    "href": "/reference/runner-web/index/functions/resolvebaseurl/",
+    "kind": "fn",
+    "sig": "function resolveBaseUrl(provider, baseUrl?): string;"
   },
   "resolveModel": {
     "href": "/reference/core/agent/functions/resolvemodel/",
@@ -1494,6 +1579,11 @@
     "kind": "type",
     "sig": "A payload transform applied before signing (encode) and after verifying (decode) in the seal envelope."
   },
+  "searchModels": {
+    "href": "/reference/runner-web/index/functions/searchmodels/",
+    "kind": "fn",
+    "sig": "function searchModels(models, query): readonly ModelMatch[];"
+  },
   "selfConsistency": {
     "href": "/reference/core/agent/functions/selfconsistency/",
     "kind": "fn",
@@ -1683,6 +1773,11 @@
     "href": "/reference/core/protocol/interfaces/testadapter/",
     "kind": "type",
     "sig": "A tiny test-runner bridge so the conformance kit runs under bun:test or"
+  },
+  "testConnection": {
+    "href": "/reference/runner-web/index/functions/testconnection/",
+    "kind": "fn",
+    "sig": "function testConnection(probe): Promise<ConnectionResult>;"
   },
   "testModel": {
     "href": "/reference/core/testkit/functions/testmodel/",

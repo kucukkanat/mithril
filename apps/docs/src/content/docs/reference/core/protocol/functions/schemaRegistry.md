@@ -9,7 +9,7 @@ title: "schemaRegistry"
 function schemaRegistry(entries): SchemaRegistry;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:135](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/suspension.ts#L135)
+Defined in: [packages/core/src/protocol/suspension.ts:135](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/suspension.ts#L135)
 
 Build a [SchemaRegistry](/mithril/reference/core/protocol/interfaces/schemaregistry/) from an id → schema map.
 

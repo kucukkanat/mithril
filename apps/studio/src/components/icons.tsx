@@ -42,6 +42,8 @@ export const SendIcon = (p: IconProps) => <Icon {...p} paths="M5 12h13m0 0-5-5m5
 export const ReplayIcon = (p: IconProps) => <Icon {...p} paths={["M4 12a8 8 0 1 0 3-6.2", "M4 4v4h4"]} />;
 export const CheckIcon = (p: IconProps) => <Icon {...p} paths="M5 12.5l4.5 4.5L19 7" />;
 export const PlusIcon = (p: IconProps) => <Icon {...p} paths="M12 5v14M5 12h14" />;
+export const TrashIcon = (p: IconProps) => <Icon {...p} paths={["M5 7h14", "M10 7V5h4v2", "M7 7l1 12h8l1-12", "M11 10v6M13 10v6"]} />;
+export const SearchIcon = (p: IconProps) => <Icon {...p} paths={["M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z", "M16.5 16.5 21 21"]} />;
 /** A billet in profile with an antenna — the rail's shorthand for "an agent". */
 export const AgentIcon = (p: IconProps) => (
   <svg className={p.className ?? "icon"} viewBox="0 0 24 24" aria-hidden="true">

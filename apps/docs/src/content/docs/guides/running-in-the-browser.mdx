@@ -37,6 +37,23 @@ console.log((await assistant.run("Summarize this page.")).status);`} />
 Omit `transport` entirely and BYOK is read from `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` — handy on a
 server, but there is no such env in a browser, so pass one explicitly.
 
+### Pointing a provider at a compatible endpoint
+
+The same environment fallback also reads `<PROVIDER>_BASE_URL`, so an OpenAI- or Anthropic-compatible
+gateway needs no code change:
+
+```sh
+OPENAI_API_KEY=… OPENAI_BASE_URL=https://my-gateway.internal/v1 bun run start
+```
+
+Precedence runs most-specific-first: an explicit `transport.baseUrl` beats
+`openaiProvider({ baseUrl })`, which beats the provider's own default — and the env var arrives as
+part of the resolved BYOK transport, so it wins over a `baseUrl` baked into the code. In code,
+`openaiProvider({ baseUrl })` / `anthropicProvider({ baseUrl })` do the same thing explicitly.
+
+This is exactly how the **Base URL** field in the playground and the Studio works: it is stored beside
+the key and injected as `<PROVIDER>_BASE_URL`, never written into the example or the project spec.
+
 <Aside type="caution" title="BYOK exposes the key">
 A BYOK key in client code is visible to the user — never ship it in a public app. Use **proxy**
 (your server holds the secret) or **ephemeral** (short-lived, server-minted tokens) for anything
@@ -45,13 +62,13 @@ untrusted. BYOK is for local dev and personal tools.
 
 <Aside type="tip" title="Try BYOK in the playground">
 The [playground](/playground/) can run these examples against a real model: in the **Run against** bar,
-pick a live provider (OpenAI, Anthropic, Google, or Groq) and paste a key. It's pure BYOK — the key
-stays in your browser and is sent straight to the provider, exactly as described here.
+pick a live provider (OpenAI, Anthropic, Google, Groq, DeepSeek, or OpenRouter) and paste a key. It's
+pure BYOK — the key stays in your browser and is sent straight to the provider, exactly as described here.
 </Aside>
 
 ## CORS, handled
 
-All four playground providers work directly from a browser with BYOK — you don't wire any of it:
+All six playground providers work directly from a browser with BYOK — you don't wire any of it:
 
 - **OpenAI** serves CORS unconditionally, so the request just works.
 - **Anthropic** auto-injects the `anthropic-dangerous-direct-browser-access: true` header, so the
@@ -60,6 +77,10 @@ All four playground providers work directly from a browser with BYOK — you don
 - **Google** sends the key as a `?key=` query parameter to `generativelanguage.googleapis.com`, which
   serves permissive CORS for API-key calls.
 - **Groq** speaks the OpenAI wire format (point `openaiProvider` at its `baseUrl`) and is CORS-friendly.
+- **DeepSeek** reflects the request origin and permits the `authorization` header, so `deepseek(…)`
+  works from a page unchanged.
+- **OpenRouter** serves permissive CORS (`*`) and whitelists its `HTTP-Referer` / `X-Title`
+  attribution headers, so `openrouter(…)` — including `appUrl`/`appName` — works from a page too.
 
 The provider does the right thing per host — Mistral/xAI are the ones that may still need a proxy.
 

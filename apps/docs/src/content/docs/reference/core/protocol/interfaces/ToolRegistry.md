@@ -5,7 +5,7 @@ prev: false
 title: "ToolRegistry"
 ---
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:80](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L80)
+Defined in: [packages/core/src/protocol/tool-registry.ts:80](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L80)
 
 The live, per-run set of tools the loop resolves against.
 
@@ -33,7 +33,7 @@ impossible.
 readonly revision: number;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:98](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L98)
+Defined in: [packages/core/src/protocol/tool-registry.ts:98](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L98)
 
 Incremented on every accepted mutation.
 
@@ -47,7 +47,7 @@ get(name):
   | undefined;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:84](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L84)
+Defined in: [packages/core/src/protocol/tool-registry.ts:84](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L84)
 
 #### Parameters
 
@@ -68,7 +68,7 @@ Defined in: [packages/core/src/protocol/tool-registry.ts:84](https://github.com/
 has(name): boolean;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:85](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L85)
+Defined in: [packages/core/src/protocol/tool-registry.ts:85](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L85)
 
 #### Parameters
 
@@ -88,7 +88,7 @@ Defined in: [packages/core/src/protocol/tool-registry.ts:85](https://github.com/
 list(): readonly AnyTool<Deps>[];
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:82](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L82)
+Defined in: [packages/core/src/protocol/tool-registry.ts:82](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L82)
 
 Every registered tool, in registration order (static → plugin → setup → runtime).
 
@@ -107,7 +107,7 @@ register(
    definition?): void;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:90](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L90)
+Defined in: [packages/core/src/protocol/tool-registry.ts:90](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L90)
 
 #### Parameters
 
@@ -134,7 +134,7 @@ Re-registering the identical digest is a no-op, which is what makes replay and T
 revoke(name): boolean;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:96](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L96)
+Defined in: [packages/core/src/protocol/tool-registry.ts:96](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L96)
 
 #### Parameters
 
@@ -161,7 +161,7 @@ remove a capability its author declared.
 summaries(): readonly ToolSummary[];
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:83](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L83)
+Defined in: [packages/core/src/protocol/tool-registry.ts:83](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L83)
 
 #### Returns
 

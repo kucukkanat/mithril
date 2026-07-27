@@ -49,8 +49,11 @@ describe("highlight", () => {
     expect(highlight(line).filter((t) => t.kind === "str")).toHaveLength(1);
   });
 
-  test("template literals are treated as strings", () => {
-    expect(kindOf("  const r = await fetch(`/wx?q=${city}`);", "`/wx?q=${city}`")).toBe("str");
+  test("a template literal is a string, but its interpolations are scanned as code", () => {
+    const line = "  const r = await fetch(`/wx?q=${city}`);";
+    expect(text(line)).toBe(line);
+    expect(kindOf(line, "`/wx?q=")).toBe("str");
+    expect(kindOf(line, "city")).toBe("plain");
   });
 
   test("a property name is not mistaken for a call", () => {

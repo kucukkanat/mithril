@@ -9,7 +9,7 @@ title: "vectorsConformance"
 function vectorsConformance(make, t): void;
 ```
 
-Defined in: [index.ts:150](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/vectors/src/index.ts#L150)
+Defined in: [index.ts:150](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/vectors/src/index.ts#L150)
 
 Shared conformance suite every [VectorStore](/mithril/reference/vectors/index/interfaces/vectorstore/) implementation must pass.
 

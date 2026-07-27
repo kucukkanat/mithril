@@ -462,6 +462,17 @@
   margin: var(--mth-space-2) var(--mth-space-3) 0;
 }
 
+/* In-flight indicator. The orb (@mithril-internal/thinking-orbs) paints itself from --text/--bg
+   and animates on its own canvas, so this only positions it beside the label. */
+.pg-thinking {
+  display: flex;
+  align-items: center;
+  gap: var(--mth-space-2);
+  margin: var(--mth-space-2) var(--mth-space-3) 0;
+  font-size: var(--mth-fs-sm);
+  color: var(--text-muted);
+}
+
 /* Live-key confirm gate (untrusted/edited code) */
 .pg-confirm {
   display: flex;

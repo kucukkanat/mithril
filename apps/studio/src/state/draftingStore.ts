@@ -20,9 +20,8 @@ import {
   type SpecDraft,
 } from "../lib/drafting.ts";
 
-/** A draft awaiting the user's go-ahead. */
+/** A request awaiting the user's go-ahead. */
 export interface PendingDraft {
-  readonly request: DraftRequest;
   /** The exact text that will be sent — what the gate renders. */
   readonly prompt: string;
   /** The model it will run on, resolved at request time. */
@@ -46,6 +45,14 @@ export interface DraftingState {
    * nothing on cancel.
    */
   request(request: DraftRequest, model: ModelSpec, previewFirst: boolean, env: Readonly<Record<string, string>>): Promise<DraftOutcome | null>;
+  /**
+   * Show the preview gate for an arbitrary prompt and resolve what the user chose.
+   *
+   * Exported as a seam so the creator can reuse the ONE gate rather than mounting a second: the
+   * "here is exactly what will be sent" promise is a single global contract, and two implementations
+   * of it would be two things to keep true. Resolves `false` immediately if a gate is already open.
+   */
+  gate(prompt: string, model: ModelSpec, previewFirst: boolean): Promise<boolean>;
   confirm(): void;
   cancel(): void;
 }
@@ -101,20 +108,22 @@ export const useDraftingStore = create<DraftingState>()((set, get) => ({
   count: 0,
   lastError: null,
 
+  async gate(prompt, model, previewFirst) {
+    if (!previewFirst) return true;
+    if (settle !== null) return false; // a gate is already open — never stack two
+    set({ pending: { prompt, model } });
+    const go = await new Promise<boolean>((resolve) => {
+      settle = resolve;
+    });
+    settle = null;
+    set({ pending: null });
+    return go;
+  },
+
   async request(request, model, previewFirst, env) {
     if (get().running) return null; // one draft at a time — they share the worker
-    const prompt = promptFor(request);
     set({ lastError: null });
-
-    if (previewFirst) {
-      set({ pending: { request, prompt, model } });
-      const go = await new Promise<boolean>((resolve) => {
-        settle = resolve;
-      });
-      settle = null;
-      set({ pending: null });
-      if (!go) return null;
-    }
+    if (!(await get().gate(promptFor(request), model, previewFirst))) return null;
 
     set({ running: true, count: get().count + 1 });
     const raw = await execute(draftProgram(request, model), env, model.kind === "local");

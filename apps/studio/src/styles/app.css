@@ -381,11 +381,9 @@ label.check > input { width: auto; margin: 0; accent-color: var(--accent); }
 .msg-approval p { border-color: color-mix(in srgb, var(--warn) 55%, transparent); background: color-mix(in srgb, var(--warn) 9%, var(--surface)); }
 .msg-approval .msg-role { color: var(--warn); }
 .msg-approval .msg-role::before { background: var(--warn); }
-.msg-thinking .thinking { display: inline-flex; gap: var(--mth-space-1); align-items: center; height: 1.2em; padding: var(--mth-space-3) var(--mth-space-4); background: var(--surface); border: var(--mth-border-thin) solid var(--border); border-radius: var(--mth-radius-lg); box-sizing: content-box; }
-.msg-thinking .thinking span { width: 6px; height: 6px; border-radius: var(--mth-radius-full); background: var(--gen); animation: mth-blink 1.2s var(--mth-ease) infinite both; }
-.msg-thinking .thinking span:nth-child(2) { animation-delay: 0.18s; }
-.msg-thinking .thinking span:nth-child(3) { animation-delay: 0.36s; }
-@keyframes mth-blink { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+/* The in-flight indicator is a <ThinkingOrb> (@mithril-internal/thinking-orbs), which paints itself
+   from --text/--bg and animates on its own canvas — this only gives it the bubble to sit in. */
+.msg-thinking .thinking { display: inline-flex; align-items: center; padding: var(--mth-space-3) var(--mth-space-4); background: var(--surface); border: var(--mth-border-thin) solid var(--border); border-radius: var(--mth-radius-lg); }
 
 /* tool call, rendered in the chat itself — same event the inspector lists, same hue */
 .msg-tool { align-self: flex-start; max-width: 88%; }
@@ -430,7 +428,10 @@ label.check > input { width: auto; margin: 0; accent-color: var(--accent); }
 .status-suspended { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, transparent); }
 .status-done { color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, transparent); }
 .status-error { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
-.download { display: flex; flex-direction: column; gap: var(--mth-space-1); font-size: var(--mth-fs-sm); color: var(--text-muted); }
+/* The orb sits to the left of the label/bar pair, so the text column is its own grid track. */
+.download { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--mth-space-2); row-gap: var(--mth-space-1); font-size: var(--mth-fs-sm); color: var(--text-muted); }
+.download > canvas { grid-row: span 2; }
+.probe-running { display: flex; align-items: center; gap: var(--mth-space-2); margin: 0; }
 .download progress { width: 100%; accent-color: var(--gen-strong); height: 6px; }
 .error-box {
   border: var(--mth-border-thin) solid color-mix(in srgb, var(--bad) 40%, transparent);
@@ -1020,13 +1021,36 @@ kbd {
 /* Returning users get their work back above the templates. */
 .recents { max-width: 64rem; margin: 0 auto var(--mth-space-6); }
 .recent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: var(--mth-space-2); }
+.recent-search {
+  display: flex; align-items: center; gap: var(--mth-space-2); margin-bottom: var(--mth-space-3);
+  padding: 0 var(--mth-space-3); background: var(--surface); color: var(--text-faint);
+  border: var(--mth-border-thin) solid var(--border); border-radius: var(--mth-radius-lg);
+}
+.recent-search:focus-within { border-color: var(--border-strong); }
+.recent-search input {
+  flex: 1; min-width: 0; border: none; background: none; box-shadow: none;
+  padding: var(--mth-space-2) 0; color: var(--text-strong);
+}
+.recent-search input:focus { outline: none; }
 .recent-card {
-  display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left;
+  display: flex; align-items: center; gap: var(--mth-space-2);
   padding: var(--mth-space-3) var(--mth-space-4); background: var(--surface);
   border: var(--mth-border-thin) solid var(--border); border-radius: var(--mth-radius-lg);
   box-shadow: var(--shadow-sm), var(--edge-hi);
 }
-.recent-card:hover { border-color: var(--border-strong); background: var(--surface); }
+.recent-card:hover { border-color: var(--border-strong); }
+.recent-open {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  text-align: left; padding: 0; background: none; border: none; box-shadow: none;
+}
+/* Always present, never loud: a hover-only affordance is invisible on touch and undiscoverable. */
+.recent-delete { padding: var(--mth-space-1); background: none; border: none; box-shadow: none; color: var(--text-faint); opacity: 0.5; }
+.recent-card:hover .recent-delete, .recent-delete:focus-visible { opacity: 1; }
+.recent-delete:hover { color: var(--bad); opacity: 1; }
+.recent-card.confirming { flex-direction: column; align-items: stretch; gap: var(--mth-space-2); border-color: var(--bad); }
+.recent-confirm { display: flex; flex-direction: column; gap: var(--mth-space-2); }
+.recent-confirm-actions { display: flex; gap: var(--mth-space-2); }
+.recent-danger { color: var(--bad); border-color: var(--bad); }
 .recent-name { font-weight: var(--mth-weight-medium); color: var(--text-strong); }
 .recent-meta { font-family: var(--mth-font-mono); font-size: var(--mth-fs-2xs); color: var(--text-faint); }
 .tpl-body { text-align: left; display: flex; flex-direction: column; align-items: flex-start; gap: var(--mth-space-2); flex: 1; min-width: 0; }
@@ -1046,3 +1070,106 @@ kbd {
 .draft-gate { display: flex; flex-direction: column; gap: var(--mth-space-3); }
 .draft-gate-actions { display: flex; gap: var(--mth-space-2); align-items: center; }
 .draft-gate-actions .push { margin-left: auto; }
+
+/* ── The agent that creates agents ─────────────────────────────────────────────
+ * Everything the creator produces reads as `--gen` (machine-authored); `--accent`
+ * stays reserved for what a human wrote. That warm/cool split is the spec⇄code story. */
+.build-stream, .build-review { display: flex; flex-direction: column; gap: var(--mth-space-3); }
+.build-lines { display: flex; flex-direction: column; gap: var(--mth-space-1); margin: 0; padding: 0; list-style: none; }
+.build-line {
+  display: flex; gap: var(--mth-space-2); align-items: baseline;
+  padding: var(--mth-space-2) var(--mth-space-3);
+  background: var(--surface-sunken); border: var(--mth-border-thin) solid var(--border);
+  border-radius: var(--mth-radius-md); font-size: var(--mth-fs-sm);
+  animation: mth-rise var(--mth-dur-fast) var(--mth-ease);
+}
+.build-line code { color: var(--text-strong); font-weight: var(--mth-weight-medium); }
+.build-detail { color: var(--text-faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.build-thinking { border-style: dashed; }
+
+.build-summary { margin: 0; color: var(--text-muted); font-size: var(--mth-fs-sm); }
+.build-notes { display: flex; flex-direction: column; gap: var(--mth-space-1); margin: 0; padding-left: var(--mth-space-4); font-size: var(--mth-fs-sm); }
+.note-warn { color: var(--warn); }
+.note-info { color: var(--text-faint); }
+
+.review-rows { display: flex; flex-direction: column; gap: var(--mth-space-2); margin: 0; padding: 0; list-style: none; }
+.review-row {
+  display: grid; grid-template-columns: auto auto 1fr; gap: var(--mth-space-2);
+  align-items: baseline; padding: var(--mth-space-3);
+  background: var(--surface-sunken); border: var(--mth-border-thin) solid var(--border);
+  border-radius: var(--mth-radius-md); font-size: var(--mth-fs-sm);
+}
+.review-row code { color: var(--text-strong); font-weight: var(--mth-weight-medium); }
+.review-purpose { color: var(--text-muted); }
+.review-chips { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--mth-space-1); }
+.chip {
+  padding: 0 var(--mth-space-2); border-radius: var(--mth-radius-full);
+  font-family: var(--mth-font-mono); font-size: var(--mth-fs-2xs); line-height: 1.7;
+  border: var(--mth-border-thin) solid var(--border);
+}
+.chip-plain { color: var(--text-faint); }
+.chip-gen { color: var(--gen); background: var(--gen-soft); border-color: transparent; }
+.chip-warn { color: var(--warn); border-color: var(--warn); }
+
+/* Edit-with-AI: the instruction bar and its change plan. */
+.instruction-bar {
+  display: flex; flex-direction: column; gap: var(--mth-space-2);
+  padding: var(--mth-space-3) var(--mth-space-4);
+  border-top: var(--mth-border-thin) solid var(--border);
+  background: var(--bg-deep);
+}
+.instruction-row { display: flex; gap: var(--mth-space-2); align-items: center; }
+.instruction-row input { flex: 1 1 auto; min-width: 0; }
+.instruction-row input:disabled { color: var(--text-faint); cursor: not-allowed; }
+
+/* The drafting-model chip: it names where an instruction goes before you send one, and opens the
+ * picker in place — the alternative was leaving the design mid-thought for Settings. */
+.draft-chip-wrap { position: relative; display: inline-flex; flex: 0 0 auto; }
+.draft-chip {
+  max-width: 14rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  padding: 0 var(--mth-space-3); border-radius: var(--mth-radius-full);
+  font-family: var(--mth-font-mono); font-size: var(--mth-fs-2xs);
+  color: var(--text-muted); background: var(--surface-2);
+  border: var(--mth-border-thin) solid var(--border);
+}
+.draft-chip:hover, .draft-chip[aria-expanded="true"] { color: var(--accent); border-color: var(--accent-quiet); background: var(--accent-soft); }
+.draft-chip.is-off { color: var(--text-faint); }
+/* Geometry (position/top/bottom/left/width/max-height) is set inline — see lib/anchor.ts. */
+.draft-pop {
+  z-index: 40; overflow-y: auto;
+  display: flex; flex-direction: column; gap: var(--mth-space-3);
+  padding: var(--mth-space-4); border-radius: var(--mth-radius-md);
+  color: var(--text); background: var(--surface);
+  border: var(--mth-border-thin) solid var(--border-strong); box-shadow: var(--shadow-md);
+}
+.draft-pop .hint { margin: 0; }
+.draft-pop-head { display: flex; align-items: center; gap: var(--mth-space-2); }
+.draft-pop-key { display: flex; flex-direction: column; gap: var(--mth-space-1); }
+.draft-pop-foot { padding-top: var(--mth-space-3); border-top: var(--mth-border-thin) solid var(--border); }
+
+.change-rows { display: flex; flex-direction: column; gap: var(--mth-space-2); margin: 0; padding: 0; list-style: none; max-height: 26rem; overflow: auto; }
+.change-row { display: flex; gap: var(--mth-space-2); align-items: baseline; font-size: var(--mth-fs-sm); }
+.change-verb { font-family: var(--mth-font-mono); font-weight: var(--mth-weight-bold); width: 1rem; flex: 0 0 auto; text-align: center; }
+.change-add .change-verb { color: var(--gen); }
+.change-remove .change-verb { color: var(--bad); }
+.change-update .change-verb { color: var(--warn); }
+.change-body { display: flex; flex-direction: column; gap: var(--mth-space-1); min-width: 0; }
+.change-body .hint { margin: 0; }
+.change-field { color: var(--text-muted); font-size: var(--mth-fs-2xs); overflow-wrap: anywhere; }
+.change-field-name { font-family: var(--mth-font-mono); color: var(--text-faint); }
+.change-field s { color: var(--text-faint); }
+.change-field summary { cursor: pointer; font-family: var(--mth-font-mono); color: var(--text-faint); }
+.change-field .draft-preview { max-height: 8rem; margin-top: var(--mth-space-1); }
+
+/* Provider connections (Settings) — one collapsible row per provider, wrapping the shared
+   ProviderSetup (key + optional base URL + Test connection). Collapsed by default so six providers
+   read as a list rather than a wall of forms. */
+.conn-list { display: flex; flex-direction: column; gap: var(--mth-space-2); }
+.conn-row { border: var(--mth-border-thin) solid var(--border); border-radius: var(--mth-radius-md); background: var(--surface); }
+.conn-row > summary { display: flex; align-items: center; gap: var(--mth-space-3); padding: var(--mth-space-3) var(--mth-space-4); cursor: pointer; list-style: none; }
+.conn-row > summary::-webkit-details-marker { display: none; }
+.conn-row > summary::after { content: "▸"; margin-left: auto; color: var(--text-faint); font-size: var(--mth-fs-2xs); transition: transform var(--mth-dur-fast) var(--mth-ease); }
+.conn-row[open] > summary::after { transform: rotate(90deg); }
+.conn-row > summary:hover { background: var(--surface-hover); border-radius: var(--mth-radius-md); }
+.conn-row > summary .key-name { flex: none; }
+.conn-row .mp-setup { border: 0; border-top: var(--mth-border-thin) solid var(--border); border-radius: 0; background: transparent; }

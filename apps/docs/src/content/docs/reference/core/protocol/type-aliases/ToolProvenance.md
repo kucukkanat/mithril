@@ -25,7 +25,7 @@ type ToolProvenance =
 };
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:16](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L16)
+Defined in: [packages/core/src/protocol/tool-registry.ts:16](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L16)
 
 Where a tool in a run's registry came from.
 

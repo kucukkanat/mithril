@@ -9,7 +9,7 @@ title: "liveProvider"
 function liveProvider(id): LiveProvider;
 ```
 
-Defined in: [runner-web/src/catalog.ts:50](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L50)
+Defined in: [runner-web/src/catalog.ts:224](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L224)
 
 Look up a [LiveProvider](/mithril/reference/runner-web/index/interfaces/liveprovider/) by id; throws on an unknown id.
 

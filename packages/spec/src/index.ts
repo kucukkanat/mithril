@@ -20,6 +20,7 @@ export {
   type CodeRegion,
   type EntryMessage,
   type EntrySpec,
+  type LiveProviderName,
   type ModelSpec,
   type OpaqueDecl,
   type ProjectDecl,

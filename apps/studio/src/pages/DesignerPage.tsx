@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { liveProvider } from "@mithril/runner-web";
 import type { AgentSpec, ProjectSpec, ToolSpec } from "@mithril/spec";
 import { useProjectStore } from "../state/projectStore.ts";
 import { useCasebookStore } from "../state/casebookStore.ts";
 import { useSettingsStore, envForModel, envForSpec, usesLocalModel } from "../state/settingsStore.ts";
 import { useDraftingStore } from "../state/draftingStore.ts";
+import { useCreatorStore } from "../state/creatorStore.ts";
 import { attachTool, makeEntry, newAgent, newTool, ownerOf, removeDecl } from "../lib/attach.ts";
+import { describeChange, planChanges, type SpecChange } from "../lib/spec-diff.ts";
 import { paramsOf } from "../lib/tool-fields.ts";
+import { InstructionBar } from "../components/InstructionBar.tsx";
+import { DraftModelChip } from "../components/DraftModelChip.tsx";
+import { ChangeSummary } from "../components/ChangeSummary.tsx";
 import { DeclList } from "../components/DeclList.tsx";
 import { AgentPanel } from "../components/AgentPanel.tsx";
 import { ToolPanel } from "../components/ToolPanel.tsx";
+import { SubAgentPanel } from "../components/SubAgentPanel.tsx";
 import { CasebookStrip } from "../components/CasebookStrip.tsx";
 import { CodeEditor } from "../components/CodeEditor.tsx";
 import { CodeView } from "../components/CodeView.tsx";
@@ -32,6 +39,7 @@ export function DesignerPage() {
   const casebook = useCasebookStore();
   const settings = useSettingsStore();
   const drafting = useDraftingStore();
+  const creator = useCreatorStore();
   const [selected, setSelected] = useState<string | null>(null);
   const [view, setView] = useState<View>("split");
   const [focus, setFocus] = useState<string | null>(null);
@@ -40,6 +48,11 @@ export function DesignerPage() {
   const [splitEditLine, setSplitEditLine] = useState<number | null>(null);
   const [dragging, setDragging] = useState(false);
   const [deleted, setDeleted] = useState<{ readonly index: number; readonly value: ProjectSpec["decls"][number] } | null>(null);
+  /** A proposed AI edit awaiting accept/discard — never applied until the user says so. */
+  const [proposal, setProposal] = useState<{ readonly instruction: string; readonly spec: ProjectSpec; readonly changes: readonly SpecChange[] } | null>(null);
+  /** The last applied AI edit, so it can be reverted in one click. */
+  const [applied, setApplied] = useState<{ readonly summary: string; readonly previous: ProjectSpec } | null>(null);
+  const [editError, setEditError] = useState<string | null>(null);
 
   // The project store is shared by the Design/Run views — never close it on unmount (a route
   // transition would race the next page's open and strand it on "Loading").
@@ -94,7 +107,13 @@ export function DesignerPage() {
   const selectedDecl = spec.decls.find((d) => d.id === selected) ?? null;
   const frozen = store.codeDirty && store.diagnostics.some((d) => d.severity === "error");
   const draftModel = settings.draftModel;
-  const { env } = envForSpec(spec, settings.keys);
+  const { env } = envForSpec(spec, settings.connections);
+  // The drafting model's own key situation, which is not the spec's: an agent can run on-device
+  // while the model drafting it is a cloud one, and vice versa.
+  const draft = envForModel(draftModel, settings.connections);
+  const draftNeedsKey = draft.missing[0] ?? null;
+  /** Drafting is offerable only when it would actually reach a model — off or keyless, it can't. */
+  const canDraft = draftModel !== null && draftNeedsKey === null;
 
   const mutate = (fn: (s: ProjectSpec) => ProjectSpec): void => store.updateSpec(fn);
 
@@ -146,6 +165,22 @@ export function DesignerPage() {
     setSelected(next);
   };
 
+  /**
+   * Edit the whole project by instruction. The result is never applied here — it becomes a change
+   * plan the user accepts or discards, so an AI edit can't quietly rewrite something hand-written.
+   */
+  const editWithAi = async (instruction: string): Promise<void> => {
+    if (draftModel === null) return;
+    setEditError(null);
+    const outcome = await creator.edit(instruction, spec, draftModel, settings.previewFirst, draft.env);
+    if (outcome === null) return; // cancelled at the gate
+    if (outcome.error !== null) {
+      setEditError(outcome.error);
+      return;
+    }
+    setProposal({ instruction, spec: outcome.result.spec, changes: planChanges(spec, outcome.result.spec) });
+  };
+
   /** Ask the drafting model to rewrite a tool's description, then apply it. */
   const fixDescription = async (tool: ToolSpec): Promise<void> => {
     if (draftModel === null) return;
@@ -156,7 +191,7 @@ export function DesignerPage() {
       { kind: "description", toolName: tool.name, current: tool.description, job, inputNames: paramsOf(tool.inputSchema.zod).map((p) => p.name) },
       draftModel,
       settings.previewFirst,
-      envForModel(draftModel, settings.keys).env,
+      draft.env,
     );
     if (outcome === null || !outcome.ok || !("description" in outcome)) return;
     mutate((s) => ({
@@ -167,6 +202,36 @@ export function DesignerPage() {
 
   const checkContext = { spec, env, local: usesLocalModel(spec) };
   const busy = casebook.checking.length > 0;
+
+  const instructionBar = (
+    <InstructionBar
+      onSubmit={(instruction) => void editWithAi(instruction)}
+      running={creator.running}
+      modelChip={<DraftModelChip model={draftModel} onChange={settings.setDraftModel} />}
+      disabledReason={
+        draftModel === null
+          ? "Drafting is off — turn it on in the model chip to edit with AI"
+          : draftNeedsKey !== null
+            ? `Add your ${liveProvider(draftNeedsKey).label} key in the model chip to edit with AI`
+            : frozen
+              ? "Fix the code errors first — the spec is out of sync with what you're editing"
+              : null
+      }
+      applied={
+        applied === null
+          ? null
+          : {
+              summary: applied.summary,
+              onUndo: () => {
+                const previous = applied.previous;
+                mutate(() => previous);
+                setApplied(null);
+              },
+            }
+      }
+      error={editError}
+    />
+  );
 
   const designPane = (
     <div className={`design-pane${frozen ? " frozen" : ""}`} data-testid="designer-design-pane">
@@ -188,7 +253,7 @@ export function DesignerPage() {
           onDetachTool={(toolId) => mutate((s) => attachTool(s, toolId, null))}
           onDropTool={(toolId) => mutate((s) => attachTool(s, toolId, selectedDecl.id))}
           dragging={dragging}
-          onFixTool={draftModel === null ? null : (t) => void fixDescription(t)}
+          onFixTool={canDraft ? (t) => void fixDescription(t) : null}
           focus={focus}
           onFocus={setFocus}
         />
@@ -199,21 +264,19 @@ export function DesignerPage() {
           tool={selectedDecl}
           onChange={(next) => mutate((s) => ({ ...s, decls: s.decls.map((d) => (d.id === next.id ? next : d)) }))}
           owner={ownerOf(spec, selectedDecl.id)}
-          onFix={draftModel === null ? null : () => void fixDescription(selectedDecl)}
+          onFix={canDraft ? () => void fixDescription(selectedDecl) : null}
           drafting={drafting.running}
         />
       )}
       {selectedDecl?.kind === "subAgentTool" && (
-        <div className="panel" data-testid="subagent-panel">
-          <div className="panel-head">
-            <h3>asTool</h3>
-            <code>{selectedDecl.name}</code>
-          </div>
-          <p className="hint">
-            This exposes the <code>{selectedDecl.agentId}</code> agent as a tool. Its description is what the parent model reads before delegating — edit
-            it in the Code tab; <code>asTool</code> is outside the structured parser&rsquo;s scope for now.
-          </p>
-        </div>
+        <SubAgentPanel
+          key={selectedDecl.id}
+          spec={spec}
+          sub={selectedDecl}
+          onChange={(next) => mutate((s) => ({ ...s, decls: s.decls.map((d) => (d.id === next.id ? next : d)) }))}
+          onRename={(to) => rename(selectedDecl.id, to)}
+          owner={ownerOf(spec, selectedDecl.id)}
+        />
       )}
       {selectedDecl?.kind === "opaque" && (
         <div className="panel" data-testid="opaque-panel">
@@ -260,7 +323,18 @@ export function DesignerPage() {
                 onChange: (next: string) => patchSelected((d) => (d.kind === "tool" ? { ...d, name: next } : d)),
               },
             }
-          : {};
+          : selectedDecl.kind === "subAgentTool"
+            ? {
+                description: {
+                  value: selectedDecl.description,
+                  onChange: (next: string) => patchSelected((d) => (d.kind === "subAgentTool" ? { ...d, description: next } : d)),
+                },
+                name: {
+                  value: selectedDecl.name,
+                  onChange: (next: string) => patchSelected((d) => (d.kind === "subAgentTool" ? { ...d, name: next } : d)),
+                },
+              }
+            : {};
 
   return (
     <div className="designer" data-testid="designer-page">
@@ -347,6 +421,11 @@ export function DesignerPage() {
             </div>
           )}
 
+          {/* Above the casebook: both act on the whole project, not the selected decl. Hidden in the
+              Code view — hand-editing TypeScript while asking the AI to rewrite the spec is a
+              conflict with no good resolution. */}
+          {view !== "code" && instructionBar}
+
           <CasebookStrip
             cases={casebook.cases}
             specChangedAt={store.savedAt ?? 0}
@@ -367,6 +446,23 @@ export function DesignerPage() {
           />
         </main>
       </div>
+
+      {proposal !== null && (
+        <ChangeSummary
+          changes={proposal.changes}
+          instruction={proposal.instruction}
+          onDiscard={() => setProposal(null)}
+          onApply={() => {
+            const { changes, spec: next } = proposal;
+            const previous = spec;
+            // One updateSpec call, so this is ONE undo unit — and it flows through orderDecls and
+            // the autosave (which is what makes every casebook verdict go stale) for free.
+            mutate(() => next);
+            setApplied({ summary: changes.map(describeChange).join(" · "), previous });
+            setProposal(null);
+          }}
+        />
+      )}
     </div>
   );
 }

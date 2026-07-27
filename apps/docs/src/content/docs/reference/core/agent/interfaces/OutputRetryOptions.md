@@ -5,7 +5,7 @@ prev: false
 title: "OutputRetryOptions"
 ---
 
-Defined in: [packages/core/src/agent/healing.ts:299](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/healing.ts#L299)
+Defined in: [packages/core/src/agent/healing.ts:299](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/healing.ts#L299)
 
 Options for [outputRetry](/mithril/reference/core/agent/functions/outputretry/).
 
@@ -17,6 +17,6 @@ Options for [outputRetry](/mithril/reference/core/agent/functions/outputretry/).
 readonly optional max?: number;
 ```
 
-Defined in: [packages/core/src/agent/healing.ts:301](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/healing.ts#L301)
+Defined in: [packages/core/src/agent/healing.ts:301](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/healing.ts#L301)
 
 Re-ask budget when structured output fails schema validation. Default 2.

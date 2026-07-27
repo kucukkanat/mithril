@@ -5,7 +5,7 @@ prev: false
 title: "GenerateOptions"
 ---
 
-Defined in: [packages/spec/src/codegen.ts:32](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/spec/src/codegen.ts#L32)
+Defined in: [packages/spec/src/codegen.ts:33](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/codegen.ts#L33)
 
 Options for [generateProject](/mithril/reference/spec/index/functions/generateproject/).
 
@@ -17,4 +17,4 @@ Options for [generateProject](/mithril/reference/spec/index/functions/generatepr
 readonly optional mode?: CodegenMode;
 ```
 
-Defined in: [packages/spec/src/codegen.ts:33](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/spec/src/codegen.ts#L33)
+Defined in: [packages/spec/src/codegen.ts:34](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/codegen.ts#L34)

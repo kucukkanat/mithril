@@ -5,7 +5,7 @@ prev: false
 title: "SpanSink"
 ---
 
-Defined in: [index.ts:45](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/otel/src/index.ts#L45)
+Defined in: [index.ts:45](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/otel/src/index.ts#L45)
 
 Receiver for reconstructed spans — implement this to bridge [toGenAiSpans](/mithril/reference/otel/functions/togenaispans/) to a real OTel exporter.
 
@@ -17,7 +17,7 @@ Receiver for reconstructed spans — implement this to bridge [toGenAiSpans](/mi
 onSpan(span): void;
 ```
 
-Defined in: [index.ts:47](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/otel/src/index.ts#L47)
+Defined in: [index.ts:47](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/otel/src/index.ts#L47)
 
 Called once per completed span, in creation order.
 

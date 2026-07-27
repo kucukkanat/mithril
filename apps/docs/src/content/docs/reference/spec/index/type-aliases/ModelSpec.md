@@ -10,7 +10,7 @@ type ModelSpec =
   | {
   kind: "live";
   model: string;
-  provider: "openai" | "anthropic" | "google" | "groq";
+  provider: LiveProviderName;
 }
   | {
   dtype?: string;
@@ -23,7 +23,7 @@ type ModelSpec =
 };
 ```
 
-Defined in: [packages/spec/src/types.ts:27](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/spec/src/types.ts#L27)
+Defined in: [packages/spec/src/types.ts:33](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/types.ts#L33)
 
 How an agent's `model` is produced in generated code.
 
@@ -35,7 +35,7 @@ How an agent's `model` is produced in generated code.
 {
   kind: "live";
   model: string;
-  provider: "openai" | "anthropic" | "google" | "groq";
+  provider: LiveProviderName;
 }
 ```
 

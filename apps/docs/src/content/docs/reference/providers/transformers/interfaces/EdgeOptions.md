@@ -5,7 +5,7 @@ prev: false
 title: "EdgeOptions"
 ---
 
-Defined in: [transformers/edge.ts:19](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/edge.ts#L19)
+Defined in: [transformers/edge.ts:19](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L19)
 
 Options for [browserEngine](/mithril/reference/providers/transformers/functions/browserengine/) / [transformers](/mithril/reference/providers/transformers/functions/transformers/) / [preload](/mithril/reference/providers/transformers/functions/preload/).
 
@@ -21,7 +21,7 @@ Options for [browserEngine](/mithril/reference/providers/transformers/functions/
 readonly optional backends?: readonly Backend[];
 ```
 
-Defined in: [transformers/edge.ts:36](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/edge.ts#L36)
+Defined in: [transformers/edge.ts:36](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L36)
 
 Restrict the Backends this model may run on (fed from the catalog's `LocalModel.backends`). When the
 resolved device isn't in this list, loadModel/[preload](/mithril/reference/providers/transformers/functions/preload/) throws an ergonomic `MithrilError`
@@ -36,7 +36,7 @@ instead of failing with a cryptic mid-stream ONNX kernel error. Omit ⇒ no rest
 readonly optional device?: Backend;
 ```
 
-Defined in: [transformers/edge.ts:27](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/edge.ts#L27)
+Defined in: [transformers/edge.ts:27](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L27)
 
 Force an ONNX execution device; omit to feature-detect: `webgpu` when available, else `cpu` on Node/Bun
 (onnxruntime-node rejects `wasm`), else `wasm` in the browser. Pass this explicitly to silence the
@@ -50,7 +50,7 @@ Node/Bun CPU-fallback warning.
 readonly optional doSample?: boolean;
 ```
 
-Defined in: [transformers/edge.ts:38](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/edge.ts#L38)
+Defined in: [transformers/edge.ts:38](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L38)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: [transformers/edge.ts:38](https://github.com/kucukkanat/mithril/blob
 readonly optional dtype?: string;
 ```
 
-Defined in: [transformers/edge.ts:29](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/edge.ts#L29)
+Defined in: [transformers/edge.ts:29](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L29)
 
 Force a quantization dtype; omit for `q4f16` (webgpu) / `q4` (cpu/wasm).
 
@@ -72,7 +72,7 @@ Force a quantization dtype; omit for `q4f16` (webgpu) / `q4` (cpu/wasm).
 readonly optional maxNewTokens?: number;
 ```
 
-Defined in: [transformers/edge.ts:37](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/edge.ts#L37)
+Defined in: [transformers/edge.ts:37](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L37)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [transformers/edge.ts:37](https://github.com/kucukkanat/mithril/blob
 readonly optional onProgress?: (report) => void;
 ```
 
-Defined in: [transformers/edge.ts:21](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/providers/src/transformers/edge.ts#L21)
+Defined in: [transformers/edge.ts:21](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L21)
 
 Model-download progress, reported OUTSIDE the event stream (aggregate `loaded/total` across files).
 

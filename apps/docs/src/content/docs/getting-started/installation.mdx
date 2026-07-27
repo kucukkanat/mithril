@@ -72,8 +72,10 @@ Then reach for the individual `@mithril/*` packages only when you need them:
 
 1. **Core is already there.** `mithril` re-exports `@mithril/core` — the protocol and the loop.
 
-2. **Add a provider path.** `mithril/openai`, `mithril/anthropic` expose self-wiring model
-   handles. Set `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` and you're done.
+2. **Add a provider path.** `mithril/openai`, `mithril/anthropic`, `mithril/deepseek`, and
+   `mithril/openrouter` expose self-wiring model handles. Set the matching
+   `<PROVIDER>_API_KEY` (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, …) and you're done. To call a
+   wire-compatible gateway instead of the provider's own API, also set `<PROVIDER>_BASE_URL`.
 
 3. **Add batteries as needed.** `@mithril/memory`, `@mithril/react`,
    `@mithril/mcp`, `@mithril/workflows`, `@mithril/fs`, `@mithril/kv`, `@mithril/otel`.

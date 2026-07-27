@@ -5,7 +5,7 @@ prev: false
 title: "Tool"
 ---
 
-Defined in: [packages/core/src/protocol/tool.ts:27](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool.ts#L27)
+Defined in: [packages/core/src/protocol/tool.ts:27](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool.ts#L27)
 
 A typed tool: Standard Schema in/out plus typed dependency injection.
 
@@ -33,7 +33,7 @@ returns the final output.
 readonly description: string;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:29](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool.ts#L29)
+Defined in: [packages/core/src/protocol/tool.ts:29](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool.ts#L29)
 
 ***
 
@@ -43,7 +43,7 @@ Defined in: [packages/core/src/protocol/tool.ts:29](https://github.com/kucukkana
 readonly optional examples?: readonly JsonValue[];
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:42](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool.ts#L42)
+Defined in: [packages/core/src/protocol/tool.ts:42](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool.ts#L42)
 
 Optional few-shot example inputs, surfaced into the tool's wire description. A handful of concrete
 example calls is the single strongest prompt-side lift for small models' tool-call reliability.
@@ -56,7 +56,7 @@ example calls is the single strongest prompt-side lift for small models' tool-ca
 readonly inputSchema: StandardSchemaV1<unknown, In>;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:43](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool.ts#L43)
+Defined in: [packages/core/src/protocol/tool.ts:43](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool.ts#L43)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [packages/core/src/protocol/tool.ts:43](https://github.com/kucukkana
 readonly name: Name;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:28](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool.ts#L28)
+Defined in: [packages/core/src/protocol/tool.ts:28](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool.ts#L28)
 
 ***
 
@@ -76,7 +76,7 @@ Defined in: [packages/core/src/protocol/tool.ts:28](https://github.com/kucukkana
 readonly optional needsApproval?: boolean | ((input, ctx) => boolean | Promise<boolean>);
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:46](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool.ts#L46)
+Defined in: [packages/core/src/protocol/tool.ts:46](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool.ts#L46)
 
 Whether the call requires human approval; a predicate can decide per-input.
 
@@ -88,7 +88,7 @@ Whether the call requires human approval; a predicate can decide per-input.
 readonly optional outputSchema?: StandardSchemaV1<unknown, JsonSafe<Out>>;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:44](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool.ts#L44)
+Defined in: [packages/core/src/protocol/tool.ts:44](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool.ts#L44)
 
 ***
 
@@ -98,7 +98,7 @@ Defined in: [packages/core/src/protocol/tool.ts:44](https://github.com/kucukkana
 readonly optional timeoutMs?: number;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:58](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool.ts#L58)
+Defined in: [packages/core/src/protocol/tool.ts:58](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool.ts#L58)
 
 Wall-clock budget for a single `execute`, in milliseconds. Exceeding it produces a `tool.error`
 classified `"timeout"`.
@@ -119,7 +119,7 @@ running detached, it merely no longer affects the run. Omit for no budget.
 readonly optional version?: string;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:37](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool.ts#L37)
+Defined in: [packages/core/src/protocol/tool.ts:37](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool.ts#L37)
 
 Optional version, stamped onto every `tool.call` event this tool produces.
 
@@ -143,7 +143,7 @@ execute(input, ctx):
 | Suspend<JsonSafe<Out>>, any>;
 ```
 
-Defined in: [packages/core/src/protocol/tool.ts:59](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool.ts#L59)
+Defined in: [packages/core/src/protocol/tool.ts:59](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool.ts#L59)
 
 #### Parameters
 

@@ -11,6 +11,6 @@ type StoreSelector =
   | ((ctx) => ToolStore);
 ```
 
-Defined in: [index.ts:92](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/index.ts#L92)
+Defined in: [index.ts:92](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/index.ts#L92)
 
 A [ToolStore](/mithril/reference/authoring/persistence/interfaces/toolstore/), or a per-run selector for one.

@@ -1,7 +1,7 @@
 {
   "name": "@mithril/providers",
   "version": "0.0.0",
-  "description": "Mithril provider adapters (OpenAI, Anthropic, Google, + browser-local Transformers.js).",
+  "description": "Mithril provider adapters (OpenAI, Anthropic, Google, DeepSeek, OpenRouter, + browser-local Transformers.js).",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -16,6 +16,14 @@
     "./google": {
       "types": "./src/google/index.ts",
       "import": "./src/google/index.ts"
+    },
+    "./deepseek": {
+      "types": "./src/deepseek/index.ts",
+      "import": "./src/deepseek/index.ts"
+    },
+    "./openrouter": {
+      "types": "./src/openrouter/index.ts",
+      "import": "./src/openrouter/index.ts"
     },
     "./transformers": {
       "types": "./src/transformers/index.ts",

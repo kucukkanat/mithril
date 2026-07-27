@@ -5,7 +5,7 @@ prev: false
 title: "ToolScript"
 ---
 
-Defined in: [script.ts:22](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/script.ts#L22)
+Defined in: [script.ts:22](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/script.ts#L22)
 
 A free JavaScript/TypeScript function body, executed through a CodeRunner.
 
@@ -17,7 +17,7 @@ A free JavaScript/TypeScript function body, executed through a CodeRunner.
 readonly kind: "script";
 ```
 
-Defined in: [script.ts:23](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/script.ts#L23)
+Defined in: [script.ts:23](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/script.ts#L23)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [script.ts:23](https://github.com/kucukkanat/mithril/blob/11fd4315eb
 readonly optional language?: "js" | "ts";
 ```
 
-Defined in: [script.ts:25](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/script.ts#L25)
+Defined in: [script.ts:25](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/script.ts#L25)
 
 Defaults to `"js"`; `"ts"` requires [ScriptOptions.transpile](/mithril/reference/authoring/index/interfaces/scriptoptions/#transpile).
 
@@ -39,7 +39,7 @@ Defaults to `"js"`; `"ts"` requires [ScriptOptions.transpile](/mithril/reference
 readonly source: string;
 ```
 
-Defined in: [script.ts:27](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/script.ts#L27)
+Defined in: [script.ts:27](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/script.ts#L27)
 
 The body of an async function: reads the ambient `input`, and must `return` a JSON-safe value.
 
@@ -51,4 +51,4 @@ The body of an async function: reads the ambient `input`, and must `return` a JS
 readonly optional timeoutMs?: number;
 ```
 
-Defined in: [script.ts:28](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/script.ts#L28)
+Defined in: [script.ts:28](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/script.ts#L28)

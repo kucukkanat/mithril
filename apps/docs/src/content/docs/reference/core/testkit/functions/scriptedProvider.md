@@ -9,7 +9,7 @@ title: "scriptedProvider"
 function scriptedProvider(turns): Provider;
 ```
 
-Defined in: [packages/core/src/testkit/index.ts:103](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/testkit/index.ts#L103)
+Defined in: [packages/core/src/testkit/index.ts:103](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/testkit/index.ts#L103)
 
 Build a deterministic [Provider](/mithril/reference/core/protocol/interfaces/provider/) that replays a fixed script of provider chunks.
 

@@ -11,7 +11,7 @@ function localModel(id):
   | undefined;
 ```
 
-Defined in: [runner-web/src/catalog.ts:113](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L113)
+Defined in: [runner-web/src/catalog.ts:287](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L287)
 
 Look up a curated local model by repo id (for its `dtype` pin, size, etc.); `undefined` for free-text ids.
 

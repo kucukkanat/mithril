@@ -9,7 +9,7 @@ title: "Backend"
 type Backend = "webgpu" | "wasm" | "cpu";
 ```
 
-Defined in: [runner-web/src/catalog.ts:15](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L15)
+Defined in: [runner-web/src/catalog.ts:15](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L15)
 
 An ONNX execution backend a local model can run on. Mirrors the transformers provider's `device`
 union (defined here too so the catalog stays import-free). `webgpu` is the browser GPU path; `wasm`

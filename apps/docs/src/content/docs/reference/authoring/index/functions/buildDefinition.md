@@ -9,7 +9,7 @@ title: "buildDefinition"
 function buildDefinition(input, ctx): ToolDefinition;
 ```
 
-Defined in: [definition.ts:73](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/authoring/src/definition.ts#L73)
+Defined in: [definition.ts:73](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/definition.ts#L73)
 
 Turn `define_tool` arguments into a validated ToolDefinition.
 

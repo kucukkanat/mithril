@@ -1,0 +1,325 @@
+/*
+ * Styles for the shared model picker. Token-only — no literal colours, sizes, or durations — so it
+ * inherits whichever host it is mounted in (the docs site or the Studio) and looks right in both
+ * themes without either host restyling it.
+ */
+
+.mp-root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mth-space-3);
+  font-size: var(--mth-fs-sm);
+  color: var(--text);
+}
+
+/* ── segmented control ───────────────────────────────────────────────────── */
+
+.mp-seg {
+  display: inline-flex;
+  align-self: flex-start;
+  border: var(--mth-border-thin) solid var(--border);
+  border-radius: var(--mth-radius-md);
+  overflow: hidden;
+  background: var(--surface-sunken);
+}
+
+.mp-seg button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: var(--mth-fs-xs);
+  padding: var(--mth-space-2) var(--mth-space-4);
+  cursor: pointer;
+  transition: background var(--mth-dur-fast) var(--mth-ease), color var(--mth-dur-fast) var(--mth-ease);
+}
+
+.mp-seg button + button {
+  border-left: var(--mth-border-thin) solid var(--border);
+}
+
+.mp-seg button:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.mp-seg button.is-on {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: var(--mth-weight-medium);
+}
+
+.mp-seg button:focus-visible,
+.mp-test-button:focus-visible,
+.mp-combo-toggle:focus-visible {
+  outline: var(--mth-border-thick) solid var(--ring);
+  outline-offset: -1px;
+}
+
+/* ── rows, fields, inputs ────────────────────────────────────────────────── */
+
+.mp-row {
+  display: flex;
+  gap: var(--mth-space-2);
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.mp-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mth-space-1);
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+
+.mp-label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--mth-space-2);
+  font-size: var(--mth-fs-2xs);
+  letter-spacing: var(--mth-tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.mp-optional {
+  text-transform: none;
+  letter-spacing: var(--mth-tracking-normal);
+  color: var(--text-faint);
+  opacity: 0.75;
+}
+
+.mp-input,
+.mp-select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: var(--mth-fs-sm);
+  color: var(--text);
+  background: var(--surface);
+  border: var(--mth-border-thin) solid var(--border);
+  border-radius: var(--mth-radius-sm);
+  padding: var(--mth-space-2) var(--mth-space-3);
+  transition: border-color var(--mth-dur-fast) var(--mth-ease);
+}
+
+.mp-select {
+  width: auto;
+  max-width: 100%;
+  cursor: pointer;
+}
+
+.mp-grow {
+  flex: 1 1 auto;
+}
+
+.mp-mono {
+  font-family: var(--mth-font-mono);
+  font-size: var(--mth-fs-xs);
+}
+
+.mp-input:focus,
+.mp-select:focus {
+  outline: none;
+  border-color: var(--border-accent);
+  box-shadow: 0 0 0 var(--mth-border-thick) var(--accent-quiet);
+}
+
+.mp-input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── combobox ────────────────────────────────────────────────────────────── */
+
+.mp-combo {
+  flex: 1 1 16rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mth-space-1);
+}
+
+/* The dropdown anchors here — to the input alone — so the custom-model note below can't push it down. */
+.mp-combo-field {
+  position: relative;
+}
+
+.mp-combo-input {
+  font-family: var(--mth-font-mono);
+  font-size: var(--mth-fs-xs);
+  padding-right: var(--mth-space-8);
+}
+
+.mp-combo-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: var(--mth-space-8);
+  display: grid;
+  place-items: center;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--text-faint);
+  cursor: pointer;
+  font-size: var(--mth-fs-xs);
+}
+
+.mp-combo-list {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + var(--mth-space-1));
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: var(--mth-space-1);
+  list-style: none;
+  max-height: 16rem;
+  overflow-y: auto;
+  background: var(--surface-raised);
+  border: var(--mth-border-thin) solid var(--border-strong);
+  border-radius: var(--mth-radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.mp-combo-option {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mth-space-3);
+  padding: var(--mth-space-2) var(--mth-space-3);
+  border-radius: var(--mth-radius-sm);
+  cursor: pointer;
+}
+
+.mp-combo-option.is-active {
+  background: var(--surface-hover);
+}
+
+.mp-combo-option.is-current {
+  box-shadow: inset var(--mth-border-thick) 0 0 0 var(--accent);
+}
+
+.mp-combo-id {
+  font-family: var(--mth-font-mono);
+  font-size: var(--mth-fs-xs);
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.mp-combo-id mark {
+  background: transparent;
+  color: var(--accent);
+  font-weight: var(--mth-weight-semibold);
+}
+
+.mp-combo-note {
+  flex: none;
+  font-size: var(--mth-fs-2xs);
+  color: var(--text-faint);
+}
+
+.mp-combo-empty {
+  padding: var(--mth-space-2) var(--mth-space-3);
+  font-size: var(--mth-fs-2xs);
+  color: var(--text-faint);
+}
+
+/* ── provider setup + test connection ───────────────────────────────────── */
+
+.mp-setup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mth-space-3);
+  padding: var(--mth-space-3);
+  background: var(--surface-sunken);
+  border: var(--mth-border-thin) solid var(--border);
+  border-radius: var(--mth-radius-md);
+}
+
+.mp-setup > .mp-field {
+  flex: none;
+}
+
+.mp-setup-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--mth-space-3);
+  flex-wrap: wrap;
+}
+
+.mp-test-button {
+  flex: none;
+  appearance: none;
+  font: inherit;
+  font-size: var(--mth-fs-xs);
+  font-weight: var(--mth-weight-medium);
+  color: var(--text);
+  background: var(--surface-raised);
+  border: var(--mth-border-thin) solid var(--border-strong);
+  border-radius: var(--mth-radius-sm);
+  padding: var(--mth-space-2) var(--mth-space-4);
+  cursor: pointer;
+  transition: background var(--mth-dur-fast) var(--mth-ease);
+}
+
+.mp-test-button:hover:not(:disabled) {
+  background: var(--surface-hover);
+  border-color: var(--border-accent);
+}
+
+.mp-test-button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* ── notes ───────────────────────────────────────────────────────────────── */
+
+.mp-note {
+  margin: 0;
+  font-size: var(--mth-fs-2xs);
+  line-height: var(--mth-lh-normal);
+  color: var(--text-muted);
+}
+
+.mp-note code {
+  font-family: var(--mth-font-mono);
+  font-size: inherit;
+  color: var(--text);
+  background: var(--code-bg);
+  border-radius: var(--mth-radius-sm);
+  padding: 0 var(--mth-space-1);
+  overflow-wrap: anywhere;
+}
+
+.mp-note-custom {
+  color: var(--warn);
+}
+
+.mp-note-custom code {
+  color: var(--warn);
+}
+
+.mp-ok {
+  color: var(--good);
+}
+
+.mp-bad {
+  color: var(--bad);
+}
+
+.mp-warn {
+  color: var(--warn);
+}
+
+.mp-link {
+  font-size: var(--mth-fs-2xs);
+  text-transform: none;
+  letter-spacing: var(--mth-tracking-normal);
+  color: var(--link);
+}

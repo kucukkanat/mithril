@@ -5,7 +5,7 @@ prev: false
 title: "LoopOptions"
 ---
 
-Defined in: [packages/core/src/agent/loop.ts:245](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L245)
+Defined in: [packages/core/src/agent/loop.ts:245](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L245)
 
 The full set of inputs to [agentLoop](/mithril/reference/core/agent/functions/agentloop/) — the flattened, already-resolved form of an
 [AgentConfig](/mithril/reference/core/agent/interfaces/agentconfig/) plus per-run options.
@@ -31,7 +31,7 @@ structured output; `healing` selects the self-correction stack. `maxSteps` defau
 readonly optional consumers?: readonly EventConsumer[];
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:278](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L278)
+Defined in: [packages/core/src/agent/loop.ts:278](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L278)
 
 ***
 
@@ -41,7 +41,7 @@ Defined in: [packages/core/src/agent/loop.ts:278](https://github.com/kucukkanat/
 readonly deps: Deps;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:250](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L250)
+Defined in: [packages/core/src/agent/loop.ts:250](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L250)
 
 ***
 
@@ -53,7 +53,7 @@ readonly optional healing?:
   | readonly Middleware<Deps>[];
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:276](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L276)
+Defined in: [packages/core/src/agent/loop.ts:276](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L276)
 
 The self-healing stack. Omitted ⇒ the batteries-included default ([healing.defaults](/mithril/reference/core/agent/variables/healing/#defaults)); `false`
 or `[]` ⇒ a raw loop (crash-hardening still on); an array ⇒ exactly those healing middleware. Composed
@@ -67,7 +67,7 @@ ahead of `middlewares` so healing wraps user middleware.
 readonly input: Input;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:249](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L249)
+Defined in: [packages/core/src/agent/loop.ts:249](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L249)
 
 ***
 
@@ -77,7 +77,7 @@ Defined in: [packages/core/src/agent/loop.ts:249](https://github.com/kucukkanat/
 readonly instructions: string | ((ctx) => string | Promise<string>);
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:247](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L247)
+Defined in: [packages/core/src/agent/loop.ts:247](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L247)
 
 ***
 
@@ -87,7 +87,7 @@ Defined in: [packages/core/src/agent/loop.ts:247](https://github.com/kucukkanat/
 readonly optional materialize?: (def) => AnyTool<Deps>;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:288](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L288)
+Defined in: [packages/core/src/agent/loop.ts:288](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L288)
 
 Rebuilds a runtime tool from its [ToolDefinition](/mithril/reference/core/protocol/interfaces/tooldefinition/) when resuming. Supplied by whichever plugin
 owns the definition `body` format; core never interprets a body itself.
@@ -110,7 +110,7 @@ owns the definition `body` format; core never interprets a body itself.
 readonly optional maxConcurrentTools?: number;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:270](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L270)
+Defined in: [packages/core/src/agent/loop.ts:270](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L270)
 
 Max tool calls executed concurrently within one step (default DEFAULT\_TOOL\_CONCURRENCY). A model
 that requests several independent tool calls in a turn runs them in a bounded pool instead of serially;
@@ -125,7 +125,7 @@ message history are deterministic regardless of completion order.
 readonly optional maxCostMicroUsd?: number;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:263](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L263)
+Defined in: [packages/core/src/agent/loop.ts:263](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L263)
 
 ***
 
@@ -135,7 +135,7 @@ Defined in: [packages/core/src/agent/loop.ts:263](https://github.com/kucukkanat/
 readonly optional maxSteps?: number;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:255](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L255)
+Defined in: [packages/core/src/agent/loop.ts:255](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L255)
 
 ***
 
@@ -145,7 +145,7 @@ Defined in: [packages/core/src/agent/loop.ts:255](https://github.com/kucukkanat/
 readonly optional maxTokens?: number;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:262](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L262)
+Defined in: [packages/core/src/agent/loop.ts:262](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L262)
 
 ***
 
@@ -155,7 +155,7 @@ Defined in: [packages/core/src/agent/loop.ts:262](https://github.com/kucukkanat/
 readonly optional middlewares?: readonly Middleware<Deps>[];
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:277](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L277)
+Defined in: [packages/core/src/agent/loop.ts:277](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L277)
 
 ***
 
@@ -165,7 +165,7 @@ Defined in: [packages/core/src/agent/loop.ts:277](https://github.com/kucukkanat/
 readonly model: ModelInput;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:246](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L246)
+Defined in: [packages/core/src/agent/loop.ts:246](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L246)
 
 ***
 
@@ -175,7 +175,7 @@ Defined in: [packages/core/src/agent/loop.ts:246](https://github.com/kucukkanat/
 readonly optional output?: StandardSchemaV1<unknown, JsonValue>;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:260](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L260)
+Defined in: [packages/core/src/agent/loop.ts:260](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L260)
 
 ***
 
@@ -185,7 +185,7 @@ Defined in: [packages/core/src/agent/loop.ts:260](https://github.com/kucukkanat/
 readonly optional outputSchema?: JsonSchemaConverter;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:261](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L261)
+Defined in: [packages/core/src/agent/loop.ts:261](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L261)
 
 ***
 
@@ -195,7 +195,7 @@ Defined in: [packages/core/src/agent/loop.ts:261](https://github.com/kucukkanat/
 readonly optional persistence?: Persistence;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:259](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L259)
+Defined in: [packages/core/src/agent/loop.ts:259](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L259)
 
 Opt-in durable persistence; present ⇒ [agentLoop](/mithril/reference/core/agent/functions/agentloop/) auto-checkpoints the run (terminal + suspend).
 
@@ -207,7 +207,7 @@ Opt-in durable persistence; present ⇒ [agentLoop](/mithril/reference/core/agen
 readonly optional providers?: ProviderRegistry;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:252](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L252)
+Defined in: [packages/core/src/agent/loop.ts:252](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L252)
 
 ***
 
@@ -217,7 +217,7 @@ Defined in: [packages/core/src/agent/loop.ts:252](https://github.com/kucukkanat/
 readonly optional resume?: ResumeState;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:257](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L257)
+Defined in: [packages/core/src/agent/loop.ts:257](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L257)
 
 ***
 
@@ -227,7 +227,7 @@ Defined in: [packages/core/src/agent/loop.ts:257](https://github.com/kucukkanat/
 readonly optional runId?: string;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:256](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L256)
+Defined in: [packages/core/src/agent/loop.ts:256](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L256)
 
 ***
 
@@ -237,7 +237,7 @@ Defined in: [packages/core/src/agent/loop.ts:256](https://github.com/kucukkanat/
 readonly optional runtime?: RuntimeAdapter;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:253](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L253)
+Defined in: [packages/core/src/agent/loop.ts:253](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L253)
 
 ***
 
@@ -247,7 +247,7 @@ Defined in: [packages/core/src/agent/loop.ts:253](https://github.com/kucukkanat/
 readonly optional setups?: readonly PluginSetup<Deps>[];
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:283](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L283)
+Defined in: [packages/core/src/agent/loop.ts:283](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L283)
 
 Plugin `setup` hooks, run sequentially in `use` order once per run before step 0 (and again on
 resume). `tools` is the registry's seed; a setup adds to it.
@@ -260,7 +260,7 @@ resume). `tools` is the registry's seed; a setup adds to it.
 readonly optional signal?: AbortSignal;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:254](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L254)
+Defined in: [packages/core/src/agent/loop.ts:254](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L254)
 
 ***
 
@@ -270,7 +270,7 @@ Defined in: [packages/core/src/agent/loop.ts:254](https://github.com/kucukkanat/
 readonly tools: readonly AnyTool<Deps>[];
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:248](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L248)
+Defined in: [packages/core/src/agent/loop.ts:248](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L248)
 
 ***
 
@@ -280,4 +280,4 @@ Defined in: [packages/core/src/agent/loop.ts:248](https://github.com/kucukkanat/
 readonly optional transport?: Transport;
 ```
 
-Defined in: [packages/core/src/agent/loop.ts:251](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/agent/loop.ts#L251)
+Defined in: [packages/core/src/agent/loop.ts:251](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/loop.ts#L251)

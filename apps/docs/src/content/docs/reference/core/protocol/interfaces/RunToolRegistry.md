@@ -5,7 +5,7 @@ prev: false
 title: "RunToolRegistry"
 ---
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:118](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L118)
+Defined in: [packages/core/src/protocol/tool-registry.ts:118](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L118)
 
 The narrowed registry view handed to a tool's `execute` as `ctx.tools`.
 
@@ -38,7 +38,7 @@ get(name):
   | undefined;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:134](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L134)
+Defined in: [packages/core/src/protocol/tool-registry.ts:134](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L134)
 
 The executable tool, so a composing tool can call another.
 
@@ -72,7 +72,7 @@ Calling the result still typechecks: `RunContext<Deps>` is assignable to `RunCon
 has(name): boolean;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:120](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L120)
+Defined in: [packages/core/src/protocol/tool-registry.ts:120](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L120)
 
 #### Parameters
 
@@ -92,7 +92,7 @@ Defined in: [packages/core/src/protocol/tool-registry.ts:120](https://github.com
 register(tool, definition): void;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:135](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L135)
+Defined in: [packages/core/src/protocol/tool-registry.ts:135](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L135)
 
 #### Parameters
 
@@ -113,7 +113,7 @@ Defined in: [packages/core/src/protocol/tool-registry.ts:135](https://github.com
 revoke(name): boolean;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:136](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L136)
+Defined in: [packages/core/src/protocol/tool-registry.ts:136](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L136)
 
 #### Parameters
 
@@ -133,7 +133,7 @@ Defined in: [packages/core/src/protocol/tool-registry.ts:136](https://github.com
 summaries(): readonly ToolSummary[];
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:119](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/tool-registry.ts#L119)
+Defined in: [packages/core/src/protocol/tool-registry.ts:119](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L119)
 
 #### Returns
 

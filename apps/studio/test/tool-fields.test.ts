@@ -103,13 +103,29 @@ describe("tokenize", () => {
     expect(toks.filter((t) => t.name !== null).map((t) => t.name)).toEqual(["city"]);
   });
 
-  test("with no names the line is one plain token", () => {
-    expect(tokenize("return {};", [])).toEqual([{ text: "return {};", name: null }]);
+  test("with no names nothing links, and the text survives", () => {
+    const toks = tokenize("return {};", []);
+    expect(toks.map((t) => t.text).join("")).toBe("return {};");
+    expect(toks.every((t) => t.name === null)).toBe(true);
   });
 
-  test("prefers the longest name so a prefix never shadows it", () => {
+  test("colours the line as TypeScript", () => {
+    const toks = tokenize('const n = 2; // "x"', []);
+    expect(toks.find((t) => t.text === "const")?.kind).toBe("key");
+    expect(tokenize('return "hi";', []).find((t) => t.text === '"hi"')?.kind).toBe("str");
+    expect(toks.find((t) => t.text === "2")?.kind).toBe("num");
+    expect(tokenize("// note", [])).toEqual([{ text: "// note", name: null, kind: "com" }]);
+  });
+
+  test("matches whole identifiers only, so a prefix never shadows a longer name", () => {
     const toks = tokenize("return cityName;", ["city", "cityName"]);
     expect(toks.filter((t) => t.name !== null).map((t) => t.name)).toEqual(["cityName"]);
+  });
+
+  test("a name inside a string literal is coloured as string and never linked", () => {
+    const toks = tokenize('return "city";', ["city"]);
+    expect(toks.every((t) => t.name === null)).toBe(true);
+    expect(toks.find((t) => t.text === '"city"')?.kind).toBe("str");
   });
 
   test("finds every occurrence and preserves the text exactly", () => {

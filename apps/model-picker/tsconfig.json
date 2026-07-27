@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "@mithril/runner-web": ["../../packages/runner-web/src/index.ts"],
+      "@mithril/core/protocol": ["../../packages/core/src/protocol/index.ts"],
+      "@mithril/core/agent": ["../../packages/core/src/agent/index.ts"]
+    }
+  }
+}

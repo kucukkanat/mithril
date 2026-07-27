@@ -91,7 +91,7 @@ export function describeRunnerError(raw: string): string | null {
   if (/\b40[13]\b|unauthor|invalid.*(api|key)|missing.*key/i.test(raw))
     return "Invalid or missing API key — check the key for this provider.";
   if (/failed to fetch|networkerror|load failed|cors/i.test(raw))
-    return "Network or CORS error — this provider may block direct browser calls. Try OpenAI, Anthropic, Google, or Groq, or route through a proxy transport.";
+    return "Network or CORS error — this provider may block direct browser calls. Every provider in the picker serves CORS; for anything else, route through a proxy transport.";
   if (/\b429\b|rate.?limit/i.test(raw)) return "Rate-limited by the provider — wait a moment and retry.";
   if (/\bNO_WASM\b|webassembly|webgpu/i.test(raw)) return "This browser can't run local models (needs WebAssembly / WebGPU).";
   return null;

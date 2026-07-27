@@ -5,7 +5,7 @@ prev: false
 title: "ContextMeter"
 ---
 
-Defined in: [packages/devtools/src/selectors.ts:126](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/devtools/src/selectors.ts#L126)
+Defined in: [packages/devtools/src/selectors.ts:126](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/devtools/src/selectors.ts#L126)
 
 A projection of a run's accounting for the inspector's cost/context meters.
 
@@ -17,7 +17,7 @@ A projection of a run's accounting for the inspector's cost/context meters.
 readonly optional contextWindow?: number;
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:133](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/devtools/src/selectors.ts#L133)
+Defined in: [packages/devtools/src/selectors.ts:133](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/devtools/src/selectors.ts#L133)
 
 The model's context window, when supplied — enables the fill bar.
 
@@ -29,7 +29,7 @@ The model's context window, when supplied — enables the fill bar.
 readonly cost: number;
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:130](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/devtools/src/selectors.ts#L130)
+Defined in: [packages/devtools/src/selectors.ts:130](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/devtools/src/selectors.ts#L130)
 
 Accumulated cost in USD (`usage.costMicroUsd / 1e6`).
 
@@ -41,7 +41,7 @@ Accumulated cost in USD (`usage.costMicroUsd / 1e6`).
 readonly optional pct?: number;
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:135](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/devtools/src/selectors.ts#L135)
+Defined in: [packages/devtools/src/selectors.ts:135](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/devtools/src/selectors.ts#L135)
 
 `tokens / contextWindow * 100`, when `contextWindow` is supplied.
 
@@ -53,7 +53,7 @@ Defined in: [packages/devtools/src/selectors.ts:135](https://github.com/kucukkan
 readonly steps: number;
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:131](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/devtools/src/selectors.ts#L131)
+Defined in: [packages/devtools/src/selectors.ts:131](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/devtools/src/selectors.ts#L131)
 
 ***
 
@@ -63,6 +63,6 @@ Defined in: [packages/devtools/src/selectors.ts:131](https://github.com/kucukkan
 readonly tokens: number;
 ```
 
-Defined in: [packages/devtools/src/selectors.ts:128](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/devtools/src/selectors.ts#L128)
+Defined in: [packages/devtools/src/selectors.ts:128](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/devtools/src/selectors.ts#L128)
 
 Total billed tokens so far (`input + output + cacheRead + cacheWrite + reasoning`).

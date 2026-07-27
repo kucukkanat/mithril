@@ -38,7 +38,7 @@ type ProviderChunk =
 };
 ```
 
-Defined in: [packages/core/src/protocol/provider.ts:74](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/core/src/protocol/provider.ts#L74)
+Defined in: [packages/core/src/protocol/provider.ts:74](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/provider.ts#L74)
 
 A pre-[EventMeta](/mithril/reference/core/protocol/interfaces/eventmeta/) streaming chunk emitted by a [Provider](/mithril/reference/core/protocol/interfaces/provider/).
 

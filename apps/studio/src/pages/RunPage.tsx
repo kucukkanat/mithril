@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { Link, useParams } from "react-router-dom";
+import { ThinkingOrb } from "@mithril-internal/thinking-orbs";
 import { createRunnerClient, liveProvider, localModel } from "@mithril/runner-web";
 import type { MithrilEvent } from "@mithril/core/protocol";
 import { generateProject, type EntryMessage } from "@mithril/spec";
@@ -104,7 +105,7 @@ export function RunPage() {
 
   if (spec === null) return <div className="page-empty" data-testid="run-loading">Loading project…</div>;
 
-  const { env, missing } = envForSpec(spec, settings.keys);
+  const { env, missing } = envForSpec(spec, settings.connections);
   const liveIds = liveProvidersIn(spec);
   const local = usesLocalModel(spec);
   const entryAgent = spec.decls.find((d) => d.kind === "agent" && d.id === spec.entry.target);
@@ -257,7 +258,7 @@ export function RunPage() {
                       type="password"
                       data-testid={`run-key-input-${pid}`}
                       placeholder={p.envVar}
-                      value={settings.keys[pid] ?? ""}
+                      value={settings.connections[pid]?.apiKey ?? ""}
                       onChange={(e) => settings.setKey(pid, e.target.value)}
                     />
                   </div>
@@ -268,6 +269,7 @@ export function RunPage() {
 
           {local && run.download !== null && run.download.progress < 1 && (
             <div className="download" data-testid="run-download">
+              <ThinkingOrb state="searching" size={20} aria-label="Downloading…" />
               <span>
                 Downloading the on-device model{localSize !== undefined ? ` (${localSize})` : ""}… {Math.round(run.download.progress * 100)}%
               </span>
@@ -293,9 +295,7 @@ export function RunPage() {
                 <li className="msg msg-assistant msg-thinking" data-testid="run-thinking">
                   <span className="msg-role">assistant</span>
                   <p className="thinking">
-                    <span />
-                    <span />
-                    <span />
+                    <ThinkingOrb state="working" size={20} aria-label="Thinking…" />
                   </p>
                 </li>
               )}

@@ -8,6 +8,8 @@
     ".": { "types": "./src/index.ts", "import": "./src/index.ts" },
     "./openai": { "types": "./src/openai.ts", "import": "./src/openai.ts" },
     "./anthropic": { "types": "./src/anthropic.ts", "import": "./src/anthropic.ts" },
+    "./deepseek": { "types": "./src/deepseek.ts", "import": "./src/deepseek.ts" },
+    "./openrouter": { "types": "./src/openrouter.ts", "import": "./src/openrouter.ts" },
     "./transformers": { "types": "./src/transformers.ts", "import": "./src/transformers.ts" },
     "./devtools/attach": { "types": "./src/devtools-attach.ts", "import": "./src/devtools-attach.ts" }
   },

@@ -9,12 +9,12 @@
  * the host loads lazily (e.g. `await import("typescript")` in a worker), and this package's root
  * entry must stay zero-dependency.
  *
- * M1 scope: tools, agents, entry. `asTool` / `defineWorkflow` statements round-trip as opaque
- * decls until the M3 recognizer lands.
+ * Scope: tools, agents, sub-agents (`asTool`), entry. `defineWorkflow` statements round-trip as
+ * opaque decls until their recognizer lands.
  *
  * Imports are ABSORBED, name by name: codegen regenerates whatever its structured decls need, so
  * those names are dropped here and only the leftovers are preserved verbatim. Splitting a mixed
- * import is the point — `import { agent, asTool, tool }` becomes a preserved `import { asTool }`,
+ * import is the point — `import { agent, healing, tool }` becomes a preserved `import { healing }`,
  * because keeping the statement whole would redeclare `agent`/`tool` alongside the regenerated
  * import and yield source that no longer compiles.
  */
@@ -25,10 +25,12 @@ import type {
   AgentSpec,
   EntryMessage,
   EntrySpec,
+  LiveProviderName,
   ModelSpec,
   OpaqueDecl,
   ProjectDecl,
   ProjectSpec,
+  SubAgentToolSpec,
   ToolSpec,
 } from "./types.ts";
 import { SPEC_VERSION } from "./types.ts";
@@ -50,10 +52,14 @@ export interface ParseResult {
   readonly opaqueCount: number;
 }
 
-const LIVE_CALLEES: Readonly<Record<string, "openai" | "anthropic" | "google">> = {
+// The provider factories codegen emits as a bare `provider("model")` call. Groq is absent on purpose:
+// it has no first-class handle and goes through the `openaiProvider({ baseUrl })` const shape below.
+const LIVE_CALLEES: Readonly<Record<string, LiveProviderName>> = {
   openai: "openai",
   anthropic: "anthropic",
   google: "google",
+  deepseek: "deepseek",
+  openrouter: "openrouter",
 };
 
 interface Ctx {
@@ -303,6 +309,40 @@ function parseAgent(ctx: Ctx, id: string, obj: TS.ObjectLiteralExpression): Agen
   };
 }
 
+/**
+ * `asTool(<agentId>, { name, description, inputSchema? })` — a child agent exposed as a parent's tool.
+ *
+ * The options object mirrors codegen's `subAgentDecl` exactly, including the `inputSchema` → `input`
+ * rename: the spec field is named for what it is (the sub-agent's input), the emitted property for
+ * what `AsToolOptions` calls it.
+ */
+function parseSubAgentTool(ctx: Ctx, id: string, agentId: string, obj: TS.ObjectLiteralExpression): SubAgentToolSpec | undefined {
+  const props = plainProps(ctx, obj);
+  if (props === undefined) return undefined;
+  let name: string | undefined;
+  let description: string | undefined;
+  let input: string | undefined;
+  for (const [key, value] of props) {
+    switch (key) {
+      case "name":
+        name = stringLit(ctx, value);
+        if (name === undefined) return undefined;
+        break;
+      case "description":
+        description = stringLit(ctx, value);
+        if (description === undefined) return undefined;
+        break;
+      case "inputSchema":
+        input = text(ctx, value);
+        break;
+      default:
+        return undefined; // unrecognized property → whole statement stays opaque
+    }
+  }
+  if (name === undefined || description === undefined) return undefined;
+  return { kind: "subAgentTool", id, agentId, name, description, ...(input === undefined ? {} : { input: { zod: input } }) };
+}
+
 function parseEntryInput(ctx: Ctx, node: TS.Expression): EntrySpec["input"] | undefined {
   const { ts } = ctx;
   const s = stringLit(ctx, node);
@@ -359,7 +399,8 @@ function namedImport(
  * the project `name` and canvas `meta` — forward across reparses.
  *
  * The round-trip invariant: for any spec `s`, `parseProject(generateProject(s), ts, s).spec`
- * deep-equals `s` (M1: for tool/agent/entry/opaque decls).
+ * deep-equals `s` — for tool, agent, sub-agent (`asTool`), entry and opaque decls. A workflow decl
+ * still degrades to opaque, which is lossless in code but not yet structured.
  */
 export function parseProject(source: string, ts: typeof TS, prev?: ProjectSpec): ParseResult {
   const sf = ts.createSourceFile("project.ts", source, ts.ScriptTarget.ES2022, true);
@@ -424,6 +465,19 @@ export function parseProject(source: string, ts: typeof TS, prev?: ProjectSpec):
           decls.push(parsed === undefined ? opaque(stmt) : { kind: "decl", decl: parsed });
           continue;
         }
+        const arg1 = first.initializer.arguments[1];
+        if (
+          callee === "asTool" &&
+          first.initializer.arguments.length === 2 &&
+          arg0 !== undefined &&
+          ts.isIdentifier(arg0) &&
+          arg1 !== undefined &&
+          ts.isObjectLiteralExpression(arg1)
+        ) {
+          const parsed = parseSubAgentTool(ctx, id, arg0.text, arg1);
+          decls.push(parsed === undefined ? opaque(stmt) : { kind: "decl", decl: parsed });
+          continue;
+        }
         // The exact groq provider const codegen emits — absorbed (regenerated when a groq model exists).
         if (callee === "openaiProvider" && stmt.getText(sf).trim() === GROQ_PROVIDER_DECL) continue;
       }
@@ -467,9 +521,9 @@ export function parseProject(source: string, ts: typeof TS, prev?: ProjectSpec):
     } else {
       // Import absorption: codegen regenerates the imports its structured decls need, so those names
       // must NOT also be preserved verbatim. Only the leftovers are — and only the leftovers, never
-      // the whole statement: a mixed import like `{ agent, asTool, tool }` (asTool round-trips as
-      // opaque, so it is never planned) would otherwise be re-emitted next to the generated
-      // `{ agent, tool }`, redeclaring both and producing code that no longer compiles.
+      // the whole statement: a mixed import like `{ agent, healing, tool }` (an agent's `healing`
+      // regions are stored verbatim, so that name is never planned) would otherwise be re-emitted
+      // next to the generated `{ agent, tool }`, redeclaring both and producing uncompilable source.
       const planned = plan.get(item.module) ?? [];
       const unplanned = item.names.filter((n) => !planned.includes(n));
       if (unplanned.length === item.names.length) pushOpaque(item.code);

@@ -37,9 +37,20 @@ export {
   modelBackends,
   requiresWebGPU,
   type Backend,
+  type CatalogModel,
   type LiveProvider,
   type LiveProviderId,
   type LocalModel,
   type ProviderMode,
+  type ProviderWire,
 } from "./catalog.ts";
+export { fuzzyPositions, fuzzyScore, isCustomModel, searchModels, type ModelMatch } from "./model-search.ts";
+export {
+  fetchProviderModels,
+  resolveBaseUrl,
+  testConnection,
+  type ConnectionFault,
+  type ConnectionProbe,
+  type ConnectionResult,
+} from "./connection.ts";
 export { hasWebGPU } from "./webgpu.ts";

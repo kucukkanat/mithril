@@ -9,7 +9,7 @@ title: "requiresWebGPU"
 function requiresWebGPU(model): boolean;
 ```
 
-Defined in: [runner-web/src/catalog.ts:127](https://github.com/kucukkanat/mithril/blob/11fd4315ebd38aa7954d618e157fa90293105bdf/packages/runner-web/src/catalog.ts#L127)
+Defined in: [runner-web/src/catalog.ts:301](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L301)
 
 True when a model can run **only** on WebGPU — i.e. its [LocalModel.backends](/mithril/reference/runner-web/index/interfaces/localmodel/#backends) is exactly `["webgpu"]`.
 

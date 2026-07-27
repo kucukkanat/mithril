@@ -1,3 +1,5 @@
+import { liveProvider, type LiveProviderId } from "@mithril/runner-web";
+import { ProviderSetup } from "@mithril-internal/model-picker";
 import { LIVE_PROVIDERS, useSettingsStore } from "../state/settingsStore.ts";
 import { useDraftingStore } from "../state/draftingStore.ts";
 import { DRAFT_DEFAULT_MODEL, draftDestination } from "../lib/drafting.ts";
@@ -13,6 +15,13 @@ import { CheckIcon, CloudIcon, CrossIcon, DeviceIcon, ShareIcon, ShieldIcon } fr
  * re-renders as the drafting setting changes, so the claim always describes the CURRENT configuration
  * rather than a generic promise.
  */
+/*
+ * Settings has no agent in scope, so a connection test here has no model to aim at — it uses the
+ * provider's own default. That still proves the two things this page is responsible for (the key and
+ * the endpoint); a specific model is tested from the picker next to the agent that names it.
+ */
+const defaultModelFor = (id: LiveProviderId): string => liveProvider(id).defaultModel;
+
 export function SettingsPage() {
   const s = useSettingsStore();
   const draftCount = useDraftingStore((d) => d.count);
@@ -161,28 +170,33 @@ export function SettingsPage() {
 
         <section className="panel" data-testid="settings-keys">
           <div className="panel-head">
-            <h3>API keys</h3>
+            <h3>Providers</h3>
             <span className="pill">bring your own</span>
           </div>
           <p className="hint" style={{ marginTop: 0, marginBottom: "var(--mth-space-5)" }}>
-            Stored in this browser&rsquo;s localStorage, sent only to the provider you run against. Clearing site data removes them.
+            Stored in this browser&rsquo;s localStorage, sent only to the provider you run against. Clearing site data removes them. Point a provider at a
+            compatible endpoint of your own with its optional base URL — then use <b>Test connection</b> to check the key, the endpoint and the model in one
+            request.
           </p>
-          <div className="key-list">
+          <div className="conn-list">
             {LIVE_PROVIDERS.map((p) => {
-              const value = s.keys[p.id] ?? "";
+              const conn = s.connections[p.id] ?? {};
+              const set = (conn.apiKey ?? "").length > 0;
               return (
-                <div key={p.id} className="key-row" data-testid={`settings-key-field-${p.id}`}>
-                  <span className="key-name">{p.label}</span>
-                  <input
-                    type="password"
-                    value={value}
-                    placeholder={p.envVar}
-                    onChange={(e) => s.setKey(p.id, e.target.value)}
-                    aria-label={`${p.label} key`}
-                    data-testid={`settings-key-input-${p.id}`}
+                <details key={p.id} className="conn-row" data-testid={`settings-key-field-${p.id}`}>
+                  <summary>
+                    <span className="key-name">{p.label}</span>
+                    <span className={`key-state${set ? " is-set" : ""}`}>{set ? "key set · local" : "no key"}</span>
+                    {(conn.baseUrl ?? "").trim().length > 0 && <span className="key-state is-set">custom endpoint</span>}
+                  </summary>
+                  <ProviderSetup
+                    provider={p.id}
+                    model={defaultModelFor(p.id)}
+                    connection={conn}
+                    onConnectionChange={(patch) => s.setConnection(p.id, patch)}
+                    testId={`settings-conn-${p.id}`}
                   />
-                  <span className={`key-state${value.length > 0 ? " is-set" : ""}`}>{value.length > 0 ? "set · local" : "not set"}</span>
-                </div>
+                </details>
               );
             })}
           </div>
