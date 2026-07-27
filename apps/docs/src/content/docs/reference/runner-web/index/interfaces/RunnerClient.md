@@ -5,7 +5,7 @@ prev: false
 title: "RunnerClient"
 ---
 
-Defined in: [runner-web/src/client.ts:53](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/client.ts#L53)
+Defined in: [runner-web/src/client.ts:53](https://github.com/kucukkanat/mithril/blob/4b7faf256a28e6c7e42b454e1bfaecb89a37f8ca/packages/runner-web/src/client.ts#L53)
 
 Owns the runner worker and exposes the run's accumulated state.
 
@@ -17,7 +17,7 @@ Owns the runner worker and exposes the run's accumulated state.
 getSnapshot(): RunnerSnapshot;
 ```
 
-Defined in: [runner-web/src/client.ts:56](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/client.ts#L56)
+Defined in: [runner-web/src/client.ts:63](https://github.com/kucukkanat/mithril/blob/4b7faf256a28e6c7e42b454e1bfaecb89a37f8ca/packages/runner-web/src/client.ts#L63)
 
 #### Returns
 
@@ -31,7 +31,7 @@ Defined in: [runner-web/src/client.ts:56](https://github.com/kucukkanat/mithril/
 reset(): void;
 ```
 
-Defined in: [runner-web/src/client.ts:67](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/client.ts#L67)
+Defined in: [runner-web/src/client.ts:74](https://github.com/kucukkanat/mithril/blob/4b7faf256a28e6c7e42b454e1bfaecb89a37f8ca/packages/runner-web/src/client.ts#L74)
 
 Terminate and clear back to the idle snapshot.
 
@@ -47,7 +47,7 @@ Terminate and clear back to the idle snapshot.
 resume(decision): void;
 ```
 
-Defined in: [runner-web/src/client.ts:60](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/client.ts#L60)
+Defined in: [runner-web/src/client.ts:67](https://github.com/kucukkanat/mithril/blob/4b7faf256a28e6c7e42b454e1bfaecb89a37f8ca/packages/runner-web/src/client.ts#L67)
 
 Answer the pending suspension of the in-flight run.
 
@@ -69,7 +69,7 @@ Answer the pending suspension of the in-flight run.
 run(code, opts?): void;
 ```
 
-Defined in: [runner-web/src/client.ts:58](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/client.ts#L58)
+Defined in: [runner-web/src/client.ts:65](https://github.com/kucukkanat/mithril/blob/4b7faf256a28e6c7e42b454e1bfaecb89a37f8ca/packages/runner-web/src/client.ts#L65)
 
 Terminate any in-flight run, then execute `code` in a fresh worker.
 
@@ -92,7 +92,7 @@ Terminate any in-flight run, then execute `code` in a fresh worker.
 stop(): void;
 ```
 
-Defined in: [runner-web/src/client.ts:65](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/client.ts#L65)
+Defined in: [runner-web/src/client.ts:72](https://github.com/kucukkanat/mithril/blob/4b7faf256a28e6c7e42b454e1bfaecb89a37f8ca/packages/runner-web/src/client.ts#L72)
 
 Terminate the in-flight run. Accumulated `events`/`logs` are kept, but `status` returns to `"idle"`
 so subscribers leave the running state (a run already at `"done"`/`"error"` is untouched).
@@ -109,7 +109,7 @@ so subscribers leave the running state (a run already at `"done"`/`"error"` is u
 subscribe(listener): () => void;
 ```
 
-Defined in: [runner-web/src/client.ts:55](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/client.ts#L55)
+Defined in: [runner-web/src/client.ts:62](https://github.com/kucukkanat/mithril/blob/4b7faf256a28e6c7e42b454e1bfaecb89a37f8ca/packages/runner-web/src/client.ts#L62)
 
 Subscribe to snapshot changes; returns an unsubscribe function.
 
@@ -122,3 +122,10 @@ Subscribe to snapshot changes; returns an unsubscribe function.
 #### Returns
 
 () => `void`
+
+#### Remarks
+
+A listener that throws is isolated: it is reported through the global `reportError`
+(never swallowed), the remaining listeners still run, and the client's own bookkeeping — the
+`terminate()` that follows a `done`/`error` message — still happens. Without that, React's
+nested-update guard firing mid-stream would leak the worker.

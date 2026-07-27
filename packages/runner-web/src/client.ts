@@ -51,7 +51,14 @@ export interface RunnerRunOptions {
 
 /** Owns the runner worker and exposes the run's accumulated state. */
 export interface RunnerClient {
-  /** Subscribe to snapshot changes; returns an unsubscribe function. */
+  /**
+   * Subscribe to snapshot changes; returns an unsubscribe function.
+   *
+   * @remarks A listener that throws is isolated: it is reported through the global `reportError`
+   * (never swallowed), the remaining listeners still run, and the client's own bookkeeping — the
+   * `terminate()` that follows a `done`/`error` message — still happens. Without that, React's
+   * nested-update guard firing mid-stream would leak the worker.
+   */
   subscribe(listener: () => void): () => void;
   getSnapshot(): RunnerSnapshot;
   /** Terminate any in-flight run, then execute `code` in a fresh worker. */
@@ -118,9 +125,23 @@ export function createRunnerClient(spawn: () => Worker): RunnerClient {
   let watchdog: { readonly ms: number; readonly message: string } | null = null;
   const listeners = new Set<() => void>();
 
+  // A subscriber that throws must not abort the notify loop OR the caller's work after `set` — a
+  // throw on the `done`/`error` message would otherwise skip `terminate()` and leak the worker.
+  // Nothing is swallowed: `reportError` surfaces it exactly as an uncaught error would.
+  const notify = (): void => {
+    for (const l of listeners) {
+      try {
+        l();
+      } catch (err) {
+        if (typeof reportError === "function") reportError(err);
+        else console.error(err);
+      }
+    }
+  };
+
   const set = (patch: Partial<RunnerSnapshot>): void => {
     snapshot = { ...snapshot, ...patch };
-    for (const l of listeners) l();
+    notify();
   };
 
   const clearTimer = (): void => {
@@ -194,7 +215,7 @@ export function createRunnerClient(spawn: () => Worker): RunnerClient {
     run(code, opts) {
       terminate();
       snapshot = { ...IDLE_RUNNER_SNAPSHOT, status: "running" };
-      for (const l of listeners) l();
+      notify();
       const idle = opts?.idleTimeoutMs === undefined ? DEFAULT_IDLE_TIMEOUT_MS : opts.idleTimeoutMs;
       watchdog =
         idle === null

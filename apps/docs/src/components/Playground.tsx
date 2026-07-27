@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { replay, type MithrilEvent } from "@mithril/core/protocol";
 // The event inspector + state/span tree are the shared @mithril/devtools/ui components (single source of
 // truth); the playground keeps only its bespoke editor, runner, and HITL flow.
@@ -51,8 +51,11 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
   const [presetId, setPresetId] = useState<string>(bootPreset ? bootPreset.id : "custom");
   const [code, setCode] = useState<string>(initial);
   const [tab, setTab] = useState<Tab>("events");
-  const [cursor, setCursor] = useState(0);
-  const [pinned, setPinned] = useState(true);
+  // The time-travel cursor is DERIVED, never stored: `null` means "follow the tail". Storing it and
+  // syncing it in an effect made every streamed event schedule a follow-up render, so React's
+  // nested-update counter never reset and a run of ~25+ events threw "Maximum update depth exceeded"
+  // mid-stream — which skipped the `terminate()` after a done/error message and leaked the worker.
+  const [scrubbed, setScrubbed] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
 
   const runner = useRunner();
@@ -77,9 +80,8 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
   };
 
   // Follow the tail while a run streams, unless the user has scrubbed back.
-  useEffect(() => {
-    if (pinned) setCursor(events.length);
-  }, [events.length, pinned]);
+  const pinned = scrubbed === null;
+  const cursor = scrubbed ?? events.length;
 
   const finalState = useMemo(() => replay([...events]), [events]);
   const text = useMemo(
@@ -104,13 +106,12 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
     applyGenerated(assembleExample(p.parts, t), p.id);
     if (opts?.reset) {
       runner.reset();
-      setCursor(0);
+      setScrubbed(null);
     }
   };
 
   const startRun = () => {
-    setPinned(true);
-    setCursor(0);
+    setScrubbed(null);
     setTab("events");
     setPendingRun(false);
     runner.run(code, { mode: effectiveMode, env: showProviderUI ? settings.envForRun() : {} });
@@ -128,7 +129,7 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
   // model you've picked in the "Run against" bar (scripted by default).
   const pickPreset = (p: Preset) => {
     applyGenerated(assembleExample(p.parts, target), p.id);
-    setCursor(0);
+    setScrubbed(null);
     runner.reset();
   };
 
@@ -160,10 +161,7 @@ export default function Playground({ embedded = false }: { embedded?: boolean })
     reassemble(targetFor("scripted", settings.activeProvider, settings.activeModel, settings.localModel), { reset: settings.mode !== "scripted" });
   };
 
-  const scrub = (c: number) => {
-    setPinned(false);
-    setCursor(c);
-  };
+  const scrub = (c: number) => setScrubbed(c);
   const share = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl(code));
