@@ -12,7 +12,7 @@ function isCustomModel(
    known?): boolean;
 ```
 
-Defined in: runner-web/src/model-search.ts:124
+Defined in: [runner-web/src/model-search.ts:124](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/model-search.ts#L124)
 
 True when `model` is not in the provider's known list — i.e. an id the user typed themselves, which
 is sent to the provider verbatim.

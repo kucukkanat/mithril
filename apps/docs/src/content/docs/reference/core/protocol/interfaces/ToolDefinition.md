@@ -5,7 +5,7 @@ prev: false
 title: "ToolDefinition"
 ---
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:37](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L37)
+Defined in: [packages/core/src/protocol/tool-registry.ts:37](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/tool-registry.ts#L37)
 
 A JSON-safe, replayable description of a tool — everything needed to rebuild it.
 
@@ -26,7 +26,7 @@ package defines the body format, e.g. `@mithril/authoring`) turns it back into a
 readonly body: JsonValue;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:48](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L48)
+Defined in: [packages/core/src/protocol/tool-registry.ts:48](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/tool-registry.ts#L48)
 
 The tier-discriminated body. Opaque to core; interpreted by the materializer that owns its format.
 
@@ -38,7 +38,7 @@ The tier-discriminated body. Opaque to core; interpreted by the materializer tha
 readonly description: string;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:39](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L39)
+Defined in: [packages/core/src/protocol/tool-registry.ts:39](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/tool-registry.ts#L39)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [packages/core/src/protocol/tool-registry.ts:39](https://github.com/
 readonly digest: string;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:50](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L50)
+Defined in: [packages/core/src/protocol/tool-registry.ts:50](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/tool-registry.ts#L50)
 
 Content digest over the canonical JSON of every other field. See [digestOf](/mithril/reference/core/protocol/functions/digestof/).
 
@@ -60,7 +60,7 @@ Content digest over the canonical JSON of every other field. See [digestOf](/mit
 readonly optional examples?: readonly JsonValue[];
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:44](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L44)
+Defined in: [packages/core/src/protocol/tool-registry.ts:44](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/tool-registry.ts#L44)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [packages/core/src/protocol/tool-registry.ts:44](https://github.com/
 readonly inputSchema: JsonValue;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:42](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L42)
+Defined in: [packages/core/src/protocol/tool-registry.ts:42](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/tool-registry.ts#L42)
 
 JSON Schema for the tool's input; compile it with [fromJsonSchema](/mithril/reference/core/protocol/functions/fromjsonschema/).
 
@@ -82,7 +82,7 @@ JSON Schema for the tool's input; compile it with [fromJsonSchema](/mithril/refe
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:38](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L38)
+Defined in: [packages/core/src/protocol/tool-registry.ts:38](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/tool-registry.ts#L38)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [packages/core/src/protocol/tool-registry.ts:38](https://github.com/
 readonly optional needsApproval?: boolean;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:45](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L45)
+Defined in: [packages/core/src/protocol/tool-registry.ts:45](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/tool-registry.ts#L45)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: [packages/core/src/protocol/tool-registry.ts:45](https://github.com/
 readonly optional outputSchema?: JsonValue;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:43](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L43)
+Defined in: [packages/core/src/protocol/tool-registry.ts:43](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/tool-registry.ts#L43)
 
 ***
 
@@ -112,7 +112,7 @@ Defined in: [packages/core/src/protocol/tool-registry.ts:43](https://github.com/
 readonly optional timeoutMs?: number;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:46](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L46)
+Defined in: [packages/core/src/protocol/tool-registry.ts:46](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/tool-registry.ts#L46)
 
 ***
 
@@ -122,4 +122,4 @@ Defined in: [packages/core/src/protocol/tool-registry.ts:46](https://github.com/
 readonly optional version?: string;
 ```
 
-Defined in: [packages/core/src/protocol/tool-registry.ts:40](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/tool-registry.ts#L40)
+Defined in: [packages/core/src/protocol/tool-registry.ts:40](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/tool-registry.ts#L40)

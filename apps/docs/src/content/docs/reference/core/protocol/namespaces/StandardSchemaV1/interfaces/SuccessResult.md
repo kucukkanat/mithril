@@ -5,7 +5,7 @@ prev: false
 title: "SuccessResult"
 ---
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:34](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/standard-schema.ts#L34)
+Defined in: [packages/core/src/protocol/standard-schema.ts:34](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/standard-schema.ts#L34)
 
 ## Type Parameters
 
@@ -21,7 +21,7 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:34](https://github.co
 readonly optional issues?: undefined;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:36](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/standard-schema.ts#L36)
+Defined in: [packages/core/src/protocol/standard-schema.ts:36](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/standard-schema.ts#L36)
 
 ***
 
@@ -31,4 +31,4 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:36](https://github.co
 readonly value: Output;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:35](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/standard-schema.ts#L35)
+Defined in: [packages/core/src/protocol/standard-schema.ts:35](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/standard-schema.ts#L35)

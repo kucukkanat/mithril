@@ -5,7 +5,7 @@ prev: false
 title: "PluginHost"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:220](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L220)
+Defined in: [packages/core/src/protocol/middleware.ts:220](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L220)
 
 The registration surface passed to [Plugin.setup](/mithril/reference/core/protocol/interfaces/plugin/#setup), once per run, before step 0.
 
@@ -37,7 +37,7 @@ here, by the agent's author, and never by the agent.
 readonly deps: Deps;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:225](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L225)
+Defined in: [packages/core/src/protocol/middleware.ts:225](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L225)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:225](https://github.com/ku
 readonly runId: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:226](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L226)
+Defined in: [packages/core/src/protocol/middleware.ts:226](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L226)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:226](https://github.com/ku
 readonly runtime: RuntimeAdapter;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:227](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L227)
+Defined in: [packages/core/src/protocol/middleware.ts:227](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L227)
 
 ***
 
@@ -67,7 +67,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:227](https://github.com/ku
 readonly signal: AbortSignal;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:228](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L228)
+Defined in: [packages/core/src/protocol/middleware.ts:228](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L228)
 
 ***
 
@@ -77,7 +77,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:228](https://github.com/ku
 readonly tools: ToolRegistry<Deps>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:224](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L224)
+Defined in: [packages/core/src/protocol/middleware.ts:224](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L224)
 
 The run's live registry, for registering a tool with an explicit [ToolDefinition](/mithril/reference/core/protocol/interfaces/tooldefinition/).
 
@@ -89,7 +89,7 @@ The run's live registry, for registering a tool with an explicit [ToolDefinition
 emit(event): void;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:229](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L229)
+Defined in: [packages/core/src/protocol/middleware.ts:229](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L229)
 
 #### Parameters
 
@@ -109,7 +109,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:229](https://github.com/ku
 register(fragment): void;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:222](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L222)
+Defined in: [packages/core/src/protocol/middleware.ts:222](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L222)
 
 Contribute a plugin fragment: tools, middleware, and/or consumers.
 

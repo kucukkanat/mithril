@@ -5,7 +5,7 @@ prev: false
 title: "McpTransport"
 ---
 
-Defined in: [packages/mcp/src/index.ts:69](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/mcp/src/index.ts#L69)
+Defined in: [packages/mcp/src/index.ts:69](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/mcp/src/index.ts#L69)
 
 The transport you implement to carry MCP JSON-RPC traffic to a server.
 
@@ -25,7 +25,7 @@ post-handshake notification). Passed to [mcpClient](/mithril/reference/mcp/index
 optional close(): Promise<void>;
 ```
 
-Defined in: [packages/mcp/src/index.ts:81](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/mcp/src/index.ts#L81)
+Defined in: [packages/mcp/src/index.ts:81](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/mcp/src/index.ts#L81)
 
 Optional teardown, invoked by [McpClient.close](/mithril/reference/mcp/index/interfaces/mcpclient/#close).
 
@@ -41,7 +41,7 @@ Optional teardown, invoked by [McpClient.close](/mithril/reference/mcp/index/int
 optional notify(method, params): Promise<void>;
 ```
 
-Defined in: [packages/mcp/src/index.ts:79](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/mcp/src/index.ts#L79)
+Defined in: [packages/mcp/src/index.ts:79](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/mcp/src/index.ts#L79)
 
 Send a JSON-RPC notification (no id, no reply expected), e.g. `"notifications/initialized"`.
 
@@ -67,7 +67,7 @@ request(
 signal?): Promise<JsonValue>;
 ```
 
-Defined in: [packages/mcp/src/index.ts:77](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/mcp/src/index.ts#L77)
+Defined in: [packages/mcp/src/index.ts:77](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/mcp/src/index.ts#L77)
 
 Send an MCP JSON-RPC request (e.g. `"tools/list"`, `"tools/call"`) and resolve its result.
 

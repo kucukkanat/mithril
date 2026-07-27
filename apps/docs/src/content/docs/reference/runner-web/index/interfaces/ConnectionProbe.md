@@ -5,7 +5,7 @@ prev: false
 title: "ConnectionProbe"
 ---
 
-Defined in: runner-web/src/connection.ts:40
+Defined in: [runner-web/src/connection.ts:40](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/connection.ts#L40)
 
 What to probe. `baseUrl` and `apiKey` are exactly what a run would use.
 
@@ -17,7 +17,7 @@ What to probe. `baseUrl` and `apiKey` are exactly what a run would use.
 readonly apiKey: string;
 ```
 
-Defined in: runner-web/src/connection.ts:43
+Defined in: [runner-web/src/connection.ts:43](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/connection.ts#L43)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: runner-web/src/connection.ts:43
 readonly optional baseUrl?: string;
 ```
 
-Defined in: runner-web/src/connection.ts:45
+Defined in: [runner-web/src/connection.ts:45](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/connection.ts#L45)
 
 Optional endpoint override; falls back to the provider's `defaultBaseUrl`.
 
@@ -43,7 +43,7 @@ readonly optional fetch?: {
 };
 ```
 
-Defined in: runner-web/src/connection.ts:47
+Defined in: [runner-web/src/connection.ts:47](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/connection.ts#L47)
 
 Injected for tests; defaults to the global `fetch`.
 
@@ -112,7 +112,7 @@ Injected for tests; defaults to the global `fetch`.
 readonly model: string;
 ```
 
-Defined in: runner-web/src/connection.ts:42
+Defined in: [runner-web/src/connection.ts:42](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/connection.ts#L42)
 
 ***
 
@@ -122,7 +122,7 @@ Defined in: runner-web/src/connection.ts:42
 readonly provider: LiveProviderId;
 ```
 
-Defined in: runner-web/src/connection.ts:41
+Defined in: [runner-web/src/connection.ts:41](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/connection.ts#L41)
 
 ***
 
@@ -132,6 +132,6 @@ Defined in: runner-web/src/connection.ts:41
 readonly optional signal?: AbortSignal;
 ```
 
-Defined in: runner-web/src/connection.ts:49
+Defined in: [runner-web/src/connection.ts:49](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/connection.ts#L49)
 
 Abort the probe (the UI wires this to unmount / a second click).

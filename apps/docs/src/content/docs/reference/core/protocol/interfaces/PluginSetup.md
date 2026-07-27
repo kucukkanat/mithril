@@ -5,7 +5,7 @@ prev: false
 title: "PluginSetup"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:233](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L233)
+Defined in: [packages/core/src/protocol/middleware.ts:233](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L233)
 
 A [Plugin.setup](/mithril/reference/core/protocol/interfaces/plugin/#setup) paired with its plugin's name, as collected from an agent's `use` array.
 
@@ -23,7 +23,7 @@ A [Plugin.setup](/mithril/reference/core/protocol/interfaces/plugin/#setup) pair
 readonly plugin: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:234](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L234)
+Defined in: [packages/core/src/protocol/middleware.ts:234](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L234)
 
 ***
 
@@ -33,7 +33,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:234](https://github.com/ku
 readonly run: (host) => void | Promise<void>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:235](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L235)
+Defined in: [packages/core/src/protocol/middleware.ts:235](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L235)
 
 #### Parameters
 

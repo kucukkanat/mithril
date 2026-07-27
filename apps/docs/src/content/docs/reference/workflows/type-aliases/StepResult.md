@@ -17,7 +17,7 @@ type StepResult<S> =
 };
 ```
 
-Defined in: [packages/workflows/src/index.ts:13](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/workflows/src/index.ts#L13)
+Defined in: [packages/workflows/src/index.ts:13](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/workflows/src/index.ts#L13)
 
 What a [WorkflowStep](/mithril/reference/workflows/type-aliases/workflowstep/) returns: either route to another step (`goto`) or finish (`done`),
 carrying the (possibly updated) state forward. Build these with [goto](/mithril/reference/workflows/functions/goto/) / [done](/mithril/reference/workflows/functions/done/).

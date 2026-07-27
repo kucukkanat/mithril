@@ -5,7 +5,7 @@ prev: false
 title: "Props"
 ---
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:25](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/standard-schema.ts#L25)
+Defined in: [packages/core/src/protocol/standard-schema.ts:25](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/standard-schema.ts#L25)
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:25](https://github.co
 readonly optional types?: Types<Input, Output>;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:31](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/standard-schema.ts#L31)
+Defined in: [packages/core/src/protocol/standard-schema.ts:31](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/standard-schema.ts#L31)
 
 ***
 
@@ -34,7 +34,7 @@ readonly validate: (value) =>
 | Promise<Result<Output>>;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:28](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/standard-schema.ts#L28)
+Defined in: [packages/core/src/protocol/standard-schema.ts:28](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/standard-schema.ts#L28)
 
 #### Parameters
 
@@ -55,7 +55,7 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:28](https://github.co
 readonly vendor: string;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:27](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/standard-schema.ts#L27)
+Defined in: [packages/core/src/protocol/standard-schema.ts:27](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/standard-schema.ts#L27)
 
 ***
 
@@ -65,4 +65,4 @@ Defined in: [packages/core/src/protocol/standard-schema.ts:27](https://github.co
 readonly version: 1;
 ```
 
-Defined in: [packages/core/src/protocol/standard-schema.ts:26](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/standard-schema.ts#L26)
+Defined in: [packages/core/src/protocol/standard-schema.ts:26](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/standard-schema.ts#L26)

@@ -9,7 +9,7 @@ title: "providerRegistry"
 function providerRegistry(...providers): ProviderRegistry;
 ```
 
-Defined in: [packages/core/src/agent/registry.ts:43](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/registry.ts#L43)
+Defined in: [packages/core/src/agent/registry.ts:43](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/agent/registry.ts#L43)
 
 Assemble a [ProviderRegistry](/mithril/reference/core/protocol/interfaces/providerregistry/) from one or more providers, keyed by each provider's spec id.
 

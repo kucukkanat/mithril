@@ -19,6 +19,6 @@ type RunnerRequest =
 };
 ```
 
-Defined in: [runner-web/src/protocol.ts:49](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/protocol.ts#L49)
+Defined in: [runner-web/src/protocol.ts:49](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/protocol.ts#L49)
 
 UI → worker.

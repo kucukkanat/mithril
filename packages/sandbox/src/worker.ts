@@ -111,12 +111,18 @@ async function spawnServer(onMessage: (d: unknown) => void, onError: (e: string)
  * In a browser the worker is created from a `blob:` URL; a strict CSP without `worker-src blob:` will block
  * it, surfacing as an ordinary failed {@link CodeResult}.
  *
+ * The snippet is evaluated as a **script**, not a function body: its value is the completion value of the
+ * last expression, so a bare top-level `return` (or top-level `await`) is a syntax error. Wrap those in an
+ * IIFE. A returned promise is awaited for you.
+ *
  * @example
  * ```ts
  * import { workerRunner } from "@mithril/sandbox/worker";
  *
  * const runner = workerRunner();
- * await runner.run("return input.a + input.b", { globals: { input: { a: 1, b: 2 } } }); // value: 3
+ * await runner.run("input.a + input.b", { globals: { input: { a: 1, b: 2 } } }); // value: 3
+ * await runner.run("(() => { const a = 2; return a * 21; })()");                 // value: 42
+ * await runner.run("new Promise(() => {})", { timeoutMs: 50 });   // ok: false — exceeded its 50ms budget
  * ```
  */
 export function workerRunner(opts: { readonly defaultTimeoutMs?: number } = {}): CodeRunner {

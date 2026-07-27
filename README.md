@@ -27,22 +27,26 @@ if (result.status === "completed") console.log(result.output);
 | Package | What it is | Status |
 |---|---|---|
 | `@mithril/core` (`/protocol`, `/agent`, `/testkit`) | Event protocol + total reducers, the agent loop, tools, streaming, HITL, structured output, §3.8 middleware/plugins, sealed tokens | ✅ implemented + tested |
-| `@mithril/providers` (`/openai`, `/anthropic`, `/google`, `/transformers`) | Real streaming provider adapters (SSE) + on-device transformers, self-wiring model handles | ✅ implemented + tested |
-| `@mithril/memory` (`.`, `/sqlite-bun`) | `Checkpointer` interface + in-memory + **real SQLite** impls + conformance kit | ✅ implemented + tested |
-| `@mithril/kv` (`.`, `/indexeddb`) | Runtime-agnostic `KeyValue` (in-memory + IndexedDB + conformance) | ✅ implemented + tested |
+| `@mithril/providers` (`/openai`, `/anthropic`, `/google`, `/deepseek`, `/openrouter`, `/transformers`) | Real streaming provider adapters (SSE) + on-device transformers, self-wiring model handles | ✅ implemented + tested |
+| `@mithril/memory` (`.`, `/sqlite-bun`, `/sqlite-node`) | `Checkpointer` interface + in-memory + **real SQLite** impls (Bun + `node:sqlite`) + conformance kit | ✅ implemented + tested |
+| `@mithril/kv` (`.`, `/indexeddb`, `/sqlite-node`) | Runtime-agnostic `KeyValue` (in-memory + IndexedDB + `node:sqlite` + conformance) | ✅ implemented + tested |
 | `@mithril/fs` (`.`, `/node`, `/opfs`) | Runtime-agnostic `FileSystem` (in-memory + **real Node/Bun fs** + browser OPFS, conformance) | ✅ implemented + tested |
-| `@mithril/vectors` (`.`, `/sqlite-bun`) | Runtime-agnostic vector store (in-memory + **real SQLite**, cosine search, conformance) | ✅ implemented + tested |
+| `@mithril/vectors` (`.`, `/sqlite-bun`, `/sqlite-node`) | Runtime-agnostic vector store (in-memory + **real SQLite**, cosine search, conformance) | ✅ implemented + tested |
 | `@mithril/otel` | Fold events → `gen_ai.*` spans | ✅ implemented + tested |
 | `@mithril/workflows` | Deterministic code-first routing over agents | ✅ implemented + tested |
 | `@mithril/mcp` (`.`, `/http`, `/server`) | MCP client + Streamable-HTTP transport + serve your own tools over MCP | ✅ implemented + tested |
 | `@mithril/react` (`.`, `/hooks`) | Headless run-store + `useRun`/`useObject` hooks | ✅ store tested; hooks typechecked |
 | `@mithril/devtools` (`.`, `/dom`, `/element`, `/ui`, `/attach`) | Headless inspector + embeddable event-stream UI + zero-touch attach | ✅ implemented + tested |
-| `@mithril/sandbox` (`.`, `/node`) | `CodeRunner` interface + Node VM + remote runners | ✅ implemented + tested |
+| `@mithril/sandbox` (`.`, `/node`, `/worker`) | `CodeRunner` interface + Node VM + cross-runtime Worker + remote runners | ✅ implemented + tested |
+| `@mithril/authoring` (`.`, `/persistence`) | Self-authored tools — the agent defines its own tools mid-run, approval-gated; optional KV/FS tool stores | ✅ implemented + tested |
+| `@mithril/runner-web` (`.`, `/worker`) | In-browser Web Worker runner (transpile → inject the real packages → stream events) + the shared provider/model catalog | ✅ implemented + tested |
+| `@mithril/spec` (`.`, `/parse`) | Serializable project spec: JSON → runnable TypeScript via codegen, and real-compiler parse back | ✅ implemented + tested |
 | `mithril` | The blessed meta-package (one-import path) | ✅ implemented + tested |
 | `create-mithril` | Scaffold a runnable app | ✅ implemented + tested |
 
 **Capabilities that work today:** typed tools with inferred I/O, streaming, real model calls (OpenAI,
-Anthropic, Google) plus on-device inference via transformers.js, all three human-in-the-loop tiers
+Anthropic, Google, DeepSeek, OpenRouter) plus on-device inference via transformers.js, all three
+human-in-the-loop tiers
 (approval, tool-returned `suspend`, mid-execute `ctx.suspend`) with first-class nested `asTool` resume and
 resumable tokens (unsigned by default; opt-in HMAC/AES-GCM sealing), typed structured output with
 validate→retry and streamed `object.delta`, step/tool/model-altitude middleware + plugin bundling + event

@@ -9,7 +9,7 @@ title: "anthropic"
 function anthropic(model, opts?): ModelHandle;
 ```
 
-Defined in: [anthropic/index.ts:150](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/anthropic/index.ts#L150)
+Defined in: [anthropic/index.ts:150](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/anthropic/index.ts#L150)
 
 Self-wiring model handle: `agent({ model: anthropic("claude-sonnet-4"), … })` needs no provider registry.
 

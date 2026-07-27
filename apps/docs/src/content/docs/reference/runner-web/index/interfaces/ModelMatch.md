@@ -5,7 +5,7 @@ prev: false
 title: "ModelMatch"
 ---
 
-Defined in: runner-web/src/model-search.ts:16
+Defined in: [runner-web/src/model-search.ts:16](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/model-search.ts#L16)
 
 A catalog model plus why it ranked where it did.
 
@@ -17,7 +17,7 @@ A catalog model plus why it ranked where it did.
 readonly model: CatalogModel;
 ```
 
-Defined in: runner-web/src/model-search.ts:17
+Defined in: [runner-web/src/model-search.ts:17](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/model-search.ts#L17)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: runner-web/src/model-search.ts:17
 readonly positions: readonly number[];
 ```
 
-Defined in: runner-web/src/model-search.ts:21
+Defined in: [runner-web/src/model-search.ts:21](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/model-search.ts#L21)
 
 Indices into the haystack that the query matched — for highlighting in the UI.
 
@@ -39,6 +39,6 @@ Indices into the haystack that the query matched — for highlighting in the UI.
 readonly score: number;
 ```
 
-Defined in: runner-web/src/model-search.ts:19
+Defined in: [runner-web/src/model-search.ts:19](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/model-search.ts#L19)
 
 Higher is better. Only meaningful for ordering within one query's results.

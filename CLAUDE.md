@@ -10,9 +10,10 @@ from the code.**
 
 - **Mithril** — a batteries-included, provider-agnostic TypeScript AI-agent harness. Public
   contract is one typed event stream (`MithrilEvent`); runs on Node, Bun, and browsers.
-- **`packages/*`** — the framework (`@mithril/core`, `providers`, `memory`, `kv`, `fs`,
-  `otel`, `workflows`, `mcp`, `react`, the `mithril` meta-package, `create-mithril`). Source-as-
-  published ESM, strict `exports` maps, zero runtime deps in core.
+- **`packages/*`** — the framework (`@mithril/core`, `providers`, `memory`, `kv`, `fs`, `vectors`,
+  `otel`, `workflows`, `mcp`, `react`, `devtools`, `sandbox`, `authoring`, `runner-web`, `spec`, the
+  `mithril` meta-package, `create-mithril`). Source-as-published ESM, strict `exports` maps, zero
+  runtime deps in core.
 - **`apps/docs`** — the documentation website (Astro + Starlight + React). A private, unpublished
   workspace; its toolchain never leaks into the libraries.
 - **`apps/model-picker`** (`@mithril-internal/model-picker`) — the ONE model picker, mounted by both
@@ -196,9 +197,13 @@ enforces this over every browser-declared entrypoint.
   playground preset for it.
 - **Dark, metallic, precise identity.** Keep it.
 
-## Known placeholders to fix before deploy
+## Deploy settings (resolved)
 
-- `apps/docs/astro.config.mjs`: the GitHub `social` URL (`github.com/mithril-ai/mithril`) and
-  `site: "https://mithril.dev"` are placeholders — set to real values.
-- Repo is not git-initialized yet. Work on a branch and use Conventional Commits once it is; commit
-  only when asked.
+- `apps/docs/astro.config.mjs` is set to real values: `site: "https://kucukkanat.github.io"` with
+  `base` applied through `baseLinks`, and the GitHub `social` URL `github.com/kucukkanat/mithril`.
+  The old `mithril.dev` / `mithril-ai` placeholders are gone — **don't reintroduce them**, and never
+  hardcode an absolute `https://mithril.dev/…` URL in a TSDoc `{@link}` (use `{@link Symbol}` for a
+  same-package symbol, or plain `` `Backticks` `` for a cross-package one, which the symbol linker
+  resolves via the generated `symbols.json`).
+- The repo is git-initialized with an `origin` remote. Use Conventional Commits; commit only when
+  asked.

@@ -9,7 +9,7 @@ title: "outputRetry"
 function outputRetry<Deps>(opts?): Middleware<Deps>;
 ```
 
-Defined in: [packages/core/src/agent/healing.ts:312](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/healing.ts#L312)
+Defined in: [packages/core/src/agent/healing.ts:312](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/agent/healing.ts#L312)
 
 Finalize-altitude structured-output retry: when the model's final text fails the `output` schema, emit a
 visible `object.invalid`, then either re-ask (steer the model with the failing issues plus the schema

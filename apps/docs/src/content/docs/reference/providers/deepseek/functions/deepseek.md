@@ -9,7 +9,7 @@ title: "deepseek"
 function deepseek(model, opts?): ModelHandle;
 ```
 
-Defined in: deepseek/index.ts:62
+Defined in: [deepseek/index.ts:62](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/deepseek/index.ts#L62)
 
 Self-wiring model handle: `agent({ model: deepseek("deepseek-chat"), … })` needs no provider registry.
 

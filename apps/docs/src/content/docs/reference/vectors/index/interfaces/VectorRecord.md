@@ -5,7 +5,7 @@ prev: false
 title: "VectorRecord"
 ---
 
-Defined in: [index.ts:13](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/vectors/src/index.ts#L13)
+Defined in: [index.ts:13](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/vectors/src/index.ts#L13)
 
 A record written to a [VectorStore](/mithril/reference/vectors/index/interfaces/vectorstore/): an id, its embedding, and optional JSON-safe metadata.
 
@@ -17,7 +17,7 @@ A record written to a [VectorStore](/mithril/reference/vectors/index/interfaces/
 readonly id: string;
 ```
 
-Defined in: [index.ts:14](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/vectors/src/index.ts#L14)
+Defined in: [index.ts:14](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/vectors/src/index.ts#L14)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [index.ts:14](https://github.com/kucukkanat/mithril/blob/8ae36b8af55
 readonly optional metadata?: Readonly<Record<string, unknown>>;
 ```
 
-Defined in: [index.ts:16](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/vectors/src/index.ts#L16)
+Defined in: [index.ts:16](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/vectors/src/index.ts#L16)
 
 ***
 
@@ -37,4 +37,4 @@ Defined in: [index.ts:16](https://github.com/kucukkanat/mithril/blob/8ae36b8af55
 readonly vector: ArrayLike<number>;
 ```
 
-Defined in: [index.ts:15](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/vectors/src/index.ts#L15)
+Defined in: [index.ts:15](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/vectors/src/index.ts#L15)

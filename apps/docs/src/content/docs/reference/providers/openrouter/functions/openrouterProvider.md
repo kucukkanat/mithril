@@ -9,7 +9,7 @@ title: "openrouterProvider"
 function openrouterProvider(config?): Provider;
 ```
 
-Defined in: openrouter/index.ts:49
+Defined in: [openrouter/index.ts:49](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/openrouter/index.ts#L49)
 
 Creates an OpenRouter Provider whose `chat` method streams `/chat/completions` responses.
 

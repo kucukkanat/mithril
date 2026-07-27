@@ -5,7 +5,7 @@ prev: false
 title: "UnsupportedJsonSchemaError"
 ---
 
-Defined in: [packages/core/src/protocol/json-schema.ts:143](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/json-schema.ts#L143)
+Defined in: [packages/core/src/protocol/json-schema.ts:143](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/json-schema.ts#L143)
 
 Thrown by [fromJsonSchema](/mithril/reference/core/protocol/functions/fromjsonschema/) when a document uses a keyword outside its supported subset.
 
@@ -21,7 +21,7 @@ Thrown by [fromJsonSchema](/mithril/reference/core/protocol/functions/fromjsonsc
 new UnsupportedJsonSchemaError(keyword, location): UnsupportedJsonSchemaError;
 ```
 
-Defined in: [packages/core/src/protocol/json-schema.ts:148](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/json-schema.ts#L148)
+Defined in: [packages/core/src/protocol/json-schema.ts:148](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/json-schema.ts#L148)
 
 #### Parameters
 
@@ -64,7 +64,7 @@ Error.cause
 readonly keyword: string;
 ```
 
-Defined in: [packages/core/src/protocol/json-schema.ts:149](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/json-schema.ts#L149)
+Defined in: [packages/core/src/protocol/json-schema.ts:149](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/json-schema.ts#L149)
 
 the offending keyword (e.g. `"oneOf"`).
 
@@ -76,7 +76,7 @@ the offending keyword (e.g. `"oneOf"`).
 readonly location: string;
 ```
 
-Defined in: [packages/core/src/protocol/json-schema.ts:150](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/json-schema.ts#L150)
+Defined in: [packages/core/src/protocol/json-schema.ts:150](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/json-schema.ts#L150)
 
 where it appeared, as a dotted path from the document root (e.g. `"properties.user"`).
 

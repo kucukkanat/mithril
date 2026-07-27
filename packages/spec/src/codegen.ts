@@ -259,7 +259,7 @@ function importLines(spec: ProjectSpec): string[] {
 
 /**
  * Generate the complete TypeScript source for a project. Deterministic: the same spec always
- * yields byte-identical output, and {@link https://mithril.dev | parseProject} recognizes exactly
+ * yields byte-identical output, and `parseProject` recognizes exactly
  * this shape (plus arbitrary hand edits, which degrade losslessly to opaque regions).
  */
 export function generateProject(spec: ProjectSpec, opts?: GenerateOptions): string {

@@ -5,7 +5,7 @@ prev: false
 title: "Suspend"
 ---
 
-Defined in: [packages/core/src/protocol/suspension.ts:92](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/suspension.ts#L92)
+Defined in: [packages/core/src/protocol/suspension.ts:92](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/suspension.ts#L92)
 
 The marker value a tool's `execute` returns to request a replay-free mid-tool pause.
 
@@ -29,7 +29,7 @@ tool result. The `execute` is not re-run on resume (the pause is replay-free).
 readonly optional __out?: Out;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:94](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/suspension.ts#L94)
+Defined in: [packages/core/src/protocol/suspension.ts:94](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/suspension.ts#L94)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [packages/core/src/protocol/suspension.ts:94](https://github.com/kuc
 readonly [SUSPEND]: true;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:93](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/suspension.ts#L93)
+Defined in: [packages/core/src/protocol/suspension.ts:93](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/suspension.ts#L93)
 
 ***
 
@@ -49,4 +49,4 @@ Defined in: [packages/core/src/protocol/suspension.ts:93](https://github.com/kuc
 readonly request: SuspensionRequest;
 ```
 
-Defined in: [packages/core/src/protocol/suspension.ts:95](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/suspension.ts#L95)
+Defined in: [packages/core/src/protocol/suspension.ts:95](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/suspension.ts#L95)

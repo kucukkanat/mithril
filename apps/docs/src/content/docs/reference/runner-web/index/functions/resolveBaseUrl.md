@@ -9,7 +9,7 @@ title: "resolveBaseUrl"
 function resolveBaseUrl(provider, baseUrl?): string;
 ```
 
-Defined in: runner-web/src/connection.ts:64
+Defined in: [runner-web/src/connection.ts:64](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/connection.ts#L64)
 
 Resolve the endpoint a probe (or a run) will actually call: the override when non-empty, else the
 provider's default.

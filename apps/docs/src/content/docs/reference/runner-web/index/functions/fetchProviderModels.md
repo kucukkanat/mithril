@@ -9,7 +9,7 @@ title: "fetchProviderModels"
 function fetchProviderModels(probe): Promise<readonly string[] | undefined>;
 ```
 
-Defined in: runner-web/src/connection.ts:211
+Defined in: [runner-web/src/connection.ts:211](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/connection.ts#L211)
 
 Fetch the provider's own current model list, so the picker searches what the account can actually
 call rather than a list baked in at release time.

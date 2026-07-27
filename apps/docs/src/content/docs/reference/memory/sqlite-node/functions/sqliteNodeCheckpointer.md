@@ -9,7 +9,7 @@ title: "sqliteNodeCheckpointer"
 function sqliteNodeCheckpointer(pathOrOpts?): Checkpointer;
 ```
 
-Defined in: [sqlite-node.ts:44](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/memory/src/sqlite-node.ts#L44)
+Defined in: [sqlite-node.ts:44](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/memory/src/sqlite-node.ts#L44)
 
 Creates a durable Checkpointer backed by `node:sqlite` (Node >= 22.5, no native dependency).
 

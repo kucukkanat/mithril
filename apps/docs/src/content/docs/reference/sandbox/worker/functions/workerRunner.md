@@ -9,7 +9,7 @@ title: "workerRunner"
 function workerRunner(opts?): CodeRunner;
 ```
 
-Defined in: [worker.ts:122](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/sandbox/src/worker.ts#L122)
+Defined in: [worker.ts:128](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/sandbox/src/worker.ts#L128)
 
 Build a [CodeRunner](/mithril/reference/sandbox/index/interfaces/coderunner/) that evaluates code in a dedicated worker — the local backend that works in
 **browsers, Node and Bun** alike.
@@ -43,11 +43,17 @@ runs, so the default is a closed world with no network. Pass anything the code l
 In a browser the worker is created from a `blob:` URL; a strict CSP without `worker-src blob:` will block
 it, surfacing as an ordinary failed [CodeResult](/mithril/reference/sandbox/index/type-aliases/coderesult/).
 
+The snippet is evaluated as a **script**, not a function body: its value is the completion value of the
+last expression, so a bare top-level `return` (or top-level `await`) is a syntax error. Wrap those in an
+IIFE. A returned promise is awaited for you.
+
 ## Example
 
 ```ts
 import { workerRunner } from "@mithril/sandbox/worker";
 
 const runner = workerRunner();
-await runner.run("return input.a + input.b", { globals: { input: { a: 1, b: 2 } } }); // value: 3
+await runner.run("input.a + input.b", { globals: { input: { a: 1, b: 2 } } }); // value: 3
+await runner.run("(() => { const a = 2; return a * 21; })()");                 // value: 42
+await runner.run("new Promise(() => {})", { timeoutMs: 50 });   // ok: false — exceeded its 50ms budget
 ```

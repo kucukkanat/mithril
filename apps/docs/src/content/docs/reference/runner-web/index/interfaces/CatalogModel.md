@@ -5,7 +5,7 @@ prev: false
 title: "CatalogModel"
 ---
 
-Defined in: [runner-web/src/catalog.ts:30](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L30)
+Defined in: [runner-web/src/catalog.ts:30](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/catalog.ts#L30)
 
 One entry in a provider's curated model list — what the picker's fuzzy search matches against.
 
@@ -21,7 +21,7 @@ live list once a key is present.
 readonly id: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:32](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L32)
+Defined in: [runner-web/src/catalog.ts:32](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/catalog.ts#L32)
 
 The exact id sent on the wire.
 
@@ -33,7 +33,7 @@ The exact id sent on the wire.
 readonly optional label?: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:34](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L34)
+Defined in: [runner-web/src/catalog.ts:34](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/catalog.ts#L34)
 
 Short human label; falls back to [CatalogModel.id](/mithril/reference/runner-web/index/interfaces/catalogmodel/#id) when absent.
 
@@ -45,6 +45,6 @@ Short human label; falls back to [CatalogModel.id](/mithril/reference/runner-web
 readonly optional note?: string;
 ```
 
-Defined in: [runner-web/src/catalog.ts:36](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/runner-web/src/catalog.ts#L36)
+Defined in: [runner-web/src/catalog.ts:36](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/catalog.ts#L36)
 
 One-line positioning ("fastest", "best reasoning") shown beside the id.

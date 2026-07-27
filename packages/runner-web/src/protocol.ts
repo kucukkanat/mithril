@@ -12,8 +12,8 @@ export type LogLevel = "log" | "info" | "warn" | "error";
 
 /**
  * A pending human-in-the-loop suspension, as posted by the worker: the JSON-safe
- * {@link https://mithril.dev/reference/core/ | SuspensionDescriptor}-shaped `request`, the
- * durable-local resume `token`, and the `runId` it belongs to (when the event stream carried one).
+ * `SuspensionDescriptor`-shaped `request`, the durable-local resume `token`, and the `runId` it
+ * belongs to (when the event stream carried one).
  */
 export interface SuspendedInfo {
   readonly request: unknown;

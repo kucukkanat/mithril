@@ -9,7 +9,7 @@ title: "defineToolSchema"
 function defineToolSchema(): StandardSchemaV1<unknown, DefineToolInput>;
 ```
 
-Defined in: [definition.ts:49](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/definition.ts#L49)
+Defined in: [definition.ts:49](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/authoring/src/definition.ts#L49)
 
 The Standard Schema for `define_tool`'s input, self-describing so the model sees the real shape.
 

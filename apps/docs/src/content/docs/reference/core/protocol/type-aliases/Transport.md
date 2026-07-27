@@ -25,7 +25,7 @@ type Transport =
 };
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:41](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L41)
+Defined in: [packages/core/src/protocol/context.ts:41](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L41)
 
 How model requests reach the provider, chosen so the same agent can run in a
 browser without leaking keys.

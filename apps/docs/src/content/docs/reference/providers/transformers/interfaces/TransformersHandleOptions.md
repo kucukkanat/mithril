@@ -5,7 +5,7 @@ prev: false
 title: "TransformersHandleOptions"
 ---
 
-Defined in: [transformers/index.ts:32](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/index.ts#L32)
+Defined in: [transformers/index.ts:32](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/transformers/index.ts#L32)
 
 Options for [transformers](/mithril/reference/providers/transformers/functions/transformers/): [EdgeOptions](/mithril/reference/providers/transformers/interfaces/edgeoptions/) plus an optional injected engine (tests / custom runtimes).
 
@@ -21,7 +21,7 @@ Options for [transformers](/mithril/reference/providers/transformers/functions/t
 readonly optional backends?: readonly Backend[];
 ```
 
-Defined in: [transformers/edge.ts:36](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L36)
+Defined in: [transformers/edge.ts:36](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/transformers/edge.ts#L36)
 
 Restrict the Backends this model may run on (fed from the catalog's `LocalModel.backends`). When the
 resolved device isn't in this list, loadModel/[preload](/mithril/reference/providers/transformers/functions/preload/) throws an ergonomic `MithrilError`
@@ -40,7 +40,7 @@ instead of failing with a cryptic mid-stream ONNX kernel error. Omit ⇒ no rest
 readonly optional device?: Backend;
 ```
 
-Defined in: [transformers/edge.ts:27](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L27)
+Defined in: [transformers/edge.ts:27](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/transformers/edge.ts#L27)
 
 Force an ONNX execution device; omit to feature-detect: `webgpu` when available, else `cpu` on Node/Bun
 (onnxruntime-node rejects `wasm`), else `wasm` in the browser. Pass this explicitly to silence the
@@ -58,7 +58,7 @@ Node/Bun CPU-fallback warning.
 readonly optional doSample?: boolean;
 ```
 
-Defined in: [transformers/edge.ts:38](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L38)
+Defined in: [transformers/edge.ts:38](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/transformers/edge.ts#L38)
 
 #### Inherited from
 
@@ -72,7 +72,7 @@ Defined in: [transformers/edge.ts:38](https://github.com/kucukkanat/mithril/blob
 readonly optional dtype?: string;
 ```
 
-Defined in: [transformers/edge.ts:29](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L29)
+Defined in: [transformers/edge.ts:29](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/transformers/edge.ts#L29)
 
 Force a quantization dtype; omit for `q4f16` (webgpu) / `q4` (cpu/wasm).
 
@@ -88,7 +88,7 @@ Force a quantization dtype; omit for `q4f16` (webgpu) / `q4` (cpu/wasm).
 readonly optional engine?: TransformersEngine;
 ```
 
-Defined in: [transformers/index.ts:34](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/index.ts#L34)
+Defined in: [transformers/index.ts:34](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/transformers/index.ts#L34)
 
 Inject a custom [TransformersEngine](/mithril/reference/providers/transformers/interfaces/transformersengine/) (a fake for tests, a Web Worker engine, a wllama backend, …).
 
@@ -100,7 +100,7 @@ Inject a custom [TransformersEngine](/mithril/reference/providers/transformers/i
 readonly optional maxNewTokens?: number;
 ```
 
-Defined in: [transformers/edge.ts:37](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L37)
+Defined in: [transformers/edge.ts:37](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/transformers/edge.ts#L37)
 
 #### Inherited from
 
@@ -114,7 +114,7 @@ Defined in: [transformers/edge.ts:37](https://github.com/kucukkanat/mithril/blob
 readonly optional onProgress?: (report) => void;
 ```
 
-Defined in: [transformers/edge.ts:21](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/edge.ts#L21)
+Defined in: [transformers/edge.ts:21](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/transformers/edge.ts#L21)
 
 Model-download progress, reported OUTSIDE the event stream (aggregate `loaded/total` across files).
 

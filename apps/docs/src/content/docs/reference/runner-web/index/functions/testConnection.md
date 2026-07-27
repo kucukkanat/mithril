@@ -9,7 +9,7 @@ title: "testConnection"
 function testConnection(probe): Promise<ConnectionResult>;
 ```
 
-Defined in: runner-web/src/connection.ts:155
+Defined in: [runner-web/src/connection.ts:155](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/connection.ts#L155)
 
 Send one minimal completion to verify a provider connection end to end — key, endpoint, and model id.
 

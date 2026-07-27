@@ -9,7 +9,7 @@ title: "mcpClient"
 function mcpClient(transport, opts?): McpClient;
 ```
 
-Defined in: [packages/mcp/src/index.ts:175](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/mcp/src/index.ts#L175)
+Defined in: [packages/mcp/src/index.ts:175](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/mcp/src/index.ts#L175)
 
 Create an [McpClient](/mithril/reference/mcp/index/interfaces/mcpclient/) over a caller-supplied [McpTransport](/mithril/reference/mcp/index/interfaces/mcptransport/).
 

@@ -9,7 +9,7 @@ title: "openrouter"
 function openrouter(model, opts?): ModelHandle;
 ```
 
-Defined in: openrouter/index.ts:83
+Defined in: [openrouter/index.ts:83](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/openrouter/index.ts#L83)
 
 Self-wiring model handle: `agent({ model: openrouter("anthropic/claude-sonnet-4.5"), … })` needs no
 provider registry.

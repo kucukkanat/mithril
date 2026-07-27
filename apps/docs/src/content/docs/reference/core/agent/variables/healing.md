@@ -16,7 +16,7 @@ const healing: {
 };
 ```
 
-Defined in: [packages/core/src/agent/healing.ts:355](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/healing.ts#L355)
+Defined in: [packages/core/src/agent/healing.ts:355](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/agent/healing.ts#L355)
 
 The built-in self-healing middleware, as a namespace. Spread [healing.defaults](/mithril/reference/core/agent/variables/healing/#defaults) (the agent default)
 or pick individual behaviors into an agent's `healing` field / a plugin's `use`.

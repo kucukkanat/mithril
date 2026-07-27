@@ -5,7 +5,7 @@ prev: false
 title: "FsTestAdapter"
 ---
 
-Defined in: [packages/fs/src/index.ts:151](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/fs/src/index.ts#L151)
+Defined in: [packages/fs/src/index.ts:151](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/fs/src/index.ts#L151)
 
 Test-runner adapter that lets [fileSystemConformance](/mithril/reference/fs/index/functions/filesystemconformance/) run under any framework.
 
@@ -22,7 +22,7 @@ suite stays framework-agnostic.
 assertEqual(actual, expected): void;
 ```
 
-Defined in: [packages/fs/src/index.ts:155](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/fs/src/index.ts#L155)
+Defined in: [packages/fs/src/index.ts:155](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/fs/src/index.ts#L155)
 
 Assert deep equality of `actual` and `expected`.
 
@@ -45,7 +45,7 @@ Assert deep equality of `actual` and `expected`.
 assertThrowsAsync(fn): Promise<void>;
 ```
 
-Defined in: [packages/fs/src/index.ts:157](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/fs/src/index.ts#L157)
+Defined in: [packages/fs/src/index.ts:157](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/fs/src/index.ts#L157)
 
 Assert that awaiting `fn` rejects.
 
@@ -67,7 +67,7 @@ Assert that awaiting `fn` rejects.
 test(name, fn): void;
 ```
 
-Defined in: [packages/fs/src/index.ts:153](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/fs/src/index.ts#L153)
+Defined in: [packages/fs/src/index.ts:153](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/fs/src/index.ts#L153)
 
 Register a named test case.
 

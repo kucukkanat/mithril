@@ -9,7 +9,7 @@ title: "nodeFileSystem"
 function nodeFileSystem(rootOrOpts): FileSystem;
 ```
 
-Defined in: [packages/fs/src/node.ts:26](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/fs/src/node.ts#L26)
+Defined in: [packages/fs/src/node.ts:26](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/fs/src/node.ts#L26)
 
 Create a [FileSystem](/mithril/reference/fs/index/interfaces/filesystem/) backed by the local disk, confined to `root`.
 

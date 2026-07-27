@@ -9,7 +9,7 @@ title: "transformersProvider"
 function transformersProvider(engine): Provider;
 ```
 
-Defined in: [transformers/core.ts:66](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/providers/src/transformers/core.ts#L66)
+Defined in: [transformers/core.ts:66](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/providers/src/transformers/core.ts#L66)
 
 Build a Provider from an injected [TransformersEngine](/mithril/reference/providers/transformers/interfaces/transformersengine/) — the pure, Node-testable core.
 

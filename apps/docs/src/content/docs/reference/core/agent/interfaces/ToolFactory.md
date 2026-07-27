@@ -5,7 +5,7 @@ prev: false
 title: "ToolFactory"
 ---
 
-Defined in: [packages/core/src/agent/factory.ts:96](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/factory.ts#L96)
+Defined in: [packages/core/src/agent/factory.ts:96](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/agent/factory.ts#L96)
 
 A `Deps`-bound tool constructor: call it with a [ToolDef](/mithril/reference/core/agent/interfaces/tooldef/) to get a fully typed [Tool](/mithril/reference/core/protocol/interfaces/tool/).
 
@@ -24,7 +24,7 @@ restate `<Deps>`. `Name`, the input type, and `Out` are all inferred from the de
 ToolFactory<Name, SIn, Out>(def): Tool<Name, Infer<SIn>, Out, Deps>;
 ```
 
-Defined in: [packages/core/src/agent/factory.ts:97](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/agent/factory.ts#L97)
+Defined in: [packages/core/src/agent/factory.ts:97](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/agent/factory.ts#L97)
 
 A `Deps`-bound tool constructor: call it with a [ToolDef](/mithril/reference/core/agent/interfaces/tooldef/) to get a fully typed [Tool](/mithril/reference/core/protocol/interfaces/tool/).
 

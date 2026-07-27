@@ -5,7 +5,7 @@ prev: false
 title: "ToolStore"
 ---
 
-Defined in: [persistence.ts:13](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/persistence.ts#L13)
+Defined in: [persistence.ts:13](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/authoring/src/persistence.ts#L13)
 
 Durable storage for authored ToolDefinitions, partitioned by scope.
 
@@ -17,7 +17,7 @@ Durable storage for authored ToolDefinitions, partitioned by scope.
 load(scope): Promise<readonly ToolDefinition[]>;
 ```
 
-Defined in: [persistence.ts:14](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/persistence.ts#L14)
+Defined in: [persistence.ts:14](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/authoring/src/persistence.ts#L14)
 
 #### Parameters
 
@@ -37,7 +37,7 @@ Defined in: [persistence.ts:14](https://github.com/kucukkanat/mithril/blob/8ae36
 remove(scope, name): Promise<void>;
 ```
 
-Defined in: [persistence.ts:16](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/persistence.ts#L16)
+Defined in: [persistence.ts:16](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/authoring/src/persistence.ts#L16)
 
 #### Parameters
 
@@ -58,7 +58,7 @@ Defined in: [persistence.ts:16](https://github.com/kucukkanat/mithril/blob/8ae36
 save(scope, def): Promise<void>;
 ```
 
-Defined in: [persistence.ts:15](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/persistence.ts#L15)
+Defined in: [persistence.ts:15](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/authoring/src/persistence.ts#L15)
 
 #### Parameters
 

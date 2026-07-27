@@ -5,7 +5,7 @@ prev: false
 title: "UsageDelta"
 ---
 
-Defined in: [packages/core/src/protocol/primitives.ts:46](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/primitives.ts#L46)
+Defined in: [packages/core/src/protocol/primitives.ts:46](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/primitives.ts#L46)
 
 Token counts and cost for a single accounting event.
 
@@ -21,7 +21,7 @@ Token counts and cost for a single accounting event.
 readonly cacheRead: number;
 ```
 
-Defined in: [packages/core/src/protocol/primitives.ts:49](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/primitives.ts#L49)
+Defined in: [packages/core/src/protocol/primitives.ts:49](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/primitives.ts#L49)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [packages/core/src/protocol/primitives.ts:49](https://github.com/kuc
 readonly cacheWrite: number;
 ```
 
-Defined in: [packages/core/src/protocol/primitives.ts:50](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/primitives.ts#L50)
+Defined in: [packages/core/src/protocol/primitives.ts:50](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/primitives.ts#L50)
 
 ***
 
@@ -41,7 +41,7 @@ Defined in: [packages/core/src/protocol/primitives.ts:50](https://github.com/kuc
 readonly costMicroUsd: number;
 ```
 
-Defined in: [packages/core/src/protocol/primitives.ts:53](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/primitives.ts#L53)
+Defined in: [packages/core/src/protocol/primitives.ts:53](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/primitives.ts#L53)
 
 Cost in integer micro-USD — avoids float drift when summing thousands of deltas.
 
@@ -53,7 +53,7 @@ Cost in integer micro-USD — avoids float drift when summing thousands of delta
 readonly input: number;
 ```
 
-Defined in: [packages/core/src/protocol/primitives.ts:47](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/primitives.ts#L47)
+Defined in: [packages/core/src/protocol/primitives.ts:47](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/primitives.ts#L47)
 
 ***
 
@@ -63,7 +63,7 @@ Defined in: [packages/core/src/protocol/primitives.ts:47](https://github.com/kuc
 readonly output: number;
 ```
 
-Defined in: [packages/core/src/protocol/primitives.ts:48](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/primitives.ts#L48)
+Defined in: [packages/core/src/protocol/primitives.ts:48](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/primitives.ts#L48)
 
 ***
 
@@ -73,4 +73,4 @@ Defined in: [packages/core/src/protocol/primitives.ts:48](https://github.com/kuc
 readonly reasoning: number;
 ```
 
-Defined in: [packages/core/src/protocol/primitives.ts:51](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/primitives.ts#L51)
+Defined in: [packages/core/src/protocol/primitives.ts:51](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/primitives.ts#L51)

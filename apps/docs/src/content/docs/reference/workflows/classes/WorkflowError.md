@@ -5,7 +5,7 @@ prev: false
 title: "WorkflowError"
 ---
 
-Defined in: [packages/workflows/src/index.ts:22](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/workflows/src/index.ts#L22)
+Defined in: [packages/workflows/src/index.ts:22](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/workflows/src/index.ts#L22)
 
 Thrown when a step routes to an unknown name, or the run exceeds `maxSteps` (a cycle guard).
 

@@ -5,7 +5,7 @@ prev: false
 title: "ParseResult"
 ---
 
-Defined in: [packages/spec/src/parse.ts:47](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/parse.ts#L47)
+Defined in: [packages/spec/src/parse.ts:47](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/spec/src/parse.ts#L47)
 
 The outcome of [parseProject](/mithril/reference/spec/parse/functions/parseproject/).
 
@@ -17,7 +17,7 @@ The outcome of [parseProject](/mithril/reference/spec/parse/functions/parseproje
 readonly diagnostics: readonly ParseDiagnostic[];
 ```
 
-Defined in: [packages/spec/src/parse.ts:50](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/parse.ts#L50)
+Defined in: [packages/spec/src/parse.ts:50](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/spec/src/parse.ts#L50)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [packages/spec/src/parse.ts:50](https://github.com/kucukkanat/mithri
 readonly opaqueCount: number;
 ```
 
-Defined in: [packages/spec/src/parse.ts:52](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/parse.ts#L52)
+Defined in: [packages/spec/src/parse.ts:52](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/spec/src/parse.ts#L52)
 
 How many statements were kept verbatim — surfaced in the UI as "N statements kept as code".
 
@@ -41,6 +41,6 @@ readonly spec:
   | undefined;
 ```
 
-Defined in: [packages/spec/src/parse.ts:49](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/spec/src/parse.ts#L49)
+Defined in: [packages/spec/src/parse.ts:49](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/spec/src/parse.ts#L49)
 
 The recognized spec, or `undefined` when the source has syntax errors or no entry.

@@ -62,7 +62,8 @@ Everything below is implemented and tested against the source — not aspiration
 - **Typed tools** with inferred input/output via [Standard Schema](https://standardschema.dev)
   (bring Zod, Valibot, ArkType…).
 - **Streaming** in three tiers — `run` (await), `stream` (handle), and the event iterator.
-- **Real provider adapters** for OpenAI, Anthropic, and Google (SSE, browser-safe transports).
+- **Real provider adapters** for OpenAI, Anthropic, Google, DeepSeek, and OpenRouter (SSE,
+  browser-safe transports).
 - **Human-in-the-loop** approval with resumable tokens, plus `seal`/`open` primitives (HMAC +
   AES-GCM) for signing or encrypting persisted state.
 - **Structured output** with validate → retry and streamed `object.delta`.

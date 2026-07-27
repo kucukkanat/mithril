@@ -5,7 +5,7 @@ prev: false
 title: "Checkpointer"
 ---
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:33](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/checkpointer.ts#L33)
+Defined in: [packages/core/src/protocol/checkpointer.ts:33](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/checkpointer.ts#L33)
 
 The persistence contract for durable runs.
 
@@ -26,7 +26,7 @@ get(runId, checkpointId): Promise<
 | undefined>;
 ```
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:36](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/checkpointer.ts#L36)
+Defined in: [packages/core/src/protocol/checkpointer.ts:36](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/checkpointer.ts#L36)
 
 #### Parameters
 
@@ -49,7 +49,7 @@ Defined in: [packages/core/src/protocol/checkpointer.ts:36](https://github.com/k
 history(runId): AsyncIterable<CheckpointRecord>;
 ```
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:37](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/checkpointer.ts#L37)
+Defined in: [packages/core/src/protocol/checkpointer.ts:37](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/checkpointer.ts#L37)
 
 #### Parameters
 
@@ -71,7 +71,7 @@ latest(runId): Promise<
 | undefined>;
 ```
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:35](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/checkpointer.ts#L35)
+Defined in: [packages/core/src/protocol/checkpointer.ts:35](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/checkpointer.ts#L35)
 
 #### Parameters
 
@@ -93,7 +93,7 @@ Defined in: [packages/core/src/protocol/checkpointer.ts:35](https://github.com/k
 purge(runId): Promise<void>;
 ```
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:38](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/checkpointer.ts#L38)
+Defined in: [packages/core/src/protocol/checkpointer.ts:38](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/checkpointer.ts#L38)
 
 #### Parameters
 
@@ -113,7 +113,7 @@ Defined in: [packages/core/src/protocol/checkpointer.ts:38](https://github.com/k
 put(rec, opts?): Promise<"ok" | "conflict">;
 ```
 
-Defined in: [packages/core/src/protocol/checkpointer.ts:34](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/checkpointer.ts#L34)
+Defined in: [packages/core/src/protocol/checkpointer.ts:34](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/checkpointer.ts#L34)
 
 #### Parameters
 

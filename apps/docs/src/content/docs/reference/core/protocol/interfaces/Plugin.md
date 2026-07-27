@@ -5,7 +5,7 @@ prev: false
 title: "Plugin"
 ---
 
-Defined in: [packages/core/src/protocol/middleware.ts:249](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L249)
+Defined in: [packages/core/src/protocol/middleware.ts:249](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L249)
 
 A bundle of tools, middleware, and event consumers registered as a unit.
 
@@ -30,7 +30,7 @@ call signature, not here — it is invalid on an interface type parameter.
 readonly optional __tools?: Tools;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:272](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L272)
+Defined in: [packages/core/src/protocol/middleware.ts:272](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L272)
 
 Phantom carrier for `Tools` inference; erased at build.
 
@@ -42,7 +42,7 @@ Phantom carrier for `Tools` inference; erased at build.
 readonly optional consumers?: readonly EventConsumer[];
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:253](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L253)
+Defined in: [packages/core/src/protocol/middleware.ts:253](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L253)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:253](https://github.com/ku
 readonly optional materialize?: (def) => AnyTool<Deps>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:270](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L270)
+Defined in: [packages/core/src/protocol/middleware.ts:270](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L270)
 
 Rebuilds a runtime tool from its replayable [ToolDefinition](/mithril/reference/core/protocol/interfaces/tooldefinition/), on resume.
 
@@ -79,7 +79,7 @@ format supplies this. At most one plugin in an agent may declare it.
 readonly optional middleware?: readonly Middleware<Deps>[];
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:252](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L252)
+Defined in: [packages/core/src/protocol/middleware.ts:252](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L252)
 
 ***
 
@@ -89,7 +89,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:252](https://github.com/ku
 readonly name: string;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:250](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L250)
+Defined in: [packages/core/src/protocol/middleware.ts:250](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L250)
 
 ***
 
@@ -99,7 +99,7 @@ Defined in: [packages/core/src/protocol/middleware.ts:250](https://github.com/ku
 readonly optional setup?: (host) => void | Promise<void>;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:263](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L263)
+Defined in: [packages/core/src/protocol/middleware.ts:263](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L263)
 
 Run-time contribution hook, invoked once per run before step 0 (and again on each `resume`, so it must
 be idempotent). Use it for capabilities that cannot be known statically — tools loaded from a store,
@@ -129,4 +129,4 @@ worked, and continuing would silently run an agent with fewer tools than its aut
 readonly optional tools?: Tools;
 ```
 
-Defined in: [packages/core/src/protocol/middleware.ts:251](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/middleware.ts#L251)
+Defined in: [packages/core/src/protocol/middleware.ts:251](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/middleware.ts#L251)

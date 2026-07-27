@@ -5,7 +5,7 @@ prev: false
 title: "RunContext"
 ---
 
-Defined in: [packages/core/src/protocol/context.ts:57](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L57)
+Defined in: [packages/core/src/protocol/context.ts:57](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L57)
 
 The typed dependency-injection context threaded into tools and dynamic
 instructions.
@@ -28,7 +28,7 @@ No globals: `deps` are re-injected every run/resume and are never serialized.
 readonly deps: Deps;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:58](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L58)
+Defined in: [packages/core/src/protocol/context.ts:58](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L58)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [packages/core/src/protocol/context.ts:58](https://github.com/kucukk
 readonly optional providers?: ProviderRegistry;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:104](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L104)
+Defined in: [packages/core/src/protocol/context.ts:104](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L104)
 
 The run's [ProviderRegistry](/mithril/reference/core/protocol/interfaces/providerregistry/), if one was supplied. Present so a sub-agent launched from a tool
 automatically inherits it and can resolve bare-string model ids.
@@ -51,7 +51,7 @@ automatically inherits it and can resolve bare-string model ids.
 readonly runId: string;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:59](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L59)
+Defined in: [packages/core/src/protocol/context.ts:59](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L59)
 
 ***
 
@@ -61,7 +61,7 @@ Defined in: [packages/core/src/protocol/context.ts:59](https://github.com/kucukk
 readonly runtime: RuntimeAdapter;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:94](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L94)
+Defined in: [packages/core/src/protocol/context.ts:94](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L94)
 
 ***
 
@@ -71,7 +71,7 @@ Defined in: [packages/core/src/protocol/context.ts:94](https://github.com/kucukk
 readonly signal: AbortSignal;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:61](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L61)
+Defined in: [packages/core/src/protocol/context.ts:61](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L61)
 
 ***
 
@@ -81,7 +81,7 @@ Defined in: [packages/core/src/protocol/context.ts:61](https://github.com/kucukk
 readonly step: number;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:60](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L60)
+Defined in: [packages/core/src/protocol/context.ts:60](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L60)
 
 ***
 
@@ -91,7 +91,7 @@ Defined in: [packages/core/src/protocol/context.ts:60](https://github.com/kucukk
 readonly tools: RunToolRegistry<Deps>;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:74](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L74)
+Defined in: [packages/core/src/protocol/context.ts:74](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L74)
 
 The run's live tool set — inspect it, and (inside `execute`) define new tools.
 
@@ -113,7 +113,7 @@ instructions and `needsApproval` predicates they reject with `NOT_IMPLEMENTED`, 
 readonly optional transport?: Transport;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:99](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L99)
+Defined in: [packages/core/src/protocol/context.ts:99](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L99)
 
 The run's resolved [Transport](/mithril/reference/core/protocol/type-aliases/transport/) (after the env-BYOK default is applied). Present so a sub-agent
 launched from a tool (see asTool) automatically inherits the parent's credentials/endpoint.
@@ -126,7 +126,7 @@ launched from a tool (see asTool) automatically inherits the parent's credential
 readonly usage: Readonly<UsageTotals>;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:75](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L75)
+Defined in: [packages/core/src/protocol/context.ts:75](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L75)
 
 ## Methods
 
@@ -136,7 +136,7 @@ Defined in: [packages/core/src/protocol/context.ts:75](https://github.com/kucukk
 emit(payload, type?): void;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:106](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L106)
+Defined in: [packages/core/src/protocol/context.ts:106](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L106)
 
 Push a first-class `custom.*` event into the stream.
 
@@ -162,7 +162,7 @@ journal<T>(
 schema?): Promise<T>;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:117](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L117)
+Defined in: [packages/core/src/protocol/context.ts:117](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L117)
 
 Journaled, exactly-once effect. Memoized into the log; skipped on Tier-2 replay.
 
@@ -192,7 +192,7 @@ Journaled, exactly-once effect. Memoized into the log; skipped on Tier-2 replay.
 reportUsage(delta): void;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:93](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L93)
+Defined in: [packages/core/src/protocol/context.ts:93](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L93)
 
 Charge tokens/cost spent *inside* a tool to the run that called it.
 
@@ -229,7 +229,7 @@ ctx.reportUsage(res.usage); // the delegated tokens now count against the parent
 suspend<Req>(req): Promise<ResolutionOf<Req>>;
 ```
 
-Defined in: [packages/core/src/protocol/context.ts:115](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/core/src/protocol/context.ts#L115)
+Defined in: [packages/core/src/protocol/context.ts:115](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/core/src/protocol/context.ts#L115)
 
 Tier-2 HITL: suspend mid-tool execution and resume with the resolution as the return value.
 

@@ -9,7 +9,7 @@ title: "fuzzyScore"
 function fuzzyScore(query, haystack): number | undefined;
 ```
 
-Defined in: runner-web/src/model-search.ts:49
+Defined in: [runner-web/src/model-search.ts:49](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/runner-web/src/model-search.ts#L49)
 
 Score `query` against `haystack` as a case-insensitive subsequence.
 

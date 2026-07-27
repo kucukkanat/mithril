@@ -5,7 +5,7 @@ prev: false
 title: "CodeRunner"
 ---
 
-Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/sandbox/src/index.ts#L34)
+Defined in: [index.ts:34](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/sandbox/src/index.ts#L34)
 
 A runtime-agnostic seam for running a snippet of code and capturing its result and logs.
 
@@ -23,7 +23,7 @@ trusted sandbox service. Choose the backend explicitly — this package never au
 readonly optional isolation?: "scope" | "remote";
 ```
 
-Defined in: [index.ts:47](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/sandbox/src/index.ts#L47)
+Defined in: [index.ts:47](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/sandbox/src/index.ts#L47)
 
 What kind of boundary this backend provides.
 
@@ -44,7 +44,7 @@ local execution can check this instead of pattern-matching on which factory buil
 run(code, opts?): Promise<CodeResult>;
 ```
 
-Defined in: [index.ts:35](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/sandbox/src/index.ts#L35)
+Defined in: [index.ts:35](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/sandbox/src/index.ts#L35)
 
 #### Parameters
 

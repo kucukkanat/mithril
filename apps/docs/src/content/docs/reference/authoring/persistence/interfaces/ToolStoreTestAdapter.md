@@ -5,7 +5,7 @@ prev: false
 title: "ToolStoreTestAdapter"
 ---
 
-Defined in: [persistence.ts:127](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/persistence.ts#L127)
+Defined in: [persistence.ts:127](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/authoring/src/persistence.ts#L127)
 
 Bridges [toolStoreConformance](/mithril/reference/authoring/persistence/functions/toolstoreconformance/) to a host test runner.
 
@@ -17,7 +17,7 @@ Bridges [toolStoreConformance](/mithril/reference/authoring/persistence/function
 assertEqual(actual, expected): void;
 ```
 
-Defined in: [persistence.ts:129](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/persistence.ts#L129)
+Defined in: [persistence.ts:129](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/authoring/src/persistence.ts#L129)
 
 #### Parameters
 
@@ -38,7 +38,7 @@ Defined in: [persistence.ts:129](https://github.com/kucukkanat/mithril/blob/8ae3
 test(name, fn): void;
 ```
 
-Defined in: [persistence.ts:128](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/persistence.ts#L128)
+Defined in: [persistence.ts:128](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/authoring/src/persistence.ts#L128)
 
 #### Parameters
 

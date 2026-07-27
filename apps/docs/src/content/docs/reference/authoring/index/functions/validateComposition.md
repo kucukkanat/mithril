@@ -9,7 +9,7 @@ title: "validateComposition"
 function validateComposition(comp, known): void;
 ```
 
-Defined in: [compose.ts:81](https://github.com/kucukkanat/mithril/blob/8ae36b8af557d6b4f2333ababb01689a162fa6f9/packages/authoring/src/compose.ts#L81)
+Defined in: [compose.ts:81](https://github.com/kucukkanat/mithril/blob/5498dd8fb6fe9570c15d14599fdc470b5197e9d5/packages/authoring/src/compose.ts#L81)
 
 Validate a composition against the tools available right now.
 
