@@ -15,10 +15,12 @@ import {
   creatorPromptFor,
   creatorToSpec,
   isCompleteFunction,
+  normalizeFunctionCode,
   parseCreatorEvents,
   specSummary,
   type CreatorEvent,
 } from "../src/lib/creator.ts";
+import { CAPABILITIES } from "../src/lib/capabilities.ts";
 
 const LOCAL: ModelSpec = { kind: "local", model: "m" };
 const BODY = "async ({ city }) => ({ city, tempC: 21 })";
@@ -41,10 +43,33 @@ describe("creatorProgram", () => {
 
   test("declares every meta-tool and hands all of them to the creator", () => {
     const program = creatorProgram({ kind: "create", job: "j" }, LOCAL);
-    for (const name of ["create_tool", "create_agent", "create_subagent", "attach_tool", "remove_decl", "finish"]) {
+    for (const name of ["create_tool", "use_storage", "create_agent", "create_subagent", "attach_tool", "remove_decl", "finish"]) {
       expect(program).toContain(`const ${name} = tool({`);
     }
-    expect(program).toContain("tools: [create_tool, create_agent, create_subagent, attach_tool, remove_decl, finish]");
+    expect(program).toContain("tools: [create_tool, use_storage, create_agent, create_subagent, attach_tool, remove_decl, finish]");
+  });
+
+  test("create_tool refuses a bodiless tool as DATA, so the model gets a retry instead of a stub", () => {
+    const program = creatorProgram({ kind: "create", job: "j" }, LOCAL);
+    expect(program).toContain("code is required");
+    // The refusal must be a return value; a throw derails exactly the small models this protects.
+    expect(program).toContain(`return { ok: false, error: "code is required`);
+    // …and only on create_tool — attach_tool sends no `code` and must not be blocked by it.
+    expect(program.split("const attach_tool = tool({")[1]).not.toContain("code is required");
+  });
+
+  test("only the naming tools dedupe — attach_tool must survive being called twice", () => {
+    const program = creatorProgram({ kind: "create", job: "j" }, LOCAL);
+    const bodyOf = (name: string): string => program.split(`const ${name} = tool({`)[1]?.split("});")[0] ?? "";
+    for (const n of ["create_tool", "create_agent", "create_subagent"]) expect(bodyOf(n)).toContain("__made.add");
+    // attach_tool/remove_decl carry neither `name` nor `id` as a NEW decl name; deduping them dropped calls.
+    expect(bodyOf("attach_tool")).not.toContain("__made");
+  });
+
+  test("the emitted program is syntactically valid TypeScript", () => {
+    const program = creatorProgram({ kind: "create", job: "j" }, LOCAL);
+    const sf = ts.createSourceFile("creator.ts", program, ts.ScriptTarget.ESNext, true, ts.ScriptKind.TS);
+    expect((sf as unknown as { parseDiagnostics: readonly unknown[] }).parseDiagnostics).toHaveLength(0);
   });
 
   test("is a tool-caller, not a structured-output run", () => {
@@ -137,8 +162,38 @@ describe("isCompleteFunction", () => {
     ["Here is a function that gets the weather.", false],
     ["", false],
     ["async () => { return 1; } }", false],
+    // A body the model prefaced with a comment is a body, not prose.
+    ["// fetches the forecast\nasync ({ city }) => ({ city })", true],
+    ["/* block */ function f() { return 1; }", true],
+    ["// just a comment, no function", false],
   ])("%p → %p", (code, expected) => {
     expect(isCompleteFunction(code)).toBe(expected);
+  });
+});
+
+describe("normalizeFunctionCode — the wrappers a model adds that the body doesn't need", () => {
+  test.each([
+    ["```js\nasync ({ city }) => ({ city })\n```", "async ({ city }) => ({ city })"],
+    ["```\nasync () => ({ ok: true })\n```", "async () => ({ ok: true })"],
+    ["const getWeather = async ({ city }) => ({ city });", "async ({ city }) => ({ city })"],
+    ["export default async () => ({ ok: true })", "async () => ({ ok: true })"],
+    ["```ts\nconst f = async () => 1;\n```", "async () => 1"],
+  ])("%p unwraps to a body isCompleteFunction accepts", (raw, expected) => {
+    expect(normalizeFunctionCode(raw)).toBe(expected);
+    expect(isCompleteFunction(normalizeFunctionCode(raw))).toBe(true);
+  });
+
+  test("leaves an already-clean body byte-identical", () => {
+    expect(normalizeFunctionCode(BODY)).toBe(BODY);
+  });
+
+  test("does not rescue prose — an unwrap is not a repair", () => {
+    expect(isCompleteFunction(normalizeFunctionCode("Here is a function that gets the weather."))).toBe(false);
+  });
+
+  test("parseCreatorEvents normalizes on the way in, so a fenced body survives the build", () => {
+    const [first] = parseCreatorEvents([{ kind: "tool", name: "t", inputs: [], code: "```js\n" + BODY + "\n```" }]);
+    expect(first).toMatchObject({ code: BODY });
   });
 });
 
@@ -222,6 +277,13 @@ describe("creatorToSpec", () => {
     const tool = spec.decls.find((d) => d.kind === "tool");
     expect(tool?.kind === "tool" && tool.execute.code).toContain("TODO");
     expect(notes.some((n) => n.text.includes("wasn't usable code"))).toBe(true);
+  });
+
+  test("an OMITTED body is stubbed loudly too — a silent stub reads as a design choice", () => {
+    const { spec, notes } = creatorToSpec([toolEvent("t", { code: "" }), agentEvent("a", ["t"])], LOCAL, "j");
+    const tool = spec.decls.find((d) => d.kind === "tool");
+    expect(tool?.kind === "tool" && tool.execute.code).toContain("TODO");
+    expect(notes.some((n) => n.tone === "warn" && n.text.includes("never wrote a body"))).toBe(true);
   });
 
   test("a real body is kept verbatim", () => {
@@ -341,6 +403,98 @@ describe("creatorToSpec as an EDIT (with a base)", () => {
   });
 });
 
+describe("use_storage — the capability a tool body could never reach before", () => {
+  const remember = (): CreatorEvent =>
+    toolEvent("remember", { inputs: [{ name: "fact", type: "text", description: "the fact" }], code: "async ({ fact }) => { await notes.set(fact, true); return { ok: true }; }" });
+  const storage = (backend: string, binding: string): CreatorEvent => ({ kind: "storage", backend, binding });
+
+  test("emits the import and the setup const, so the binding actually exists", () => {
+    const { spec } = creatorToSpec([storage("kv", "notes"), remember(), agentEvent("a", ["remember"])], LOCAL, "j");
+    const opaque = spec.decls.filter((d) => d.kind === "opaque");
+    expect(opaque.map((d) => d.code)).toEqual([`import { indexedDbKv } from "@mithril/kv/indexeddb";`, "const notes = indexedDbKv();"]);
+    // Setup leads the file: an import must be top-level, and the const must initialize first.
+    expect(spec.decls[0]?.kind).toBe("opaque");
+    expect(spec.decls[1]?.kind).toBe("opaque");
+  });
+
+  test("the generated file is valid and the body's reference resolves", () => {
+    const { spec, notes } = creatorToSpec([storage("kv", "notes"), remember(), agentEvent("a", ["remember"])], LOCAL, "j");
+    const code = generateProject(spec);
+    expect(code).toContain(`import { indexedDbKv } from "@mithril/kv/indexeddb";`);
+    // The const must precede the tool that closes over it, or it's a TDZ crash at run time.
+    expect(code.indexOf("const notes =")).toBeLessThan(code.indexOf("const remember ="));
+    expect(notes.filter((n) => n.tone === "warn")).toEqual([]);
+  });
+
+  test("every capability module is one the runner's registry actually serves", async () => {
+    // The whitelist is only safe if every entry resolves — an unlisted specifier throws
+    // "Cannot import … in the runner" at run time, which is the bug this feature exists to remove.
+    // Read against the registry SOURCE: `defaultModules` is not a root export, and widening
+    // @mithril/runner-web's public API for a Studio test is exactly the package churn to avoid.
+    const registry = await Bun.file(new URL("../../../packages/runner-web/src/modules.ts", import.meta.url)).text();
+    for (const cap of CAPABILITIES) expect(registry).toContain(`${JSON.stringify(cap.module)}:`);
+  });
+
+  test("every advertised factory is a real export of that module", async () => {
+    for (const cap of CAPABILITIES) {
+      const mod = (await import(cap.module)) as Record<string, unknown>;
+      expect(typeof mod[cap.factory]).toBe("function");
+    }
+  });
+
+  test("an unknown backend never reaches the spec", () => {
+    expect(parseCreatorEvents([{ kind: "storage", backend: "postgres", binding: "db" }])).toEqual([]);
+  });
+
+  test("asking twice for the same binding is idempotent", () => {
+    const { spec } = creatorToSpec([storage("kv", "notes"), storage("kv", "notes"), agentEvent("a")], LOCAL, "j");
+    expect(spec.decls.filter((d) => d.kind === "opaque")).toHaveLength(2);
+  });
+
+  test("two different bindings both get set up", () => {
+    const { spec } = creatorToSpec([storage("kv", "facts"), storage("files", "notes"), agentEvent("a")], LOCAL, "j");
+    expect(spec.decls.filter((d) => d.kind === "opaque").map((d) => d.code)).toEqual([
+      `import { indexedDbKv } from "@mithril/kv/indexeddb";`,
+      "const facts = indexedDbKv();",
+      `import { opfsFileSystem } from "@mithril/fs/opfs";`,
+      "const notes = opfsFileSystem();",
+    ]);
+  });
+
+  test("an in-memory backend is called out — it looks like memory but forgets everything", () => {
+    const { notes } = creatorToSpec([storage("kv_memory", "scratch"), agentEvent("a")], LOCAL, "j");
+    expect(notes.some((n) => n.tone === "info" && n.text.includes("in-memory"))).toBe(true);
+  });
+
+  test("a binding that collides with a framework name is refused, not shipped", () => {
+    const { spec, notes } = creatorToSpec([storage("kv", "agent"), agentEvent("a")], LOCAL, "j");
+    expect(spec.decls.filter((d) => d.kind === "opaque")).toEqual([]);
+    expect(notes.some((n) => n.text.includes("collides"))).toBe(true);
+  });
+
+  test("a body using storage that was never set up is WARNED about, and kept", () => {
+    const { spec, notes } = creatorToSpec([remember(), agentEvent("a", ["remember"])], LOCAL, "j");
+    const tool = spec.decls.find((d) => d.kind === "tool");
+    // Kept verbatim: one setup line short of correct beats a placeholder.
+    expect(tool?.kind === "tool" && tool.execute.code).toContain("notes.set");
+    expect(notes.some((n) => n.tone === "warn" && n.text.includes('"notes"'))).toBe(true);
+  });
+
+  test("an edit never destroys hand-written opaque code", () => {
+    const base: ProjectSpec = {
+      specVersion: 1,
+      name: "p",
+      decls: [
+        { kind: "opaque", id: "o1", code: "const handWritten = 42;" },
+        { kind: "agent", id: "assistant", model: LOCAL, instructions: "i", tools: [] },
+      ],
+      entry: { target: "assistant", input: "" },
+    };
+    const { spec } = creatorToSpec([agentEvent("assistant")], LOCAL, "tweak it", base);
+    expect(spec.decls.some((d) => d.kind === "opaque" && d.code === "const handWritten = 42;")).toBe(true);
+  });
+});
+
 describe("the keystone: everything the creator builds survives the round-trip", () => {
   const CASES: readonly (readonly [string, readonly CreatorEvent[]])[] = [
     ["one agent, one tool", [toolEvent("get_weather"), agentEvent("assistant", ["get_weather"])]],
@@ -367,4 +521,24 @@ describe("the keystone: everything the creator builds survives the round-trip", 
       expect(result.spec).toEqual(spec);
     });
   }
+
+  test("parse(generate(spec)) ≡ spec — with storage", () => {
+    // The reason the import and the const are TWO opaque decls: parseProject splits an unplanned
+    // import from the statement after it, so emitting them joined would fail this assertion — and a
+    // spec that fails it is one the Designer corrupts on first edit.
+    const { spec } = creatorToSpec(
+      [
+        { kind: "storage", backend: "files", binding: "notes" },
+        toolEvent("save_note", { inputs: [{ name: "text", type: "text", description: "the note" }], code: "async ({ text }) => { await notes.writeFile(`n-${Date.now()}.md`, text); return { saved: true }; }" }),
+        agentEvent("assistant", ["save_note"]),
+        { kind: "finish", name: "Note taker", entry: "assistant", summary: "s" },
+      ],
+      LOCAL,
+      "job",
+    );
+    const result = parseProject(generateProject(spec), ts, spec);
+    expect(result.diagnostics.filter((d) => d.severity === "error")).toEqual([]);
+    expect(result.opaqueCount).toBe(2); // the import and the setup const, both verbatim by design
+    expect(result.spec).toEqual(spec);
+  });
 });

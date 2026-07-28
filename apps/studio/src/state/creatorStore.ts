@@ -95,6 +95,13 @@ function runFailure(events: readonly MithrilEvent[]): string | null {
   return failed !== undefined && failed.type === "run.error" ? failed.error.message : null;
 }
 
+/*
+ * A run has settled when the worker reported `done`/`error` — OR when the user pressed Stop, which
+ * `RunnerClient.stop()` publishes as a return to `idle`. Without the `idle` case the subscription
+ * below never unsubscribes and the screen stays stuck in "building" forever.
+ */
+const settled = (status: string): boolean => status === "done" || status === "error" || status === "idle";
+
 export const useCreatorStore = create<CreatorState>()((set, get) => ({
   phase: "idle",
   events: [],
@@ -114,7 +121,7 @@ export const useCreatorStore = create<CreatorState>()((set, get) => ({
         const snap = c.getSnapshot();
         // Definitions stream in as they are made, so the screen shows work rather than a spinner.
         set({ events: parseCreatorEvents(snap.data), download: snap.download ?? null });
-        if (snap.status !== "done" && snap.status !== "error") return;
+        if (!settled(snap.status)) return;
         unsubscribe();
 
         const events = parseCreatorEvents(snap.data);
@@ -152,7 +159,7 @@ export const useCreatorStore = create<CreatorState>()((set, get) => ({
       const unsubscribe = c.subscribe(() => {
         const snap = c.getSnapshot();
         set({ events: parseCreatorEvents(snap.data), download: snap.download ?? null });
-        if (snap.status !== "done" && snap.status !== "error") return;
+        if (!settled(snap.status)) return;
         unsubscribe();
         set({ running: false });
         resolve({
@@ -169,8 +176,9 @@ export const useCreatorStore = create<CreatorState>()((set, get) => ({
   },
 
   stop() {
-    // terminate() resolves the subscription above through a `done`/`error` snapshot, so whatever was
-    // already emitted still becomes a reviewable build. Stopping is a salvage path, not a discard.
+    // stop() publishes a terminal `idle` snapshot, which resolves the subscription above (see
+    // `settled`), so whatever was already emitted still becomes a reviewable build. Stopping is a
+    // salvage path, not a discard.
     client().stop();
   },
 

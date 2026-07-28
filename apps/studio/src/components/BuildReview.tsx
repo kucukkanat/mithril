@@ -1,5 +1,6 @@
 import type { ProjectSpec } from "@mithril/spec";
 import { paramsOf } from "../lib/tool-fields.ts";
+import { CAPABILITIES } from "../lib/capabilities.ts";
 import { reachesOutside } from "../lib/probe.ts";
 import type { BuildOutcome } from "../state/creatorStore.ts";
 
@@ -34,6 +35,13 @@ function toolChips(code: string, zod: string): readonly { readonly text: string;
   ];
 }
 
+/** Read a capability setup line back into its binding and backend, or null for any other opaque code. */
+function describeStorage(code: string): { readonly binding: string; readonly summary: string; readonly persistent: boolean } | null {
+  const m = /^\s*const\s+([A-Za-z_$][\w$]*)\s*=\s*([A-Za-z_$][\w$]*)\(\)/.exec(code);
+  const cap = m === null ? undefined : CAPABILITIES.find((c) => c.factory === m[2]);
+  return cap === undefined || m?.[1] === undefined ? null : { binding: m[1], summary: cap.summary, persistent: cap.persistent };
+}
+
 export function BuildReview({ outcome, onAccept, onRetry, onTweak, accepting }: BuildReviewProps) {
   const { spec, notes, summary, stoppedEarly, error } = outcome;
   const empty = spec.decls.length === 0;
@@ -49,6 +57,12 @@ export function BuildReview({ outcome, onAccept, onRetry, onTweak, accepting }: 
     }
     if (d.kind === "subAgentTool") {
       return [{ kind: "asTool", id: d.id, purpose: d.description, chips: [{ text: `delegates to ${d.agentId}`, tone: "plain" as const }] }];
+    }
+    // Storage is the one opaque decl the build produces itself, and it is the whole reason a body
+    // can persist anything — showing only the tools would hide where the data actually goes.
+    if (d.kind === "opaque") {
+      const cap = describeStorage(d.code);
+      return cap === null ? [] : [{ kind: "storage", id: cap.binding, purpose: cap.summary, chips: [{ text: cap.persistent ? "persists across runs" : "in-memory only", tone: cap.persistent ? ("gen" as const) : ("warn" as const) }] }];
     }
     return [];
   });
@@ -94,7 +108,7 @@ export function BuildReview({ outcome, onAccept, onRetry, onTweak, accepting }: 
       <ol className="review-rows">
         {rows.map((r) => (
           <li key={r.id} className="review-row" data-testid={`review-row-${r.id}`}>
-            <span className={`decl-kind ${r.kind === "agent" ? "k-agent" : "k-tool"}`}>{r.kind}</span>
+            <span className={`decl-kind ${r.kind === "agent" ? "k-agent" : r.kind === "storage" ? "k-opaque" : "k-tool"}`}>{r.kind}</span>
             <code>{r.id}</code>
             <span className="review-purpose">{r.purpose}</span>
             <span className="review-chips">

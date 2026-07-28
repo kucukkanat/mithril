@@ -29,6 +29,8 @@ function line(e: CreatorEvent): readonly [string, string, string] | null {
       return ["agent", e.id, e.purpose];
     case "subagent":
       return ["asTool", e.exposeName, `${e.id} — ${e.exposeDescription}`];
+    case "storage":
+      return ["storage", e.binding, `${e.backend} — every tool body can use it`];
     case "attach":
       return ["attach", e.tool, `→ ${e.agent}`];
     case "remove":

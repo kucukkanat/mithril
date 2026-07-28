@@ -26,6 +26,7 @@ import {
   providerOf,
   type AgentSpec,
   type ModelSpec,
+  type OpaqueDecl,
   type ProjectDecl,
   type ProjectSpec,
   type SubAgentToolSpec,
@@ -34,6 +35,8 @@ import {
 import { inputsToZod, safeIdent, type DraftInput } from "./drafting.ts";
 import { stubBody } from "./tool-fields.ts";
 import { orderDecls } from "./order.ts";
+import { CAPABILITIES, capabilityCatalogue, capabilityOf, capabilitySetup } from "./capabilities.ts";
+import { freeIdentifiers } from "./free-vars.ts";
 
 /** Build a whole project from one prompt. */
 export interface CreateRequest {
@@ -105,6 +108,10 @@ const META_TOOLS: readonly {
   /** Body of the `execute` arrow, after validation. Receives `input`. */
   readonly emit: string;
   readonly ack: string;
+  /** Extra `return { ok: false, error }` guards, emitted before the duplicate check. */
+  readonly guards?: readonly string[];
+  /** Does this tool introduce a new decl name? Only those take part in duplicate refusal. */
+  readonly names?: true;
 }[] = [
   {
     name: "create_tool",
@@ -114,7 +121,7 @@ const META_TOOLS: readonly {
     name: z.string().describe("snake_case, e.g. get_weather"),
     description: z.string().describe("When the model should call this"),
     inputs: ${INPUTS_ZOD},
-    code: z.string().describe("A complete async arrow function, e.g. async ({ city }) => ({ city, tempC: 21 })"),
+    code: z.string().describe("REQUIRED. The tool's whole body as a complete async arrow function, e.g. async ({ city }) => ({ city, tempC: 21 })"),
   })`,
     examples: `[{
     name: "get_weather",
@@ -124,6 +131,32 @@ const META_TOOLS: readonly {
   }]`,
     emit: `{ v: 1, kind: "tool", name: input.name, description: input.description, inputs: input.inputs, code: input.code }`,
     ack: `{ ok: true, created: input.name }`,
+    names: true,
+    // A missing body used to sail through and land as a silent placeholder. Refusing IN the tool (as
+    // data, not a thrown error) is the one feedback channel a small model can actually act on: it
+    // gets a second attempt at the field it dropped, in the same loop, before anything is emitted.
+    guards: [
+      `if (typeof input.code !== "string" || input.code.trim().length === 0) return { ok: false, error: "code is required — send the tool's whole body as a complete async arrow function, e.g. async ({ city }) => ({ city, tempC: 21 }). Call create_tool again with it." };`,
+    ],
+  },
+  {
+    name: "use_storage",
+    description:
+      "Give the agent somewhere to keep data BETWEEN runs. Call this FIRST, before create_tool, whenever the job says remember, note, save, track, history or later. It puts one binding in scope that every tool body can then use directly — no import needed.",
+    inputSchema: `z.object({
+    backend: z.enum([${CAPABILITIES.map((c) => JSON.stringify(c.id)).join(", ")}]).describe("Which store to use"),
+    binding: z.string().describe("The variable name your tool bodies will call it by, e.g. notes"),
+  })`,
+    examples: `[{ backend: "kv", binding: "facts" }]`,
+    emit: `{ v: 1, kind: "storage", backend: input.backend, binding: input.binding }`,
+    ack: `{ ok: true, use: input.binding, note: "Reference " + input.binding + " directly in any tool body. Do not import it." }`,
+    // The binding IS a top-level name, so it shares the duplicate check with the decl-makers.
+    names: true,
+    // The enum already constrains this on the wire, but a model that free-texts the field would
+    // otherwise emit a payload the host silently drops. Listing the menu in the refusal is the fix.
+    guards: [
+      `if (![${CAPABILITIES.map((c) => JSON.stringify(c.id)).join(", ")}].includes(input.backend)) return { ok: false, error: "Unknown backend. Pick one of: ${CAPABILITIES.map((c) => c.id).join(", ")}." };`,
+    ],
   },
   {
     name: "create_agent",
@@ -142,6 +175,7 @@ const META_TOOLS: readonly {
   }]`,
     emit: `{ v: 1, kind: "agent", id: input.id, purpose: input.purpose, instructions: input.instructions, tools: input.tools }`,
     ack: `{ ok: true, created: input.id }`,
+    names: true,
   },
   {
     name: "create_subagent",
@@ -167,6 +201,7 @@ const META_TOOLS: readonly {
   }]`,
     emit: `{ v: 1, kind: "subagent", id: input.id, purpose: input.purpose, instructions: input.instructions, tools: input.tools, parent: input.parent, exposeName: input.expose_name, exposeDescription: input.expose_description }`,
     ack: `{ ok: true, created: input.id, exposed_as: input.expose_name }`,
+    names: true,
   },
   {
     name: "attach_tool",
@@ -204,10 +239,18 @@ const META_TOOLS: readonly {
  */
 const CREATOR_SYSTEM = [
   "You build AI agents by CALLING TOOLS. Never describe the agent in prose — every part of it must come from a tool call.",
-  "Create tools before the agent that uses them, then create the agent listing those tool names.",
-  "Tool code must be a complete async arrow function. If you do not know a real endpoint, return a clearly-labelled fixture and say so in the tool description. Never invent API keys.",
+  "Call use_storage first if the agent needs to remember anything, then create tools, then the agent listing those tool names.",
+  // `code` is the field small models drop; the whole build is worthless without it, so it is the one
+  // thing the system prompt repeats after the tool's own description already said it.
+  "Every create_tool call MUST include `code` — a complete async arrow function, never an empty string and never a description of one. If you do not know a real endpoint, return a clearly-labelled fixture and say so in the tool description. Never invent API keys.",
   "Keep it small: only the tools the job actually needs.",
   "When the agent is complete, call finish exactly once.",
+  // The catalogue is the whole point of the feature: the model cannot use what it has never been
+  // shown, and it must never guess at an API — a plausible-but-wrong method name fails at run time
+  // with no type error to catch it first.
+  "\n\nA tool body runs in a sandboxed worker. It may use standard JavaScript and `fetch`. It CANNOT import anything — the only extra names in scope are the ones use_storage puts there.\n\nStorage backends available to use_storage:\n" +
+    capabilityCatalogue() +
+    "\n\nUse EXACTLY the methods listed above; do not invent others. Prefer a persistent backend whenever the job implies remembering across conversations.",
 ].join(" ");
 
 /**
@@ -280,9 +323,18 @@ export function creatorProgram(req: CreatorRequest, model: ModelSpec): string {
       `  inputSchema: ${t.inputSchema},`,
       `  examples: ${t.examples},`,
       `  execute: async (input) => {`,
+      ...(t.guards ?? []).map((g) => `    ${g}`),
+      // Duplicate-name refusal, but ONLY for the tools that name something new. `attach_tool` carries
+      // neither field, so the old `?? ""` interned the empty string on the first attach and refused
+      // every attach after it — the loop lost exactly the calls that wire an agent up.
       // A refusal is information the model can act on; a thrown tool error derails small models.
-      `    if (__made.has(input.name ?? input.id ?? "")) return { ok: false, error: "That name already exists — pick another, or use attach_tool." };`,
-      `    __made.add(input.name ?? input.id ?? "");`,
+      ...(t.names
+        ? [
+            `    const __id = input.name ?? input.id ?? input.binding;`,
+            `    if (__made.has(__id)) return { ok: false, error: "That name already exists — pick another, or use attach_tool." };`,
+            `    __made.add(__id);`,
+          ]
+        : []),
       `    emit(${t.emit});`,
       `    return ${t.ack};`,
       `  },`,
@@ -326,6 +378,7 @@ export type CreatorEvent =
       readonly exposeName: string;
       readonly exposeDescription: string;
     }
+  | { readonly kind: "storage"; readonly backend: string; readonly binding: string }
   | { readonly kind: "attach"; readonly tool: string; readonly agent: string }
   | { readonly kind: "remove"; readonly name: string }
   | { readonly kind: "finish"; readonly name: string; readonly entry: string; readonly summary: string };
@@ -358,7 +411,9 @@ export function parseCreatorEvents(data: readonly unknown[]): readonly CreatorEv
     const kind = str(raw["kind"]);
     if (kind === "tool") {
       const name = str(raw["name"]);
-      return name.length === 0 ? [] : [{ kind, name, description: str(raw["description"]), inputs: inputList(raw["inputs"]), code: str(raw["code"]) }];
+      return name.length === 0
+        ? []
+        : [{ kind, name, description: str(raw["description"]), inputs: inputList(raw["inputs"]), code: normalizeFunctionCode(str(raw["code"])) }];
     }
     if (kind === "agent") {
       const id = str(raw["id"]);
@@ -383,6 +438,14 @@ export function parseCreatorEvents(data: readonly unknown[]): readonly CreatorEv
         },
       ];
     }
+    if (kind === "storage") {
+      const backend = str(raw["backend"]);
+      const binding = str(raw["binding"]);
+      // An unknown backend is dropped here rather than carried: `creatorToSpec` could not emit it,
+      // and a binding with no setup behind it is exactly the unbound reference this feature exists
+      // to prevent. The body that used it still gets its own free-identifier warning.
+      return backend.length === 0 || binding.length === 0 || capabilityOf(backend) === undefined ? [] : [{ kind, backend, binding }];
+    }
     if (kind === "attach") {
       const tool = str(raw["tool"]);
       const agent = str(raw["agent"]);
@@ -398,6 +461,38 @@ export function parseCreatorEvents(data: readonly unknown[]): readonly CreatorEv
 }
 
 /**
+ * Strip the wrappers a model puts around a function body that the body itself doesn't need.
+ *
+ * Models routinely return a correct function inside a markdown fence, or as a named binding
+ * (`const getWeather = async (…) => …;`), because that is how functions appear in their training
+ * data. Both are perfectly good code that {@link isCompleteFunction} would reject on its first
+ * character, and rejecting it costs the user the whole body. Only these three lossless unwraps are
+ * applied — a fence, a leading binding or `export default`, and a trailing semicolon. Anything the
+ * model actually wrote survives byte-identically.
+ */
+export function normalizeFunctionCode(raw: string): string {
+  const fenced = /^```[a-zA-Z]*\s*\n([\s\S]*?)\n?```$/.exec(raw.trim());
+  return (fenced?.[1] ?? raw)
+    .trim()
+    .replace(/^export\s+default\s+/, "")
+    .replace(/^(?:const|let|var)\s+[A-Za-z_$][\w$]*\s*=\s*/, "")
+    .replace(/;+$/, "")
+    .trim();
+}
+
+/** Offset of the first character that isn't whitespace or a comment. */
+function firstToken(code: string): number {
+  let i = 0;
+  while (i < code.length) {
+    if (/\s/.test(code[i] ?? "")) i++;
+    else if (code.startsWith("//", i)) i = code.indexOf("\n", i) === -1 ? code.length : code.indexOf("\n", i);
+    else if (code.startsWith("/*", i)) i = code.indexOf("*/", i) === -1 ? code.length : code.indexOf("*/", i) + 2;
+    else break;
+  }
+  return i;
+}
+
+/**
  * Is `code` a complete function expression?
  *
  * A scanner, not a parser: it tracks strings, template literals, comments and bracket depth, which is
@@ -407,7 +502,8 @@ export function parseCreatorEvents(data: readonly unknown[]): readonly CreatorEv
  */
 export function isCompleteFunction(code: string): boolean {
   const trimmed = code.trim();
-  if (!/^(async\s+)?(\(|function\b)/.test(trimmed) && !/^async\s*\(/.test(trimmed)) return false;
+  // A leading explanatory comment is a body the user wants, not prose — judge the first real token.
+  if (!/^(async\s*)?(\(|function\b)/.test(trimmed.slice(firstToken(trimmed)))) return false;
   let depth = 0;
   let quote: string | null = null;
   let comment: "line" | "block" | null = null;
@@ -466,6 +562,19 @@ export interface BuildResult {
   readonly finished: boolean;
 }
 
+/**
+ * Top-level names an opaque statement introduces.
+ *
+ * Same shape as `orderDecls`'s BINDER, and for the same reason: opaque code is the only decl whose
+ * bindings aren't its id, so both the ordering pass and the unbound-reference check have to read
+ * them out of the source.
+ */
+function topLevelBindings(code: string): readonly string[] {
+  return [...code.matchAll(/(?:^|\n)\s*(?:export\s+)?(?:const|let|var|function\*?|class)\s+([A-Za-z_$][\w$]*)/g)].flatMap((m) =>
+    m[1] === undefined ? [] : [m[1]],
+  );
+}
+
 /** Assign a decl id that is a valid identifier, unused, and not reserved. */
 function claimId(raw: string, fallback: string, taken: Set<string>): string {
   const base = safeIdent(raw, fallback);
@@ -504,6 +613,10 @@ export function creatorToSpec(events: readonly CreatorEvent[], model: ModelSpec,
   const tools: ToolSpec[] = [];
   const agents: AgentSpec[] = [];
   const subs: SubAgentToolSpec[] = [];
+  /** Capability setup, as opaque decls. Kept separate so it always leads the file. */
+  const setup: OpaqueDecl[] = [];
+  /** Binding name → the decl id of its `const`, so a repeated use_storage replaces rather than doubles. */
+  const bindings = new Map<string, string>();
   /** agent id → tool ids it should be able to call. */
   const wants = new Map<string, string[]>();
   const removed = new Set<string>();
@@ -523,6 +636,11 @@ export function creatorToSpec(events: readonly CreatorEvent[], model: ModelSpec,
     } else if (d.kind === "subAgentTool") {
       idOf.set(d.name, d.id);
       subs.push(d);
+    } else if (d.kind === "opaque") {
+      // Hand-written code (and earlier capability setup) survives an edit. Dropping it here would
+      // delete whatever you had typed in the Code view the moment you used the instruction bar.
+      setup.push(d);
+      for (const name of topLevelBindings(d.code)) bindings.set(name, d.id);
     }
   }
 
@@ -537,14 +655,51 @@ export function creatorToSpec(events: readonly CreatorEvent[], model: ModelSpec,
     return claimId(name, fallback, taken);
   };
 
+  /** Opaque ids follow `parseProject`'s own `o1`, `o2`, … so a build round-trips through the code view. */
+  let opaqueSeq = setup.length;
+  const nextOpaqueId = (): string => {
+    opaqueSeq++;
+    return `o${opaqueSeq}`;
+  };
+
   for (const e of events) {
+    if (e.kind === "storage") {
+      const cap = capabilityOf(e.backend);
+      if (cap === undefined) continue; // unreachable: parseCreatorEvents already dropped these
+      const binding = safeIdent(e.binding, "store");
+      if (bindings.has(binding)) continue; // asking twice for the same name is idempotent, not an error
+      if (RESERVED_IDS.has(binding)) {
+        notes.push({ tone: "warn", text: `Storage binding "${binding}" collides with a framework name — skipped.` });
+        continue;
+      }
+      const [importLine, constLine] = capabilitySetup(cap, binding);
+      // TWO decls, not one statement: `parseProject` splits an unplanned import from the const that
+      // follows it, so emitting them joined would break `parse(generate(spec)) ≡ spec`.
+      setup.push({ kind: "opaque", id: nextOpaqueId(), code: importLine });
+      const constDecl: OpaqueDecl = { kind: "opaque", id: nextOpaqueId(), code: constLine };
+      setup.push(constDecl);
+      bindings.set(binding, constDecl.id);
+      taken.add(binding);
+      if (!cap.persistent) {
+        notes.push({ tone: "info", text: `"${binding}" is in-memory — it starts empty on every run. Switch it to a persistent backend in the Code view to keep data.` });
+      }
+      continue;
+    }
     if (e.kind === "tool") {
       const id = claimOrReplace(tools, e.name, "tool");
       idOf.set(e.name, id);
       const names = e.inputs.map((i) => safeIdent(i.name, "input"));
+      // Both stub cases are reported. An omitted `code` is the commonest way a small model shortchanges
+      // create_tool, and staying quiet about it is what made a stubbed body look like a design choice.
       const complete = isCompleteFunction(e.code);
-      if (!complete && e.code.length > 0) {
-        notes.push({ tone: "warn", text: `${id}: the model's body wasn't usable code — replaced with a placeholder.` });
+      if (!complete) {
+        notes.push({
+          tone: "warn",
+          text:
+            e.code.length === 0
+              ? `${id}: the model never wrote a body — stubbed. Write it in the Designer, or re-run and ask for real code.`
+              : `${id}: the model's body wasn't usable code — replaced with a placeholder.`,
+        });
       }
       tools.push({
         kind: "tool",
@@ -602,6 +757,21 @@ export function creatorToSpec(events: readonly CreatorEvent[], model: ModelSpec,
   const keptAgents = agents.filter(live);
   const callable = new Set([...keptTools, ...keptSubs].map((d) => d.id));
 
+  // A body may reference storage bindings and any other decl in the file; anything else is a name
+  // the generated code cannot resolve. Warn, never rewrite: a body one setup line short of correct
+  // is worth far more than the placeholder that would replace it, and the Designer is where it gets
+  // fixed. Same call the "given a tool that was never created" note already makes.
+  const inScope = new Set<string>([...bindings.keys(), ...keptTools.map((t) => t.id), ...keptSubs.map((s) => s.id), ...keptAgents.map((a) => a.id)]);
+  for (const t of keptTools) {
+    const free = freeIdentifiers(t.execute.code, inScope);
+    if (free.length > 0) {
+      notes.push({
+        tone: "warn",
+        text: `${t.id} uses ${free.map((n) => `"${n}"`).join(", ")}, which nothing in the project defines — it will throw when called.`,
+      });
+    }
+  }
+
   // Resolve each agent's wanted tool names against the ids actually created. A tool a model listed
   // but never made is dropped loudly, not silently: codegen would emit a reference to nothing.
   const wired: AgentSpec[] = keptAgents.map((a) => {
@@ -649,7 +819,10 @@ export function creatorToSpec(events: readonly CreatorEvent[], model: ModelSpec,
     wired[0]?.id ??
     "";
 
-  const decls: ProjectDecl[] = [...keptTools, ...keptSubs, ...wired];
+  // Setup leads: an import must be a top-level statement, and the `const` has to initialize before
+  // any tool body's decl references it. `orderDecls` would lift it anyway — placing it here means
+  // the generated file matches statement-for-statement what `parseProject` reads back.
+  const decls: ProjectDecl[] = [...setup.filter(live), ...keptTools, ...keptSubs, ...wired];
   const spec: ProjectSpec = {
     specVersion: SPEC_VERSION,
     // On an edit `job` is the instruction, which must never become the project's name.
